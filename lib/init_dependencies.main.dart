@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:tech_haven/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:tech_haven/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:tech_haven/features/auth/domain/repository/auth_repository.dart';
+import 'package:tech_haven/features/auth/domain/usecases/verify_otp_code.dart';
 import 'package:tech_haven/features/auth/domain/usecases/verify_user_phone_number.dart';
 import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 
@@ -33,8 +34,12 @@ void _initAuth() {
     // phonenumberverification
     ..registerFactory(
       () => VerifyUserPhoneNumber(serviceLocator()),
-    )    ..registerLazySingleton(
-      () => AuthBloc(verifyUserPhoneNumber: serviceLocator(),
+    )
+    ..registerFactory(() => VerifyUserOTPCode(serviceLocator()))
+    ..registerLazySingleton(
+      () => AuthBloc(
+        verifyUserPhoneNumber: serviceLocator(),
+        verifyUserOTPCode: serviceLocator(),
       ),
     );
 }

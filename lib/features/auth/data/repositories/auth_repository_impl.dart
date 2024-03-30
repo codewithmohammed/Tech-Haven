@@ -1,4 +1,3 @@
-
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
@@ -82,6 +81,18 @@ class AuthRepositoryImpl implements AuthRepository {
       final verificatiionId =
           await remoteDataSource.verifyPhoneNumber(phonenumber: phonenumber);
       return right(verificatiionId);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> verifyOTPCode(
+      {required String verificationId, required String otpCode}) async {
+    try {
+      final userId = await remoteDataSource.verifyOTPCode(
+          verificationId: verificationId, otpCode: otpCode);
+      return right(userId);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

@@ -34,7 +34,10 @@ final class AuthFailure extends AuthState {
 //for all the otp failure states in the otp screen
 final class OTPPageStates extends AuthState {}
 
-final class OTPVerificationFailed extends OTPPageStates {}
+final class OTPVerificationFailed extends OTPPageStates {
+  final String message;
+  OTPVerificationFailed({required this.message});
+}
 
 final class OTPVerificationSuccess extends OTPPageStates {}
 

@@ -7,6 +7,12 @@ final class VerifyPhoneNumberEvent extends AuthEvent {
   VerifyPhoneNumberEvent({required this.phoneNumber});
 }
 
+final class VerifyOTPCodeEvent extends AuthEvent {
+  final String verificationId;
+  final String otpCode;
+  VerifyOTPCodeEvent({required this.verificationId,required this.otpCode});
+}
+
 // final class AuthSignUp extends AuthEvent {
 //   final String phoneNumber;
 //   final String email;

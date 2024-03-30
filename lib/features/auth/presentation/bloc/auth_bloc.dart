@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:tech_haven/core/common/entities/user.dart';
+import 'package:tech_haven/features/auth/domain/usecases/verify_otp_code.dart';
 import 'package:tech_haven/features/auth/domain/usecases/verify_user_phone_number.dart';
 
 part 'auth_event.dart';
@@ -11,14 +12,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // final UserSignUp _userSignUp;
   // final AppUserCubit _appUserCubit;
   final VerifyUserPhoneNumber _verifyUserPhoneNumber;
+  final VerifyUserOTPCode _verifyUserOTPCode;
   AuthBloc({
     // required UserSignUp userSignUp,
     // required AppUserCubit appUserCubit,
     required VerifyUserPhoneNumber verifyUserPhoneNumber,
+    required VerifyUserOTPCode verifyUserOTPCode,
   })  :
         // _userSignUp = userSignUp,
         // _appUserCubit = appUserCubit,
         _verifyUserPhoneNumber = verifyUserPhoneNumber,
+        _verifyUserOTPCode = verifyUserOTPCode,
         super(AuthInitial()) {
     // on the first event or in the initial stage we will show the loading state
     on<AuthEvent>((event, emit) {
@@ -29,6 +33,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     //for verifying the phoneNumber and also creating a user with email and password
     // on<AuthSignUp>(_onAuthSignUp);
     on<VerifyPhoneNumberEvent>(_onVerifyPhoneNumberEvent);
+
+    //for verifying the otp pincode
+    on<VerifyOTPCodeEvent>(_verifyOTPCodeEvent);
   }
 
   FutureOr<void> _onVerifyPhoneNumberEvent(
@@ -73,4 +80,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   //   _appUserCubit.updateUser(user);
   //   emit(AuthSuccess(user));
   // }
+
+  FutureOr<void> _verifyOTPCodeEvent(
+      VerifyOTPCodeEvent event, Emitter<AuthState> emit) async {
+    final res = await _verifyUserOTPCode(VerifyUserOTPCodeParams(
+      verificationId: event.verificationId,
+      otpCode: event.otpCode,
+    ));
+    res.fold(
+      (failure) => emit(
+        OTPVerificationFailed(message: failure.message),
+      ),
+      (userId) => emit(
+        OTPVerificationSuccess(),
+      ),
+    );
+  }
 }

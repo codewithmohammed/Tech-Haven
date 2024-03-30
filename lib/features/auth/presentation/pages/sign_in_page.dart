@@ -1,13 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
-import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/authentication_container.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/authentication_text_form_field.dart';
