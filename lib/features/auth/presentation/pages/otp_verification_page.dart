@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/authentication_container.dart';
 
@@ -50,77 +52,98 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
     );
     return Scaffold(
       backgroundColor: AppPallete.primaryAppColor,
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Container(),
-          Positioned(
-            bottom: -50,
-            child: AuthenticationContainer(
-              height: 450,
-              title: 'Code Verification',
-              subTitle:
-                  'Enter your 4-digit verification code receieved in your phone number',
-              columnChildren: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Form(
-                  child: Pinput(
-                    length: 6,
-                    inputFormatters: [
-                      LengthLimitingTextInputFormatter(
-                        6,
-                        maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      )
-                    ],
-                    controller: pinController,
-                    focusNode: focusNode,
-                    androidSmsAutofillMethod:
-                        AndroidSmsAutofillMethod.smsUserConsentApi,
-                    listenForMultipleSmsOnAndroid: true,
-                    defaultPinTheme: defaultPinTheme,
-                    separatorBuilder: (index) => const SizedBox(width: 1),
-                    // validator: (value) {
-                    //   return value == '222255' ? null : 'Pin is incorrect';
-                    // },
-                    onClipboardFound: (value) {
-                      debugPrint('onClipboardFound: $value');
-                      pinController.setText(value);
-                    },
-                    hapticFeedbackType: HapticFeedbackType.lightImpact,
-                    //on completing the entering of the pinCode.
-                    onCompleted: (pinCode) {
-                      
-print(
-                          'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
-                      context.read<AuthBloc>().add(VerifyOTPCodeEvent(
-                            verificationId: widget.verificaionId,
-                            otpCode: pinCode,
-                          ));
-                    },
-                    onChanged: (value) {
-                      debugPrint('onChanged: $value');
-                    },
-                    cursor: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 9),
-                          width: 22,
-                          height: 1,
-                          color: AppPallete.blackColor,
-                        ),
-                      ],
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) => current is OTPPageActionState,
+        buildWhen: (previous, current) => current is AuthOTPPageState,
+        listener: (context, state) {
+          if (state is OTPVerificationSuccess) {
+            context.read<AuthBloc>().add(NavigateToSignUpPageEvent(
+                  userId: state.userId,
+                ));
+            print('popped');
+            GoRouter.of(context).pop();
+          }
+          if (state is OTPVerificationFailed) {
+            showSnackBar(
+              context,
+              state.message,
+            );
+            pinController.clear();
+          }
+        },
+        builder: (context, state) {
+          return Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(),
+              Positioned(
+                bottom: -50,
+                child: AuthenticationContainer(
+                  height: 450,
+                  title: 'Code Verification',
+                  subTitle:
+                      'Enter your 4-digit verification code receieved in your phone number',
+                  columnChildren: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                    focusedPinTheme: defaultPinTheme,
-                  ),
+                    Form(
+                      child: Pinput(
+                        length: 6,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(
+                            6,
+                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                          )
+                        ],
+                        controller: pinController,
+                        focusNode: focusNode,
+                        androidSmsAutofillMethod:
+                            AndroidSmsAutofillMethod.smsUserConsentApi,
+                        listenForMultipleSmsOnAndroid: true,
+                        defaultPinTheme: defaultPinTheme,
+                        separatorBuilder: (index) => const SizedBox(width: 1),
+                        // validator: (value) {
+                        //   return value == '222255' ? null : 'Pin is incorrect';
+                        // },
+                        onClipboardFound: (value) {
+                          debugPrint('onClipboardFound: $value');
+                          pinController.setText(value);
+                        },
+                        hapticFeedbackType: HapticFeedbackType.lightImpact,
+                        //on completing the entering of the pinCode.
+                        onCompleted: (pinCode) {
+                          print(
+                              'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
+                          context.read<AuthBloc>().add(VerifyOTPCodeEvent(
+                                verificationId: widget.verificaionId,
+                                otpCode: pinCode,
+                              ));
+                        },
+                        onChanged: (value) {
+                          debugPrint('onChanged: $value');
+                        },
+                        cursor: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 9),
+                              width: 22,
+                              height: 1,
+                              color: AppPallete.blackColor,
+                            ),
+                          ],
+                        ),
+                        focusedPinTheme: defaultPinTheme,
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
                 ),
-                const Spacer(),
-              ],
-            ),
-          )
-        ],
+              )
+            ],
+          );
+        },
       ),
     );
   }

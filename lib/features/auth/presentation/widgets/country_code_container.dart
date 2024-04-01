@@ -4,11 +4,12 @@ class CountryCodeContainer extends StatelessWidget {
   const CountryCodeContainer({
     super.key,
     required this.onTap,
-    required this.countryCode,
+    required this.countryCode,  this.enabled = true,
   });
 
   final void Function()? onTap;
   final String countryCode;
+  final bool enabled;
   @override
   Widget build(BuildContext context) {
     print(countryCode);
@@ -32,6 +33,7 @@ class CountryCodeContainer extends StatelessWidget {
               )),
           TextFormField(
             onTap: onTap,
+            enabled: enabled,
             enableInteractiveSelection: false,
             canRequestFocus: false,
             style: const TextStyle(fontSize: 16),

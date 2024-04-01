@@ -14,7 +14,6 @@ import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/authentication_text_form_field.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/country_code_container.dart';
-
 import '../../../../core/theme/app_pallete.dart';
 import '../widgets/authentication_container.dart';
 
@@ -46,6 +45,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    // made to null to use it late after assigning the value
+    late String fullPhoneNumber;
+    bool textFormFieldEnabled = true;
     // FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     // final screenWidth = MediaQuery.of(context).size.width;
     // a valuenotifire for the country code change.
@@ -53,18 +55,57 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       backgroundColor: AppPallete.primaryAppColor,
       body: BlocConsumer<AuthBloc, AuthState>(
+        listenWhen: (previous, current) => current is SignUpPageActionState,
+        buildWhen: (previous, current) => current is AuthSignUpPageState,
         listener: (context, state) {
           //showing a snackbar if the verification of mobile number failed
-          if (state is PhoneVerificationFailed) {
+          if (state is SignUpVerificationIDFailed) {
             showSnackBar(
               context,
               state.message,
             );
           }
           if (state is NavigateToOTPPage) {
+            print('navigating to otp page');
             GoRouter.of(context).pushNamed(
               AppRouteConstants.otpVerificationPage,
               pathParameters: {'verificationId': state.verificationId},
+            );
+          }
+          if (state is StartSigningUpUser) {
+            print('starting to sign up user');
+            //we will disable the whole textform field if the otp verification is success and will move on to creating the user.
+            textFormFieldEnabled = false;
+            //we have to extract the name from the email given by the user
+            final username = extractNameFromEmail(emailController.text);
+            print(username);
+            //creating the email signup with firebase, and also saving the user data in the user folder.
+
+            context.read<AuthBloc>().add(
+                  AuthSignUpEvent(
+                    phonenumberVerifiedUID: state.userId,
+                    username: username,
+                    phoneNumber: phoneNumberController.text,
+                    email: emailController.text,
+                    password: passwordController.text,
+                  ),
+                );
+          }
+          if (state is SignUpUserSuccess) {
+            print('sdffffffffffffffffffffffffffffffffffffffffffffff');
+            GoRouter.of(context).pushReplacementNamed(
+              AppRouteConstants.signupWelcomePage,
+              pathParameters: {
+                'initialUsername': state.user.username,
+              },
+            );
+          }
+          if (state is SignUpUserFailed) {
+            textFormFieldEnabled = true;
+            print('failed');
+            showSnackBar(
+              context,
+              state.message,
             );
           }
         },
@@ -72,6 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state is AuthLoading) {
             return const Loader();
           }
+
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -102,6 +144,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             valueListenable: countryCode,
                             builder: (context, value, child) {
                               return CountryCodeContainer(
+                                enabled: textFormFieldEnabled,
                                 countryCode: countryCode.value,
                                 onTap: () {
                                   changeCountryCode(context);
@@ -112,6 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           //phone number field
                           Expanded(
                             child: AuthenticationTextFormField(
+                              enabled: textFormFieldEnabled,
                               textEditingController: phoneNumberController,
                               labelText: 'Phone Number',
                               hintText: '1234567890',
@@ -127,6 +171,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       //email field
                       AuthenticationTextFormField(
+                        enabled: textFormFieldEnabled,
                         textEditingController: emailController,
                         labelText: 'Email',
                         hintText: 'example@gmail.com',
@@ -135,6 +180,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       //password
                       AuthenticationTextFormField(
+                        enabled: textFormFieldEnabled,
                         textEditingController: passwordController,
                         labelText: 'Password',
                         hintText: '',
@@ -143,15 +189,18 @@ class _SignUpPageState extends State<SignUpPage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         isPasswordField: true,
                         suffixOnTap: () {
-                          setState(() {
-                            passwordIsObscure =
-                                passwordIsObscure ? false : true;
-                          });
+                          setState(
+                            () {
+                              passwordIsObscure =
+                                  passwordIsObscure ? false : true;
+                            },
+                          );
                         },
                       ),
 
                       //re password
                       AuthenticationTextFormField(
+                        enabled: textFormFieldEnabled,
                         textEditingController: rePasswordController,
                         labelText: 'Re-Enter Password',
                         hintText: '',
@@ -213,36 +262,14 @@ class _SignUpPageState extends State<SignUpPage> {
                           passwordController.text ==
                               rePasswordController.text &&
                           countryCode.value != '000') {
-                        final String fullPhoneNumber =
+                        fullPhoneNumber =
                             '+${countryCode.value}${phoneNumberController.text}';
                         print(fullPhoneNumber);
-                        // print('${countryCode.value}${phoneNumberController.text}');
                         context.read<AuthBloc>().add(
                               VerifyPhoneNumberEvent(
                                 phoneNumber: fullPhoneNumber,
                               ),
                             );
-                        // await firebaseAuth.verifyPhoneNumber(
-                        //   phoneNumber: '+447444555666',
-                        //   verificationCompleted: (phoneAuthCredential) async {
-                        //     await firebaseAuth
-                        //         .signInWithCredential(phoneAuthCredential);
-                        //     print('verification is completed automaticall7');
-                        //   },
-                        //   verificationFailed: (FirebaseAuthException e) {
-                        //     if (e.code == 'invalid-phone-number') {
-                        //       print('The provided phone number is not valid.');
-                        //     }
-
-                        //     // Handle other errors
-                        //   },
-                        //   codeSent: (verificationId, forceResendingToken) async {
-                        //     GoRouter.of(context).pushNamed(
-                        //         AppRouteConstants.otpVerificationPage,
-                        //         pathParameters: {'verificationId': verificationId});
-                        //   },
-                        //   codeAutoRetrievalTimeout: (verificationId) {},
-                        // );
                       }
                     },
                   ),
@@ -255,13 +282,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-                    // context.read<AuthBloc>().add(
-                    //       AuthSignUp(
-                    //         phoneNumber:
-                    //             countryCode.value + phoneNumberController.text,
-                    //         email: emailController.text,
-                    //         password: passwordController.text,
-                    //       ),
-                    //     );
-
-                

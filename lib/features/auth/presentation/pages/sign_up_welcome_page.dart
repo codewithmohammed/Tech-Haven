@@ -1,92 +1,199 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/utils/get_random_color.dart';
+import 'package:tech_haven/core/utils/pick_image.dart';
+import 'package:tech_haven/core/utils/show_snackbar.dart';
+import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 
-class SignUpWelcomePage extends StatelessWidget {
-  const SignUpWelcomePage({super.key});
+class SignUpWelcomePage extends StatefulWidget {
+  final String initialUsername;
+  const SignUpWelcomePage({super.key, required this.initialUsername});
+
+  @override
+  State<SignUpWelcomePage> createState() => _SignUpWelcomePageState();
+}
+
+class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
+  final usernameController = TextEditingController();
+  File? image;
+  void selectImage() async {
+    final pickedImage = await pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        image = pickedImage;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.all(40),
-        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'WELCOME !',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w800),
-          ),
-          const Text('upload your image and enter your name below.'),
-          const SizedBox(
-            height: 50,
-          ),
-          Center(
-            child: Stack(
-              children: [
-                Container(
-                  height: 200,
-                  width: 200,
-                  decoration: BoxDecoration(shape: BoxShape.circle, boxShadow: [
-                    BoxShadow(
-                        spreadRadius: Constants.globalBoxBlur.spreadRadius,
-                        blurRadius: Constants.globalBoxBlur.blurRadius,
-                        color: AppPallete.primaryAppColor,)
-                  ],),
-                ),
-                Container(
-                  height: 200,
-                  width: 200,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppPallete.darkgreyColor,
-                  ),
-                  child: const Icon(
-                    Icons.person,
-                  ),
-                ),
-                Positioned(
-                  right: 0,
-                  bottom: 0,
-                  child: CircularButton(
-                    onPressed: () {},
-                    circularButtonChild: const Icon(
-                      Icons.camera_alt,
-                      color: AppPallete.whiteColor,
+    ValueNotifier<String> username = ValueNotifier(widget.initialUsername);
+    final Color userColor = getRandomColor();
+
+    // String username = initialUsername;
+    // String firstLetterOfName = username.split('').first;
+    // Color color = getRandomColor();
+    return BlocConsumer<AuthBloc, AuthState>(
+      listenWhen: (previous, current) =>
+          current is SignUpWelcomePageActionState,
+      buildWhen: (previous, current) => current is AuthSignUpWelcomPageState,
+      listener: (context, state) {
+        if (state is AuthIsUserLoggedInSuccess) {
+          context.read<AuthBloc>().add(SignUpWelcomePageProfileUploadEvent(
+                uid: state.user.signUpUID,
+                isprofilephotoUploaded: image != null,
+                image: image,
+                username: username.value,
+                color: userColor.value,
+              ));
+        }
+        if (state is AuthIsUserLoggedInFailed) {
+          showSnackBar(
+            context,
+            state.message,
+          );
+        }
+        if (state is UserProfileSetSuccess) {
+          print(state.message);
+          GoRouter.of(context).pushNamed(AppRouteConstants.mainPage);
+        }
+        if (state is UserProfileSetFailed) {}
+      },
+      builder: (context, state) {
+        return Scaffold(
+            body: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(40),
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ValueListenableBuilder(
+                valueListenable: username,
+                builder: (context, value, child) {
+                  return Text(
+                    'WELCOME ${username.value}!',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontSize: 30, fontWeight: FontWeight.w800),
+                  );
+                },
+              ),
+              const Text('upload your image and enter your name below.'),
+              const SizedBox(
+                height: 50,
+              ),
+              Center(
+                child: Stack(
+                  children: [
+                    Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            spreadRadius: Constants.globalBoxBlur.spreadRadius,
+                            blurRadius: Constants.globalBoxBlur.blurRadius,
+                            color: AppPallete.primaryAppColor,
+                          ),
+                        ],
+                      ),
                     ),
-                    diameter: 50,
-                  ),
+                    Container(
+                      alignment: Alignment.center,
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: userColor,
+                          image: image == null
+                              ? null
+                              : DecorationImage(
+                                  image: FileImage(image!),
+                                )),
+                      child: image == null
+                          ? ValueListenableBuilder(
+                              valueListenable: username,
+                              builder: (context, value, child) {
+                                return Text(
+                                  username.value.split('').first,
+                                  style: const TextStyle(
+                                    fontSize: 100,
+                                  ),
+                                );
+                              })
+                          : const SizedBox(),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: CircularButton(
+                        onPressed: () async {
+                          //select an image from the gallery and show
+                          selectImage();
+                        },
+                        circularButtonChild: const Icon(
+                          Icons.camera_alt,
+                          color: AppPallete.whiteColor,
+                        ),
+                        diameter: 50,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
 
-          // const Spacer(),
-          const SizedBox(
-            height: 50,
-          ),
+              // const Spacer(),
+              const SizedBox(
+                height: 50,
+              ),
 
-          const TextField(
-            decoration: InputDecoration(hintText: 'Enter your Name'),
+              TextFormField(
+                initialValue: widget.initialUsername,
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    username.value = value;
+                  } else {
+                    username.value = widget.initialUsername;
+                  }
+                },
+                decoration: const InputDecoration(
+                  hintText: 'Enter your UserName',
+                ),
+              ),
+              // const Spacer(),
+              const SizedBox(
+                height: 50,
+              ),
+              PrimaryAppButton(
+                buttonText: 'Save',
+                onPressed: () {
+                  context.read<AuthBloc>().add(AuthIsUserLoggedInEvent()
+                      // SignUpWelcomePageProfileUploadEvent(
+                      //   //profile is not uploaded if the image is null or it is uploaded.
+                      //   isprofilephotoUploaded: image != null,
+                      //   image: image,
+                      //   username: username.value,
+                      //   color: userColor.value,
+                      // ),
+                      );
+                  // GoRouter.of(context).pushNamed(
+                  //   AppRouteConstants.mainPage,
+                  // );
+                },
+              ),
+            ],
           ),
-          // const Spacer(),
-          const SizedBox(
-            height: 50,
-          ),
-          PrimaryAppButton(
-            buttonText: 'Save',
-            onPressed: () {
-              GoRouter.of(context).pushNamed(AppRouteConstants.googleMapPage);
-            },
-          ),
-        ],
-      ),
-    ));
+        ));
+      },
+    );
   }
 }
 // class SplashAnimation extends StatefulWidget {

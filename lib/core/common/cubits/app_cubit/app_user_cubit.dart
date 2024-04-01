@@ -1,15 +1,15 @@
-import 'package:bloc/bloc.dart';
-import 'package:tech_haven/core/common/entities/user.dart';
+// import 'package:bloc/bloc.dart';
+// import 'package:tech_haven/core/common/entities/user_data_model.dart';
 
-part 'app_user_state.dart';
+// part 'app_user_state.dart';
 
-class AppUserCubit extends Cubit<AppUserState> {
-  AppUserCubit() : super(AppUserInitial());
-    void updateUser(User? user) {
-    if (user == null) {
-      emit(AppUserInitial());
-    } else {
-      emit(AppUserLoggedIn(user));
-    }
-  }
-}
+// class AppUserCubit extends Cubit<AppUserState> {
+//   AppUserCubit() : super(AppUserInitial());
+//     void updateUser(User? user) {
+//     if (user == null) {
+//       emit(AppUserInitial());
+//     } else {
+//       emit(AppUserLoggedIn(user));
+//     }
+//   }
+// }

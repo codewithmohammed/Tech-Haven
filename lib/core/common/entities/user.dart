@@ -1,17 +1,17 @@
-import 'dart:typed_data';
-
 class User {
-  final String id;
+  final String signUpUID;
   final String phonenumber;
-  final String email;
   final String username;
-  final Uint8List profilephoto;
+  final String email;
 
   User({
-    required this.id,
+    required this.signUpUID,
     required this.phonenumber,
-    required this.email,
     required this.username,
-    required this.profilephoto
+    required this.email,
   });
 }
+// signUpUID,
+//         "phonenumber": phonenumber,
+//         "email": email,
+//         "username": username,

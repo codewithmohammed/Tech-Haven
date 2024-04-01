@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/bottomnav/custom_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:tech_haven/features/auth/presentation/pages/new_password_page.dart';
@@ -139,12 +140,12 @@ class AppRoutes {
       ),
       GoRoute(
         name: AppRouteConstants.signupWelcomePage,
-        path: '/sign_up_welcome_page',
+        path: '/sign_up_welcome_page/:initialUsername',
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             transitionDuration: const Duration(milliseconds: 500),
             key: state.pageKey,
-            child: const SignUpWelcomePage(),
+            child:  SignUpWelcomePage(initialUsername: state.pathParameters['initialUsername']!,),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               final tween = Tween(
@@ -169,6 +170,30 @@ class AppRoutes {
             transitionDuration: const Duration(milliseconds: 500),
             key: state.pageKey,
             child: const GoogleMapPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              final tween = Tween(
+                begin: const Offset(1, 0),
+                end: Offset.zero,
+              ).animate(
+                CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              );
+              return SlideTransition(
+                position: tween,
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+       GoRoute(
+        name: AppRouteConstants.mainPage,
+        path: '/main_page',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            transitionDuration: const Duration(milliseconds: 500),
+            key: state.pageKey,
+            child: const CustomBottomNavigationBar(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               final tween = Tween(

@@ -14,6 +14,7 @@ class AuthenticationTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final void Function()? suffixOnTap;
   final bool isPasswordField;
+  final bool enabled;
   const AuthenticationTextFormField(
       {super.key,
       required this.labelText,
@@ -22,10 +23,10 @@ class AuthenticationTextFormField extends StatelessWidget {
       this.inputFormatters,
       required this.textEditingController,
       this.validator,
-      this.autovalidateMode ,
+      this.autovalidateMode,
       this.keyboardType = TextInputType.text,
       this.suffixOnTap,
-      this.isPasswordField = false});
+      this.isPasswordField = false,this.enabled = true,});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +37,7 @@ class AuthenticationTextFormField extends StatelessWidget {
         alignment: Alignment.centerRight,
         children: [
           TextFormField(
+            enabled: enabled,
             controller: textEditingController,
             autovalidateMode: autovalidateMode,
             keyboardType: keyboardType,
