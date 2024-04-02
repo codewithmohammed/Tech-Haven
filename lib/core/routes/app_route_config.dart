@@ -8,7 +8,6 @@ import 'package:tech_haven/features/auth/presentation/pages/otp_verification_pag
 import 'package:tech_haven/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:tech_haven/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:tech_haven/features/auth/presentation/pages/sign_up_welcome_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/welcome_page.dart';
 import 'package:tech_haven/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/features/map/presentation/pages/google_map_page.dart';
 
@@ -25,7 +24,7 @@ class AppRoutes {
             fullscreenDialog: true,
             transitionDuration: const Duration(milliseconds: 250),
             key: state.pageKey,
-            child: const WelcomePage(),
+            child: const CustomBottomNavigationBar(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return FadeTransition(
@@ -105,7 +104,9 @@ class AppRoutes {
           return CustomTransitionPage(
             transitionDuration: const Duration(milliseconds: 250),
             key: state.pageKey,
-            child:  OTPVerificationPage(verificaionId: state.pathParameters['verificationId']! ,),
+            child: OTPVerificationPage(
+              verificaionId: state.pathParameters['verificationId']!,
+            ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return FadeTransition(
@@ -145,7 +146,9 @@ class AppRoutes {
           return CustomTransitionPage(
             transitionDuration: const Duration(milliseconds: 500),
             key: state.pageKey,
-            child:  SignUpWelcomePage(initialUsername: state.pathParameters['initialUsername']!,),
+            child: SignUpWelcomePage(
+              initialUsername: state.pathParameters['initialUsername']!,
+            ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               final tween = Tween(
@@ -186,7 +189,7 @@ class AppRoutes {
           );
         },
       ),
-       GoRoute(
+      GoRoute(
         name: AppRouteConstants.mainPage,
         path: '/main_page',
         pageBuilder: (context, state) {

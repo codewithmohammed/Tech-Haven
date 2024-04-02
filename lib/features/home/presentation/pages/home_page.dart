@@ -1,9 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/features/home/presentation/widgets/advertisement_container.dart';
-import 'package:tech_haven/features/home/presentation/widgets/carousel_banner.dart';
+import 'package:tech_haven/features/home/presentation/widgets/carousel_banner_container.dart';
 import 'package:tech_haven/features/home/presentation/widgets/category_item_listview.dart';
 import 'package:tech_haven/features/home/presentation/widgets/deals_gridview.dart';
 import 'package:tech_haven/features/home/presentation/widgets/horizontal_product_listview.dart';
@@ -18,7 +17,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       // extendBody: true,
       // resizeToAvoidBottomInset: true,
 
@@ -26,56 +25,24 @@ class _HomePageState extends State<HomePage> {
         bottom: false,
         child: CustomScrollView(
           slivers: [
-            SliverAppBar(
-              forceElevated: true,
-              scrolledUnderElevation: 0,
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              pinned: true,
-              floating: true,
-              //the whole height of the appBar
-              expandedHeight: 130,
-              //the height of the app bar when it is collapsed or scrolled
-              collapsedHeight: 100,
-              stretchTriggerOffset: 100,
-              onStretchTrigger: () async {},
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  color: AppPallete.primaryAppColor,
-                  child: const Text(
-                    'LOGO',
-                    style: TextStyle(fontSize: 30),
-                  ),
-                ),
-                expandedTitleScale: 1,
-                centerTitle: true,
-                //the default padding is made to some values based on the row widgets
-                titlePadding: const EdgeInsetsDirectional.only(
-                  start: 15,
-                  bottom: 5,
-                  end: 15,
-                ),
-                //
-                title: const AppBarSearchBar(),
-              ),
-            ),
-            const SliverToBoxAdapter(
+            CustomSliverAppBar(),
+            SliverToBoxAdapter(
               child: AdvertisementContainer(),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: CarouselBannerContainer(),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: CategoryIconListView(),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: HorizontalProductListView(),
             ),
             // sliver items 2
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: DealsGridView(),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: SizedBox(height: 80),
             )
             // sliver items 3
@@ -87,4 +54,52 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class CustomSliverAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const CustomSliverAppBar({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      forceElevated: true,
+      scrolledUnderElevation: 0,
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      pinned: true,
+      floating: true,
+      //the whole height of the appBar
+      expandedHeight: 130,
+      //the height of the app bar when it is collapsed or scrolled
+      collapsedHeight: 100,
+      stretchTriggerOffset: 100,
+      onStretchTrigger: () async {},
+      flexibleSpace: FlexibleSpaceBar(
+        background: Container(
+          color: AppPallete.primaryAppColor,
+          child: const Text(
+            'LOGO',
+            style: TextStyle(fontSize: 30),
+          ),
+        ),
+        expandedTitleScale: 1,
+        centerTitle: true,
+        //the default padding is made to some values based on the row widgets
+        titlePadding: const EdgeInsetsDirectional.only(
+          start: 15,
+          bottom: 5,
+          end: 15,
+        ),
+        //
+        title: const AppBarSearchBar(),
+      ),
+    );
+  }
+
+  @override
+  // TODO: implement preferredSize
+  Size get preferredSize => const Size(double.maxFinite, 130);
 }

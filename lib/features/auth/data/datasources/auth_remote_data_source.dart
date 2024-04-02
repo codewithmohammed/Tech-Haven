@@ -37,11 +37,6 @@ abstract interface class AuthRemoteDataSource {
     required String username,
     required int color,
   });
-
-//   Future<String> signInWithPhoneNumberAndPassword({
-//     required String phoneNumber,
-//     required String password,
-//   });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -53,12 +48,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required this.firebaseFirestore,
     required this.firebaseStorage,
   });
-
-  // @override
-  // Future<String> signInWithPhoneNumberAndPassword(
-  //     {required String phoneNumber, required String password}) {
-  //   throw UnimplementedError();
-  // }
+  
   @override
   Future<String> userProfileUpload({
     required String uid,

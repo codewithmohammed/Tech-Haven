@@ -7,7 +7,6 @@ import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/rive/rive_assets.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
-
 class CustomBottomNavigationBar extends StatelessWidget {
   const CustomBottomNavigationBar({super.key});
 
@@ -15,32 +14,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PageController pageController = PageController();
-    return Scaffold(
-      extendBody: true,
-      resizeToAvoidBottomInset: true,
-      body: PageView.builder(
-        controller: pageController,
-        itemCount: Constants.listOFMainPages.length,
-        // controller: ,
-        itemBuilder: (context, index) {
-          return Constants.listOFMainPages[index];
-        },
-        onPageChanged: (index) {
-          BottomNavUtils.animateTheIcon(index);
-        },
-      ),
-
-      //  ValueListenableBuilder(
-      //     valueListenable: BottomNavUtils.selectedBottomNav,
-      //     builder: (context, value, child) {
-      //       if (value == bottonNavs[0].riveAsset) {
-      //         return const HomePage();
-      //       }
-      //       return Container();
-      //     },
-      //     child: const HomePage()),
-      bottomNavigationBar: SafeArea(
-        child: Container(
+    return SafeArea(
+      child: Scaffold(
+        extendBody: true,
+        resizeToAvoidBottomInset: true,
+        body: PageView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          itemCount: Constants.listOFMainPages.length,
+          // controller: ,
+          itemBuilder: (context, index) {
+            return Constants.listOFMainPages[index];
+          },
+          onPageChanged: (index) {
+            BottomNavUtils.animateTheIcon(index);
+          },
+        ),
+        bottomNavigationBar: Container(
           clipBehavior: Clip.hardEdge,
           padding: const EdgeInsets.all(
             10,

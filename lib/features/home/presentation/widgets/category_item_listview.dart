@@ -1,5 +1,6 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class CategoryIconListView extends StatelessWidget {
@@ -12,6 +13,7 @@ class CategoryIconListView extends StatelessWidget {
     return SizedBox(
       height: 200, // Fixed height for horizontal list
       child: GridView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 100,
         ),

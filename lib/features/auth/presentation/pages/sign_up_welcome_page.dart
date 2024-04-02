@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +23,13 @@ class SignUpWelcomePage extends StatefulWidget {
 
 class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
   final usernameController = TextEditingController();
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    super.dispose();
+  }
+
   File? image;
   void selectImage() async {
     final pickedImage = await pickImage();
@@ -36,10 +44,6 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
   Widget build(BuildContext context) {
     ValueNotifier<String> username = ValueNotifier(widget.initialUsername);
     final Color userColor = getRandomColor();
-
-    // String username = initialUsername;
-    // String firstLetterOfName = username.split('').first;
-    // Color color = getRandomColor();
     return BlocConsumer<AuthBloc, AuthState>(
       listenWhen: (previous, current) =>
           current is SignUpWelcomePageActionState,
@@ -56,8 +60,10 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
         }
         if (state is AuthIsUserLoggedInFailed) {
           showSnackBar(
-            context,
-            state.message,
+            context: context,
+            title: 'Oh',
+            content: state.message,
+            contentType: ContentType.failure,
           );
         }
         if (state is UserProfileSetSuccess) {

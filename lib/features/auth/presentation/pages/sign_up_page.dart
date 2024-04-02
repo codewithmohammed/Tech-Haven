@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -61,8 +62,10 @@ class _SignUpPageState extends State<SignUpPage> {
           //showing a snackbar if the verification of mobile number failed
           if (state is SignUpVerificationIDFailed) {
             showSnackBar(
-              context,
-              state.message,
+              context: context,
+              title: 'Oh',
+              content: state.message,
+              contentType: ContentType.failure,
             );
           }
           if (state is NavigateToOTPPage) {
@@ -104,8 +107,10 @@ class _SignUpPageState extends State<SignUpPage> {
             textFormFieldEnabled = true;
             print('failed');
             showSnackBar(
-              context,
-              state.message,
+              context: context,
+              title: 'Oh',
+              content: state.message,
+              contentType: ContentType.failure,
             );
           }
         },

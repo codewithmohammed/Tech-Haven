@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:tech_haven/core/common/entities/user.dart';
 import 'package:tech_haven/core/common/entities/user_data_model.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
@@ -76,30 +75,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     });
   }
-
-  // FutureOr<void> _onAuthSignUp(
-  //   AuthSignUp event,
-  //   Emitter<AuthState> emit,
-  // ) async {
-  //   final res = await _userSignUp(UserSignUpParams(
-  //     phonenumber: event.phoneNumber,
-  //     email: event.email,
-  //     password: event.password,
-  //   ));
-
-  //   res.fold(
-  //     (failure) => emit(AuthFailure(failure.message)),
-  //     (user) => _emitAuthSuccess(user, emit),
-  //   );
-  // }
-
-  // void _emitAuthSuccess(
-  //   User user,
-  //   Emitter<AuthState> emit,
-  // ) {
-  //   _appUserCubit.updateUser(user);
-  //   emit(AuthSuccess(user));
-  // }
 
   FutureOr<void> _onAuthSignUpEvent(
       AuthSignUpEvent event, Emitter<AuthState> emit) async {

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,8 +66,10 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
           }
           if (state is OTPVerificationFailed) {
             showSnackBar(
-              context,
-              state.message,
+              context: context,
+              title: 'Oh',
+              content: state.message,
+              contentType: ContentType.failure,
             );
             pinController.clear();
           }
