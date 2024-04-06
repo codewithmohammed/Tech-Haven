@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 

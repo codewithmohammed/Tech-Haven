@@ -29,7 +29,9 @@ class PrimaryAppButton extends StatelessWidget {
         child: Text(
           buttonText,
           style: const TextStyle(
-              color: Colors.white, fontSize: Constants.buttonTextFontSize),
+            color: Colors.white,
+            fontSize: Constants.buttonTextFontSize,
+          ),
         ),
       ),
     );

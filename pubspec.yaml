@@ -80,6 +80,34 @@ flutter:
     - assets/dev/iphone-png.png
     - assets/images/star-svgrepo-com.svg
     - assets/rive/animated_icon_set_.riv
+    - assets/icons/arrow_right.svg
+    - assets/icons/arrow_up.svg
+    - assets/icons/camera.svg
+    - assets/icons/cart.svg
+    - assets/icons/cart_plus.svg
+    - assets/icons/chevron_down.svg
+    - assets/icons/dollar.svg
+    - assets/icons/edit.svg
+    - assets/icons/exclamation.svg
+    - assets/icons/eye.svg
+    - assets/icons/eye_slash.svg
+    - assets/icons/globe.svg
+    - assets/icons/heart.svg
+    - assets/icons/map_pin.svg
+    - assets/icons/map_pin_alt.svg
+    - assets/icons/messages.svg
+    - assets/icons/microphone.svg
+    - assets/icons/play.svg
+    - assets/icons/publish.svg
+    - assets/icons/share.svg
+    - assets/icons/star.svg
+    - assets/icons/star_half.svg
+    - assets/icons/thumb_up.svg
+    - assets/icons/trash_bin.svg
+    - assets/icons/user_add.svg
+    - assets/icons/user_circle.svg
+    - assets/icons/search.svg
+
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

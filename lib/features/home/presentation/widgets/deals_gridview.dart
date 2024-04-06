@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 
 import '../../../../core/theme/app_pallete.dart';
 
@@ -192,8 +194,9 @@ class DealsGridView extends StatelessWidget {
                                 ),
                                 child: InkWell(
                                   onTap: () {},
-                                  child: const Icon(
-                                    Icons.trolley,
+                                  child: const SvgIcon(
+                                    icon: CustomIcons.cartSvg,
+                                    radius: 5,
                                   ),
                                 ),
                               ),

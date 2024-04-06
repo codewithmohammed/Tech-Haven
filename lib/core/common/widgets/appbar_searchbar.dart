@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
@@ -30,7 +33,17 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                   filled: true,
                   fillColor: AppPallete.whiteColor,
                   contentPadding: const EdgeInsets.only(top: 10),
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: SizedBox(
+                    height: 50,
+                    child: SvgPicture.asset(
+                      CustomIcons.searchSvg,
+                      theme: const SvgTheme(
+                        currentColor: AppPallete.greyTextColor,
+                      ),
+                      fit: BoxFit.scaleDown,
+                      height: 50,
+                    ),
+                  ),
                   hintText: hintText,
                   hintStyle: const TextStyle(color: AppPallete.greyTextColor),
                   border: const OutlineInputBorder(
@@ -44,11 +57,14 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
+            const SizedBox(
+              width: 10,
+            ),
             favouriteIconNeeded
-                ? const Icon(
-                    Icons.favorite_border,
-                    color: AppPallete.blackColor,
-                    size: 30,
+                ? const SvgIcon(
+                    icon: CustomIcons.heartSvg,
+                    radius: 30,
+                    color: AppPallete.greyTextColor,
                   )
                 : const SizedBox()
           ],
@@ -62,10 +78,9 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                   height: 30,
                   child: const Row(
                     children: [
-                      Icon(
-                        Icons.location_on,
-                        color: AppPallete.blackColor,
-                        size: 18,
+                      SvgIcon(
+                        icon: CustomIcons.mapPinSvg,
+                        radius: 18,
                       ),
                       Text(
                         'Delivering to',
@@ -83,10 +98,10 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ),
                       ),
-                      Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: AppPallete.blackColor,
-                      )
+                      SvgIcon(
+                        icon: CustomIcons.chevronDownSvg,
+                        radius: 25,
+                      ),
                     ],
                   ),
                 ),
