@@ -87,11 +87,11 @@ class CustomSliverAppBar extends StatelessWidget
         ),
         expandedTitleScale: 1,
         centerTitle: true,
-        //the default padding is made to some values based on the row widgets
+        // the default padding is made to some values based on the row widgets
         titlePadding: const EdgeInsetsDirectional.only(
-          start: 15,
+          start: 10,
           bottom: 5,
-          end: 15,
+          end: 10,
         ),
         //
         title: const AppBarSearchBar(),
@@ -100,6 +100,5 @@ class CustomSliverAppBar extends StatelessWidget
   }
 
   @override
-  // TODO: implement preferredSize
   Size get preferredSize => const Size(double.maxFinite, 130);
 }

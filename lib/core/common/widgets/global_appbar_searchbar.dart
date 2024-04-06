@@ -10,7 +10,6 @@ class GlobalAppBarSearchBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.red,
       padding: const EdgeInsets.symmetric(
         horizontal: 15,
       ),

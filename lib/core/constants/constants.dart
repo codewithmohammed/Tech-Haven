@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/features/cart/presentation/pages/cart_page.dart';
 import 'package:tech_haven/features/home/presentation/pages/home_page.dart';
-import 'package:tech_haven/features/notification/presentation/pages/notification_page.dart';
+import 'package:tech_haven/features/notification/presentation/pages/main_notification_page.dart';
 import 'package:tech_haven/features/profile/presentation/pages/profile_page.dart';
 import 'package:tech_haven/features/searchcategory/presentation/pages/search_category_page.dart';
 
@@ -18,7 +18,7 @@ class Constants {
   static List<Widget> listOFMainPages = [
     const HomePage(),
     const SearchCategoryPage(),
-    const NotificationPage(),
+    const MainNotificationPage(),
     const ProfilePage(),
     const CartPage(),
   ];
