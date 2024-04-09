@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import '../../../../core/common/widgets/global_appbar_searchbar.dart';
@@ -29,7 +30,7 @@ class _SearchCategoryPageState extends State<SearchCategoryPage> {
         bottom: false,
         child: Scaffold(
             extendBody: true,
-            appBar: const GlobalAppBarSearchBar(),
+            appBar: const AppBarSearchBar(),
             body: Row(
               children: [
                 SizedBox(
