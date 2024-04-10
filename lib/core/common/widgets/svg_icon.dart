@@ -18,9 +18,11 @@ class SvgIcon extends StatelessWidget {
     return SvgPicture.asset(
       icon,
       height: radius,
+      
       width: radius,
       theme: SvgTheme(
         currentColor: color,
+        
       ),
       // fit: BoxFit.scaleDown,
     );

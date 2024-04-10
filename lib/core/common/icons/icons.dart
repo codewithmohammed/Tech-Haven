@@ -28,4 +28,11 @@ class CustomIcons {
   static const String userAddSvg = 'assets/icons/user_add.svg';
   static const String userCircleSvg = 'assets/icons/user_circle.svg';
   static const String searchSvg = 'assets/icons/search.svg';
+  static const String settingSvg = 'assets/icons/settings.svg';
+  static const String settingAltSvg = 'assets/icons/settings_alt.svg';
+  static const String orderListSvg = 'assets/icons/order_list.svg';
+  static const String angleRightSvg = 'assets/icons/angle_right.svg';
+  static const String rightArrowExitSvg = 'assets/icons/arrow_right_exit.svg';
+  static const String questionMarkSvg = 'assets/icons/question_mark.svg';
+  static const String languageSvg = 'assets/icons/translate.svg';
 }

@@ -107,6 +107,13 @@ flutter:
     - assets/icons/user_add.svg
     - assets/icons/user_circle.svg
     - assets/icons/search.svg
+    - assets/icons/settings.svg
+    - assets/icons/settings_alt.svg
+    - assets/icons/order_list.svg
+    - assets/icons/angle_right.svg
+    - assets/icons/question_mark.svg
+    - assets/icons/arrow_right_exit.svg
+    - assets/icons/language.svg
 
   # assets:
   #   - images/a_dot_burr.jpeg
