@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
-import '../../../../core/common/widgets/global_appbar_searchbar.dart';
 
 class SearchCategoryPage extends StatefulWidget {
   const SearchCategoryPage({super.key});

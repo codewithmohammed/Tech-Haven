@@ -5,6 +5,7 @@ import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/theme/theme.dart';
 
 class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   final String hintText;
@@ -31,32 +32,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
             children: <Widget>[
               Expanded(
                 child: TextField(
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: AppPallete.whiteColor,
-                    contentPadding: const EdgeInsets.only(top: 10),
-                    prefixIcon: SizedBox(
-                      height: 50,
-                      child: SvgPicture.asset(
-                        CustomIcons.searchSvg,
-                        theme: const SvgTheme(
-                          currentColor: AppPallete.greyTextColor,
-                        ),
-                        fit: BoxFit.scaleDown,
-                        height: 50,
-                      ),
-                    ),
-                    hintText: hintText,
-                    hintStyle: const TextStyle(color: AppPallete.greyTextColor),
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      borderSide: BorderSide(
-                        color: AppPallete.borderColor,
-                      ),
-                    ),
-                  ),
+                  decoration: AppTheme.inputDecoration,
                 ),
               ),
               const SizedBox(
@@ -82,7 +58,8 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                       children: [
                         SvgIcon(
                           icon: CustomIcons.mapPinSvg,
-                          radius: 18,
+                          radius: 15,
+                          fit: BoxFit.scaleDown,
                         ),
                         Text(
                           'Delivering to',

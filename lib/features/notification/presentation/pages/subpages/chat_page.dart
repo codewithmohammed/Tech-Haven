@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 
 class ChatPage extends StatelessWidget {
   const ChatPage({super.key});
@@ -58,7 +60,9 @@ class ChatPage extends StatelessWidget {
                 backgroundColor: Colors.red,
               ),
               onTap: () {
-                print('object');
+                GoRouter.of(context).pushNamed(
+                  AppRouteConstants.messagePage,
+                );
               },
             );
           },

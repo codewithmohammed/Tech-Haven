@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
-import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/features/profile/presentation/widgets/profile_welcome_text.dart';
@@ -11,12 +10,11 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         extendBody: true,
-        appBar: const AppBarSearchBar(),
-        body: Container(
-          //column for the whole
-          child: const Column(
+        appBar: AppBarSearchBar(),
+        body: SingleChildScrollView(
+          child: Column(
             children: [
               //hello nice to meet you
               ProfileWelcomeText(),

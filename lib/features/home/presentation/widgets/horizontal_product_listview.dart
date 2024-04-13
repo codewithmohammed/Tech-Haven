@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/common/widgets/cart_button.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
+import 'package:tech_haven/core/common/widgets/heart_button.dart';
+import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class HorizontalProductListView extends StatelessWidget {
@@ -101,29 +105,24 @@ class HorizontalProductListView extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                child: Row(
+                                child: const Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    const Text(
+                                    Text(
                                       '4.5',
                                       style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
                                       ),
                                     ),
-                                    SvgPicture.asset(
-                                      width: 10,
-                                      height: 10,
-                                      'assets/images/star-svgrepo-com.svg',
-                                      theme: const SvgTheme(
-                                        currentColor: Colors.green,
-                                      ),
-                                      colorFilter: const ColorFilter.mode(
-                                          Colors.green, BlendMode.srcIn),
+                                    SvgIcon(
+                                      icon: CustomIcons.starSvg,
+                                      radius: 10,
+                                      color: Colors.green,
                                     ),
-                                    const Text(
+                                    Text(
                                       '(8K)',
                                       style: TextStyle(
                                         fontSize: 10,
@@ -135,64 +134,17 @@ class HorizontalProductListView extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Positioned(
+                            const Positioned(
                               top: 5,
                               right: 5,
-                              child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: const BoxDecoration(
-                                    color: AppPallete.whiteColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppPallete.appShadowColor,
-                                        blurStyle: BlurStyle.normal,
-                                        blurRadius: 2,
-                                      )
-                                    ],
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        5,
-                                      ),
-                                    ),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: const Icon(
-                                      Icons.favorite_border,
-                                    ),
-                                  )),
+                              child: HeartButton(),
                             ),
                             //favorite
                             //cart
-                            Positioned(
+                            const Positioned(
                               bottom: 5,
                               right: 5,
-                              child: Container(
-                                height: 30,
-                                width: 30,
-                                decoration: const BoxDecoration(
-                                  color: AppPallete.whiteColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppPallete.appShadowColor,
-                                      blurStyle: BlurStyle.normal,
-                                      blurRadius: 2,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      5,
-                                    ),
-                                  ),
-                                ),
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: const Icon(
-                                    Icons.trolley,
-                                  ),
-                                ),
-                              ),
+                              child: CartButton(),
                             ),
                           ],
                         ),
@@ -303,4 +255,3 @@ class HorizontalProductListView extends StatelessWidget {
     );
   }
 }
-

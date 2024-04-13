@@ -24,4 +24,7 @@ class Constants {
   ];
 
   static const noConnectionErrorMessage = 'Not connected to the network';
+  static const Widget kHeight = const SizedBox(
+    height: 10,
+  );
 }

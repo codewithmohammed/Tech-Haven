@@ -8,22 +8,23 @@ class SvgIcon extends StatelessWidget {
     required this.icon,
     required this.radius,
     this.color = AppPallete.blackColor,
+    this.fit = BoxFit.none
   });
   final String icon;
   final double radius;
   final Color color;
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       icon,
       height: radius,
-      
       width: radius,
       theme: SvgTheme(
         currentColor: color,
-        
       ),
+      fit: fit,
       // fit: BoxFit.scaleDown,
     );
   }

@@ -35,4 +35,5 @@ class CustomIcons {
   static const String rightArrowExitSvg = 'assets/icons/arrow_right_exit.svg';
   static const String questionMarkSvg = 'assets/icons/question_mark.svg';
   static const String languageSvg = 'assets/icons/translate.svg';
+  static const String faceGrinSvg = 'assets/icons/face_grin.svg';
 }
