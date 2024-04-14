@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:rive/rive.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
-import 'package:tech_haven/core/common/widgets/heart_button.dart';
+import 'package:tech_haven/core/common/widgets/square_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -193,7 +193,16 @@ class CartPage extends StatelessWidget {
                                 //remove button
                                 RemoveButton(),
                                 //heart button
-                                HeartButton(),
+                                SquareButton(
+                                  icon: SquareButton(
+                                    icon: SvgIcon(
+                                      icon: CustomIcons.heartSvg,
+                                      color: AppPallete.greyTextColor,
+                                      radius: 5,
+                                      fit: BoxFit.scaleDown,
+                                    ),
+                                  ),
+                                ),
                               ],
                             )
                           ],

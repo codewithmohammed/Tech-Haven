@@ -10,4 +10,5 @@ class AppRouteConstants {
   static const String homePage = 'home_page';
   static const String mainPage = 'main_page';
   static const String messagePage = 'message_page';
+  static const String detailsPage = 'details_page';
 }

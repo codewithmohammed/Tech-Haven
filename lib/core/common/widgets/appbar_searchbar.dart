@@ -32,7 +32,8 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
             children: <Widget>[
               Expanded(
                 child: TextField(
-                  decoration: AppTheme.inputDecoration,
+                  decoration:
+                      AppTheme.inputDecoration.copyWith(hintText: hintText),
                 ),
               ),
               const SizedBox(

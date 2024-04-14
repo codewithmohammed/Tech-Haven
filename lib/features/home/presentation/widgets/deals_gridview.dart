@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
-import 'package:tech_haven/core/common/widgets/cart_button.dart';
+import 'package:tech_haven/core/common/widgets/square_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 
 import '../../../../core/theme/app_pallete.dart';
@@ -172,10 +172,15 @@ class DealsGridView extends StatelessWidget {
                             ),
 
                             //cart
-                            Positioned(
+                            const Positioned(
                               bottom: 5,
                               right: 5,
-                              child: CartButton(),
+                              child: SquareButton(
+                                icon: SvgIcon(
+                                  icon: CustomIcons.cartSvg,
+                                  radius: 5,
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -271,4 +276,3 @@ class DealsGridView extends StatelessWidget {
     );
   }
 }
-

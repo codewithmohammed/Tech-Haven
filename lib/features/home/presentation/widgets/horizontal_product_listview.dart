@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tech_haven/core/common/icons/icons.dart';
-import 'package:tech_haven/core/common/widgets/cart_button.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
-import 'package:tech_haven/core/common/widgets/heart_button.dart';
-import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/features/home/presentation/widgets/horizontal_product_card.dart';
 
 class HorizontalProductListView extends StatelessWidget {
-  const HorizontalProductListView({
-    super.key,
-  });
+  const HorizontalProductListView({super.key, this.onTap});
+
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -41,212 +36,7 @@ class HorizontalProductListView extends StatelessWidget {
               itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
                 //column since the container is divided into two
-                return Container(
-                  width: 185,
-                  margin: const EdgeInsets.all(10),
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppPallete.appShadowColor,
-                        blurStyle: BlurStyle.normal,
-                        blurRadius: 5,
-                      ),
-                    ],
-                    color: AppPallete.whiteColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        5,
-                      ),
-                    ),
-                  ),
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      //sized box for the image and the cart/favorite button
-                      Expanded(
-                        flex: 2,
-                        child: Stack(
-                          children: [
-                            //image
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: AppPallete.lightgreyColor,
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    'assets/dev/iphone-png.png',
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    5,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            //rating
-                            Positioned(
-                              bottom: 5,
-                              left: 5,
-                              child: Container(
-                                height: 15,
-                                width: 70,
-                                decoration: const BoxDecoration(
-                                  color: AppPallete.whiteColor,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppPallete.appShadowColor,
-                                      blurStyle: BlurStyle.normal,
-                                      blurRadius: 2,
-                                    )
-                                  ],
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      10,
-                                    ),
-                                  ),
-                                ),
-                                child: const Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '4.5',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    SvgIcon(
-                                      icon: CustomIcons.starSvg,
-                                      radius: 10,
-                                      color: Colors.green,
-                                    ),
-                                    Text(
-                                      '(8K)',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w700,
-                                        color: AppPallete.greyTextColor,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const Positioned(
-                              top: 5,
-                              right: 5,
-                              child: HeartButton(),
-                            ),
-                            //favorite
-                            //cart
-                            const Positioned(
-                              bottom: 5,
-                              right: 5,
-                              child: CartButton(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      //this is for the whole height of onw of the listview
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //product title
-                            const Text(
-                              'Sony Playstation 5 Digital Edition',
-                              softWrap: true,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            //product price
-                            const SizedBox(
-                              width: 150,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'AED',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        '1,693',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        '3,299',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700,
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                          decorationThickness: 2.0,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        '48%',
-                                        style: TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
-
-                            //product offer green
-                            Container(
-                              height: 8,
-                              width: 40,
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppPallete.appShadowColor,
-                                    blurStyle: BlurStyle.normal,
-                                    blurRadius: 2,
-                                  )
-                                ],
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    5,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+                return  HorizonatalProductCard(index: index,);
               },
             ),
           ),
@@ -255,3 +45,4 @@ class HorizontalProductListView extends StatelessWidget {
     );
   }
 }
+

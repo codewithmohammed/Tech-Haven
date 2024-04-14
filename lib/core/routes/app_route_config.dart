@@ -8,6 +8,8 @@ import 'package:tech_haven/features/auth/presentation/pages/otp_verification_pag
 import 'package:tech_haven/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:tech_haven/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:tech_haven/features/auth/presentation/pages/sign_up_welcome_page.dart';
+import 'package:tech_haven/features/auth/presentation/pages/welcome_page.dart';
+import 'package:tech_haven/features/details/presentation/pages/details_page.dart';
 import 'package:tech_haven/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/features/message/presentation/pages/message_page.dart';
@@ -19,7 +21,7 @@ class AppRoutes {
       _buildPageRoute(
         name: AppRouteConstants.welcomePage,
         path: '/',
-        child: const CustomBottomNavigationBar(),
+        child: const WelcomePage(),
       ),
       _buildPageRoute(
         name: AppRouteConstants.signupPage,
@@ -125,6 +127,11 @@ class AppRoutes {
             child: child,
           );
         },
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.detailsPage,
+        path: '/details_page',
+        child: const DetailsPage(),
       ),
     ],
   );
