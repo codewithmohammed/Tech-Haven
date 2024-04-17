@@ -7,6 +7,8 @@ import 'package:tech_haven/features/profile/presentation/pages/profile_page.dart
 import 'package:tech_haven/features/searchcategory/presentation/pages/search_category_page.dart';
 
 class Constants {
+  static const String techHavenLogo = 'assets/logo/techHavenLogo.png';
+  static const String techHavenLogoHR = 'assets/logo/techHavenLogoHR.png';
   static const globalBoxBlur = BoxShadow(
     color: AppPallete.appShadowColor,
     blurStyle: BlurStyle.normal,

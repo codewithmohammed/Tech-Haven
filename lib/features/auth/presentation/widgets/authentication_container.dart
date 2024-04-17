@@ -19,7 +19,6 @@ class AuthenticationContainer extends StatelessWidget {
 
   const AuthenticationContainer(
       {super.key,
-      
       required this.height,
       required this.title,
       this.subTitle = '',
@@ -40,7 +39,9 @@ class AuthenticationContainer extends StatelessWidget {
           height: height,
           width: 415,
           decoration: const BoxDecoration(
-            boxShadow: [Constants.globalBoxBlur],
+            boxShadow: [
+              Constants.globalBoxBlur,
+            ],
             color: AppPallete.whiteColor,
             borderRadius: BorderRadius.all(
               Radius.circular(45),
@@ -97,8 +98,10 @@ class AuthenticationContainer extends StatelessWidget {
             top: -35,
             right: 35,
             child: CircularButton(
-                onPressed: onPressedTopButton,
-                circularButtonChild: topButtonChild,diameter: 70,),
+              onPressed: onPressedTopButton,
+              circularButtonChild: topButtonChild,
+              diameter: 70,
+            ),
           ),
         ),
       ],

@@ -15,6 +15,7 @@ import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/authentication_text_form_field.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/country_code_container.dart';
+import 'package:tech_haven/features/auth/presentation/widgets/phone_number_text_field.dart';
 import '../../../../core/theme/app_pallete.dart';
 import '../widgets/authentication_container.dart';
 
@@ -52,7 +53,7 @@ class _SignUpPageState extends State<SignUpPage> {
     // FirebaseAuth firebaseAuth = FirebaseAuth.instance;
     // final screenWidth = MediaQuery.of(context).size.width;
     // a valuenotifire for the country code change.
-    final countryCode = AuthUtils.signUpcountryCode;
+    final countryCode = AuthUtils.signUpCountryCode;
     return Scaffold(
       backgroundColor: AppPallete.primaryAppColor,
       body: BlocConsumer<AuthBloc, AuthState>(
@@ -60,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
         buildWhen: (previous, current) => current is AuthSignUpPageState,
         listener: (context, state) {
           //showing a snackbar if the verification of mobile number failed
-          if (state is SignUpVerificationIDFailed) {
+          if (state is OTPSendFailed) {
             showSnackBar(
               context: context,
               title: 'Oh',
@@ -68,32 +69,44 @@ class _SignUpPageState extends State<SignUpPage> {
               contentType: ContentType.failure,
             );
           }
-          if (state is NavigateToOTPPage) {
+          if (state is OTPSendSuccess) {
             print('navigating to otp page');
             GoRouter.of(context).pushNamed(
-              AppRouteConstants.otpVerificationPage,
-              pathParameters: {'verificationId': state.verificationId},
-            );
-          }
-          if (state is StartSigningUpUser) {
-            print('starting to sign up user');
-            //we will disable the whole textform field if the otp verification is success and will move on to creating the user.
-            textFormFieldEnabled = false;
-            //we have to extract the name from the email given by the user
-            final username = extractNameFromEmail(emailController.text);
-            print(username);
-            //creating the email signup with firebase, and also saving the user data in the user folder.
-
-            context.read<AuthBloc>().add(
-                  AuthSignUpEvent(
-                    phonenumberVerifiedUID: state.userId,
-                    username: username,
-                    phoneNumber: phoneNumberController.text,
-                    email: emailController.text,
-                    password: passwordController.text,
-                  ),
+                AppRouteConstants.otpVerificationPage,
+                pathParameters: {
+                  'email': state.authSignUpModel.email,
+                  'password': state.authSignUpModel.password,
+                  'phoneNumber': state.authSignUpModel.phoneNumber,
+                  'verificationID': state.authSignUpModel.verificationID,
+                }
+                // AppRouteConstants.otpVerificationPage,
+                // pathParameters: {
+                //   'email': state.authSignUpModel.email,
+                //   'password': state.authSignUpModel.password,
+                //   'phoneNumber': state.authSignUpModel.phoneNumber,
+                //   'verificationID': state.authSignUpModel.verificationID,
+                // }
                 );
           }
+          // if (state is StartSigningUpUser) {
+          //   print('starting to sign up user');
+          //   //we will disable the whole textform field if the otp verification is success and will move on to creating the user.
+          //   textFormFieldEnabled = false;
+          //   //we have to extract the name from the email given by the user
+          //   final username = extractNameFromEmail(emailController.text);
+          //   print(username);
+          //   //creating the email signup with firebase, and also saving the user data in the user folder.
+
+          //   context.read<AuthBloc>().add(
+          //         AuthSignUpEvent(
+          //           phoneNumberVerifiedUID: state.userId,
+          //           username: username,
+          //           phoneNumber: phoneNumberController.text,
+          //           email: emailController.text,
+          //           password: passwordController.text,
+          //         ),
+          //       );
+          // }
           if (state is SignUpUserSuccess) {
             print('sdffffffffffffffffffffffffffffffffffffffffffffff');
             GoRouter.of(context).pushReplacementNamed(
@@ -140,39 +153,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     height: 625,
                     title: 'Sign Up',
                     columnChildren: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // the container for selecting the counctry code
-                          ValueListenableBuilder(
-                            valueListenable: countryCode,
-                            builder: (context, value, child) {
-                              return CountryCodeContainer(
-                                enabled: textFormFieldEnabled,
-                                countryCode: countryCode.value,
-                                onTap: () {
-                                  changeCountryCode(context);
-                                },
-                              );
-                            },
-                          ),
-                          //phone number field
-                          Expanded(
-                            child: AuthenticationTextFormField(
-                              enabled: textFormFieldEnabled,
-                              textEditingController: phoneNumberController,
-                              labelText: 'Phone Number',
-                              hintText: '1234567890',
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(10),
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              validator: Validator.validatePhoneNumber,
-                              keyboardType: TextInputType.number,
-                            ),
-                          ),
-                        ],
+                      PhoneNumberTextField(
+                        countryCode: countryCode,
+                        textFormFieldEnabled: textFormFieldEnabled,
+                        phoneNumberController: phoneNumberController,
                       ),
                       //email field
                       AuthenticationTextFormField(
@@ -251,7 +235,10 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                     //for the goolgle authentication
-                    onPressedTopButton: () {},
+                    onPressedTopButton: () {
+                      //sign up with google
+                      // context.read<AuthBloc>().add(SignUpWithGoogleAccount());
+                    },
                     //the text inside the elevated button
                     buttonNeeded: true,
                     buttonText: 'Sign up',
@@ -269,10 +256,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           countryCode.value != '000') {
                         fullPhoneNumber =
                             '+${countryCode.value}${phoneNumberController.text}';
-                        print(fullPhoneNumber);
+                        // print(fullPhoneNumber);
                         context.read<AuthBloc>().add(
-                              VerifyPhoneNumberEvent(
+                              SendOTPEvent(
                                 phoneNumber: fullPhoneNumber,
+                                email: emailController.text,
+                                password: passwordController.text,
                               ),
                             );
                       }
@@ -286,4 +275,8 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+
+  signInWithGoogle() {}
 }
+
+

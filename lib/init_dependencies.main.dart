@@ -4,26 +4,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/features/auth/data/datasources/auth_remote_data_source.dart';
+import 'package:tech_haven/features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:tech_haven/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:tech_haven/features/auth/domain/repository/auth_repository.dart';
 import 'package:tech_haven/features/auth/domain/usecases/current_user.dart';
-import 'package:tech_haven/features/auth/domain/usecases/user_profile_upload.dart';
-import 'package:tech_haven/features/auth/domain/usecases/user_signup.dart';
-import 'package:tech_haven/features/auth/domain/usecases/verify_otp_code.dart';
-import 'package:tech_haven/features/auth/domain/usecases/verify_user_phone_number.dart';
+import 'package:tech_haven/features/auth/domain/usecases/send_otp_to_phone_number.dart';
+import 'package:tech_haven/features/auth/domain/usecases/create_user.dart';
+import 'package:tech_haven/features/auth/domain/usecases/user_signin.dart';
+import 'package:tech_haven/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
-  await _initAuth();
-  serviceLocator.registerLazySingleton(() =>  FirebaseAuth.instance);
+  _initAuth();
+  serviceLocator.registerLazySingleton(
+    () => AppUserCubit(),
+  );
+  serviceLocator.registerLazySingleton(() => FirebaseAuth.instance);
   serviceLocator.registerLazySingleton(() => FirebaseFirestore.instance);
   serviceLocator.registerLazySingleton(() => FirebaseStorage.instance);
 }
 
-Future<void>_initAuth()async{
+_initAuth() {
+  //for user cubit
+
   // Datasource
   serviceLocator
     ..registerFactory<AuthRemoteDataSource>(
@@ -41,19 +48,25 @@ Future<void>_initAuth()async{
     )
     // phonenumberverification
     ..registerFactory(
-      () => VerifyUserPhoneNumber(serviceLocator()),
+      () => SendOTPToPhoneNumber(serviceLocator()),
+
+
+      
     )
-    ..registerFactory(() => VerifyUserOTPCode(serviceLocator()))
-    ..registerFactory(() => UserSignUp(serviceLocator()))
+    ..registerFactory(() => VerifyPhoneAndSignUpUser(serviceLocator()))
+    ..registerFactory(() => CreateUser(authRepository: serviceLocator()))
+    ..registerFactory(() => UserSignIn(authRepository: serviceLocator()))
+    // ..registerFactory(() => UserSignUp(serviceLocator()))
     ..registerFactory(() => CurrentUser(authRepository: serviceLocator()))
-    ..registerFactory(() => UserProfileUpload(authRepository: serviceLocator()))
+    // ..registerFactory(() => UserProfileUpload(authRepository: serviceLocator()))
     ..registerLazySingleton(
       () => AuthBloc(
-        userSignUp: serviceLocator(),
-        currentUser: serviceLocator(),
-        userProfileUpload: serviceLocator(),
-        verifyUserPhoneNumber: serviceLocator(),
-        verifyUserOTPCode: serviceLocator(),
-      ),
+          currentUser: serviceLocator(),
+          sendOTPToPhoneNumber: serviceLocator(),
+          verifyPhoneAndSignUpUser: serviceLocator(),
+          createUser: serviceLocator(),
+          userSignIn: serviceLocator(),
+          // userProfileUpload: serviceLocator(),
+          appUserCubit: serviceLocator()),
     );
 }

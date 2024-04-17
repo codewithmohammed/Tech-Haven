@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
-import 'package:tech_haven/features/home/presentation/widgets/horizontal_product_card.dart';
+import 'package:tech_haven/features/home/presentation/widgets/product_card.dart';
 
 class HorizontalProductListView extends StatelessWidget {
   const HorizontalProductListView({super.key, this.onTap});
@@ -36,7 +36,7 @@ class HorizontalProductListView extends StatelessWidget {
               itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
                 //column since the container is divided into two
-                return  HorizonatalProductCard(index: index,);
+                return  ProductCard(index: index,);
               },
             ),
           ),

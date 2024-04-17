@@ -1,19 +1,27 @@
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/features/auth/presentation/widgets/authentication_container.dart';
 
 class OTPVerificationPage extends StatefulWidget {
-  const OTPVerificationPage({super.key, required this.verificaionId});
-
-  final String verificaionId;
+  const OTPVerificationPage({
+    super.key,
+    required this.phoneNumber,
+    required this.verificaionID,
+    required this.email,
+    required this.password,
+  });
+  final String phoneNumber;
+  final String email;
+  final String password;
+  final String verificaionID;
 
   @override
   State<OTPVerificationPage> createState() => _OTPVerificationPageState();
@@ -58,14 +66,14 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         listenWhen: (previous, current) => current is OTPPageActionState,
         buildWhen: (previous, current) => current is AuthOTPPageState,
         listener: (context, state) {
-          if (state is OTPVerificationSuccess) {
-            context.read<AuthBloc>().add(NavigateToSignUpPageEvent(
-                  userId: state.userId,
-                ));
-            print('popped');
-            GoRouter.of(context).pop();
+          if (state is UserCreationSuccess) {
+            //navigate to signupwelcome page.
+            GoRouter.of(context).pushReplacementNamed(AppRouteConstants.signupWelcomePage,
+                pathParameters: {
+                  'initialUsername': state.user.username!,
+                });
           }
-          if (state is OTPVerificationFailed) {
+          if (state is UserCreationFailed) {
             showSnackBar(
               context: context,
               title: 'Oh',
@@ -73,6 +81,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
               contentType: ContentType.failure,
             );
             pinController.clear();
+            GoRouter.of(context).pop();
           }
         },
         builder: (context, state) {
@@ -117,10 +126,15 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         hapticFeedbackType: HapticFeedbackType.lightImpact,
                         //on completing the entering of the pinCode.
                         onCompleted: (pinCode) {
-                          print(
-                              'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
-                          context.read<AuthBloc>().add(VerifyOTPCodeEvent(
-                                verificationId: widget.verificaionId,
+                          // print(
+                          //     'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
+                          context
+                              .read<AuthBloc>()
+                              .add(VerifyPhoneAndSignUpUserEvent(
+                                phoneNumber: widget.phoneNumber,
+                                email: widget.email,
+                                password: widget.password,
+                                verificationId: widget.verificaionID,
                                 otpCode: pinCode,
                               ));
                         },

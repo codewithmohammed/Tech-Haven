@@ -2,15 +2,49 @@ part of 'auth_bloc.dart';
 
 sealed class AuthEvent {}
 
-final class VerifyPhoneNumberEvent extends AuthEvent {
+final class SendOTPEvent extends AuthEvent {
   final String phoneNumber;
-  VerifyPhoneNumberEvent({required this.phoneNumber});
+  final String email;
+  final String password;
+  SendOTPEvent(
+      {required this.email, required this.password, required this.phoneNumber});
 }
 
-final class VerifyOTPCodeEvent extends AuthEvent {
+final class VerifyPhoneAndSignUpUserEvent extends AuthEvent {
+  final String phoneNumber;
+  final String email;
+  final String password;
   final String verificationId;
   final String otpCode;
-  VerifyOTPCodeEvent({required this.verificationId, required this.otpCode});
+  VerifyPhoneAndSignUpUserEvent({
+    required this.phoneNumber,
+    required this.email,
+    required this.password,
+    required this.verificationId,
+    required this.otpCode,
+  });
+}
+
+final class CreateUserEvent extends AuthEvent {
+  final String username;
+  final File? image;
+  final int color;
+
+  CreateUserEvent({
+    required this.username,
+    required this.image,
+    required this.color,
+  });
+}
+
+final class UserSignInEvent extends AuthEvent {
+  final String phoneNumber;
+  final String password;
+
+  UserSignInEvent({
+    required this.phoneNumber,
+    required this.password,
+  });
 }
 
 final class NavigateToSignUpPageEvent extends AuthEvent {
@@ -19,13 +53,13 @@ final class NavigateToSignUpPageEvent extends AuthEvent {
 }
 
 final class AuthSignUpEvent extends AuthEvent {
-  final String phonenumberVerifiedUID;
+  final String phoneNumberVerifiedUID;
   final String username;
   final String phoneNumber;
   final String email;
   final String password;
   AuthSignUpEvent({
-    required this.phonenumberVerifiedUID,
+    required this.phoneNumberVerifiedUID,
     required this.username,
     required this.phoneNumber,
     required this.email,
@@ -35,18 +69,23 @@ final class AuthSignUpEvent extends AuthEvent {
 
 final class SignUpWelcomePageProfileUploadEvent extends AuthEvent {
   final String uid;
-  final bool isprofilephotoUploaded;
+  final bool isProfilePhotoUploaded;
   final File? image;
   final String username;
   final int color;
 
   SignUpWelcomePageProfileUploadEvent({
     required this.uid,
-    required this.isprofilephotoUploaded,
+    required this.isProfilePhotoUploaded,
     required this.image,
     required this.username,
     required this.color,
   });
 }
 
+final class SignUpWithGoogleAccount extends AuthEvent {}
+
 final class AuthIsUserLoggedInEvent extends AuthEvent {}
+
+
+// final class AuthIsUserLoggedIn extends AuthEvent{}

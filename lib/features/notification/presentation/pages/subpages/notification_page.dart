@@ -42,7 +42,7 @@ class NotificationPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           );

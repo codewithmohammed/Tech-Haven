@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/features/home/presentation/widgets/advertisement_container.dart';
 import 'package:tech_haven/features/home/presentation/widgets/carousel_banner_container.dart';
@@ -72,7 +73,7 @@ class CustomSliverAppBar extends StatelessWidget
       pinned: true,
       floating: true,
       //the whole height of the appBar
-      expandedHeight: 130,
+      expandedHeight: 150,
       //the height of the app bar when it is collapsed or scrolled
       collapsedHeight: 100,
       stretchTriggerOffset: 100,
@@ -80,9 +81,10 @@ class CustomSliverAppBar extends StatelessWidget
       flexibleSpace: FlexibleSpaceBar(
         background: Container(
           color: AppPallete.primaryAppColor,
-          child: const Text(
-            'LOGO',
-            style: TextStyle(fontSize: 30),
+          alignment: Alignment.topLeft,
+          child: Image.asset(
+            scale: 10,
+            Constants.techHavenLogoHR,
           ),
         ),
         expandedTitleScale: 1,

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/core/routes/app_route_config.dart';
 import 'package:tech_haven/core/theme/theme.dart';
 import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
@@ -16,6 +17,9 @@ void main() async {
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
+        create: (_) => serviceLocator<AppUserCubit>(),
+      ),
+      BlocProvider(
         create: (context) => serviceLocator<AuthBloc>(),
       ),
     ],
@@ -26,7 +30,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  // @override
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
@@ -36,9 +40,12 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       title: 'Tech Haven',
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      routeInformationProvider: AppRoutes.goRouter.routeInformationProvider,
-      routeInformationParser: AppRoutes.goRouter.routeInformationParser,
+      darkTheme: AppTheme.darkTheme, 
+      // routerConfig: AppRoutes.goRouter,
+      routeInformationProvider:
+          AppRoutes.goRouter.routeInformationProvider,
+      routeInformationParser:
+          AppRoutes.goRouter.routeInformationParser,
       routerDelegate: AppRoutes.goRouter.routerDelegate,
     );
   }

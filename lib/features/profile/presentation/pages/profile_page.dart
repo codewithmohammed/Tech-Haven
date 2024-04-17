@@ -1,59 +1,66 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
-import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/features/profile/presentation/widgets/profile_header_tile.dart';
 import 'package:tech_haven/features/profile/presentation/widgets/profile_welcome_text.dart';
+import 'package:tech_haven/features/profile/presentation/widgets/tile_bar_button.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         extendBody: true,
-        appBar: AppBarSearchBar(),
+        appBar: const AppBarSearchBar(),
         body: SingleChildScrollView(
           child: Column(
             children: [
               //hello nice to meet you
-              ProfileWelcomeText(),
+              const ProfileWelcomeText(),
               //your orders
-              TileBarButton(
+              const TileBarButton(
                 title: 'Your Orders',
                 icon: CustomIcons.orderListSvg,
               ),
-              TileBarButton(
+              const TileBarButton(
                 title: 'Start Selling',
                 subtitle:
                     'Activate this option to start selling your products as a vendor on our platform.',
                 icon: CustomIcons.cartSvg,
               ),
-              ProfileHeader(
+              const ProfileHeaderTile(
                 title: 'SETTINGS',
               ),
-              TileBarButton(
+              const TileBarButton(
                 title: 'Country',
                 icon: CustomIcons.globeSvg,
               ),
-              TileBarButton(
+              const TileBarButton(
                 title: 'Language',
                 icon: CustomIcons.languageSvg,
               ),
-              ProfileHeader(
+              const ProfileHeaderTile(
                 title: 'REACH OUT TO US',
               ),
-              TileBarButton(
+              const TileBarButton(
                 title: 'Help Center',
                 icon: CustomIcons.questionMarkSvg,
               ),
-              TileBarButton(
+              const TileBarButton(
                 title: 'About App',
                 icon: CustomIcons.exclamationSvg,
               ),
               TileBarButton(
                 title: 'Sign Out',
                 icon: CustomIcons.rightArrowExitSvg,
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                  // context.read<AuthBloc>().add(SignOutUserEvent());
+                },
               ),
               // Row(
               //   children: [
@@ -64,86 +71,5 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
         ));
-  }
-}
-
-class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.title});
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 15,
-      ),
-      color: AppPallete.lightgreyColor,
-      height: 45,
-      width: double.infinity,
-      alignment: Alignment.centerLeft,
-      child: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 15,
-        ),
-      ),
-    );
-  }
-}
-
-class TileBarButton extends StatelessWidget {
-  const TileBarButton({
-    super.key,
-    required this.title,
-    required this.icon,
-    this.subtitle,
-    this.color = AppPallete.primaryAppButtonColor,
-    this.trailing,
-  });
-  final String title;
-  final String icon;
-  final String? subtitle;
-  final Color color;
-  final Widget? trailing;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      horizontalTitleGap: 5,
-      onTap: () {},
-      leading: SvgIcon(
-        icon: icon,
-        radius: 20,
-        color: color,
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 12,
-        ),
-      ),
-      subtitle: subtitle != null
-          ? Text(
-              subtitle!,
-              style: const TextStyle(
-                fontSize: 10,
-              ),
-            )
-          : null,
-      trailing: trailing != null
-          ? Row(
-              children: [
-                trailing!,
-                const SvgIcon(
-                  icon: CustomIcons.angleRightSvg,
-                  radius: 15,
-                ),
-              ],
-            )
-          : const SvgIcon(
-              icon: CustomIcons.angleRightSvg,
-              radius: 15,
-            ),
-    );
   }
 }

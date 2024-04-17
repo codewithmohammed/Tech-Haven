@@ -1,17 +1,15 @@
 class User {
-  final String signUpUID;
-  final String phonenumber;
-  final String username;
-  final String email;
+  final String? uid;
+  final String? phoneNumber;
+  final String? username;
+  final String? email;
+  final String? profilePictureURL;
 
   User({
-    required this.signUpUID,
-    required this.phonenumber,
+    required this.uid,
+    required this.phoneNumber,
     required this.username,
     required this.email,
+    required this.profilePictureURL,
   });
 }
-// signUpUID,
-//         "phonenumber": phonenumber,
-//         "email": email,
-//         "username": username,

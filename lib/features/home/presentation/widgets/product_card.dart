@@ -8,8 +8,8 @@ import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
-class HorizonatalProductCard extends StatelessWidget {
-  const HorizonatalProductCard({super.key, required this.index});
+class ProductCard extends StatelessWidget {
+  const ProductCard({super.key, required this.index});
 
   final int index;
   @override

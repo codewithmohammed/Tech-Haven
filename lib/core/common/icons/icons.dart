@@ -36,4 +36,5 @@ class CustomIcons {
   static const String questionMarkSvg = 'assets/icons/question_mark.svg';
   static const String languageSvg = 'assets/icons/translate.svg';
   static const String faceGrinSvg = 'assets/icons/face_grin.svg';
+  static const String angleUpSvg = 'assets/icons/angle_up.svg';
 }

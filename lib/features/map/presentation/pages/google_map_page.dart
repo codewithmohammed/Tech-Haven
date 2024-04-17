@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
@@ -28,19 +29,8 @@ class GoogleMapPage extends StatelessWidget {
         height: 70,
         color: AppPallete.whiteColor,
         padding: const EdgeInsets.all(8),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5.0),
-            ),
-          ),
-          onPressed: () {
-            GoRouter.of(context).pushNamed(AppRouteConstants.homePage);
-          },
-          child: const Text(
-            'CONFIRM LOCATION',
-            style: TextStyle(color: AppPallete.whiteColor),
-          ),
+        child: const RoundedRectangularButton(
+          title: 'CONFIRM LOCATION',
         ),
       ),
     );

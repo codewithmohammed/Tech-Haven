@@ -1,4 +1,5 @@
 class AppRouteConstants {
+  static const String splashScreen = 'splash_screen';
   static const String welcomePage = 'welcome_page';
   static const String signinPage = 'signin_page';
   static const String signupPage = 'signup_page';

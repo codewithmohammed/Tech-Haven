@@ -22,13 +22,13 @@ class SignUpWelcomePage extends StatefulWidget {
 }
 
 class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
-  final usernameController = TextEditingController();
+  // final usernameController = TextEditingController();
 
-  @override
-  void dispose() {
-    usernameController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   usernameController.dispose();
+  //   super.dispose();
+  // }
 
   File? image;
   void selectImage() async {
@@ -50,13 +50,15 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
       buildWhen: (previous, current) => current is AuthSignUpWelcomPageState,
       listener: (context, state) {
         if (state is AuthIsUserLoggedInSuccess) {
-          context.read<AuthBloc>().add(SignUpWelcomePageProfileUploadEvent(
-                uid: state.user.signUpUID,
-                isprofilephotoUploaded: image != null,
-                image: image,
-                username: username.value,
-                color: userColor.value,
-              ));
+          context.read<AuthBloc>().add(
+                SignUpWelcomePageProfileUploadEvent(
+                  uid: state.user.uid!,
+                  isProfilePhotoUploaded: image != null,
+                  image: image,
+                  username: username.value,
+                  color: userColor.value,
+                ),
+              );
         }
         if (state is AuthIsUserLoggedInFailed) {
           showSnackBar(
@@ -66,11 +68,18 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
             contentType: ContentType.failure,
           );
         }
-        if (state is UserProfileSetSuccess) {
-          print(state.message);
+        if (state is CreateUserSuccess) {
+          // print(state.message);
           GoRouter.of(context).pushNamed(AppRouteConstants.mainPage);
         }
-        if (state is UserProfileSetFailed) {}
+        if (state is CreateUserFailed) {
+          showSnackBar(
+            context: context,
+            title: 'Oh',
+            content: state.message,
+            contentType: ContentType.failure,
+          );
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -181,15 +190,19 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
               PrimaryAppButton(
                 buttonText: 'Save',
                 onPressed: () {
-                  context.read<AuthBloc>().add(AuthIsUserLoggedInEvent()
-                      // SignUpWelcomePageProfileUploadEvent(
-                      //   //profile is not uploaded if the image is null or it is uploaded.
-                      //   isprofilephotoUploaded: image != null,
-                      //   image: image,
-                      //   username: username.value,
-                      //   color: userColor.value,
-                      // ),
-                      );
+                  context.read<AuthBloc>().add(CreateUserEvent(
+                        username: username.value,
+                        image: image,
+                        color: userColor.value,
+                      )
+                          // SignUpWelcomePageProfileUploadEvent(
+                          //   //profile is not uploaded if the image is null or it is uploaded.
+                          //   isprofilephotoUploaded: image != null,
+                          //   image: image,
+                          //   username: username.value,
+                          //   color: userColor.value,
+                          // ),
+                          );
                   // GoRouter.of(context).pushNamed(
                   //   AppRouteConstants.mainPage,
                   // );

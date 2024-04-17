@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 class AuthUtils {
   // this is for the notifying the change in the country picker
-  static ValueNotifier<String> signUpcountryCode = ValueNotifier('000');
+  static ValueNotifier<String> signUpCountryCode = ValueNotifier('000');
+  static ValueNotifier<String> signInCountryCode = ValueNotifier('000');
 }
 
 //choosing the country code
-void changeCountryCode(BuildContext context) {
+void changeCountryCode(BuildContext context,ValueNotifier<String> valueNotifier) {
   showCountryPicker(
       context: context,
       showPhoneCode: true,
@@ -30,12 +31,12 @@ void changeCountryCode(BuildContext context) {
             border: UnderlineInputBorder()),
       ),
       onSelect: (Country country) {
-        AuthUtils.signUpcountryCode.value = country.phoneCode;
+        valueNotifier.value = country.phoneCode;
       });
 }
 
 //for extracting the name from the email entered by the user
-String extractNameFromEmail(String email) {
+ String extractNameFromEmail(String email) {
   // Split the email address by the "@" symbol
   List<String> parts = email.split("@");
 
