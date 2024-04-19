@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 
 import 'package:tech_haven/core/theme/app_pallete.dart';

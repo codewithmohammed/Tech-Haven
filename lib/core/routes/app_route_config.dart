@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/common/bottomnav/custom_bottom_navigation_bar.dart';
+import 'package:tech_haven/core/pages/bottomnav/user_bottom_navigation_bar.dart';
+import 'package:tech_haven/core/pages/bottomnav/vendor_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
-import 'package:tech_haven/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/new_password_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/otp_verification_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/sign_in_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/sign_up_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/sign_up_welcome_page.dart';
-import 'package:tech_haven/features/auth/presentation/pages/welcome_page.dart';
-import 'package:tech_haven/features/details/presentation/pages/details_page.dart';
-import 'package:tech_haven/features/home/presentation/pages/home_page.dart';
-import 'package:tech_haven/features/map/presentation/pages/google_map_page.dart';
-import 'package:tech_haven/features/message/presentation/pages/message_page.dart';
-import 'package:tech_haven/features/splash/presentation/pages/splash_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/new_password_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/otp_verification_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/sign_in_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_welcome_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/pages/welcome_page.dart';
+import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
+import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
+import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
+import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
+import 'package:tech_haven/core/pages/splash/presentation/pages/splash_page.dart';
 
 // class AppRoutes {
 //   static GoRouter goRouter = GoRouter(
@@ -354,7 +355,7 @@ class AppRoutes {
       _buildPageRoute(
         name: AppRouteConstants.mainPage,
         path: '/main_page',
-        child: const CustomBottomNavigationBar(),
+        child: const UserBottomNavigationBar(),
         transitionDuration: const Duration(milliseconds: 500),
         transitionsBuilder: (animation, child) {
           final tween = Tween(
@@ -396,6 +397,10 @@ class AppRoutes {
         path: '/details_page',
         child: const DetailsPage(),
       ),
+      _buildPageRoute(
+          name: AppRouteConstants.vendorMainPage,
+          path: '/vendor_main_page',
+          child: const VendorBottomNavigationBar())
     ],
   );
 

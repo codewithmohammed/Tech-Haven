@@ -41,10 +41,12 @@ dependencies:
   firebase_core: ^2.27.2
   firebase_messaging: ^14.7.21
   firebase_storage: ^11.6.11
+  fl_chart: ^0.67.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.4
   flutter_polyline_points: ^2.0.0
+  flutter_slidable: ^3.1.0
   flutter_svg: ^2.0.10+1
   fpdart: ^1.1.0
   get_it: ^7.6.7
@@ -125,6 +127,9 @@ flutter:
     - assets/logo/techHavenLogo.png
     - assets/logo/techHavenLogoHR.png
     - assets/icons/angle_up.svg
+    - assets/icons/plus.svg
+    - assets/icons/pen.svg
+    - assets/icons/clock.svg
 
   # assets:
   #   - images/a_dot_burr.jpeg

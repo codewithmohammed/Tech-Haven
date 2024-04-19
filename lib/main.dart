@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/core/routes/app_route_config.dart';
 import 'package:tech_haven/core/theme/theme.dart';
-import 'package:tech_haven/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/firebase_options.dart';
 import 'package:tech_haven/init_dependencies.main.dart';
 
