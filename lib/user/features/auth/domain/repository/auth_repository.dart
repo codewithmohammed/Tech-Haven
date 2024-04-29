@@ -1,9 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/common/entities/auth_sign_up_model.dart';
-import 'package:tech_haven/core/common/entities/user.dart';
-import 'package:tech_haven/core/common/entities/user_data_model.dart';
+import 'package:tech_haven/core/entities/auth_sign_up_model.dart';
+import 'package:tech_haven/core/entities/user.dart';
+import 'package:tech_haven/core/entities/user_data_model.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/user/features/auth/data/models/sign_up_model.dart';
 
@@ -52,4 +53,7 @@ abstract interface class AuthRepository {
   //   required String phonenumber,
   //   required String password,
   // });
+
+  Future<Either<Failure, String>> signUpUserWithGoogle();
+  Future<Either<Failure, String>> forgotPasswordSendEmail({required String phoneNumber});
 }

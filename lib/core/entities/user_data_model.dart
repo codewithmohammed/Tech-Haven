@@ -22,21 +22,3 @@ class UserDataModel {
     required this.isVendor,
   });
 }
-
-
-// @JsonSerializable()
-// class Location {
-//   final String street;
-//   final String city;
-//   final String state;
-//   final String zip;
-
-//   Location({
-//     required this.street,
-//     required this.city,
-//     required this.state,
-//     required this.zip,
-//   });
-
-//   static fromJson(Map<String, dynamic> e) {}
-// }

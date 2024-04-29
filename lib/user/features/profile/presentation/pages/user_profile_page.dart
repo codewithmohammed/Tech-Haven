@@ -13,7 +13,8 @@ class UserProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(resizeToAvoidBottomInset: false,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
         extendBody: true,
         appBar: const AppBarSearchBar(),
         body: SingleChildScrollView(
@@ -63,6 +64,7 @@ class UserProfilePage extends StatelessWidget {
                 icon: CustomIcons.rightArrowExitSvg,
                 onTap: () {
                   FirebaseAuth.instance.signOut();
+                  GoRouter.of(context).goNamed(AppRouteConstants.splashScreen);
                   // context.read<AuthBloc>().add(SignOutUserEvent());
                 },
               ),

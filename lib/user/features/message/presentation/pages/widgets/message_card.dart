@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/common/enums/message_enum.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
-import 'package:tech_haven/user/features/message/presentation/pages/widgets/display_text_image_gif.dart';
 
 class MessageCard extends StatelessWidget {
   const MessageCard({

@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,9 +11,9 @@ import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/user/features/auth/presentation/bloc/sign_up_page_state.dart';
 import 'package:tech_haven/user/features/auth/presentation/constants/auth_constants.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_text_form_field.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/country_code_container.dart';
+import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/phone_number_text_field.dart';
 import '../../../../../core/theme/app_pallete.dart';
 import '../widgets/authentication_container.dart';
@@ -57,8 +56,8 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       backgroundColor: AppPallete.primaryAppColor,
       body: BlocConsumer<AuthBloc, AuthState>(
-        listenWhen: (previous, current) => current is SignUpPageActionState,
-        buildWhen: (previous, current) => current is AuthSignUpPageState,
+        // listenWhen: (previous, current) => current is SignUpPageActionState,
+        // buildWhen: (previous, current) => current is AuthSignUpPageState,
         listener: (context, state) {
           //showing a snackbar if the verification of mobile number failed
           if (state is OTPSendFailed) {
@@ -70,7 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           }
           if (state is OTPSendSuccess) {
-            print('navigating to otp page');
+            // print('navigating to otp page');
             GoRouter.of(context).pushNamed(
                 AppRouteConstants.otpVerificationPage,
                 pathParameters: {
@@ -87,6 +86,21 @@ class _SignUpPageState extends State<SignUpPage> {
                 //   'verificationID': state.authSignUpModel.verificationID,
                 // }
                 );
+          }
+          if (state is AuthGoogleSignUpSuccess) {
+            GoRouter.of(context).pushReplacementNamed(
+              AppRouteConstants.mainPage,
+              // pathParameters: {
+              //   'initialUsername': state.user.username!,}
+            );
+          }
+          if (state is AuthGoogleSignUpFailed) {
+            showSnackBar(
+              context: context,
+              title: 'Oh',
+              content: state.message,
+              contentType: ContentType.failure,
+            );
           }
           // if (state is StartSigningUpUser) {
           //   print('starting to sign up user');
@@ -159,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         phoneNumberController: phoneNumberController,
                       ),
                       //email field
-                      AuthenticationTextFormField(
+                      CustomTextFormField(
                         enabled: textFormFieldEnabled,
                         textEditingController: emailController,
                         labelText: 'Email',
@@ -168,7 +182,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
                       //password
-                      AuthenticationTextFormField(
+                      CustomTextFormField(
                         enabled: textFormFieldEnabled,
                         textEditingController: passwordController,
                         labelText: 'Password',
@@ -188,7 +202,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
 
                       //re password
-                      AuthenticationTextFormField(
+                      CustomTextFormField(
                         enabled: textFormFieldEnabled,
                         textEditingController: rePasswordController,
                         labelText: 'Re-Enter Password',
@@ -235,9 +249,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ],
                     //for the goolgle authentication
-                    onPressedTopButton: () {
-                      //sign up with google
-                      // context.read<AuthBloc>().add(SignUpWithGoogleAccount());
+                    onPressedTopButton: () async {
+                      // print('object');
+                      context.read<AuthBloc>().add(SignUpWithGoogleAccount());
                     },
                     //the text inside the elevated button
                     buttonNeeded: true,
@@ -278,5 +292,3 @@ class _SignUpPageState extends State<SignUpPage> {
 
   signInWithGoogle() {}
 }
-
-

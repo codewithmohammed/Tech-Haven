@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/common/entities/auth_sign_up_model.dart';
+import 'package:tech_haven/core/entities/auth_sign_up_model.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/auth/domain/repository/auth_repository.dart';

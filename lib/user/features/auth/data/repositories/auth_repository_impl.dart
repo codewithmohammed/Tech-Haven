@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/common/entities/auth_sign_up_model.dart';
-import 'package:tech_haven/core/common/entities/user.dart';
+import 'package:tech_haven/core/entities/auth_sign_up_model.dart';
+import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -97,6 +97,27 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final result = await remoteDataSource.userSignIn(
           phoneNumber: phoneNumber, password: password);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> signUpUserWithGoogle() async {
+    try {
+      final result = await remoteDataSource.signUpUserWithGoogle();
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> forgotPasswordSendEmail({required String phoneNumber}) async {
+    try {
+      final result =
+          await remoteDataSource.forgotPasswordSendEmail(phoneNumber: phoneNumber);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

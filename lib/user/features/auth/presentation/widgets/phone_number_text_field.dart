@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/core/validators/validators.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_text_form_field.dart';
+import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/country_code_container.dart';
 
 class PhoneNumberTextField extends StatelessWidget {
@@ -39,7 +39,7 @@ class PhoneNumberTextField extends StatelessWidget {
         ),
         //phone number field
         Expanded(
-          child: AuthenticationTextFormField(
+          child: CustomTextFormField(
             enabled: textFormFieldEnabled,
             textEditingController: phoneNumberController,
             labelText: 'Phone Number',

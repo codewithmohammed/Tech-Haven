@@ -11,6 +11,7 @@ import 'package:tech_haven/user/features/auth/data/models/user_data_model_impl.d
     as model;
 import 'package:tech_haven/user/features/auth/data/models/user_model.dart';
 import 'package:uuid/uuid.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseFirestore firebaseFirestore;
@@ -80,21 +81,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String password,
   }) async {
     try {
-      await firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (phoneAuthCredential) async {
-          firebaseAuth.signInWithCredential(phoneAuthCredential);
-        },
-        verificationFailed: (error) async {
-          throw ServerException(error.message!);
-        },
-        codeSent: (verificationId, forceResendingToken) async {
-          // print('assigning the verification id');
-          assignTheVerificationId(verificationId);
-          // print(potentialVerificationId);
-        },
-        codeAutoRetrievalTimeout: (verificationId) async {},
-      );
+      await getVerificationId(phoneNumber);
+      // await firebaseAuth.verifyPhoneNumber(
+      //   phoneNumber: phoneNumber,
+      //   verificationCompleted: (phoneAuthCredential) async {
+      //     firebaseAuth.signInWithCredential(phoneAuthCredential);
+      //   },
+      //   verificationFailed: (error) async {
+      //     throw ServerException(error.message!);
+      //   },
+      //   codeSent: (verificationId, forceResendingToken) async {
+      //     // print('assigning the verification id');
+      //     assignTheVerificationId(verificationId);
+      //     // print(potentialVerificationId);
+      //   },
+      //   codeAutoRetrievalTimeout: (verificationId) async {},
+      // );
       if (potentialVerificationId != null) {
         // print(potentialVerificationId);
 
@@ -119,7 +121,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-  void assignTheVerificationId(String verificationId) {
+  Future<void> getVerificationId(String phoneNumber) async {
+    await firebaseAuth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      verificationCompleted: (phoneAuthCredential) async {
+        firebaseAuth.signInWithCredential(phoneAuthCredential);
+      },
+      verificationFailed: (error) async {
+        throw ServerException(error.message!);
+      },
+      codeSent: (verificationId, forceResendingToken) async {
+        // print('assigning the verification id');
+        assignTheVerificationId(verificationId: verificationId);
+        // print(potentialVerificationId);
+      },
+      codeAutoRetrievalTimeout: (verificationId) async {},
+    );
+  }
+
+  assignTheVerificationId({required String verificationId}) {
     potentialVerificationId = verificationId;
   }
 
@@ -229,7 +249,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       // Fetch the user document from Firestore based on the provided phone number
-      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+      final QuerySnapshot snapshot = await firebaseFirestore
           .collection('users')
           .where('phoneNumber', isEqualTo: phoneNumber)
           .get();
@@ -260,6 +280,66 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.message);
     } catch (e) {
       throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<String> signUpUserWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        throw const ServerException('the google user is not initiated');
+      }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      return userCredential.user!.email!;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<String> forgotPasswordSendEmail({required String phoneNumber}) async {
+    try {
+      // firebaseAuth.confirmPasswordReset(code: code, newPassword: newPassword)
+      final QuerySnapshot snapshot = await firebaseFirestore
+          .collection('users')
+          .where('phoneNumber', isEqualTo: phoneNumber)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        final userData = snapshot.docs.first.data() as Map<String, dynamic>;
+        final String email = userData['email'];
+        // Fetch user document based on uid
+        // final userDoc =
+        //     await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        // final userDataFromDoc = userDoc.data();
+        // If the user is found, sign in with the user's email and password
+        await firebaseAuth.sendPasswordResetEmail(email: email );
+        // await firebaseAuth.signInWithCredential(credential);
+        // return userCredential.user!.email!;
+        // Navigate to the next screen or perform any desired action
+
+        return 'Change your Password from the link that is send to your email $email';
+      } else {
+        throw const ServerException(
+          "User doesn't Exist with this phone number",
+        );
+      }
+      // return potentialVerificationId!;
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(
+        e.toString(),
+      );
     }
   }
 }

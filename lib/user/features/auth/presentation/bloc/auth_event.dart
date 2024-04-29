@@ -1,6 +1,6 @@
 part of 'auth_bloc.dart';
 
-sealed class AuthEvent {}
+ class AuthEvent {}
 
 final class SendOTPEvent extends AuthEvent {
   final String phoneNumber;
@@ -85,7 +85,20 @@ final class SignUpWelcomePageProfileUploadEvent extends AuthEvent {
 
 final class SignUpWithGoogleAccount extends AuthEvent {}
 
+final class SignInWithGoogleAccount extends AuthEvent {}
+
 final class AuthIsUserLoggedInEvent extends AuthEvent {}
 
+final class ForgotPasswordSendEmailEvent extends AuthEvent {
+  final String phoneNumber;
+  ForgotPasswordSendEmailEvent({required this.phoneNumber});
+}
 
-// final class AuthIsUserLoggedIn extends AuthEvent{}
+final class ForgotPasswordOTPVerificaion extends AuthEvent {
+  final String otpCode;
+  final String verificationID;
+  ForgotPasswordOTPVerificaion({
+    required this.otpCode,
+    required this.verificationID,
+  });
+}

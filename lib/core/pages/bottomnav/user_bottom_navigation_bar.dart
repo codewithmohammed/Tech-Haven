@@ -17,7 +17,7 @@ class UserBottomNavigationBar extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         extendBody: true,
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         body: PageView.builder(
           physics: const NeverScrollableScrollPhysics(),
           controller: pageController,

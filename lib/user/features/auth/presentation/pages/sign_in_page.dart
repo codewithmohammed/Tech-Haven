@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -12,11 +13,11 @@ import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/user/features/auth/presentation/bloc/sign_in_page_state.dart';
 import 'package:tech_haven/user/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_text_form_field.dart';
+import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/phone_number_text_field.dart';
-import 'package:tech_haven/user/features/profile/bloc/profile_bloc.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -45,12 +46,28 @@ class _SignInPageState extends State<SignInPage> {
     return Scaffold(
         backgroundColor: AppPallete.primaryAppColor,
         body: BlocConsumer<AuthBloc, AuthState>(
-          listenWhen: (previous, current) => current is SignInPageActionState,
-          buildWhen: (previous, current) => current is AuthSignInPageState,
+          // listenWhen: (previous, current) => current is SignInPageActionState,
+          // buildWhen: (previous, current) => current is AuthSignInPageState,
           listener: (context, state) {
+            if (state is AuthGoogleSignInSuccess) {
+              GoRouter.of(context).pushReplacementNamed(
+                AppRouteConstants.mainPage,
+                // pathParameters: {
+                //   'initialUsername': state.user.username!,}
+              );
+            }
+            if (state is AuthGoogleSignInFailed) {
+              showSnackBar(
+                context: context,
+                title: 'Oh',
+                content: state.message,
+                contentType: ContentType.failure,
+              );
+            }
             if (state is AuthSignInSuccess) {
+              print('hello');
               GoRouter.of(context)
-                  .pushReplacementNamed(AppRouteConstants.splashScreen);
+                  .pushReplacementNamed(AppRouteConstants.mainPage);
             }
             if (state is AuthSignInFailed) {
               showSnackBar(
@@ -61,7 +78,9 @@ class _SignInPageState extends State<SignInPage> {
               );
             }
           },
-          builder: (context, state) {
+          builder: (context, state) {          if (state is AuthLoading) {
+            return const Loader();
+          }
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [
@@ -98,7 +117,7 @@ class _SignInPageState extends State<SignInPage> {
                           textFormFieldEnabled: true,
                           phoneNumberController: phoneNumberController,
                         ),
-                        AuthenticationTextFormField(
+                        CustomTextFormField(
                           textEditingController: passwordController,
                           labelText: 'Password',
                           hintText: '',
@@ -161,8 +180,8 @@ class _SignInPageState extends State<SignInPage> {
                         height: 30,
                       ),
                       onPressedElevatedButton: () {
-                        print('object');
-                        if (signinFormKey.currentState!.validate()  &&
+                        // print('object');
+                        if (signinFormKey.currentState!.validate() &&
                             countryCode.value != '000') {
                           print('object');
                           fullPhoneNumber =
@@ -172,7 +191,9 @@ class _SignInPageState extends State<SignInPage> {
                               password: passwordController.text));
                         }
                       },
-                      onPressedTopButton: () {},
+                      onPressedTopButton: () async {
+                        context.read<AuthBloc>().add(SignInWithGoogleAccount());
+                      },
                     ),
                   ),
                 ),

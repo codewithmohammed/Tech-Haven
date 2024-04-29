@@ -27,15 +27,16 @@ class MoneyWithdrawalPage extends StatelessWidget {
                   height: 250,
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                      color: AppPallete.whiteColor,
-                      boxShadow: [
-                        Constants.globalBoxBlur,
-                      ],
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          10,
-                        ),
-                      )),
+                    color: AppPallete.whiteColor,
+                    boxShadow: [
+                      Constants.globalBoxBlur,
+                    ],
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(
+                        10,
+                      ),
+                    ),
+                  ),
                   child: Column(
                     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

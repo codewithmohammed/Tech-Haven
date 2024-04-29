@@ -1,5 +1,5 @@
 
-import 'package:tech_haven/core/common/entities/user_data_model.dart';
+import 'package:tech_haven/core/entities/user_data_model.dart';
 
 class UserDataModelImpl extends UserDataModel {
   

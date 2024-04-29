@@ -1,4 +1,4 @@
-import 'package:tech_haven/core/common/entities/user.dart';
+import 'package:tech_haven/core/entities/user.dart';
 
 class UserModel extends User {
   UserModel({

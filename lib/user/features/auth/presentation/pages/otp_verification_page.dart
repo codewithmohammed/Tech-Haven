@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/user/features/auth/presentation/bloc/otp_page_state.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
 
 class OTPVerificationPage extends StatefulWidget {
@@ -63,12 +65,13 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
     return Scaffold(
       backgroundColor: AppPallete.primaryAppColor,
       body: BlocConsumer<AuthBloc, AuthState>(
-        listenWhen: (previous, current) => current is OTPPageActionState,
-        buildWhen: (previous, current) => current is AuthOTPPageState,
+        // listenWhen: (previous, current) => current is OTPPageActionState,
+        // buildWhen: (previous, current) => current is AuthOTPPageState,
         listener: (context, state) {
           if (state is UserCreationSuccess) {
             //navigate to signupwelcome page.
-            GoRouter.of(context).pushReplacementNamed(AppRouteConstants.signupWelcomePage,
+            GoRouter.of(context).pushReplacementNamed(
+                AppRouteConstants.signupWelcomePage,
                 pathParameters: {
                   'initialUsername': state.user.username!,
                 });
@@ -84,7 +87,9 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             GoRouter.of(context).pop();
           }
         },
-        builder: (context, state) {
+        builder: (context, state) {          if (state is AuthLoading) {
+            return const Loader();
+          }
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -126,17 +131,20 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         hapticFeedbackType: HapticFeedbackType.lightImpact,
                         //on completing the entering of the pinCode.
                         onCompleted: (pinCode) {
-                          // print(
-                          //     'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
-                          context
-                              .read<AuthBloc>()
-                              .add(VerifyPhoneAndSignUpUserEvent(
-                                phoneNumber: widget.phoneNumber,
-                                email: widget.email,
-                                password: widget.password,
-                                verificationId: widget.verificaionID,
-                                otpCode: pinCode,
-                              ));
+                   
+                            // print(
+                            //     'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
+                            context.read<AuthBloc>().add(
+                                  VerifyPhoneAndSignUpUserEvent(
+                                    phoneNumber: widget.phoneNumber,
+                                    email: widget.email,
+                                    password: widget.password,
+                                    verificationId: widget.verificaionID,
+                                    otpCode: pinCode,
+                                  ),
+                                );
+                         
+                
                         },
                         onChanged: (value) {
                           debugPrint('onChanged: $value');

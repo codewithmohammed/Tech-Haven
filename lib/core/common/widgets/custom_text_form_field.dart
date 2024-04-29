@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
-class AuthenticationTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final bool isObscureText;
@@ -15,23 +15,27 @@ class AuthenticationTextFormField extends StatelessWidget {
   final void Function()? suffixOnTap;
   final bool isPasswordField;
   final bool enabled;
-  const AuthenticationTextFormField(
-      {super.key,
-      required this.labelText,
-      required this.hintText,
-      this.isObscureText = false,
-      this.inputFormatters,
-      required this.textEditingController,
-      this.validator,
-      this.autovalidateMode,
-      this.keyboardType = TextInputType.text,
-      this.suffixOnTap,
-      this.isPasswordField = false,this.enabled = true,});
+  final int durationMilliseconds;
+  const CustomTextFormField({
+    super.key,
+    required this.labelText,
+    required this.hintText,
+    this.isObscureText = false,
+    this.inputFormatters,
+    required this.textEditingController,
+    this.validator,
+    this.autovalidateMode,
+    this.keyboardType = TextInputType.text,
+    this.suffixOnTap,
+    this.isPasswordField = false,
+    this.enabled = true,
+    this.durationMilliseconds = 1500,
+  });
 
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-      duration: const Duration(milliseconds: 1500),
+      duration:  Duration(milliseconds: durationMilliseconds),
       curve: Curves.easeIn,
       child: Stack(
         alignment: Alignment.centerRight,

@@ -30,7 +30,8 @@ abstract interface class AuthRemoteDataSource {
   Future<String> userSignIn({
     required String phoneNumber,
     required String password,
-    // required String verificationID,
-    // required String otpCode,
   });
+
+  Future<String> signUpUserWithGoogle();
+  Future<String> forgotPasswordSendEmail({required String phoneNumber});
 }

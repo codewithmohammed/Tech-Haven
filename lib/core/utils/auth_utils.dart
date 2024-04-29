@@ -5,6 +5,7 @@ class AuthUtils {
   // this is for the notifying the change in the country picker
   static ValueNotifier<String> signUpCountryCode = ValueNotifier('000');
   static ValueNotifier<String> signInCountryCode = ValueNotifier('000');
+    static ValueNotifier<String> forgotPasswordCountryCode = ValueNotifier('000');
 }
 
 //choosing the country code

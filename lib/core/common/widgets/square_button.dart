@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class SquareButton extends StatelessWidget {
-  const SquareButton({super.key, required this.icon});
+  const SquareButton({
+    super.key,
+    required this.icon,
+    this.side = 33,
+  });
 
   final Widget icon;
+  final double side;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 33,
-        width: 33,
+        height: side,
+        width: side,
         decoration: const BoxDecoration(
           // color: AppPallete.whiteColor,
           boxShadow: [

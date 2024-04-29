@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_text_form_field.dart';
+import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 
 class NewPasswordPage extends StatefulWidget {
   const NewPasswordPage({super.key});
@@ -39,13 +39,13 @@ class _NewPasswordPageState extends State<NewPasswordPage> {
               title: 'New Password',
               subTitle: 'Enter your new Password here',
               columnChildren: [
-                AuthenticationTextFormField(
+                CustomTextFormField(
                   textEditingController: passwordController,
                   labelText: 'New Password',
                   hintText: '',
                   isObscureText: true,
                 ),
-                AuthenticationTextFormField(
+                CustomTextFormField(
                   textEditingController: newPasswordController,
                   labelText: 'Re-enter New Password',
                   hintText: '',

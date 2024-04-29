@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
-import 'package:tech_haven/core/routes/app_route_constants.dart';
+import 'package:tech_haven/core/common/widgets/chat_tile.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+class UserChatPage extends StatelessWidget {
+  const UserChatPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,22 +45,9 @@ class ChatPage extends StatelessWidget {
         body: ListView.builder(
           itemCount: 40,
           itemBuilder: (context, index) {
-            return ListTile(
-              leading: const CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.red,
-              ),
-              title: const Text('Name'),
-              subtitle: const Text('Last Message'),
-              trailing: const CircleAvatar(
-                radius: 5,
-                backgroundColor: Colors.red,
-              ),
-              onTap: () {
-                GoRouter.of(context).pushNamed(
-                  AppRouteConstants.messagePage,
-                );
-              },
+            return const ChatTile(
+              name: 'name',
+              lastMessage: 'lastMessage', image: '',
             );
           },
         ),
@@ -71,3 +55,4 @@ class ChatPage extends StatelessWidget {
     );
   }
 }
+

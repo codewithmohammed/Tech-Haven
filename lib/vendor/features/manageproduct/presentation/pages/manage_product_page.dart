@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/notification/presentation/widgets/tab_text.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
-import 'package:tech_haven/vendor/features/manageproduct/pages/subpages/published_page.dart';
-import 'package:tech_haven/vendor/features/manageproduct/pages/subpages/unplubished_page.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/subpages/published_page.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/subpages/unplubished_page.dart';
 
 class ManageProductPage extends StatelessWidget {
   const ManageProductPage({super.key});

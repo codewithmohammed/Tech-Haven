@@ -85,7 +85,7 @@ class _DetailsPageState extends State<DetailsPage>
                     itemCount: 1,
                     itemBuilder: (context, index, realIndex) {
                       return Hero(
-                        tag: '0',
+                        tag: '${index +0.5}',
                         child: Image.asset(
                           'assets/dev/iphone-png.png',
                         ),
@@ -461,7 +461,10 @@ class _DetailsPageState extends State<DetailsPage>
                 ),
                 itemCount: 10,
                 itemBuilder: (context, index) {
-                  return ProductCard(index: index);
+                  return ProductCard(
+                    index: index,
+                    isHorizontal: false,
+                  );
                 },
               ),
               const SizedBox(
@@ -551,59 +554,3 @@ class _DetailsPageState extends State<DetailsPage>
     );
   }
 }
-
-
-// class MyTabbedPage extends StatefulWidget {
-//   const MyTabbedPage({super.key});
-
-//   @override
-//   _MyTabbedPageState createState() => _MyTabbedPageState();
-// }
-
-// class _MyTabbedPageState extends State<MyTabbedPage>
-//     with SingleTickerProviderStateMixin {
-//   late TabController _tabController;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _tabController = TabController(length: 3, vsync: this);
-//   }
-
-//   @override
-//   void dispose() {
-//     _tabController.dispose();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Tabbed Page'),
-//       ),
-//       body: Column(
-//         children: [
-//           TabBar(
-//             controller: _tabController,
-//             tabs: const [
-//               Tab(text: 'Tab 1'),
-//               Tab(text: 'Tab 2'),
-//               Tab(text: 'Tab 3'),
-//             ],
-//           ),
-//           Expanded(
-//             child: TabBarView(
-//               controller: _tabController,
-//               children: const [
-//                 Center(child: Text('Tab 1 Content')),
-//                 Center(child: Text('Tab 2 Content')),
-//                 Center(child: Text('Tab 3 Content')),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

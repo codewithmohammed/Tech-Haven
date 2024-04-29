@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/theme/theme.dart';
 
@@ -11,29 +11,55 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   final String hintText;
   final bool favouriteIconNeeded;
   final bool deliveryPlaceNeeded;
+  final bool backButton;
+  final bool enabled;
+  final bool autoFocus;
   const AppBarSearchBar({
     super.key,
     this.hintText = 'What are you looking for ?',
     this.favouriteIconNeeded = true,
     this.deliveryPlaceNeeded = true,
+    this.backButton = false,
+    this.enabled = false,
+    this.autoFocus = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 1),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Row(
-            mainAxisAlignment: favouriteIconNeeded
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.center,
-            children: <Widget>[
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              if (backButton)
+                CircularButton(
+                  onPressed: () {
+                    GoRouter.of(context).pop();
+                  },
+                  circularButtonChild: const SvgIcon(
+                    icon: CustomIcons.arrowLeftSvg,
+                    radius: 25,
+                    // color: AppPallete.whiteColor,
+                  ),
+                  diameter: 40,
+                  color: AppPallete.whiteColor,
+                  shadow: false,
+                ),
               Expanded(
-                child: TextField(
-                  decoration:
-                      AppTheme.inputDecoration.copyWith(hintText: hintText),
+                child: GestureDetector(
+                  onTap: () {
+                    GoRouter.of(context)
+                        .pushNamed(AppRouteConstants.searchPage);
+                  },
+                  child: TextField(
+                    enabled: enabled,
+                    decoration:
+                        AppTheme.inputDecoration.copyWith(hintText: hintText),
+                    autofocus: autoFocus,
+                  ),
                 ),
               ),
               const SizedBox(

@@ -1,4 +1,4 @@
-import 'package:tech_haven/core/common/entities/auth_sign_up_model.dart';
+import 'package:tech_haven/core/entities/auth_sign_up_model.dart';
 
 class SignUpModelImpl extends AuthSignUpModel {
   SignUpModelImpl({

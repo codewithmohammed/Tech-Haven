@@ -2,7 +2,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/pages/bottomnav/user_bottom_navigation_bar.dart';
-import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/welcome_page.dart';
 
 class SplashScreen extends StatefulWidget {

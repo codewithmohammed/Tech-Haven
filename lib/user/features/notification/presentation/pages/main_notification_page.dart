@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
-import 'package:tech_haven/user/features/notification/presentation/pages/subpages/chat_page.dart';
+import 'package:tech_haven/user/features/notification/presentation/pages/subpages/user_chat_page.dart';
 import 'package:tech_haven/user/features/notification/presentation/pages/subpages/notification_page.dart';
 import 'package:tech_haven/user/features/notification/presentation/widgets/tab_text.dart';
 
@@ -42,7 +42,7 @@ class MainNotificationPage extends StatelessWidget {
             ),
             body: const TabBarView(
               children: [
-                ChatPage(),
+                UserChatPage(),
                 NotificationPage(),
               ],
             ),

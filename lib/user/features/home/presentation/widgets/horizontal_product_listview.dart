@@ -36,7 +36,10 @@ class HorizontalProductListView extends StatelessWidget {
               itemCount: 10,
               itemBuilder: (BuildContext context, int index) {
                 //column since the container is divided into two
-                return  ProductCard(index: index,);
+                return ProductCard(
+                  index: index,
+                  isHorizontal: true,
+                );
               },
             ),
           ),
@@ -45,4 +48,3 @@ class HorizontalProductListView extends StatelessWidget {
     );
   }
 }
-

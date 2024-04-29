@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/pages/bottomnav/user_bottom_navigation_bar.dart';
@@ -15,6 +16,9 @@ import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart'
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
 import 'package:tech_haven/core/pages/splash/presentation/pages/splash_page.dart';
+import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
+import 'package:tech_haven/vendor/features/message/presentation/pages/vendor_chat_page.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/pages/register_product_page.dart';
 
 // class AppRoutes {
 //   static GoRouter goRouter = GoRouter(
@@ -400,7 +404,46 @@ class AppRoutes {
       _buildPageRoute(
           name: AppRouteConstants.vendorMainPage,
           path: '/vendor_main_page',
-          child: const VendorBottomNavigationBar())
+          child: const VendorBottomNavigationBar()),
+      _buildPageRoute(
+        name: AppRouteConstants.vendorChatPage,
+        path: '/vendor_chat_page',
+        child: const VendorChatPage(),
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.searchPage,
+        path: '/search_page',
+        child: const SearchPage(),
+        transitionsBuilder: (animation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1), // Slide from bottom to top
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.registerProductPage,
+        path: '/register_product_page',
+        child: const RegisterProductPage(),
+        transitionsBuilder: (animation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1), // Slide from bottom to top
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
+      ),
     ],
   );
 

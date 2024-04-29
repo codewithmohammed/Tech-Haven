@@ -7,6 +7,8 @@ import 'package:tech_haven/core/theme/theme.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/firebase_options.dart';
 import 'package:tech_haven/init_dependencies.main.dart';
+import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
+import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +23,12 @@ void main() async {
       ),
       BlocProvider(
         create: (context) => serviceLocator<AuthBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => serviceLocator<SearchCategoryBloc>(),
+      ),
+      BlocProvider(
+        create: (_) => serviceLocator<SearchCategoryCubit>(),
       ),
     ],
     child: const MyApp(),
@@ -40,12 +48,10 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       title: 'Tech Haven',
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme, 
+      darkTheme: AppTheme.darkTheme,
       // routerConfig: AppRoutes.goRouter,
-      routeInformationProvider:
-          AppRoutes.goRouter.routeInformationProvider,
-      routeInformationParser:
-          AppRoutes.goRouter.routeInformationParser,
+      routeInformationProvider: AppRoutes.goRouter.routeInformationProvider,
+      routeInformationParser: AppRoutes.goRouter.routeInformationParser,
       routerDelegate: AppRoutes.goRouter.routerDelegate,
     );
   }

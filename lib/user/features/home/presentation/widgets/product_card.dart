@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:like_button/like_button.dart';
+import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/prize_data_widget.dart';
 import 'package:tech_haven/core/common/widgets/square_button.dart';
@@ -9,9 +11,14 @@ import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({super.key, required this.index});
+  const ProductCard({
+    super.key,
+    required this.index,
+    required this.isHorizontal,
+  });
 
   final int index;
+  final bool isHorizontal;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,7 +76,7 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                         child: Hero(
-                          tag: '$index',
+                          tag: isHorizontal ? '${index + 0.5}' : '$index',
                           child: Image.asset('assets/dev/iphone-png.png'),
                         ),
                       ),
@@ -110,6 +117,7 @@ class ProductCard extends StatelessWidget {
                                 icon: CustomIcons.starSvg,
                                 radius: 10,
                                 color: Colors.green,
+                                fit: BoxFit.scaleDown,
                               ),
                               Text(
                                 '(8K)',
@@ -123,15 +131,29 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const Positioned(
+                      Positioned(
                         top: 5,
                         right: 5,
                         child: SquareButton(
-                          icon: SvgIcon(
-                            icon: CustomIcons.heartSvg,
-                            color: AppPallete.greyTextColor,
-                            radius: 5,
-                            fit: BoxFit.scaleDown,
+                          // side: 45,
+                          icon: LikeButton(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            animationDuration: const Duration(
+                              milliseconds: 500,
+                            ),
+                            size: 20,
+                            likeBuilder: (isLiked) {
+                              return SvgIcon(
+                                icon: isLiked
+                                    ? CustomIcons.heartFilledSvg
+                                    : CustomIcons.heartSvg,
+                                color: isLiked
+                                    ? Colors.red
+                                    : AppPallete.greyTextColor,
+                                radius: 5,
+                                fit: BoxFit.scaleDown,
+                              );
+                            },
                           ),
                         ),
                       ),
@@ -140,12 +162,7 @@ class ProductCard extends StatelessWidget {
                       const Positioned(
                         bottom: 5,
                         right: 5,
-                        child: SquareButton(
-                          icon: SvgIcon(
-                            icon: CustomIcons.cartSvg,
-                            radius: 5,
-                          ),
-                        ),
+                        child: ShoppingCartButton(),
                       ),
                     ],
                   ),
