@@ -1,12 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'search_category_cubit.dart';
 
-class SearchCategoryCubitState extends Equatable {
-  final int currentIndex;
-  final int? openedAccordionIndex;
-  final int? pageOfcurrentAccordionIndex;
-
-  const SearchCategoryCubitState(this.currentIndex, this.openedAccordionIndex, this.pageOfcurrentAccordionIndex);
+sealed class SearchCategoryState extends Equatable {
+  const SearchCategoryState();
 
   @override
-  List<Object?> get props => [currentIndex, openedAccordionIndex, pageOfcurrentAccordionIndex];
+  List<Object> get props => [];
 }
+
+final class SearchCategoryInitial extends SearchCategoryState {}

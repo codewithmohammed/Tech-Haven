@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
-import 'package:tech_haven/core/datasource/data_source.dart';
-import 'package:tech_haven/core/datasource/data_source_impl.dart';
+import 'package:tech_haven/core/common/datasource/data_source.dart';
+import 'package:tech_haven/core/common/datasource/data_source_impl.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:tech_haven/user/features/auth/data/repositories/auth_repository_impl.dart';
@@ -26,6 +26,12 @@ import 'package:tech_haven/user/features/searchcategory/domain/repository/search
 import 'package:tech_haven/user/features/searchcategory/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
+import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
+import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source_impl.dart';
+import 'package:tech_haven/vendor/features/registerproduct/data/repositories/register_product_repostory_imp.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/repository/register_product_repository.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_category.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -40,6 +46,7 @@ Future<void> initDependencies() async {
   _initAuth();
   _initDataSource();
   _initSearchCategory();
+  _initRegisterProduct();
 }
 
 _initAuth() {
@@ -97,7 +104,8 @@ void _initSearchCategory() {
     ..registerFactory<SearchCategoryDataSource>(
         () => SearchCategoryDataSourceImpl(dataSource: serviceLocator()))
     ..registerFactory<SearchCategoryRepository>(() =>
-        SearchCategoryRepositoryImpl(searchCategoryDataSource: serviceLocator()))
+        SearchCategoryRepositoryImpl(
+            searchCategoryDataSource: serviceLocator()))
     ..registerFactory(
         () => GetAllCategory(searchCategoryRepository: serviceLocator()))
     ..registerLazySingleton(
@@ -107,3 +115,17 @@ void _initSearchCategory() {
     );
 }
 
+_initRegisterProduct() {
+  serviceLocator
+    ..registerFactory<RegisterProductDataSource>(
+        () => RegisterProductDataSourceImpl(dataSource: serviceLocator()))
+    ..registerFactory<RegisterProductRepository>(() =>
+        RegisterProductRepositoryImpl(
+            registerProductDataSource: serviceLocator()))
+    ..registerFactory(() => GetAllCategoryForRegister(
+          registerProductRepository: serviceLocator(),
+        ))
+    ..registerLazySingleton(
+        () => RegisterProductBloc(getAllCategoryForRegister: serviceLocator()));
+  // ..registerLazySingleton(() => ChangeCategoryModelBloc());
+}

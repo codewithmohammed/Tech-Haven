@@ -82,23 +82,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     try {
       await getVerificationId(phoneNumber);
-      // await firebaseAuth.verifyPhoneNumber(
-      //   phoneNumber: phoneNumber,
-      //   verificationCompleted: (phoneAuthCredential) async {
-      //     firebaseAuth.signInWithCredential(phoneAuthCredential);
-      //   },
-      //   verificationFailed: (error) async {
-      //     throw ServerException(error.message!);
-      //   },
-      //   codeSent: (verificationId, forceResendingToken) async {
-      //     // print('assigning the verification id');
-      //     assignTheVerificationId(verificationId);
-      //     // print(potentialVerificationId);
-      //   },
-      //   codeAutoRetrievalTimeout: (verificationId) async {},
-      // );
       if (potentialVerificationId != null) {
-        // print(potentialVerificationId);
 
         return SignUpModelImpl(
           phoneNumber: phoneNumber,
@@ -182,7 +166,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           phoneNumber: user.phoneNumber,
           email: user.email,
           username: user.displayName ?? extractNameFromEmail(user.email!),
-          profilePictureURL: '',
+          profilePhoto: '',
         ).toJson());
       } else {
         throw const ServerException(
@@ -235,10 +219,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     // required String otpCode,
   }) async {
     try {
-      // PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
-      //   verificationId: verificationID,
-      //   smsCode: otpCode,
-      // );
       UserCredential userCredential;
       // Fetch the user document from Firestore based on the provided phone number
       //check if there is a user with this number with email.

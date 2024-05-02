@@ -1,5 +1,5 @@
-import 'package:tech_haven/user/features/searchcategory/data/models/category_model.dart';
+import 'package:tech_haven/core/common/model/category_model.dart';
 
 abstract class SearchCategoryDataSource {
-  Future<List<CategoryModel>> getAllCategoryModel();
+  Future<List<CategoryModel>> getAllCategoryModel(bool refresh);
 }

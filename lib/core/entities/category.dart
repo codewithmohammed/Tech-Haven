@@ -9,6 +9,4 @@ class Category {
     required this.imageURL,
     required this.subCategories,
   });
-
-
 }

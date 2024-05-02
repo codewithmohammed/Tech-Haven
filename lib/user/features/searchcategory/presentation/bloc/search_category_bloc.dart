@@ -25,7 +25,7 @@ class SearchCategoryBloc
   FutureOr<void> _onGetAllSearchCategoryEvent(GetAllSearchCategoryEvent event,
       Emitter<SearchCategoryState> emit) async {
     if (isDataLoaded == false) {
-      final result = await _getAllCategory(NoParams());
+      final result = await _getAllCategory(GetAllCategoryParams(refreshPage: event.refreshPage));
 
       result.fold(
           (failure) => emit(

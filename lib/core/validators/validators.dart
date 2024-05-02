@@ -1,4 +1,10 @@
 class Validator {
+    static String? validateEmptyField(String? value ) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Fill the Field';
+    }
+    return null;
+  }
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Please Enter your Valid Email';

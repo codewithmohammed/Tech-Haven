@@ -15,36 +15,25 @@ import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/sign_up_welcome_page.dart';
 
-class SignUpWelcomePage extends StatefulWidget {
+class SignUpWelcomePage extends StatelessWidget {
   final String initialUsername;
   const SignUpWelcomePage({super.key, required this.initialUsername});
 
-  @override
-  State<SignUpWelcomePage> createState() => _SignUpWelcomePageState();
-}
-
-class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
   // final usernameController = TextEditingController();
-
-  // @override
-  // void dispose() {
-  //   usernameController.dispose();
-  //   super.dispose();
-  // }
-
-  File? image;
-  void selectImage() async {
-    final pickedImage = await pickImage();
-    if (pickedImage != null) {
-      setState(() {
-        image = pickedImage;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<String> username = ValueNotifier(widget.initialUsername);
+    ValueNotifier<String> username = ValueNotifier(initialUsername);
+    ValueNotifier<File?> image = ValueNotifier(null);
+
+    // File? image;
+    void selectImage() async {
+      final pickedImage = await pickImage();
+      if (pickedImage != null) {
+        image.value = pickedImage;
+      }
+    }
+
     final Color userColor = getRandomColor();
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
@@ -56,8 +45,8 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
             context.read<AuthBloc>().add(
                   SignUpWelcomePageProfileUploadEvent(
                     uid: state.user.uid!,
-                    isProfilePhotoUploaded: image != null,
-                    image: image,
+                    isProfilePhotoUploaded: image.value != null,
+                    image: image.value,
                     username: username.value,
                     color: userColor.value,
                   ),
@@ -126,30 +115,36 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
                           ],
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.center,
-                        height: 200,
-                        width: 200,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: userColor,
-                            image: image == null
-                                ? null
-                                : DecorationImage(
-                                    image: FileImage(image!),
-                                  )),
-                        child: image == null
-                            ? ValueListenableBuilder(
-                                valueListenable: username,
-                                builder: (context, value, child) {
-                                  return Text(
-                                    username.value.split('').first,
-                                    style: const TextStyle(
-                                      fontSize: 100,
-                                    ),
-                                  );
-                                })
-                            : const SizedBox(),
+                      ValueListenableBuilder(
+                        valueListenable: image,
+                        builder: (context, value, child) {
+                          return Container(
+                            alignment: Alignment.center,
+                            height: 200,
+                            width: 200,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: userColor,
+                                image: image.value == null
+                                    ? null
+                                    : DecorationImage(
+                                        image: FileImage(image.value!),
+                                      )),
+                            child: image.value == null
+                                ? ValueListenableBuilder(
+                                    valueListenable: username,
+                                    builder: (context, value, child) {
+                                      return Text(
+                                        username.value.split('').first,
+                                        style: const TextStyle(
+                                          fontSize: 100,
+                                        ),
+                                      );
+                                    })
+                                : const SizedBox(),
+                          );
+                        },
+                        // child:
                       ),
                       Positioned(
                         right: 0,
@@ -176,41 +171,31 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
                 ),
 
                 TextFormField(
-                  initialValue: widget.initialUsername,
+                  initialValue: initialUsername,
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       username.value = value;
                     } else {
-                      username.value = widget.initialUsername;
+                      username.value = initialUsername;
                     }
                   },
                   decoration: const InputDecoration(
                     hintText: 'Enter your UserName',
                   ),
                 ),
-                // const Spacer(),
                 const SizedBox(
                   height: 50,
                 ),
                 PrimaryAppButton(
                   buttonText: 'Save',
                   onPressed: () {
-                    context.read<AuthBloc>().add(CreateUserEvent(
-                          username: username.value,
-                          image: image,
-                          color: userColor.value,
-                        )
-                            // SignUpWelcomePageProfileUploadEvent(
-                            //   //profile is not uploaded if the image is null or it is uploaded.
-                            //   isprofilephotoUploaded: image != null,
-                            //   image: image,
-                            //   username: username.value,
-                            //   color: userColor.value,
-                            // ),
-                            );
-                    // GoRouter.of(context).pushNamed(
-                    //   AppRouteConstants.mainPage,
-                    // );
+                    context.read<AuthBloc>().add(
+                          CreateUserEvent(
+                            username: username.value,
+                            image: image.value,
+                            color: userColor.value,
+                          ),
+                        );
                   },
                 ),
               ],
@@ -221,6 +206,7 @@ class _SignUpWelcomePageState extends State<SignUpWelcomePage> {
     );
   }
 }
+
 // class SplashAnimation extends StatefulWidget {
 //   const SplashAnimation({super.key});
 

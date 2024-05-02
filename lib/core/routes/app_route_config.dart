@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/pages/bottomnav/user_bottom_navigation_bar.dart';
-import 'package:tech_haven/core/pages/bottomnav/vendor_bottom_navigation_bar.dart';
+import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
+import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/new_password_page.dart';
@@ -15,7 +15,7 @@ import 'package:tech_haven/user/features/details/presentation/pages/details_page
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
-import 'package:tech_haven/core/pages/splash/presentation/pages/splash_page.dart';
+import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';
 import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
 import 'package:tech_haven/vendor/features/message/presentation/pages/vendor_chat_page.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/pages/register_product_page.dart';
@@ -430,7 +430,7 @@ class AppRoutes {
       _buildPageRoute(
         name: AppRouteConstants.registerProductPage,
         path: '/register_product_page',
-        child: const RegisterProductPage(),
+        child:  RegisterProductPage(),
         transitionsBuilder: (animation, child) {
           return SlideTransition(
             position: Tween<Offset>(

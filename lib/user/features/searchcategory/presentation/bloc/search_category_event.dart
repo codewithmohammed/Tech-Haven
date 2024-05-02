@@ -7,4 +7,7 @@ sealed class SearchCategoryEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class GetAllSearchCategoryEvent extends SearchCategoryEvent{}
+final class GetAllSearchCategoryEvent extends SearchCategoryEvent {
+  final bool refreshPage;
+  GetAllSearchCategoryEvent({required this.refreshPage});
+}

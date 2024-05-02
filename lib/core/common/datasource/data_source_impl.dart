@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tech_haven/core/datasource/data_source.dart';
+import 'package:tech_haven/core/common/datasource/data_source.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
-import 'package:tech_haven/user/features/searchcategory/data/models/category_model.dart';
+import 'package:tech_haven/core/common/model/category_model.dart';
 // import 'package:tech_haven/core/models/category.dart';
 
 class DataSourceImpl implements DataSource {
@@ -16,32 +16,39 @@ class DataSourceImpl implements DataSource {
 
   @override
   Stream<String> getUserData() {
-    // TODO: implement getAllCategories
-    throw UnimplementedError();
+    try{
+      
+    }
   }
 
+  List<CategoryModel> mainCategories = [];
   // @override
   @override
-  Future<List<CategoryModel>> getAllCategoryData() async {
-    List<CategoryModel> mainCategories = [];
-    List<CategoryModel> subcategories = [];
-    List<CategoryModel> variants = [];
+  Future<List<CategoryModel>> getAllCategoryData(bool refresh) async {
+    if (mainCategories.isNotEmpty && !refresh) {
+      return mainCategories;
+    }
+    mainCategories.clear();
     try {
       final mainSnapshot =
           await firebaseFirestore.collection('categories').get();
       for (var mainCategoryDoc in mainSnapshot.docs) {
+        List<CategoryModel> subcategories = [];
         var mainDocumentData = mainCategoryDoc.data();
         CategoryModel mainCategory = CategoryModel.fromJson(mainDocumentData);
-        mainCategories.add(mainCategory);
-        print(mainCategory.categoryName);
+        //list of mainCategories
+
+        //[mainCategory]
+        mainCategories.add(mainCategory); //one category is added.
         final subSnapshotDocs =
             await fetchSubcollectionData(mainCategoryDoc.reference);
 
         for (var subCategoryDoc in subSnapshotDocs) {
+          List<CategoryModel> variants = [];
           var subDocumentData = subCategoryDoc.data() as Map<String, dynamic>;
           CategoryModel subCategory = CategoryModel.fromJson(subDocumentData);
-          print(subCategory.categoryName);
-          subcategories.add(subCategory);
+          // print(subCategory.categoryName);
+          subcategories.add(subCategory); //one category is added
           final variantSnapshotDocs =
               await fetchSubsubcollectionData(subCategoryDoc.reference);
 
@@ -50,13 +57,16 @@ class DataSourceImpl implements DataSource {
                 variantCategoryDoc.data() as Map<String, dynamic>;
             CategoryModel variantCategory =
                 CategoryModel.fromJson(variantDocumentData);
-            variants.add(variantCategory);
+            variants.add(
+                variantCategory); //one category is added if there is only one variant category it goes outside of loop.
           }
-          subCategory.subCategories = variants;
+          subCategory.subCategories =
+              variants; //variants have only one category model in it.
         }
         mainCategory.subCategories = subcategories;
       }
-      return mainCategories;
+
+      return mainCategories.reversed.toList();
     } on FirebaseException catch (e) {
       throw ServerException(e.toString());
     } catch (e) {

@@ -5,8 +5,8 @@ import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/icons/icons.dart';
-import 'package:tech_haven/core/pages/bottomnav/utils/bottom_nav_utils.dart';
-import 'package:tech_haven/core/pages/bottomnav/widgets/bottom_navigation_bar_container.dart';
+import 'package:tech_haven/core/common/pages/bottomnav/utils/bottom_nav_utils.dart';
+import 'package:tech_haven/core/common/pages/bottomnav/widgets/bottom_navigation_bar_container.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 

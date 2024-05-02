@@ -6,16 +6,22 @@ class UserModel extends User {
     required super.phoneNumber,
     required super.email,
     required super.username,
-    required super.profilePictureURL,
+    required super.profilePhoto,
+    required super.isVendor,
+    required super.isProfilePhotoUploaded,
+    required super.color,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> map) {
+  factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      uid: map['uid'],
-      phoneNumber: map['phoneNumber'],
-      email: map['email'],
-      username: map['username'],
-      profilePictureURL: map['profilePictureURL'],
+      uid: json['uid'],
+      phoneNumber: json['phoneNumber'],
+      email: json['email'],
+      username: json['username'],
+      profilePhoto: json['profilePictureURL'],
+      isVendor: json['isVendor'],
+      isProfilePhotoUploaded: json['isProfilePhotoUploaded'],
+      color: json['color'],
     );
   }
   Map<String, dynamic> toJson() => {
@@ -23,6 +29,9 @@ class UserModel extends User {
         "phoneNumber": phoneNumber ?? '',
         "email": email ?? '',
         "username": username ?? '',
-        "profilePictureURL": profilePictureURL ?? ''
+        "profilePictureURL": profilePhoto ?? '',
+        "isVendor": isVendor,
+        "color": color,
+        "isProfilePhotoUploaded": isProfilePhotoUploaded,
       };
 }

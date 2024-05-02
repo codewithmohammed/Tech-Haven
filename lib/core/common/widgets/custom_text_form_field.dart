@@ -7,7 +7,7 @@ class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final bool isObscureText;
-  final TextEditingController textEditingController;
+  final TextEditingController? textEditingController;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final AutovalidateMode? autovalidateMode;

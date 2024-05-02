@@ -9,9 +9,9 @@ class SearchCategoryRepositoryImpl implements SearchCategoryRepository {
   final SearchCategoryDataSource searchCategoryDataSource;
   SearchCategoryRepositoryImpl({required this.searchCategoryDataSource});
   @override
-  Future<Either<Failure, List<Category>>> getAllCategories() async {
+  Future<Either<Failure, List<Category>>> getAllCategories(bool refresh) async {
     try {
-      final result = await searchCategoryDataSource.getAllCategoryModel();
+      final result = await searchCategoryDataSource.getAllCategoryModel(refresh);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
