@@ -1,16 +1,17 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 
-class PublishedPage extends StatefulWidget {
-  const PublishedPage({super.key});
+class PublishedPage extends StatelessWidget {
+  const PublishedPage({super.key, required this.listOfPublishedProduct});
 
-  @override
-  State<PublishedPage> createState() => _PublishedPageState();
-}
+  final List<Product> listOfPublishedProduct;
 
-class _PublishedPageState extends State<PublishedPage> {
   @override
   Widget build(BuildContext context) {
 // void _handleOpen() {
@@ -21,7 +22,7 @@ class _PublishedPageState extends State<PublishedPage> {
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [],
         body: ListView.builder(
-          itemCount: 40,
+          itemCount: listOfPublishedProduct.length,
           itemBuilder: (context, index) {
             return Slidable(
               // enabled:,
@@ -55,12 +56,18 @@ class _PublishedPageState extends State<PublishedPage> {
                   decoration: const BoxDecoration(
                     color: AppPallete.darkgreyColor,
                   ),
-                  child: Image.asset('assets/dev/hp-laptop-png.png'),
+                  child: Image.network(
+                    listOfPublishedProduct[index].displayImageURL,
+                  ),
                 ),
-                title: const Text('Name'),
-                subtitle: const Text('Last Message'),
+                title: Text(listOfPublishedProduct[index].name),
+                subtitle: Text(listOfPublishedProduct[index].prize.toString()),
                 // trailing:
-                onTap: () {},
+                onTap: () { 
+                  GoRouter.of(context).pushNamed(
+                      AppRouteConstants.registerProductPage,
+                      extra: listOfPublishedProduct[index]);
+                },
               ),
             );
           },

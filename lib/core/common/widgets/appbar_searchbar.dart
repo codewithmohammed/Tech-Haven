@@ -66,10 +66,16 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                 width: 10,
               ),
               favouriteIconNeeded
-                  ? const SvgIcon(
-                      icon: CustomIcons.heartSvg,
-                      radius: 30,
-                      color: AppPallete.greyTextColor,
+                  ? GestureDetector(
+                      onTap: () {
+                        GoRouter.of(context)
+                            .pushNamed(AppRouteConstants.favoritePage);
+                      },
+                      child: const SvgIcon(
+                        icon: CustomIcons.heartSvg,
+                        radius: 30,
+                        color: AppPallete.greyTextColor,
+                      ),
                     )
                   : const SizedBox()
             ],

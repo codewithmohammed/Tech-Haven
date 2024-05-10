@@ -1,25 +1,22 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_page_divider.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
-import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/common/widgets/square_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
-import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({super.key});
+  const DetailsPage({super.key, required this.product});
+
+  final Product product;
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -47,29 +44,29 @@ class _DetailsPageState extends State<DetailsPage>
     PageController pageController = PageController();
     int selectedColor = 1;
     // TabController controller = TabController(length: 2, vsync: this);
-    return SafeArea(
-      child: Scaffold(
-        appBar: const AppBarSearchBar(
-          deliveryPlaceNeeded: false,
-        ),
-        body: SingleChildScrollView(
+    return Scaffold(
+      appBar: const AppBarSearchBar(
+        deliveryPlaceNeeded: false,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //for the brand name
-              const Padding(
-                padding: EdgeInsets.all(10),
+              Padding(
+                padding: const EdgeInsets.all(10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GlobalTitleText(
-                      title: 'Brand Name',
+                      title: widget.product.brandName,
                       fontSize: 16,
                       color: AppPallete.primaryAppColor,
                     ),
                     Constants.kHeight,
                     Text(
-                      'PlayStation 5 Digital Edition Console Withsssssssssssssssss Controller',
+                      widget.product.name,
                     ),
                   ],
                 ),
@@ -85,9 +82,9 @@ class _DetailsPageState extends State<DetailsPage>
                     itemCount: 1,
                     itemBuilder: (context, index, realIndex) {
                       return Hero(
-                        tag: '${index +0.5}',
-                        child: Image.asset(
-                          'assets/dev/iphone-png.png',
+                        tag: widget.product.productID,
+                        child: Image.network(
+                          widget.product.displayImageURL,
                         ),
                       );
                     },
@@ -100,29 +97,30 @@ class _DetailsPageState extends State<DetailsPage>
                     ),
                   ),
                   const Positioned(
-                      right: 10,
-                      top: 5,
-                      child: Column(
-                        children: [
-                          SquareButton(
-                            icon: SvgIcon(
-                              icon: CustomIcons.heartSvg,
-                              color: AppPallete.greyTextColor,
-                              radius: 5,
-                              fit: BoxFit.scaleDown,
-                            ),
+                    right: 10,
+                    top: 5,
+                    child: Column(
+                      children: [
+                        SquareButton(
+                          icon: SvgIcon(
+                            icon: CustomIcons.heartSvg,
+                            color: AppPallete.greyTextColor,
+                            radius: 5,
+                            fit: BoxFit.scaleDown,
                           ),
-                          Constants.kHeight,
-                          SquareButton(
-                            icon: SvgIcon(
-                              icon: CustomIcons.shareSvg,
-                              color: AppPallete.greyTextColor,
-                              radius: 5,
-                              fit: BoxFit.scaleDown,
-                            ),
+                        ),
+                        Constants.kHeight,
+                        SquareButton(
+                          icon: SvgIcon(
+                            icon: CustomIcons.shareSvg,
+                            color: AppPallete.greyTextColor,
+                            radius: 5,
+                            fit: BoxFit.scaleDown,
                           ),
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
 
@@ -147,10 +145,9 @@ class _DetailsPageState extends State<DetailsPage>
                       child: TabBarView(
                         controller: _tabController,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.all(15),
-                            child: Text(
-                                'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat'),
+                          Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Text(widget.product.overview),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -464,6 +461,10 @@ class _DetailsPageState extends State<DetailsPage>
                   return ProductCard(
                     index: index,
                     isHorizontal: false,
+                    product: null,
+                    onTapFavouriteButton: (bool) async {
+                      return null;
+                    }, listOfFavoritedProducts: [],
                   );
                 },
               ),
@@ -473,82 +474,82 @@ class _DetailsPageState extends State<DetailsPage>
             ],
           ),
         ),
-        bottomSheet: Container(
-          width: double.infinity,
-          height: 70,
-          decoration: const BoxDecoration(
-            color: AppPallete.whiteColor,
-            border: Border(
-              top: BorderSide(
-                color: AppPallete.greyTextColor,
-                width: 0.5,
-              ),
+      ),
+      bottomSheet: Container(
+        width: double.infinity,
+        height: 70,
+        decoration: const BoxDecoration(
+          color: AppPallete.whiteColor,
+          border: Border(
+            top: BorderSide(
+              color: AppPallete.greyTextColor,
+              width: 0.5,
             ),
           ),
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              Container(
+        ),
+        padding: const EdgeInsets.all(8),
+        child: Row(
+          children: [
+            Container(
+              height: 50,
+              width: 50,
+              decoration: const BoxDecoration(
+                color: AppPallete.whiteColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(
+                    5,
+                  ),
+                ),
+                border: Border(
+                  top: BorderSide(
+                    color: AppPallete.greyTextColor,
+                    width: 0.5,
+                  ),
+                  bottom: BorderSide(
+                    color: AppPallete.greyTextColor,
+                    width: 0.5,
+                  ),
+                  right: BorderSide(
+                    color: AppPallete.greyTextColor,
+                    width: 0.5,
+                  ),
+                  left: BorderSide(
+                    color: AppPallete.greyTextColor,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'QTY',
+                    style: TextStyle(
+                        color: AppPallete.greyTextColor, fontSize: 10),
+                  ),
+                  Text(
+                    '1',
+                    style: TextStyle(
+                      color: AppPallete.textColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            const Expanded(
+              child: SizedBox(
                 height: 50,
-                width: 50,
-                decoration: const BoxDecoration(
-                  color: AppPallete.whiteColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(
-                      5,
-                    ),
-                  ),
-                  border: Border(
-                    top: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                    bottom: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                    right: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                    left: BorderSide(
-                      color: AppPallete.greyTextColor,
-                      width: 0.5,
-                    ),
-                  ),
-                ),
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'QTY',
-                      style: TextStyle(
-                          color: AppPallete.greyTextColor, fontSize: 10),
-                    ),
-                    Text(
-                      '1',
-                      style: TextStyle(
-                        color: AppPallete.textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
+                child: RoundedRectangularButton(
+                  title: 'ADD TO CART',
                 ),
               ),
-              const SizedBox(
-                width: 15,
-              ),
-              const Expanded(
-                child: SizedBox(
-                  height: 50,
-                  child: RoundedRectangularButton(
-                    title: 'ADD TO CART',
-                  ),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

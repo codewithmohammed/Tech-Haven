@@ -4,17 +4,31 @@ import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/repository/register_product_repository.dart';
 
-class RegisterNewProduct
-    implements UseCase<bool, RegisterNewProductParams> {
+class RegisterNewProduct implements UseCase<bool, RegisterNewProductParams> {
   final RegisterProductRepository registerProductRepository;
   RegisterNewProduct({
     required this.registerProductRepository,
   });
 
   @override
-  Future<Either<Failure, bool>> call(
-      RegisterNewProductParams params) async {
-    return await registerProductRepository.registerNewProduct(brandName: params.brandName, name: params.productName, prize: params.productPrize, quantity: params.productQuantity, mainCategory: params.mainCategory, mainCategoryID: params.mainCategoryID, subCategory: params.subCategory, subCategoryID: params.subCategoryID, variantCategory: params.variantCategory, variantCategoryID: params.variantCategoryID, overview: params.productOverview, specifications: params.specifications, shippingCharge: params.shippingCharge, productImages: params.productImages, isPublished: params.isPublished);
+  Future<Either<Failure, bool>> call(RegisterNewProductParams params) async {
+    return await registerProductRepository.registerNewProduct(
+      brandName: params.brandName,
+      name: params.productName,
+      prize: params.productPrize,
+      quantity: params.productQuantity,
+      mainCategory: params.mainCategory,
+      mainCategoryID: params.mainCategoryID,
+      subCategory: params.subCategory,
+      subCategoryID: params.subCategoryID,
+      variantCategory: params.variantCategory,
+      variantCategoryID: params.variantCategoryID,
+      overview: params.productOverview,
+      specifications: params.specifications,
+      shippingCharge: params.shippingCharge,
+      productImages: params.productImages,
+      isPublished: params.isPublished,
+    );
   }
 }
 

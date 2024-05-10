@@ -7,8 +7,12 @@ import 'package:tech_haven/core/theme/theme.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/firebase_options.dart';
 import 'package:tech_haven/init_dependencies.main.dart';
+import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
+import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 
 void main() async {
@@ -26,17 +30,26 @@ void main() async {
         create: (context) => serviceLocator<AuthBloc>(),
       ),
       BlocProvider(
+        create: (_) => serviceLocator<HomePageBloc>(),
+      ),
+      BlocProvider(
         create: (context) => serviceLocator<SearchCategoryBloc>(),
       ),
       BlocProvider(
         create: (_) => serviceLocator<SearchCategoryCubit>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<RegisterProductBloc>(),
       ),
-      //    BlocProvider(
-      //   create: (_) => serviceLocator<ChangeCategoryModelBloc>(),
-      // ),
+      BlocProvider(
+        create: (_) => serviceLocator<ManageProductBloc>(),
+      ),
+      BlocProvider(
+        create: (_) => serviceLocator<GetImagesBloc>(),
+      ),
+      BlocProvider(
+        create: (_) => serviceLocator<FavoritePageBloc>(),
+      ),
     ],
     child: const MyApp(),
   ));

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/notification/presentation/widgets/tab_text.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/subpages/published_page.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/subpages/unplubished_page.dart';
 
@@ -10,42 +13,65 @@ class ManageProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!ManageProductBloc.isDataLoaded) {
+        // If data is not loaded and not loading, fetch the data
+        BlocProvider.of<ManageProductBloc>(context).add(GetAllProductsEvent());
+      }
+    });
+    return SafeArea(
       child: DefaultTabController(
         length: 2,
-        child: Scaffold(
-          // extendBody: false,
-          // resizeToAvoidBottomInset: true,
-          appBar: VendorAppBar(
-            title: 'Manage Products',
-            bottom: TabBar(
-              indicatorWeight: 1,
-              indicatorPadding: EdgeInsets.only(top: 45),
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicator: BoxDecoration(
-                color: AppPallete.primaryAppButtonColor,
-              ),
-              dividerHeight: 0,
-              tabs: [
-                Tab(
-                  child: TabText(
-                    title: 'Published',
+        child: BlocConsumer<ManageProductBloc, ManageProductState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is ManageProductLoadingState) {
+              return const Loader();
+            }
+            if (state is GetAllProductsSuccess) {
+              return Scaffold(
+                appBar: const VendorAppBar(
+                  title: 'Manage Products',
+                  bottom: TabBar(
+                    indicatorWeight: 1,
+                    indicatorPadding: EdgeInsets.only(top: 45),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                      color: AppPallete.primaryAppButtonColor,
+                    ),
+                    dividerHeight: 0,
+                    tabs: [
+                      Tab(
+                        child: TabText(
+                          title: 'Published',
+                        ),
+                      ),
+                      Tab(
+                        child: TabText(
+                          title: 'UnPublished',
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Tab(
-                  child: TabText(
-                    title: 'UnPublished',
-                  ),
+                body: TabBarView(
+                  children: [
+                    PublishedPage(
+                      listOfPublishedProduct: state.listOfProductModel
+                          .where((element) => element.isPublished == true)
+                          .toList(),
+                    ),
+                    UnPublishedPage(
+                      listOfPublishedProduct: state.listOfProductModel
+                          .where((element) => element.isPublished == false)
+                          .toList(),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              PublishedPage(),
-              UnPublishedPage(),
-            ],
-          ),
+              );
+            }
+            return const SizedBox();
+          },
         ),
       ),
     );

@@ -1,10 +1,10 @@
-import 'package:tech_haven/core/entities/image.dart';
+
 
 class Product {
   final String productID;
-  final String vendorID;
   final String vendorName;
   final String brandName;
+  final String displayImageURL;
   final String name;
   final double prize;
   final int quantity;
@@ -17,15 +17,16 @@ class Product {
   final String overview;
   final Map<String, String>? specifications;
   final double? shippingCharge;
-  final Map<int,List<Image>> listOfImages;
+
+  // final Map<int,List<Image>> productImages;
   final double? rating;
   final bool isPublished;
 
   Product({
     required this.productID,
-    required this.vendorID,
     required this.vendorName,
     required this.brandName,
+    required this.displayImageURL,
     required this.name,
     required this.prize,
     required this.quantity,
@@ -38,7 +39,7 @@ class Product {
     required this.overview,
     required this.specifications,
     required this.shippingCharge,
-    required this.listOfImages,
+    // required this.productImages,
     required this.rating,
     required this.isPublished,
   });

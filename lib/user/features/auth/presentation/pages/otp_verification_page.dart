@@ -73,7 +73,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             GoRouter.of(context).pushReplacementNamed(
                 AppRouteConstants.signupWelcomePage,
                 pathParameters: {
-                  'initialUsername': state.user.username!,
+                  'initialUsername': state.username,
                 });
           }
           if (state is UserCreationFailed) {
@@ -87,7 +87,8 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             GoRouter.of(context).pop();
           }
         },
-        builder: (context, state) {          if (state is AuthLoading) {
+        builder: (context, state) {
+          if (state is AuthLoading) {
             return const Loader();
           }
           return Stack(
@@ -131,20 +132,15 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         hapticFeedbackType: HapticFeedbackType.lightImpact,
                         //on completing the entering of the pinCode.
                         onCompleted: (pinCode) {
-                   
-                            // print(
-                            //     'onComccccccccccccccccccccccccccccccccccccccpleted: $pinCode');
-                            context.read<AuthBloc>().add(
-                                  VerifyPhoneAndSignUpUserEvent(
-                                    phoneNumber: widget.phoneNumber,
-                                    email: widget.email,
-                                    password: widget.password,
-                                    verificationId: widget.verificaionID,
-                                    otpCode: pinCode,
-                                  ),
-                                );
-                         
-                
+                          context.read<AuthBloc>().add(
+                                VerifyPhoneAndSignUpUserEvent(
+                                  phoneNumber: widget.phoneNumber,
+                                  email: widget.email,
+                                  password: widget.password,
+                                  verificationId: widget.verificaionID,
+                                  otpCode: pinCode,
+                                ),
+                              );
                         },
                         onChanged: (value) {
                           debugPrint('onChanged: $value');

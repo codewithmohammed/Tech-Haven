@@ -1,5 +1,4 @@
 import 'package:tech_haven/core/entities/auth_sign_up_model.dart';
-import 'package:tech_haven/core/entities/user_data_model.dart';
 
 import 'auth_bloc.dart';
 
@@ -15,25 +14,25 @@ final class OTPSendSuccess extends SignUpPageActionState {
   OTPSendSuccess({required this.authSignUpModel});
 }
 
-final class SignUpPageDisableTextField extends SignUpPageActionState {
-  final String verificationId;
-  SignUpPageDisableTextField({required this.verificationId});
-}
+// final class SignUpPageDisableTextField extends SignUpPageActionState {
+//   final String verificationId;
+//   SignUpPageDisableTextField({required this.verificationId});
+// }
 
-final class SignUpUserSuccess extends SignUpPageActionState {
-  final UserDataModel user;
-  SignUpUserSuccess({required this.user});
-}
+// final class SignUpUserSuccess extends SignUpPageActionState {
+//   final String username;
+//   SignUpUserSuccess({required this.username});
+// }
 
-final class SignUpUserFailed extends SignUpPageActionState {
-  final String message;
-  SignUpUserFailed({required this.message});
-}
+// final class SignUpUserFailed extends SignUpPageActionState {
+//   final String message;
+//   SignUpUserFailed({required this.message});
+// }
 
-final class StartSigningUpUser extends SignUpPageActionState {
-  final String userId;
-  StartSigningUpUser({required this.userId});
-}
+// final class StartSigningUpUser extends SignUpPageActionState {
+//   final String userId;
+//   StartSigningUpUser({required this.userId});
+// }
 
 final class AuthGoogleSignUpFailed extends SignUpPageActionState {
   final String message;

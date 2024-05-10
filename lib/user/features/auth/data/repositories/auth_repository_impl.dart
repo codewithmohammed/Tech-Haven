@@ -36,7 +36,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, User>> verifyPhoneAndSignUpUser({
+  Future<Either<Failure, String>> verifyPhoneAndSignUpUser({
     required String phoneNumber,
     required String email,
     required String password,
@@ -44,32 +44,27 @@ class AuthRepositoryImpl implements AuthRepository {
     required String otpCode,
   }) async {
     try {
-      final user = await remoteDataSource.verifyPhoneAndSignUpUser(
+      final username = await remoteDataSource.verifyPhoneAndSignUpUser(
         phoneNumber: phoneNumber,
         email: email,
         password: password,
         verificationId: verificationId,
         otpCode: otpCode,
       );
-      return right(User(
-          uid: user.uid,
-          phoneNumber: user.phoneNumber,
-          username: user.username,
-          email: user.email,
-          profilePictureURL: user.phoneNumber));
+      return right(username);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
 
   @override
-  Future<Either<Failure, String>> createUser({
+  Future<Either<Failure, bool>> createUser({
     required File? image,
     required String username,
     required int color,
   }) async {
     try {
-      final String result = await remoteDataSource.createUser(
+      final bool result = await remoteDataSource.createUser(
           image: image, username: username, color: color);
       return right(result);
     } on ServerException catch (e) {
@@ -77,19 +72,19 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  @override
-  Future<Either<Failure, User>> currentUser() async {
-    try {
-      final currentUser = remoteDataSource.currentUser;
-      if (currentUser == null) {
-        return left(Failure('User not logged in!'));
-      }
-      // print('the current user id is ${currentUser.uid}');
-      return throw UnimplementedError();
-    } on ServerException catch (e) {
-      return left(Failure(e.message));
-    }
-  }
+  // @override
+  // Future<Either<Failure, User>> currentUser() async {
+  //   try {
+  //     final currentUser = remoteDataSource.currentUser;
+  //     if (currentUser == null) {
+  //       return left(Failure('User not logged in!'));
+  //     }
+  //     // print('the current user id is ${currentUser.uid}');
+  //     return throw UnimplementedError();
+  //   } on ServerException catch (e) {
+  //     return left(Failure(e.message));
+  //   }
+  // }
 
   @override
   Future<Either<Failure, String>> userSignIn(
@@ -114,10 +109,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, String>> forgotPasswordSendEmail({required String phoneNumber}) async {
+  Future<Either<Failure, String>> forgotPasswordSendEmail(
+      {required String phoneNumber}) async {
     try {
-      final result =
-          await remoteDataSource.forgotPasswordSendEmail(phoneNumber: phoneNumber);
+      final result = await remoteDataSource.forgotPasswordSendEmail(
+          phoneNumber: phoneNumber);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

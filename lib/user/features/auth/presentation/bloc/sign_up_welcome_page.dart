@@ -7,8 +7,8 @@ final class AuthSignUpWelcomPageState extends AuthState {}
 final class SignUpWelcomePageActionState extends AuthSignUpWelcomPageState {}
 
 final class CreateUserSuccess extends SignUpWelcomePageActionState {
-  final String message;
-  CreateUserSuccess({required this.message});
+  final bool userCreated;
+  CreateUserSuccess({required this.userCreated});
 }
 
 final class CreateUserFailed extends SignUpWelcomePageActionState {

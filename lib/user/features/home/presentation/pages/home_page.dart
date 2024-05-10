@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/widgets/custom_sliver_appbar.dart';
-import 'package:tech_haven/core/constants/constants.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/advertisement_container.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/carousel_banner_container.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/category_item_listview.dart';
@@ -19,6 +18,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    context.read<HomePageBloc>().add(GetAllProductsEvent());
+    context.read<HomePageBloc>().add(GetAllBannerEvent());
+    print('hskdfsjdhfjs');
     return const Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
@@ -37,23 +39,19 @@ class _HomePageState extends State<HomePage> {
               child: CategoryIconListView(),
             ),
             SliverToBoxAdapter(
-              child: HorizontalProductListView(),
+              child: HorizontalProductListView(
+                  // listOfProducts: state.listOfProducts,
+                  ),
             ),
-            // sliver items 2
             SliverToBoxAdapter(
               child: DealsGridView(),
             ),
             SliverToBoxAdapter(
               child: SizedBox(height: 80),
             )
-            // sliver items 3
-            // SliverToBoxAdapter(
-            //   child:
-            // ),
           ],
         ),
       ),
     );
   }
 }
-

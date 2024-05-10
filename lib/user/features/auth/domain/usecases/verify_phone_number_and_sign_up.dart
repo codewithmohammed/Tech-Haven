@@ -5,12 +5,12 @@ import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/auth/domain/repository/auth_repository.dart';
 
 class VerifyPhoneAndSignUpUser
-    implements UseCase<User, VerifyPhoneAndSignUpUserParams> {
+    implements UseCase<String, VerifyPhoneAndSignUpUserParams> {
   final AuthRepository authRepository;
   const VerifyPhoneAndSignUpUser(this.authRepository);
 
   @override
-  Future<Either<Failure, User>> call(
+  Future<Either<Failure, String>> call(
       VerifyPhoneAndSignUpUserParams params) async {
     return await authRepository.verifyPhoneAndSignUpUser(
       phoneNumber: params.phoneNumber,

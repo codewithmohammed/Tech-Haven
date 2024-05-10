@@ -18,4 +18,6 @@ class User {
     required this.profilePhoto,
     required this.color,
   });
+
+
 }

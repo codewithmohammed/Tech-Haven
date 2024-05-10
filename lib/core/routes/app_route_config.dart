@@ -1,8 +1,11 @@
+// import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
+import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/new_password_page.dart';
@@ -12,6 +15,7 @@ import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_page.da
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_welcome_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/welcome_page.dart';
 import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
+import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
@@ -396,10 +400,15 @@ class AppRoutes {
           );
         },
       ),
-      _buildPageRoute(
+      _buildPageRouteWithParams(
         name: AppRouteConstants.detailsPage,
         path: '/details_page',
-        child: const DetailsPage(),
+        pageBuilder: (state) {
+          Product product = state.extra as Product;
+          return DetailsPage(
+            product: product,
+          );
+        },
       ),
       _buildPageRoute(
           name: AppRouteConstants.vendorMainPage,
@@ -428,9 +437,9 @@ class AppRoutes {
         },
       ),
       _buildPageRoute(
-        name: AppRouteConstants.registerProductPage,
-        path: '/register_product_page',
-        child:  RegisterProductPage(),
+        name: AppRouteConstants.favoritePage,
+        path: '/favorite_page',
+        child: const FavoritePage(),
         transitionsBuilder: (animation, child) {
           return SlideTransition(
             position: Tween<Offset>(
@@ -444,6 +453,32 @@ class AppRoutes {
           );
         },
       ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.registerProductPage,
+        path: '/register_product_page',
+        pageBuilder: (state) {
+          Product? product = state.extra as Product?;
+          return RegisterProductPage(product: product);
+        },
+        transitionsBuilder: (animation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1), // Slide from bottom to top
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
+      ),
+      // _buildPageRoute(
+      //   name: AppRouteConstants.registerProductPage,
+      //   path: '/register_product_page:/product',
+      //   child:  RegisterProductPage(product: ),
+      //   transitionsBuilder:
+      // ),
     ],
   );
 
@@ -508,8 +543,6 @@ class AppRoutes {
     );
   }
 }
-
-
 
 // class MyCustomRouteTransition extends PageRouteBuilder {
 //   final Widget route;

@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tech_haven/user/features/auth/data/models/sign_up_model.dart';
-import 'package:tech_haven/user/features/auth/data/models/user_model.dart';
-
 abstract interface class AuthRemoteDataSource {
   //this is firebase user to get the current user
   User? get currentUser;
@@ -13,7 +11,7 @@ abstract interface class AuthRemoteDataSource {
     required String password,
   });
 //for otp verification
-  Future<UserModel> verifyPhoneAndSignUpUser({
+  Future<String> verifyPhoneAndSignUpUser({
     required String phoneNumber,
     required String email,
     required String password,
@@ -21,7 +19,7 @@ abstract interface class AuthRemoteDataSource {
     required String otpCode,
   });
 
-  Future<String> createUser({
+  Future<bool> createUser({
     required File? image,
     required String username,
     required int color,

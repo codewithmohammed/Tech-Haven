@@ -12,12 +12,14 @@ class ListViewContainer extends StatelessWidget {
     required this.onTapCenterWidget,
     this.crossIcon = true,
     required this.onPressedCrossIcon,
+    this.color = AppPallete.darkgreyColor,
   });
   final bool crossIcon;
   final double containerWidth;
   final Widget centerWidget;
   final void Function()? onTapCenterWidget;
   final void Function()? onPressedCrossIcon;
+  final Color color;
   @override
   Widget build(BuildContext context) {
     // int itemCount = widget.initialItemCount;
@@ -30,8 +32,8 @@ class ListViewContainer extends StatelessWidget {
           margin: const EdgeInsets.all(
             5,
           ),
-          decoration: const BoxDecoration(
-            color: AppPallete.darkgreyColor,
+          decoration:  BoxDecoration(
+            color: color,
             borderRadius: BorderRadius.all(
               Radius.circular(
                 10,

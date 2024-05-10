@@ -21,7 +21,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // final UserSignUp _userSignUp;
   final AppUserCubit _appUserCubit;
-  final CurrentUser _currentUser;
+  // final CurrentUser _currentUser;
   final SendOTPToPhoneNumber _sendOTPToPhoneNumber;
   final VerifyPhoneAndSignUpUser _verifyPhoneAndSignUpUser;
   final CreateUser _createUser;
@@ -31,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     // required UserSignUp userSignUp,
     required AppUserCubit appUserCubit,
-    required CurrentUser currentUser,
+    // required CurrentUser currentUser,
     required SendOTPToPhoneNumber sendOTPToPhoneNumber,
     required VerifyPhoneAndSignUpUser verifyPhoneAndSignUpUser,
     required CreateUser createUser,
@@ -41,7 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   })  :
         //  _userSignUp = userSignUp,
         _appUserCubit = appUserCubit,
-        _currentUser = currentUser,
+        // _currentUser = currentUser,
         _sendOTPToPhoneNumber = sendOTPToPhoneNumber,
         _verifyPhoneAndSignUpUser = verifyPhoneAndSignUpUser,
         _createUser = createUser,
@@ -63,7 +63,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<VerifyPhoneAndSignUpUserEvent>(_onVerifyPhoneAndSignUpUserEvent);
     //for verifying the otp pincode with phone number
     on<CreateUserEvent>(_onCreateUserEvent);
-    on<AuthIsUserLoggedInEvent>(_onAuthIsUserLoggedInEvent);
+    // on<AuthIsUserLoggedInEvent>(_onAuthIsUserLoggedInEvent);
     on<UserSignInEvent>(_onUserSignInEvent);
     on<SignUpWithGoogleAccount>(_onSignUpWithGoogleAccount);
     on<SignInWithGoogleAccount>(_onSignInWithGoogleAccount);
@@ -105,9 +105,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           message: failure.message,
         ),
       ),
-      (user) => emit(
+      (username) => emit(
         UserCreationSuccess(
-          user: user,
+          username: username,
         ),
       ),
     );
@@ -123,9 +123,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     res.fold(
       (failure) => emit(CreateUserFailed(message: failure.message)),
-      (result) => emit(
+      (userCreated) => emit(
         CreateUserSuccess(
-          message: result,
+          userCreated: userCreated,
         ),
       ),
     );
@@ -144,20 +144,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
-  FutureOr<void> _onAuthIsUserLoggedInEvent(
-      AuthIsUserLoggedInEvent event, Emitter<AuthState> emit) async {
-    final res = await _currentUser(NoParams());
+  // FutureOr<void> _onAuthIsUserLoggedInEvent(
+  //     AuthIsUserLoggedInEvent event, Emitter<AuthState> emit) async {
+  //   final res = await _currentUser(NoParams());
 
-    res.fold(
-        (failure) => emit(
-              AuthIsUserLoggedInFailed(message: failure.message),
-            ), (user) {
-      _appUserCubit.updateUser(user);
-      emit(
-        AuthIsUserLoggedInSuccess(user: user),
-      );
-    });
-  }
+  //   res.fold(
+  //       (failure) => emit(
+  //             AuthIsUserLoggedInFailed(message: failure.message),
+  //           ), (user) {
+  //     _appUserCubit.updateUser(user);
+  //     emit(
+  //       AuthIsUserLoggedInSuccess(user: user),
+  //     );
+  //   });
+  // }
 
   FutureOr<void> _onSignUpWithGoogleAccount(
       SignUpWithGoogleAccount event, Emitter<AuthState> emit) async {

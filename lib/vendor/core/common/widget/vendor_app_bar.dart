@@ -7,16 +7,19 @@ import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class VendorAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const VendorAppBar({
-    super.key,
-    required this.title,
-    required this.bottom,
-    this.messageIcon = true,
-  });
+  const VendorAppBar(
+      {super.key,
+      required this.title,
+      required this.bottom,
+      this.trailingIcon = CustomIcons.messagesSvg,
+      this.messageIcon = true,
+      this.onPressedTrailingIcon});
 
   final String title;
   final PreferredSizeWidget? bottom;
+  final String? trailingIcon;
   final bool messageIcon;
+  final void Function()? onPressedTrailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class VendorAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
           ),
-          child: messageIcon
+          child: messageIcon && trailingIcon == null
               ? CircularButton(
                   onPressed: () {
                     GoRouter.of(context)
@@ -44,7 +47,18 @@ class VendorAppBar extends StatelessWidget implements PreferredSizeWidget {
                   color: AppPallete.whiteColor,
                   shadow: false,
                 )
-              : null,
+              : trailingIcon != null
+                  ? CircularButton(
+                      onPressed: onPressedTrailingIcon,
+                      circularButtonChild: SvgIcon(
+                        icon: trailingIcon!,
+                        radius: 25,
+                      ),
+                      diameter: 50,
+                      color: AppPallete.whiteColor,
+                      shadow: false,
+                    )
+                  : null,
         )
       ],
       bottom: bottom,

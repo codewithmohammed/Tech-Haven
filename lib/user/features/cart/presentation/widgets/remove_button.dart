@@ -11,11 +11,12 @@ class RemoveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 60,
+      width: 80,
+      height: 25,
       child: InkWell(
         onTap: onTap,
         child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SvgIcon(
               icon: CustomIcons.trashBinSvg,

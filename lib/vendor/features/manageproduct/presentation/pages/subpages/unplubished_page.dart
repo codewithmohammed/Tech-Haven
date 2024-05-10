@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class UnPublishedPage extends StatelessWidget {
-  const UnPublishedPage({super.key});
-
+  const UnPublishedPage({super.key, required this.listOfPublishedProduct});
+  final List<Product> listOfPublishedProduct;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-        itemCount: 40,
+        itemCount: listOfPublishedProduct.length,
         itemBuilder: (context, index) {
           return Slidable(
             // enabled:,
@@ -42,10 +43,11 @@ class UnPublishedPage extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: AppPallete.darkgreyColor,
                 ),
-                child: Image.asset('assets/dev/hp-laptop-png.png'),
+                child: Image.network(
+                    listOfPublishedProduct[index].displayImageURL),
               ),
-              title: const Text('Name'),
-              subtitle: const Text('Last Message'),
+              title: Text(listOfPublishedProduct[index].name),
+              subtitle: Text(listOfPublishedProduct[index].prize.toString()),
               // trailing:
               onTap: () {
                 // GoRouter.of(context).pushNamed(

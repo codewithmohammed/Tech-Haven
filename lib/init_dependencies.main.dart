@@ -11,7 +11,6 @@ import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:tech_haven/user/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:tech_haven/user/features/auth/domain/repository/auth_repository.dart';
-import 'package:tech_haven/user/features/auth/domain/usecases/current_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/forgot_password_send_email.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/google_sign_up.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/send_otp_to_phone_number.dart';
@@ -19,6 +18,22 @@ import 'package:tech_haven/user/features/auth/domain/usecases/create_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
+import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/favorite/data/repositories/favorite_page_repository_impl.dart';
+import 'package:tech_haven/user/features/favorite/domain/repository/favorite_page_repository.dart';
+import 'package:tech_haven/user/features/favorite/domain/usecase/get_all_favorited_products.dart';
+import 'package:tech_haven/user/features/favorite/domain/usecase/remove_product_from_favorite.dart';
+import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
+import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source.dart';
+import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/home/data/repositories/home_page_repository_impl.dart';
+import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_favorited_products.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_products_home_page.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_favorite.dart';
+import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source_impl.dart';
 import 'package:tech_haven/user/features/searchcategory/data/repositories/search_category_repository_impl.dart';
@@ -26,11 +41,22 @@ import 'package:tech_haven/user/features/searchcategory/domain/repository/search
 import 'package:tech_haven/user/features/searchcategory/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
+import 'package:tech_haven/vendor/features/manageproduct/data/datasource/manage_product_data_source.dart';
+import 'package:tech_haven/vendor/features/manageproduct/data/datasource/manage_product_data_source_impl.dart';
+import 'package:tech_haven/vendor/features/manageproduct/data/repositories/manage_product_repository_impl.dart';
+import 'package:tech_haven/vendor/features/manageproduct/domain/repository/manage_product_repository.dart';
+import 'package:tech_haven/vendor/features/manageproduct/domain/usecase/get_all_products.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source_impl.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/repositories/register_product_repostory_imp.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/repository/register_product_repository.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/delete_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_category.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_images_for_the_product.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/register_new_product.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/update_existing_product.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 
 final serviceLocator = GetIt.instance;
@@ -44,9 +70,12 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => FirebaseFirestore.instance);
   serviceLocator.registerLazySingleton(() => FirebaseStorage.instance);
   _initAuth();
+  _initHomePage();
   _initDataSource();
   _initSearchCategory();
   _initRegisterProduct();
+  _initManageProduct();
+  _initFavorite();
 }
 
 _initAuth() {
@@ -75,14 +104,14 @@ _initAuth() {
     ..registerFactory(() => CreateUser(authRepository: serviceLocator()))
     ..registerFactory(() => UserSignIn(authRepository: serviceLocator()))
     // ..registerFactory(() => UserSignUp(serviceLocator()))
-    ..registerFactory(() => CurrentUser(authRepository: serviceLocator()))
+    // ..registerFactory(() => CurrentUser(authRepository: serviceLocator()))
     ..registerFactory(() => GoogleSignUp(authRepository: serviceLocator()))
     ..registerFactory(
         () => ForgotPasswordSendEmail(authRepository: serviceLocator()))
     // ..registerFactory(() => UserProfileUpload(authRepository: serviceLocator()))
     ..registerLazySingleton(
       () => AuthBloc(
-          currentUser: serviceLocator(),
+          // currentUser: serviceLocator(),
           sendOTPToPhoneNumber: serviceLocator(),
           verifyPhoneAndSignUpUser: serviceLocator(),
           createUser: serviceLocator(),
@@ -95,8 +124,28 @@ _initAuth() {
 }
 
 _initDataSource() {
-  serviceLocator.registerFactory<DataSource>(
-      () => DataSourceImpl(firebaseFirestore: serviceLocator()));
+  serviceLocator.registerFactory<DataSource>(() => DataSourceImpl(
+      firebaseFirestore: serviceLocator(), firebaseAuth: serviceLocator()));
+}
+
+void _initHomePage() {
+  serviceLocator
+    ..registerFactory<HomePageDataSource>(() => HomePageDataSourceImpl(
+        dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
+    ..registerFactory<HomePageRepository>(
+        () => HomePageRepositoryImpl(homePageDataSource: serviceLocator()))
+    ..registerFactory(
+        () => GetAllProductsHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(() => GetAllBanner(homePageRepository: serviceLocator()))
+    ..registerFactory(
+        () => UpdateProductToFavorite(homePageRepository: serviceLocator()))
+    ..registerFactory(() =>
+        GetAllFavoritedProductsHomePage(homePageRepository: serviceLocator()))
+    ..registerLazySingleton(() => HomePageBloc(
+        getAllProductsHomePage: serviceLocator(),
+        getAllBanner: serviceLocator(),
+        updateProductToFavorite: serviceLocator(),
+        getAllFavoritedProducts: serviceLocator()));
 }
 
 void _initSearchCategory() {
@@ -117,15 +166,71 @@ void _initSearchCategory() {
 
 _initRegisterProduct() {
   serviceLocator
-    ..registerFactory<RegisterProductDataSource>(
-        () => RegisterProductDataSourceImpl(dataSource: serviceLocator()))
+    ..registerFactory<RegisterProductDataSource>(() =>
+        RegisterProductDataSourceImpl(
+            dataSource: serviceLocator(),
+            firebaseAuth: serviceLocator(),
+            firebaseFirestore: serviceLocator(),
+            firebaseStorage: serviceLocator()))
     ..registerFactory<RegisterProductRepository>(() =>
         RegisterProductRepositoryImpl(
             registerProductDataSource: serviceLocator()))
     ..registerFactory(() => GetAllCategoryForRegister(
           registerProductRepository: serviceLocator(),
         ))
+    ..registerFactory(
+        () => RegisterNewProduct(registerProductRepository: serviceLocator()))
+    ..registerFactory(() =>
+        GetImagesForTheProduct(registerProductRepository: serviceLocator()))
+    ..registerFactory(
+        () => DeleteProduct(registerProductRepository: serviceLocator()))
+    ..registerFactory(() =>
+        UpdateExistingProduct(registerProductRepository: serviceLocator()))
+    ..registerLazySingleton(() => RegisterProductBloc(
+          getAllCategoryForRegister: serviceLocator(),
+          registerNewProduct: serviceLocator(),
+          deleteProduct: serviceLocator(),
+          updateExistingProduct: serviceLocator(),
+        ))
     ..registerLazySingleton(
-        () => RegisterProductBloc(getAllCategoryForRegister: serviceLocator()));
+        () => GetImagesBloc(getImagesForTheProduct: serviceLocator()));
+  // ..registerLazySingleton(() => ChangeCategoryModelBloc());
+}
+
+_initManageProduct() {
+  serviceLocator
+    ..registerFactory<ManageProductDataSource>(
+      () => ManageProductDataSourceImpl(
+        dataSource: serviceLocator(),
+      ),
+    )
+    ..registerFactory<ManageProductRepository>(() =>
+        ManageProductRepositoryImpl(manageProductDataSource: serviceLocator()))
+    // ..registerFactory(() => GetAllCategoryForRegister(
+    //       registerProductRepository: serviceLocator(),
+    //     ))
+    ..registerFactory(
+        () => GetAllProducts(manageProductRepository: serviceLocator()))
+    ..registerLazySingleton(
+        () => ManageProductBloc(getAllProducts: serviceLocator()));
+  // ..registerLazySingleton(() => ChangeCategoryModelBloc());
+}
+
+_initFavorite() {
+  serviceLocator
+    ..registerFactory<FavoritePageDataSource>(() => FavoritePageDataSourceImpl(
+        dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
+    ..registerFactory<FavoritePageRepository>(() =>
+        FavoritePageRepositoryImpl(favoritePageDataSource: serviceLocator()))
+    // ..registerFactory(() => GetAllCategoryForRegister(
+    //       registerProductRepository: serviceLocator(),
+    //     ))
+    ..registerFactory(() => GetAllFavoritedProductFavoritePage(
+        favoritePageRepository: serviceLocator()))
+    ..registerFactory(
+        () => RemoveProductFavorite(favoritePageRepository: serviceLocator()))
+    ..registerLazySingleton(() => FavoritePageBloc(
+        getAllFavoritedProduct: serviceLocator(),
+        removeProductFavorite: serviceLocator()));
   // ..registerLazySingleton(() => ChangeCategoryModelBloc());
 }

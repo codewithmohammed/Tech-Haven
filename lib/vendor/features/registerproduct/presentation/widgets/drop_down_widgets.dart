@@ -4,17 +4,22 @@ import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/entities/category.dart';
 
 class DropDownWidgets extends StatefulWidget {
-  const DropDownWidgets(
-      {super.key,
-      required this.allCategories,
-      // required this.mainCategoryIndex,
-      // required this.subCategoryIndex,
-      // required this.variantCategoryIndex,
-      required this.categoryIndexes});
+  const DropDownWidgets({
+    super.key,
+    required this.allCategories,
+    required this.categoryIndexes,
+    // this.mainCategoryValue,
+    // this.subCategoryValue,
+    // this.variantCategoryValue,
+  });
 
   final List<Category> allCategories;
 
   final List<int?> categoryIndexes;
+
+  // final String? mainCategoryValue;
+  // final String? subCategoryValue;
+  // final String? variantCategoryValue;
 
   // int? mainCategoryIndex;
   // int? subCategoryIndex;
@@ -24,18 +29,46 @@ class DropDownWidgets extends StatefulWidget {
   State<DropDownWidgets> createState() => _DropDownWidgetsState();
 }
 
-String? mainCategoryValue;
-String? subCategoryValue;
-String? variantCategoryValue;
-
 // Getter methods to access index values
 // int? get mainCategoryIndex => widget.categoryIndexes[0];
 // int? get subCategoryIndex => widget.categoryIndexes[1];
 // int? get variantCategoryIndex => widget.categoryIndexes[2];
 
 class _DropDownWidgetsState extends State<DropDownWidgets> {
+  String? mainCategoryValue;
+  String? subCategoryValue;
+  String? variantCategoryValue;
   @override
   Widget build(BuildContext context) {
+    if (widget.categoryIndexes[0] != null &&
+        widget.categoryIndexes[1] != null &&
+        widget.categoryIndexes[2] != null) {
+      mainCategoryValue =
+          widget.allCategories[widget.categoryIndexes[0]!].categoryName;
+      subCategoryValue = widget.allCategories[widget.categoryIndexes[0]!]
+          .subCategories[widget.categoryIndexes[1]!].categoryName;
+      variantCategoryValue = widget
+          .allCategories[widget.categoryIndexes[0]!]
+          .subCategories[widget.categoryIndexes[1]!]
+          .subCategories[widget.categoryIndexes[2]!]
+          .categoryName;
+      // widget.categoryIndexes[0] = widget.allCategories.indexWhere((element) =>
+      //     element.categoryName ==
+      //     widget.allCategories[widget.categoryIndexes[0]!].categoryName);
+      // widget.categoryIndexes[1] = widget
+      //     .allCategories[widget.categoryIndexes[0]!].subCategories
+      //     .indexWhere((element) =>
+      //         element.categoryName ==
+      //         widget.allCategories[widget.categoryIndexes[0]!]
+      //             .subCategories[widget.categoryIndexes[1]!].categoryName);
+      // widget.categoryIndexes[2] = widget
+      //     .allCategories[widget.categoryIndexes[0]!]
+      //     .subCategories[widget.categoryIndexes[1]!]
+      //     .subCategories
+      //     .indexWhere((element) =>
+      //         element.categoryName ==
+      //         widget.allCategories[widget.categoryIndexes[0]!].subCategories[widget.categoryIndexes[1]!].subCategories[widget.categoryIndexes[2]!].categoryName);
+    }
     return Column(
       children: [
         CustomDropDown(
@@ -52,6 +85,8 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
             } else {
               setState(() {
                 mainCategoryValue = value;
+                print(mainCategoryValue);
+
                 widget.categoryIndexes[0] = categoryIndex;
                 subCategoryValue = null;
                 widget.categoryIndexes[1] = null;

@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 
 class PrizeDataWidget extends StatelessWidget {
   const PrizeDataWidget({
-    super.key,required this.totalHeight,
+    super.key,
+    required this.totalHeight,
+    required this.prize,
+    required this.offPercentage,
+    required this.previousPrize,
   });
 
   final double totalHeight;
+  final String prize;
+  final String offPercentage;
+  final String previousPrize;
 
   @override
   Widget build(BuildContext context) {
-      final double ratio = totalHeight / 200; 
-    return  Row(
+    final double ratio = totalHeight / 200;
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -24,7 +31,7 @@ class PrizeDataWidget extends StatelessWidget {
               ),
             ),
             Text(
-              '1,693',
+              prize,
               style: TextStyle(
                 fontSize: 16 * ratio,
                 fontWeight: FontWeight.w600,
@@ -35,7 +42,7 @@ class PrizeDataWidget extends StatelessWidget {
         Row(
           children: [
             Text(
-              '3,299',
+              previousPrize,
               style: TextStyle(
                 fontSize: 12 * ratio,
                 fontWeight: FontWeight.w700,
@@ -43,14 +50,14 @@ class PrizeDataWidget extends StatelessWidget {
                 decorationThickness: 2.0,
               ),
             ),
-            SizedBox(
-              width: 5,
+            const SizedBox(
+              width: 2,
             ),
             Text(
-              '48%',
+              offPercentage,
               style: TextStyle(
                 color: Colors.green,
-                fontSize: 13 * ratio,
+                fontSize: 12 * ratio,
                 fontWeight: FontWeight.w500,
               ),
             ),

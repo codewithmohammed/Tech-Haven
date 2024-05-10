@@ -3,13 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tech_haven/core/common/model/user_model.dart' as model;
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:tech_haven/user/features/auth/data/models/sign_up_model.dart';
-import 'package:tech_haven/user/features/auth/data/models/user_data_model_impl.dart'
-    as model;
-import 'package:tech_haven/user/features/auth/data/models/user_model.dart';
 import 'package:uuid/uuid.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -24,7 +22,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   });
 
   @override
-  Future<String> createUser({
+  Future<bool> createUser({
     required File? image,
     required String username,
     required int color,
@@ -52,7 +50,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final CollectionReference collectionReference =
             firebaseFirestore.collection('users');
 
-        model.UserDataModelImpl userDataModelImpl = model.UserDataModelImpl(
+        model.UserModel userModel = model.UserModel(
           email: user.email!,
           phoneNumber: user.phoneNumber!,
           uid: user.uid,
@@ -63,9 +61,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           isVendor: false,
         );
 
-        await collectionReference.doc(user.uid).set(userDataModelImpl.toJson());
+        await collectionReference.doc(user.uid).set(userModel.toJson());
       }
-      return 'Success';
+      return true;
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
@@ -83,7 +81,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await getVerificationId(phoneNumber);
       if (potentialVerificationId != null) {
-
         return SignUpModelImpl(
           phoneNumber: phoneNumber,
           email: email,
@@ -128,7 +125,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> verifyPhoneAndSignUpUser({
+  Future<String> verifyPhoneAndSignUpUser({
     required String phoneNumber,
     required String email,
     required String password,
@@ -161,13 +158,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (user != null) {
         await user.linkWithCredential(phoneAuthCredential);
-        return UserModel.fromJson(UserModel(
-          uid: user.uid,
-          phoneNumber: user.phoneNumber,
-          email: user.email,
-          username: user.displayName ?? extractNameFromEmail(user.email!),
-          profilePhoto: '',
-        ).toJson());
+        //sending username to
+        return user.displayName ?? extractNameFromEmail(user.email!);
       } else {
         throw const ServerException(
           'Exception Cauth While Linking Phone Number',
@@ -302,7 +294,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         //     await FirebaseFirestore.instance.collection('users').doc(uid).get();
         // final userDataFromDoc = userDoc.data();
         // If the user is found, sign in with the user's email and password
-        await firebaseAuth.sendPasswordResetEmail(email: email );
+        await firebaseAuth.sendPasswordResetEmail(email: email);
         // await firebaseAuth.signInWithCredential(credential);
         // return userCredential.user!.email!;
         // Navigate to the next screen or perform any desired action

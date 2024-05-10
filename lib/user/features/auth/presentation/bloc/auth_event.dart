@@ -1,13 +1,16 @@
 part of 'auth_bloc.dart';
 
- class AuthEvent {}
+class AuthEvent {}
 
 final class SendOTPEvent extends AuthEvent {
   final String phoneNumber;
   final String email;
   final String password;
-  SendOTPEvent(
-      {required this.email, required this.password, required this.phoneNumber});
+  SendOTPEvent({
+    required this.email,
+    required this.password,
+    required this.phoneNumber,
+  });
 }
 
 final class VerifyPhoneAndSignUpUserEvent extends AuthEvent {

@@ -121,25 +121,25 @@ class _SignUpPageState extends State<SignUpPage> {
           //         ),
           //       );
           // }
-          if (state is SignUpUserSuccess) {
-            print('sdffffffffffffffffffffffffffffffffffffffffffffff');
-            GoRouter.of(context).pushReplacementNamed(
-              AppRouteConstants.signupWelcomePage,
-              pathParameters: {
-                'initialUsername': state.user.username,
-              },
-            );
-          }
-          if (state is SignUpUserFailed) {
-            textFormFieldEnabled = true;
-            print('failed');
-            showSnackBar(
-              context: context,
-              title: 'Oh',
-              content: state.message,
-              contentType: ContentType.failure,
-            );
-          }
+          // if (state is SignUpUserSuccess) {
+          //   print('sdffffffffffffffffffffffffffffffffffffffffffffff');
+          //   GoRouter.of(context).pushReplacementNamed(
+          //     AppRouteConstants.signupWelcomePage,
+          //     pathParameters: {
+          //       'initialUsername': state.username,
+          //     },
+          //   );
+          // }
+          // if (state is SignUpUserFailed) {
+          //   textFormFieldEnabled = true;
+          //   print('failed');
+          //   showSnackBar(
+          //     context: context,
+          //     title: 'Oh',
+          //     content: state.message,
+          //     contentType: ContentType.failure,
+          //   );
+          // }
         },
         builder: (context, state) {
           if (state is AuthLoading) {

@@ -6,6 +6,7 @@ sealed class RegisterProductEvent {
 
 final class GetAllCategoryEvent extends RegisterProductEvent {
   final bool refreshPage;
+
   GetAllCategoryEvent({required this.refreshPage});
 }
 
@@ -39,6 +40,53 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
     required this.productOverview,
     required this.shippingCharge,
     required this.productImages,
+    required this.isPublished,
+  });
+}
+
+final class DeleteTheProductEvent extends RegisterProductEvent {
+  final Product product;
+  final Map<int, List<model.Image>> mapOfListOfImages;
+  DeleteTheProductEvent({
+    required this.product,
+    required this.mapOfListOfImages,
+  });
+}
+
+final class UpdateExistingProductEvent extends RegisterProductEvent {
+  final Product product;
+  final String brandName;
+  final String productName;
+  final double productPrize;
+  final int productQuantity;
+  final String mainCategory;
+  final String mainCategoryID;
+  final String subCategory;
+  final String subCategoryID;
+  final String variantCategory;
+  final String variantCategoryID;
+  final String productOverview;
+  final double shippingCharge;
+  final Map<int, List<File>>? productImages;
+  final List<int> deleteImagesIndexes;
+  final bool isPublished;
+
+  UpdateExistingProductEvent({
+    required this.product,
+    required this.brandName,
+    required this.productName,
+    required this.productPrize,
+    required this.productQuantity,
+    required this.mainCategory,
+    required this.mainCategoryID,
+    required this.subCategory,
+    required this.subCategoryID,
+    required this.variantCategory,
+    required this.variantCategoryID,
+    required this.productOverview,
+    required this.shippingCharge,
+    required this.productImages,
+    required this.deleteImagesIndexes,
     required this.isPublished,
   });
 }

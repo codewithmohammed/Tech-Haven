@@ -12,6 +12,6 @@ final class UserCreationFailed extends OTPPageActionState {
 }
 
 final class UserCreationSuccess extends OTPPageActionState {
-  final User user;
-  UserCreationSuccess({required this.user});
+  final String username;
+  UserCreationSuccess({required this.username});
 }

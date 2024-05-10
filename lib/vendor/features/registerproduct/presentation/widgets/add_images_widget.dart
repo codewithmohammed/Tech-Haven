@@ -8,14 +8,24 @@ import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/pick_image.dart';
+
+import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/list_view_container.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/sub_text.dart';
 
 class AddImagesWidget extends StatefulWidget {
-  const AddImagesWidget({super.key, required this.productImages});
+  const AddImagesWidget(
+      {super.key,
+      required this.productImages,
+      this.productImagesLink,
+      required this.deletedImagesIndex,
+      required this.canAddNewImages});
 
   final Map<int, List<File>> productImages;
+  final Map<int, List<model.Image>>? productImagesLink;
+  final List<int> deletedImagesIndex;
+  final bool canAddNewImages;
 
   @override
   State<AddImagesWidget> createState() => _AddImagesWidgetState();
@@ -63,6 +73,7 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.productImagesLink != null) {}
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,7 +87,9 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                   // physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: widget.productImages.length,
+                  itemCount: widget.productImagesLink != null
+                      ? widget.productImagesLink!.length
+                      : widget.productImages.length,
                   itemBuilder: (context, index) {
                     return ListViewContainer(
                       onTapCenterWidget: () {
@@ -85,42 +98,87 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                         // });
                       },
                       onPressedCrossIcon: () {
-                        setState(() {
-                          if (widget.productImages.containsKey(index + 1)) {
-                            final value = widget.productImages[index + 1];
-
-                            widget.productImages[index] = value!;
-                            widget.productImages.remove(index + 1);
-                          } else {
-                            widget.productImages.remove(index);
-                          }
-                        });
+                        if (widget.productImagesLink != null) {
+                          setState(() {
+                            widget.deletedImagesIndex.add(index);
+                          });
+                        } else {
+                          setState(() {
+                            if (widget.productImages.containsKey(index + 1)) {
+                              final value = widget.productImages[index + 1];
+                              widget.productImages[index] = value!;
+                              widget.productImages.remove(index + 1);
+                            } else {
+                              widget.productImages.remove(index);
+                            }
+                          });
+                        }
                       },
                       containerWidth: 80,
-                      centerWidget: Image.file(
-                        widget.productImages[index]!.first,
-                        fit: BoxFit.cover,
+                      centerWidget: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          widget.productImagesLink != null
+                              ? Image.network(
+                                  widget.productImagesLink![index]!.first
+                                      .imageURL,
+                                )
+                              : Image.file(
+                                  widget.productImages[index]!.first,
+                                  fit: BoxFit.cover,
+                                ),
+                          if ((widget.deletedImagesIndex.contains(index)) &&
+                              (widget.productImagesLink != null))
+                            GestureDetector(
+                              onTap: () {
+                                if (widget.productImagesLink != null) {
+                                  setState(() {
+                                    widget.deletedImagesIndex.remove(index);
+                                  });
+                                }
+                              },
+                              child: Container(
+                                alignment: Alignment.center,
+                                color: Colors.red.withOpacity(0.5),
+                                child: const Center(
+                                  child: Text(
+                                    'Undo Removing this Images',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      crossIcon: true,
+                      crossIcon: (widget.deletedImagesIndex.contains(index) &&
+                              (widget.productImagesLink != null))
+                          ? false
+                          : true,
                     );
                   },
                 ),
               ),
             ),
-            SizedBox(
-              height: 100,
-              child: ListViewContainer(
-                  crossIcon: false,
-                  containerWidth: 80,
-                  centerWidget: const SvgIcon(
-                    icon: CustomIcons.plusSvg,
-                    radius: 20,
-                  ),
-                  onTapCenterWidget: () {
-                    selectImage(widget.productImages.length);
-                  },
-                  onPressedCrossIcon: () {}),
-            ),
+            if (widget.productImagesLink == null)
+              SizedBox(
+                height: 100,
+                child: ListViewContainer(
+                    crossIcon: false,
+                    containerWidth: 80,
+                    color: AppPallete.darkgreyColor,
+                    centerWidget: const SvgIcon(
+                      icon: CustomIcons.plusSvg,
+                      radius: 20,
+                    ),
+                    onTapCenterWidget: () {
+                      selectImage(widget.productImages.length);
+                    },
+                    onPressedCrossIcon: () {}),
+              ),
           ],
         ),
         Constants.kHeight,
@@ -130,7 +188,9 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: widget.productImages.length,
+          itemCount: widget.productImagesLink != null
+              ? widget.productImagesLink!.length
+              : widget.productImages.length,
           itemBuilder: (context, mainIndex) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -155,9 +215,12 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                   ),
                   child: InkWell(
                     child: Center(
-                      child: Image.file(
-                        widget.productImages[mainIndex]!.first,
-                      ),
+                      child: widget.productImagesLink != null
+                          ? Image.network(
+                              widget.productImagesLink![mainIndex]![0].imageURL)
+                          : Image.file(
+                              widget.productImages[mainIndex]!.first,
+                            ),
                     ),
                   ),
                 ),
@@ -170,7 +233,9 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                         child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
-                          itemCount: widget.productImages[mainIndex]!.length,
+                          itemCount: widget.productImagesLink != null
+                              ? widget.productImagesLink![mainIndex]!.length
+                              : widget.productImages[mainIndex]!.length,
                           itemBuilder: (context, index) {
                             return ListViewContainer(
                               onTapCenterWidget: () {
@@ -185,26 +250,36 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                                 });
                               },
                               containerWidth: 150,
-                              centerWidget: Image.file(
-                                widget.productImages[mainIndex]![index],
-                              ),
-                              crossIcon: index == 0 ? false : true,
+                              centerWidget: widget.productImagesLink != null
+                                  ? Image.network(
+                                      widget
+                                          .productImagesLink![mainIndex]![index]
+                                          .imageURL,
+                                    )
+                                  : Image.file(
+                                      widget.productImages[mainIndex]![index],
+                                    ),
+                              crossIcon: widget.productImagesLink != null
+                                  ? false
+                                  : index == 0
+                                      ? false
+                                      : true,
                             );
                           },
                         ),
                       ),
-                      ListViewContainer(
-                          crossIcon: false,
-                          containerWidth: 150,
-                          centerWidget: const SvgIcon(
-                            icon: CustomIcons.plusSvg,
-                            radius: 20,
-                          ),
-                          onTapCenterWidget: () {
-                            // print(mainIndex);
-                            selectMultipleImages(mainIndex);
-                          },
-                          onPressedCrossIcon: () {}),
+                      if (widget.productImagesLink == null)
+                        ListViewContainer(
+                            crossIcon: false,
+                            containerWidth: 150,
+                            centerWidget: const SvgIcon(
+                              icon: CustomIcons.plusSvg,
+                              radius: 20,
+                            ),
+                            onTapCenterWidget: () {
+                              selectMultipleImages(mainIndex);
+                            },
+                            onPressedCrossIcon: () {}),
                     ],
                   ),
                 ),

@@ -3,22 +3,30 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
+import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/category.dart';
+import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/add_images_widget.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/drop_down_widgets.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/sub_text.dart';
 
 class RegisterProductPage extends StatefulWidget {
-  const RegisterProductPage({super.key});
+  const RegisterProductPage({super.key, required this.product});
+
+  final Product? product;
 
   @override
   State<RegisterProductPage> createState() => _RegisterProductPageState();
@@ -44,19 +52,18 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   List<int?> categoryIndexes = [null, null, null];
 
-  int? mainCategoryIndex;
+  List<Category> allCategories = [];
 
-  int? subCategoryIndex;
-
-  int? variantCategoryIndex;
   GlobalKey<FormState> globalFormKey = GlobalKey();
-  final Map<int, Map<String, String>> specificationTextFormFields = {};
 
-  bool isChecked = false;
+  Map<int, Map<String, String>> specificationTextFormFields = {};
 
   Map<int, List<File>> productImages = {};
 
   ValueNotifier<bool> shippingChargeBool = ValueNotifier(false);
+
+  List<int> deletedImagesIndex = []; //
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -66,291 +73,470 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             .add(GetAllCategoryEvent(refreshPage: false));
       }
     });
-    List<Category> allCategories = [];
-    return Scaffold(
-        appBar: const VendorAppBar(
-          title: 'Register New Product',
-          bottom: null,
-          messageIcon: false,
-        ),
-        body: SingleChildScrollView(
-            child: Container(
-          padding: const EdgeInsets.all(
-            8,
-          ),
-          child: Form(
-            key: globalFormKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const GlobalTitleText(
-                  title: 'General',
-                ),
-                Constants.kHeight,
-                CustomTextFormField(
-                  labelText: 'Brand Name',
-                  hintText: 'Brand Name',
-                  textEditingController: brandNameTextEditingController,
-                  validator: Validator.validateEmptyField,
-                ),
-                Constants.kHeight,
-                CustomTextFormField(
-                  labelText: 'Product Name',
-                  hintText: 'Product Name',
-                  textEditingController: productNameTextEditingController,
-                  validator: Validator.validateEmptyField,
-                ),
-                Constants.kHeight,
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextFormField(
-                        labelText: 'Product Prize',
-                        hintText: 'Product Prize',
-                        textEditingController:
-                            productPrizeTextEditingController,
-                        validator: Validator.validateEmptyField,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
+
+    Map<int, List<model.Image>>? listOfImagesLinks;
+
+    return BlocConsumer<RegisterProductBloc, RegisterProductState>(
+      listener: (context, state) {
+        if (state is NewProductRegisteredSuccess) {
+        
+          GoRouter.of(context).pop();
+        }
+        if (state is NewProductRegisteredFailed) {
+          showSnackBar(
+            context: context,
+            title: 'Oh',
+            content: state.message,
+            contentType: ContentType.failure,
+          );
+        }
+        if (state is DeleteProductSuccess) {
+          GoRouter.of(context).pop();
+        }
+        if (state is DeleteProductFailed) {
+          showSnackBar(
+            context: context,
+            title: 'Oh',
+            content: state.message,
+            contentType: ContentType.failure,
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is RegisterProductLoading) {
+          return const Loader();
+        }
+        if (state is RegisterProductAllCategoryLoadedSuccess) {
+          context.read<GetImagesBloc>().add(EmitInitialEvent());
+          allCategories = state.allCategoryModel;
+          if (widget.product != null) {
+            brandNameTextEditingController.text = widget.product!.brandName;
+            productNameTextEditingController.text = widget.product!.name;
+            productPrizeTextEditingController.text =
+                widget.product!.prize.toString();
+            productQuantityTextEditingController.text =
+                widget.product!.quantity.toString();
+            productOverviewTextEditingController.text =
+                widget.product!.overview;
+            shippingChargeBool.value = widget.product!.shippingCharge != 0;
+            shippingChargeController.text =
+                widget.product!.shippingCharge.toString();
+            categoryIndexes[0] = allCategories.indexWhere((element) =>
+                element.categoryName == widget.product!.mainCategory);
+            categoryIndexes[1] = allCategories[categoryIndexes[0]!]
+                .subCategories
+                .indexWhere((element) =>
+                    element.categoryName == widget.product!.subCategory);
+
+            categoryIndexes[2] = allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .subCategories
+                .indexWhere((element) =>
+                    element.categoryName == widget.product!.variantCategory);
+            context.read<GetImagesBloc>().add(GetImagesForTheProductEvent(
+                  productID: widget.product!.productID,
+                ));
+          }
+          return Scaffold(
+              appBar: VendorAppBar(
+                title: widget.product != null
+                    ? 'Update The Product'
+                    : 'Register New Product',
+                bottom: null,
+                messageIcon: widget.product != null ? false : true,
+                trailingIcon:
+                    widget.product != null ? CustomIcons.trashBinSvg : null,
+                onPressedTrailingIcon: () {
+                  context.read<RegisterProductBloc>().add(
+                        DeleteTheProductEvent(
+                          product: widget.product!,
+                          mapOfListOfImages: listOfImagesLinks!,
                         ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d*\.?\d{0,2}$')),
-                        ],
-                      ),
-                    ),
-                    Constants.kWidth,
-                    Expanded(
-                      child: CustomTextFormField(
-                        labelText: 'Product Quantity',
-                        hintText: 'Product Quantity',
-                        textEditingController:
-                            productQuantityTextEditingController,
-                        validator: Validator.validateEmptyField,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                      ),
-                    ),
-                  ],
+                      );
+                },
+              ),
+              body: SingleChildScrollView(
+                  child: Container(
+                padding: const EdgeInsets.all(
+                  8,
                 ),
-                Constants.kHeight,
-                BlocBuilder<RegisterProductBloc, RegisterProductState>(
-                  buildWhen: (previous, current) =>
-                      current is RegisterProductPageActionState,
-                  builder: (context, state) {
-                    if (state is RegisterProductLoading) {
-                      return const Loader();
-                    }
-                    if (state is RegisterProductAllCategoryLoadedSuccess) {
-                      allCategories = state.allCategoryModel;
-                      return DropDownWidgets(
+                child: Form(
+                  key: globalFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const GlobalTitleText(
+                        title: 'General',
+                      ),
+                      Constants.kHeight,
+                      CustomTextFormField(
+                        labelText: 'Brand Name',
+                        hintText: 'Brand Name',
+                        textEditingController: brandNameTextEditingController,
+                        validator: Validator.validateEmptyField,
+                      ),
+                      Constants.kHeight,
+                      CustomTextFormField(
+                        labelText: 'Product Name',
+                        hintText: 'Product Name',
+                        textEditingController: productNameTextEditingController,
+                        validator: Validator.validateEmptyField,
+                      ),
+                      Constants.kHeight,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextFormField(
+                              labelText: 'Product Prize',
+                              hintText: 'Product Prize',
+                              textEditingController:
+                                  productPrizeTextEditingController,
+                              validator: Validator.validateEmptyField,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}$')),
+                              ],
+                            ),
+                          ),
+                          Constants.kWidth,
+                          Expanded(
+                            child: CustomTextFormField(
+                              labelText: 'Product Quantity',
+                              hintText: 'Product Quantity',
+                              textEditingController:
+                                  productQuantityTextEditingController,
+                              validator: Validator.validateEmptyField,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Constants.kHeight,
+                      DropDownWidgets(
                         allCategories: allCategories,
                         categoryIndexes: categoryIndexes,
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
-                Constants.kHeight,
-                const SubText(subText: 'Overview'),
-                Constants.kHeight,
-                TextFormField(
-                  controller: productOverviewTextEditingController,
-                  validator: Validator.validateEmptyField,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  decoration: const InputDecoration(
-                    labelText: 'Enter text',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                Constants.kHeight,
-                const SubText(subText: 'Specifications'),
-                ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: specificationTextFormFields.length,
-                  itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        const Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: CustomTextFormField(
-                              labelText: 'Name',
-                              hintText: 'Name',
-                              durationMilliseconds: 150,
-                              textEditingController: null,
-                            ),
-                          ),
-                        ),
-                        const Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: CustomTextFormField(
-                              labelText: 'Spec.',
-                              hintText: 'Spec.',
-                              textEditingController: null,
-                              durationMilliseconds: 150,
-                            ),
-                          ),
-                        ),
-                        index < specificationTextFormFields.length - 1
-                            ? IconButton(
-                                icon: const Icon(Icons.remove),
-                                onPressed: () {
-                                  setState(() {
-                                    specificationTextFormFields.remove(index);
-                                  });
-                                },
-                              )
-                            : IconButton(
-                                icon: const Icon(Icons.add),
-                                onPressed: () {
-                                  // final Map<String, String> newEntry =
-                                  final Map<String, String> myMap = {};
-
-                                  myMap[index.toString()] = '';
-
-                                  setState(() {
-                                    specificationTextFormFields[index] = myMap;
-                                  });
-                                },
-                              ),
-                      ],
-                    );
-                  },
-                ),
-                Constants.kHeight,
-                const GlobalTitleText(
-                  title: 'Shipping',
-                ),
-                Constants.kHeight,
-                ValueListenableBuilder(
-                    valueListenable: shippingChargeBool,
-                    builder: (context, shippingBool, child) {
-                      // shippingBool == false
-                      //     ? shippingChargeController.text = '0'
-                      //     : null;
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Charge Shipping',
-                                style: TextStyle(fontSize: 16.0),
-                              ),
-                              const SizedBox(width: 10.0),
-                              Checkbox(
-                                value: shippingBool,
-                                onChanged: (value) {
-                                  shippingChargeBool.value = value!;
-                                },
-                              ),
-                            ],
-                          ),
-                          if (shippingBool)
-                            CustomTextFormField(
-                              labelText: 'Shipping Charge.',
-                              hintText: 'Shipping Charge.',
-                              textEditingController: shippingChargeController,
-                              validator: shippingBool
-                                  ? Validator.validateEmptyField
-                                  : null,
-                              durationMilliseconds: 150,
-                            ),
-                        ],
-                      );
-                    }),
-                Constants.kHeight,
-                const GlobalTitleText(
-                  title: 'Attribute',
-                ),
-                AddImagesWidget(
-                  productImages: productImages,
-                ),
-                Constants.kHeight,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const SizedBox(
-                      width: 150,
-                      child: RoundedRectangularButton(
-                        title: 'Draft',
-                        outlined: true,
+                        // mainCategoryValue: mainCategoryValue,
+                        // subCategoryValue: subCategoryValue,
+                        // variantCategoryValue: variantCategoryValue,
                       ),
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: RoundedRectangularButton(
-                        title: 'Publish',
-                        onPressed: () {
-                          if (globalFormKey.currentState!.validate() &&
-                              mainCategoryValue != null &&
-                              subCategoryValue != null &&
-                              variantCategoryValue != null &&
-                              productImages.isNotEmpty) {
-                              
-                            context.read<RegisterProductBloc>().add(
-                                  RegisterNewProductEvent(
-                                    brandName:
-                                        brandNameTextEditingController.text,
-                                    productName:
-                                        productNameTextEditingController.text,
-                                    productPrize: double.parse(
-                                        productPrizeTextEditingController.text),
-                                    // productPrizeTextEditingController.text,
-                                    productQuantity: int.parse(
-                                        productQuantityTextEditingController
-                                            .text),
-                                    mainCategory: mainCategoryValue!,
-                                    mainCategoryID:
-                                        allCategories[mainCategoryIndex!].id,
-                                    subCategory: subCategoryValue!,
-                                    subCategoryID:
-                                        allCategories[mainCategoryIndex!]
-                                            .subCategories[subCategoryIndex!]
-                                            .id,
-                                    variantCategory: variantCategoryValue!,
-                                    variantCategoryID: allCategories[
-                                            mainCategoryIndex!]
-                                        .subCategories[subCategoryIndex!]
-                                        .subCategories[variantCategoryIndex!]
-                                        .id,
-                                    productOverview:
-                                        productOverviewTextEditingController
-                                            .text,
-                                    shippingCharge:
-                                        shippingChargeController.text.isEmpty
-                                            ? 0
-                                            : double.parse(
-                                                shippingChargeController.text),
-                                    productImages: productImages,
-                                    isPublished: true,
+                      Constants.kHeight,
+                      const SubText(subText: 'Overview'),
+                      Constants.kHeight,
+                      TextFormField(
+                        controller: productOverviewTextEditingController,
+                        validator: Validator.validateEmptyField,
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                        decoration: const InputDecoration(
+                          labelText: 'Enter text',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      Constants.kHeight,
+                      const SubText(subText: 'Specifications'),
+                      ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: specificationTextFormFields.length,
+                        itemBuilder: (context, index) {
+                          return Row(
+                            children: [
+                              const Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CustomTextFormField(
+                                    labelText: 'Name',
+                                    hintText: 'Name',
+                                    durationMilliseconds: 150,
+                                    textEditingController: null,
                                   ),
-                                );
-                            print(true);
-                          } else if (productImages.isEmpty) {
-                            showSnackBar(
-                              context: context,
-                              title: 'Images',
-                              content: 'Please Upload Product Images',
-                              contentType: ContentType.warning,
-                            );
-                          }
+                                ),
+                              ),
+                              const Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CustomTextFormField(
+                                    labelText: 'Spec.',
+                                    hintText: 'Spec.',
+                                    textEditingController: null,
+                                    durationMilliseconds: 150,
+                                  ),
+                                ),
+                              ),
+                              index < specificationTextFormFields.length - 1
+                                  ? IconButton(
+                                      icon: const Icon(Icons.remove),
+                                      onPressed: () {
+                                        setState(() {
+                                          specificationTextFormFields
+                                              .remove(index);
+                                        });
+                                      },
+                                    )
+                                  : IconButton(
+                                      icon: const Icon(Icons.add),
+                                      onPressed: () {
+                                        // final Map<String, String> newEntry =
+                                        final Map<String, String> myMap = {};
+
+                                        myMap[index.toString()] = '';
+
+                                        setState(() {
+                                          specificationTextFormFields[index] =
+                                              myMap;
+                                        });
+                                      },
+                                    ),
+                            ],
+                          );
                         },
                       ),
-                    )
-                  ],
-                )
-              ],
-            ),
+                      Constants.kHeight,
+                      const GlobalTitleText(
+                        title: 'Shipping',
+                      ),
+                      Constants.kHeight,
+                      ValueListenableBuilder(
+                          valueListenable: shippingChargeBool,
+                          builder: (context, shippingBool, child) {
+                            // shippingBool == false
+                            //     ? shippingChargeController.text = '0'
+                            //     : null;
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      'Charge Shipping',
+                                      style: TextStyle(fontSize: 16.0),
+                                    ),
+                                    const SizedBox(width: 10.0),
+                                    Checkbox(
+                                      value: shippingBool,
+                                      onChanged: (value) {
+                                        shippingChargeBool.value = value!;
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                if (shippingBool)
+                                  CustomTextFormField(
+                                    labelText: 'Shipping Charge.',
+                                    hintText: 'Shipping Charge.',
+                                    textEditingController:
+                                        shippingChargeController,
+                                    validator: shippingBool
+                                        ? Validator.validateEmptyField
+                                        : null,
+                                    durationMilliseconds: 150,
+                                  ),
+                              ],
+                            );
+                          }),
+                      Constants.kHeight,
+                      const GlobalTitleText(
+                        title: 'Attribute',
+                      ),
+                      BlocConsumer<GetImagesBloc, GetImagesState>(
+                        listener: (context, state) {
+                          if (state is GetImagesForRegisterProductFailed) {
+                            showSnackBar(
+                                context: context,
+                                title: 'Oh',
+                                content: state.message,
+                                contentType: ContentType.failure);
+                          }
+                        },
+                        // buildWhen: (previous, current) =>
+                        //     current is GetImageForRegisterProduct,
+                        builder: (context, state) {
+                          if (state is GetImagesForRegisterProductSuccess) {
+                            listOfImagesLinks = state.mapOfListOfImages;
+                            return AddImagesWidget(
+                              productImages: productImages,
+                              productImagesLink: listOfImagesLinks,
+                              deletedImagesIndex: deletedImagesIndex,
+                              canAddNewImages: true,
+                            );
+                          }
+                          return AddImagesWidget(
+                            productImages: productImages,
+                            productImagesLink: null,
+                            deletedImagesIndex: deletedImagesIndex,
+                            canAddNewImages: false,
+                          );
+                        },
+                      ),
+                      if (widget.product != null)
+                        const GlobalTitleText(
+                          title: 'Add New Images',
+                        ),
+                      if (widget.product != null)
+                        AddImagesWidget(
+                          productImages: productImages,
+                          productImagesLink: null,
+                          deletedImagesIndex: deletedImagesIndex,
+                          canAddNewImages: true,
+                        ),
+                      Constants.kHeight,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          if (widget.product == null)
+                            SizedBox(
+                              width: 150,
+                              child: RoundedRectangularButton(
+                                title: 'Draft',
+                                outlined: true,
+                                onPressed: () {
+                                  if (globalFormKey.currentState!.validate() &&
+                                      categoryIndexes[0] != null &&
+                                      categoryIndexes[1] != null &&
+                                      categoryIndexes[2] != null &&
+                                      productImages.isNotEmpty) {
+                                    registerNewProduct(isPublished: false);
+                                  } else if (productImages.isEmpty) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Images',
+                                      content: 'Please Upload Product Images',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          SizedBox(
+                            width: 150,
+                            child: RoundedRectangularButton(
+                              title:
+                                  widget.product != null ? 'Update' : 'Publish',
+                              onPressed: () {
+                                if (widget.product != null &&
+                                    globalFormKey.currentState!.validate() &&
+                                    categoryIndexes[0] != null &&
+                                    categoryIndexes[1] != null &&
+                                    categoryIndexes[2] != null) {
+                                  if (listOfImagesLinks!.length.compareTo(
+                                              deletedImagesIndex.length) >
+                                          0 ||
+                                      productImages.isNotEmpty) {
+                                    updateTheProduct();
+                                  } else {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Images',
+                                      content:
+                                          'There must be atleast one Image for the product',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                } else if (globalFormKey.currentState!
+                                        .validate() &&
+                                    categoryIndexes[0] != null &&
+                                    categoryIndexes[1] != null &&
+                                    categoryIndexes[2] != null &&
+                                    productImages.isNotEmpty) {
+                                  registerNewProduct(isPublished: true);
+                                } else if (productImages.isEmpty) {
+                                  showSnackBar(
+                                    context: context,
+                                    title: 'Images',
+                                    content: 'Please Upload Product Images',
+                                    contentType: ContentType.warning,
+                                  );
+                                }
+                              },
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )));
+        }
+        return const SizedBox();
+      },
+    );
+  }
+
+  void updateTheProduct() {
+    print(productImages.length);
+    Product product = widget.product!;
+    context.read<RegisterProductBloc>().add(UpdateExistingProductEvent(
+          product: product,
+          brandName: brandNameTextEditingController.text,
+          productName: productNameTextEditingController.text,
+          productPrize: double.parse(productPrizeTextEditingController.text),
+          productQuantity: int.parse(productQuantityTextEditingController.text),
+          mainCategory: allCategories[categoryIndexes[0]!].categoryName,
+          mainCategoryID: allCategories[categoryIndexes[0]!].id,
+          subCategory: allCategories[categoryIndexes[0]!]
+              .subCategories[categoryIndexes[1]!]
+              .categoryName,
+          subCategoryID: allCategories[categoryIndexes[0]!]
+              .subCategories[categoryIndexes[1]!]
+              .id,
+          variantCategory: allCategories[categoryIndexes[0]!]
+              .subCategories[categoryIndexes[1]!]
+              .subCategories[categoryIndexes[2]!]
+              .categoryName,
+          variantCategoryID: allCategories[categoryIndexes[0]!]
+              .subCategories[categoryIndexes[1]!]
+              .subCategories[categoryIndexes[2]!]
+              .id,
+          productOverview: productOverviewTextEditingController.text,
+          shippingCharge: double.parse(shippingChargeController.text),
+          productImages: productImages,
+          deleteImagesIndexes: deletedImagesIndex,
+          isPublished: true,
+        ));
+  }
+
+  void registerNewProduct({required bool isPublished}) {
+    context.read<RegisterProductBloc>().add(
+          RegisterNewProductEvent(
+            brandName: brandNameTextEditingController.text,
+            productName: productNameTextEditingController.text,
+            productPrize: double.parse(productPrizeTextEditingController.text),
+            // productPrizeTextEditingController.text,
+            productQuantity:
+                int.parse(productQuantityTextEditingController.text),
+            mainCategory: allCategories[categoryIndexes[0]!].categoryName,
+            mainCategoryID: allCategories[categoryIndexes[0]!].id,
+            subCategory: allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .categoryName,
+            subCategoryID: allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .id,
+            variantCategory: allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .subCategories[categoryIndexes[2]!]
+                .categoryName,
+            variantCategoryID: allCategories[categoryIndexes[0]!]
+                .subCategories[categoryIndexes[1]!]
+                .subCategories[categoryIndexes[2]!]
+                .id,
+            productOverview: productOverviewTextEditingController.text,
+            shippingCharge: shippingChargeController.text.isEmpty
+                ? 0
+                : double.parse(shippingChargeController.text),
+            productImages: productImages,
+            isPublished: isPublished,
           ),
-        )));
+        );
   }
 }

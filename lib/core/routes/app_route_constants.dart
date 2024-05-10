@@ -16,4 +16,5 @@ class AppRouteConstants {
   static const String vendorChatPage = 'vendor_chat_page';
   static const String searchPage = 'search_page';
   static const String registerProductPage = 'register_product_page';
+  static const String favoritePage = 'favorite_page';
 }

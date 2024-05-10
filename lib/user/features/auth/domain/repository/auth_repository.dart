@@ -16,7 +16,7 @@ abstract interface class AuthRepository {
 
   //this is for the verification of the otp code that the user has entered
   //if it's failure we will display a snackbar telling the issue else we will give a second chance for the user to enter the otp again
-  Future<Either<Failure, User>> verifyPhoneAndSignUpUser({
+  Future<Either<Failure, String>> verifyPhoneAndSignUpUser({
     required String phoneNumber,
     required String email,
     required String password,
@@ -32,7 +32,7 @@ abstract interface class AuthRepository {
   //   required String password,
   // });
 
-  Future<Either<Failure, String>> createUser({
+  Future<Either<Failure, bool>> createUser({
     required File? image,
     required String username,
     required int color,
@@ -43,7 +43,7 @@ abstract interface class AuthRepository {
     required String password,
   });
 
-  Future<Either<Failure, User>> currentUser();
+  // Future<Either<Failure, User>> currentUser();
   // //for sign in using phone number
   // Future<Either<Failure, User>> signInWithPhoneNumberAndPassword({
   //   required String phonenumber,

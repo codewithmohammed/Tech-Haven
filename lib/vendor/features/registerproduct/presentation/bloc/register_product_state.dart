@@ -1,8 +1,7 @@
 part of 'register_product_bloc.dart';
 
-sealed class RegisterProductState  {
+sealed class RegisterProductState {
   const RegisterProductState();
-
 }
 
 final class RegisterProductInitial extends RegisterProductState {}
@@ -27,6 +26,22 @@ final class RegisterProductAllCategoryLoadedFailed
   RegisterProductAllCategoryLoadedFailed({required this.message});
 }
 
+final class NewProductRegisteredSuccess extends RegisterProductPageActionState {
+  final bool newProductRegisterd;
+  NewProductRegisteredSuccess({required this.newProductRegisterd});
+}
 
-final class CategoryDropDownState extends RegisterProductPageState {}
+final class NewProductRegisteredFailed extends RegisterProductPageActionState {
+  final String message;
+  NewProductRegisteredFailed({required this.message});
+}
 
+final class DeleteProductSuccess extends RegisterProductPageActionState {
+  final bool deleteSuccess;
+  DeleteProductSuccess({required this.deleteSuccess});
+}
+
+final class DeleteProductFailed extends RegisterProductPageActionState {
+  final String message;
+  DeleteProductFailed({required this.message});
+}
