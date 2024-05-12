@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_header_tile.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_welcome_text.dart';

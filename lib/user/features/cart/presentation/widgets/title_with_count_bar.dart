@@ -7,11 +7,12 @@ class TitleWithCountBar extends StatelessWidget {
       {super.key,
       required this.title,
       required this.itemsCount,
-      this.isForFavorite = false});
+      this.isForFavorite = false,this.totalPrize = '0'});
 
   final String title;
   final String itemsCount;
   final bool isForFavorite;
+  final String totalPrize;
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +41,8 @@ class TitleWithCountBar extends StatelessWidget {
             ],
           ),
           if (!isForFavorite)
-            const Text(
-              'AED 12352.00',
+             Text(
+              totalPrize,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,

@@ -4,15 +4,15 @@ import 'package:tech_haven/core/common/model/product_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
-import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source.dart';
+import 'package:tech_haven/user/features/cart/data/datasource/cart_page_data_source.dart';
 import 'package:tech_haven/user/features/home/data/models/banner_model.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
 
-class HomePageDataSourceImpl extends HomePageDataSource {
+class CartPageDataSourceImpl extends CartPageDataSource {
   final DataSource dataSource;
   final FirebaseFirestore firebaseFirestore;
   // final FirebaseStorage firebaseStorage;
-  HomePageDataSourceImpl({
+  CartPageDataSourceImpl({
     required this.dataSource,
     required this.firebaseFirestore,
     // required this.firebaseStorage
@@ -20,8 +20,13 @@ class HomePageDataSourceImpl extends HomePageDataSource {
   @override
   Future<List<ProductModel>> getAllProducts() async {
     try {
+      final allCartedProducts = await dataSource.getAllCart();
+      print(allCartedProducts);
       final allProducts = await dataSource.getAllProductsData();
-      return allProducts;
+      List<ProductModel> filteredProducts = getAllProductsThatIsCarted(
+          productModels: allProducts, cartModels: allCartedProducts);
+      print(filteredProducts);
+      return filteredProducts;
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -87,5 +92,19 @@ class HomePageDataSourceImpl extends HomePageDataSource {
     } catch (e) {
       throw ServerException(e.toString());
     }
+  }
+
+  List<ProductModel> getAllProductsThatIsCarted(
+      {required List<ProductModel> productModels,
+      required List<Cart> cartModels}) {
+    List<ProductModel> filteredList = [];
+    for (var product in productModels) {
+      for (var cart in cartModels) {
+        if (product.productID == cart.productID) {
+          filteredList.add(product);
+        }
+      }
+    }
+    return filteredList;
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/cart/presentation/pages/cart_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';

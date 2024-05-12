@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 

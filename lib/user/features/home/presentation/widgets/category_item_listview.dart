@@ -1,6 +1,5 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class CategoryIconListView extends StatelessWidget {

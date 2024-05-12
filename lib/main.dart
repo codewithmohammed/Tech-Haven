@@ -7,6 +7,7 @@ import 'package:tech_haven/core/theme/theme.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/firebase_options.dart';
 import 'package:tech_haven/init_dependencies.main.dart';
+import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
 import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
@@ -49,6 +50,8 @@ void main() async {
       ),
       BlocProvider(
         create: (_) => serviceLocator<FavoritePageBloc>(),
+      ),      BlocProvider(
+        create: (_) => serviceLocator<CartPageBloc>(),
       ),
     ],
     child: const MyApp(),

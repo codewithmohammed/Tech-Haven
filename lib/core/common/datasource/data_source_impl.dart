@@ -4,9 +4,12 @@ import 'package:tech_haven/core/common/datasource/data_source.dart';
 import 'package:tech_haven/core/common/model/image_model.dart';
 import 'package:tech_haven/core/common/model/product_model.dart';
 import 'package:tech_haven/core/common/model/user_model.dart' as model;
+import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/common/model/category_model.dart';
+import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
+import 'package:uuid/uuid.dart';
 // import 'package:tech_haven/user/features/auth/data/models/user_model.dart';
 // import 'package:tech_haven/core/models/category.dart';
 
@@ -49,8 +52,7 @@ class DataSourceImpl implements DataSource {
       }
       return userModel;
     } catch (e) {
-      print('Error fetching user data: $e');
-      return null; // Return null in case of error
+      throw ServerException(e.toString()); // Return null in case of error
     }
   }
 
@@ -199,7 +201,6 @@ class DataSourceImpl implements DataSource {
           );
         }
       }
-      print('updated the favorite');
       return true;
     } catch (e) {
       throw ServerException(e.toString());
@@ -218,7 +219,6 @@ class DataSourceImpl implements DataSource {
                 .collection('favorite')
                 .doc(userData.uid)
                 .get();
-        print(snapshot.exists && snapshot.data() != null);
         if (snapshot.exists && snapshot.data() != null) {
           listOfFavoritedProduct =
               List<String>.from(snapshot.data()!['listOfProducts']);
@@ -226,6 +226,79 @@ class DataSourceImpl implements DataSource {
         }
       }
       return listOfFavoritedProduct;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<CartModel>> getAllCart() async {
+    try {
+      List<CartModel> carts = [];
+      final user = await getUserData();
+      if (user != null) {
+        final QuerySnapshot<Map<String, dynamic>> snapshot =
+            await firebaseFirestore
+                .collection('carts')
+                .doc(user.uid)
+                .collection('cart')
+                .get();
+
+        for (var document in snapshot.docs) {
+          carts.add(CartModel.fromJson(document.data()));
+        }
+      }
+      return carts;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<CartModel>> updateProductToCart({required int itemCount, required Product product, required Cart? cart})async {
+    try {
+      final user = await getUserData();
+      if (user != null) {
+        if (cart != null && itemCount != 0) {
+          //for updation
+          final cartModel = CartModel(
+            cartID: cart.cartID,
+            productID: product.productID,
+            productCount: itemCount,
+          );
+          await firebaseFirestore
+              .collection('carts')
+              .doc(user.uid)
+              .collection('cart')
+              .doc(cart.cartID)
+              .update(cartModel.toJson());
+        } else if (cart == null && itemCount != 0) {
+          //for creation
+          String cartID = const Uuid().v1();
+          final cartModel = CartModel(
+            cartID: cartID,
+            productID: product.productID,
+            productCount: itemCount,
+          );
+          await firebaseFirestore
+              .collection('carts')
+              .doc(user.uid)
+              .collection('cart')
+              .doc(cartID)
+              .set(cartModel.toJson());
+        } else if (cart != null && itemCount == 0) {
+          //for deletion of the data from the firebase
+          await firebaseFirestore
+              .collection('carts')
+              .doc(user.uid)
+              .collection('cart')
+              .doc(cart.cartID)
+              .delete();
+        }
+      } else {
+        throw const ServerException('Unexpected Error Occured');
+      }
+      return await getAllCart();
     } catch (e) {
       throw ServerException(e.toString());
     }

@@ -4,7 +4,7 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/user/features/home/data/models/banner_model.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
 
-abstract class HomePageDataSource {
+abstract class CartPageDataSource {
   Future<List<ProductModel>> getAllProducts();
   Future<List<BannerModel>> getAllBanners();
   Future<bool> updateProductToFavorite(

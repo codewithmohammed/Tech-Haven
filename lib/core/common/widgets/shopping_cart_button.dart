@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class ShoppingCartButton extends StatefulWidget {
-  const ShoppingCartButton({super.key});
+  const ShoppingCartButton({
+    super.key,
+    this.onTapMinusButton,
+    this.onTapPlusButton,
+    required this.currentCount,
+    this.isLoading = false,
+    this.onTapCartButton,
+    // this.isExpanded = false,
+  });
+
+  final void Function()? onTapMinusButton;
+  final void Function()? onTapPlusButton;
+  final void Function()? onTapCartButton;
+  final int currentCount;
+  final bool isLoading;
 
   @override
   State<ShoppingCartButton> createState() => _ShoppingCartButtonState();
 }
 
 class _ShoppingCartButtonState extends State<ShoppingCartButton> {
+  // final bool isExpanded;
   bool isExpanded = false;
-
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -37,19 +51,18 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
         ),
       ),
       child: InkWell(
-        onTap: () {
+        onTap: () { widget.onTapCartButton;
           setState(() {
-            isExpanded != true ? isExpanded = true : isExpanded = false;
+            isExpanded = isExpanded ? false : true;
           });
+         
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             if (isExpanded)
               GestureDetector(
-                onTap: () {
-                  print('object');
-                },
+                onTap: widget.onTapPlusButton,
                 child: const Text(
                   '+',
                   style: TextStyle(
@@ -59,25 +72,25 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
                   ),
                 ),
               ),
-            isExpanded
-                ? const Text(
-                    '1',
-                    style: TextStyle(
+            isExpanded && !widget.isLoading
+                ? Text(
+                    widget.currentCount.toString(),
+                    style: const TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
                     ),
                   )
-                : const SvgIcon(
-                    icon: CustomIcons.cartSvg,
-                    radius: 20,
-                    color: Colors.black,
-                  ),
+                : isExpanded && widget.isLoading
+                    ? const CircularProgressIndicator()
+                    : const SvgIcon(
+                        icon: CustomIcons.cartSvg,
+                        radius: 20,
+                        color: Colors.black,
+                      ),
             if (isExpanded)
               GestureDetector(
-                onTap: () {
-                  print('object');
-                },
+                onTap: widget.onTapMinusButton,
                 child: const Text(
                   '-',
                   style: TextStyle(
@@ -90,28 +103,6 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
           ],
         ),
       ),
-
-      // decoration: BoxDecoration(
-      //   color: isExpanded ? Colors.green : Colors.blue,
-      //   borderRadius: BorderRadius.circular(isExpanded ? 30 : 10.0),
-      // ),
-      // child: Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //   children: [
-      //     Icon(
-      //       isExpanded ? Icons.check : Icons.shopping_cart,
-      //       color: Colors.white,
-      //     ),
-      //     if (isExpanded)
-      //       const Text(
-      //         'Added to Cart!',
-      //         style: TextStyle(
-      //           fontSize: 8,
-      //           fontWeight: FontWeight.bold,
-      //           color: Colors.white,
-      //         ),
-      //       ),
-      //   ],
     );
   }
 }

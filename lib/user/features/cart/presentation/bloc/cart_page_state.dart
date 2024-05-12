@@ -1,36 +1,31 @@
-part of 'home_page_bloc.dart';
+part of 'cart_page_bloc.dart';
 
-sealed class HomePageState extends Equatable {
-  const HomePageState();
+sealed class CartPageState extends Equatable {
+  const CartPageState();
 
   @override
   List<Object> get props => [];
 }
 
-final class HomePageInitial extends HomePageState {}
+final class CartPageInitial extends CartPageState {}
 
-final class HomePageLoadingState extends HomePageState {}
+final class CartPageLoadingState extends CartPageState {}
 
-final class HorizontalProductListViewState extends HomePageState {}
+final class CartProductListViewState extends CartPageState {}
 
-final class HorizontalProductsListViewSuccess
-    extends HorizontalProductListViewState {
+final class CartProductsListViewSuccess extends CartProductListViewState {
   final List<Product> listOfProducts;
-  final List<String> listOfFavoritedProducts;
-
-  HorizontalProductsListViewSuccess({
+  CartProductsListViewSuccess({
     required this.listOfProducts,
-    required this.listOfFavoritedProducts,
   });
 }
 
-final class HorizontalProductsListViewFailed
-    extends HorizontalProductListViewState {
+final class CartProductsListViewFailed extends CartProductListViewState {
   final String message;
-  HorizontalProductsListViewFailed({required this.message});
+  CartProductsListViewFailed({required this.message});
 }
 
-final class BannerCarouselState extends HomePageState {}
+final class BannerCarouselState extends CartPageState {}
 
 final class GetAllBannerSuccess extends BannerCarouselState {
   final List<Banner> listOfBanners;
@@ -42,7 +37,7 @@ final class GetAllBannerFailed extends BannerCarouselState {
   GetAllBannerFailed({required this.message});
 }
 
-final class AddProductToCartState extends HomePageState {}
+final class AddProductToCartState extends CartPageState {}
 
 final class ProductAddedToCartSuccess extends AddProductToCartState {
   final bool addedSuccess;
@@ -54,7 +49,7 @@ final class ProductAddedToCartFailed extends AddProductToCartState {
   ProductAddedToCartFailed({required this.message});
 }
 
-final class UpdateProductToFavoriteState extends HomePageState {}
+final class UpdateProductToFavoriteState extends CartPageState {}
 
 final class ProductUpdatedToFavoriteSuccess
     extends UpdateProductToFavoriteState {
@@ -68,14 +63,14 @@ final class ProductUpdatedToFavoriteFailed
   ProductUpdatedToFavoriteFailed({required this.message});
 }
 
-final class UpdateProductToCartState extends HomePageState {}
+final class UpdateProductToCartState extends CartPageState {}
 
 final class CartLoadedSuccessState extends UpdateProductToCartState {
   final List<Cart> listOfCart;
   CartLoadedSuccessState({required this.listOfCart});
 }
 
-final class ProductUpdatedToCartLoading extends UpdateProductToCartState {}
+final class CartUpdatedToCartLoading extends UpdateProductToCartState {}
 
 final class CartLoadedFailedState extends UpdateProductToCartState {
   final String message;

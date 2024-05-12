@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -18,6 +17,16 @@ import 'package:tech_haven/user/features/auth/domain/usecases/create_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:tech_haven/user/features/cart/data/datasource/cart_page_data_source.dart';
+import 'package:tech_haven/user/features/cart/data/datasource/cart_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/cart/data/repositories/cart_page_repository_impl.dart';
+import 'package:tech_haven/user/features/cart/domain/repository/cart_page_repository.dart';
+import 'package:tech_haven/user/features/cart/domain/usecase/get_all_cart_cart_page.dart';
+import 'package:tech_haven/user/features/cart/domain/usecase/get_all_favorited_products_cart_page.dart';
+import 'package:tech_haven/user/features/cart/domain/usecase/get_all_products_cart_page.dart';
+import 'package:tech_haven/user/features/cart/domain/usecase/update_product_to_cart_cart_page.dart';
+import 'package:tech_haven/user/features/cart/domain/usecase/update_product_to_favorite_cart_page.dart';
+import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
 import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
 import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source_impl.dart';
 import 'package:tech_haven/user/features/favorite/data/repositories/favorite_page_repository_impl.dart';
@@ -29,10 +38,12 @@ import 'package:tech_haven/user/features/home/data/datasource/home_page_data_sou
 import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source_impl.dart';
 import 'package:tech_haven/user/features/home/data/repositories/home_page_repository_impl.dart';
 import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_favorited_products.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner_home_page.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_cart_home_page.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_favorited_products_home_page.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_products_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_favorite.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_cart_home_page.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_favorite_home_page.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source_impl.dart';
@@ -76,6 +87,7 @@ Future<void> initDependencies() async {
   _initRegisterProduct();
   _initManageProduct();
   _initFavorite();
+  _initCart();
 }
 
 _initAuth() {
@@ -136,16 +148,23 @@ void _initHomePage() {
         () => HomePageRepositoryImpl(homePageDataSource: serviceLocator()))
     ..registerFactory(
         () => GetAllProductsHomePage(homePageRepository: serviceLocator()))
-    ..registerFactory(() => GetAllBanner(homePageRepository: serviceLocator()))
     ..registerFactory(
-        () => UpdateProductToFavorite(homePageRepository: serviceLocator()))
+        () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(() =>
+        UpdateProductToFavoriteHomePage(homePageRepository: serviceLocator()))
     ..registerFactory(() =>
         GetAllFavoritedProductsHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(
+        () => UpdateProductToCartHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllCartHomePage(homePageRepository: serviceLocator()))
     ..registerLazySingleton(() => HomePageBloc(
         getAllProductsHomePage: serviceLocator(),
-        getAllBanner: serviceLocator(),
-        updateProductToFavorite: serviceLocator(),
-        getAllFavoritedProducts: serviceLocator()));
+        getAllBannerHomePage: serviceLocator(),
+        updateProductToFavoriteHomePage: serviceLocator(),
+        getAllFavoritedProductsHomePage: serviceLocator(),
+        updateProductToCartHomePage: serviceLocator(),
+        getAllCartHomePage: serviceLocator()));
 }
 
 void _initSearchCategory() {
@@ -233,4 +252,33 @@ _initFavorite() {
         getAllFavoritedProduct: serviceLocator(),
         removeProductFavorite: serviceLocator()));
   // ..registerLazySingleton(() => ChangeCategoryModelBloc());
+}
+
+_initCart() {
+  serviceLocator
+    ..registerFactory<CartPageDataSource>(() => CartPageDataSourceImpl(
+        dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
+    ..registerFactory<CartPageRepository>(
+        () => CartPageRepositoryImpl(cartPageDataSource: serviceLocator()))
+    // ..registerFactory(() => GetAllCategoryForRegister(
+    //       registerProductRepository: serviceLocator(),
+    //     ))
+    ..registerFactory(
+        () => GetAllProductsCartPage(cartPageRepository: serviceLocator()))
+    // ..registerFactory(() => GetAllBannerCartPage(CartPageRepository: serviceLocator()))
+    ..registerFactory(() =>
+        UpdateProductToFavoriteCartPage(cartPageRepository: serviceLocator()))
+    ..registerFactory(() =>
+        GetAllFavoritedProductsCartPage(cartPageRepository: serviceLocator()))
+    ..registerFactory(
+        () => UpdateProductToCartCartPage(cartPageRepository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllCartCartPage(cartPageRepository: serviceLocator()))
+    ..registerLazySingleton(() => CartPageBloc(
+        getAllProductsCartPage: serviceLocator(),
+        // getAllBannerCartPage: serviceLocator(),
+        updateProductToFavoriteCartPage: serviceLocator(),
+        getAllFavoritedProductsCartPage: serviceLocator(),
+        updateProductToCartCartPage: serviceLocator(),
+        getAllCartCartPage: serviceLocator()));
 }

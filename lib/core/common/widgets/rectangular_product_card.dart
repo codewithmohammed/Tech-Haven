@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:like_button/like_button.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/square_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/remove_button.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/save_button.dart';
@@ -13,10 +15,12 @@ import '../../constants/constants.dart';
 class RectangularProductCard extends StatelessWidget {
   const RectangularProductCard(
       {super.key,
-      required this.items,
+      // required this.items,
+      this.isLoading = false,
       required this.onTap,
       required this.isFavoriteCard,
       required this.productName,
+      required this.textEditingController,
       required this.productPrize,
       required this.vendorName,
       required this.deliveryDate,
@@ -24,7 +28,8 @@ class RectangularProductCard extends StatelessWidget {
       this.onTapFavouriteButton,
       required this.productImage});
   final bool isFavoriteCard;
-  final List<String> items;
+  final bool isLoading;
+  final TextEditingController? textEditingController;
   final void Function()? onTap;
   final String productName;
   final String productPrize;
@@ -33,6 +38,66 @@ class RectangularProductCard extends StatelessWidget {
   final int productCount;
   final String? productImage;
   final Future<bool?> Function(bool)? onTapFavouriteButton;
+
+  @override
+  Widget build(BuildContext context) {
+    return isLoading
+        ? Shimmer.fromColors(
+            baseColor: Colors.grey.shade100,
+            highlightColor: Colors.grey.shade300,
+            child: RectangularProductCardContent(
+              onTap: onTap,
+              productName: productName,
+              productPrize: productPrize,
+              isFavoriteCard: isFavoriteCard,
+              deliveryDate: deliveryDate,
+              vendorName: vendorName,
+              productImage: productImage,
+              onTapFavouriteButton: onTapFavouriteButton,
+              isFavorited: false,
+              textEditingController: textEditingController,
+            ),
+          )
+        : RectangularProductCardContent(
+            onTap: onTap,
+            productName: productName,
+            productPrize: productPrize,
+            isFavoriteCard: isFavoriteCard,
+            deliveryDate: deliveryDate,
+            vendorName: vendorName,
+            productImage: productImage,
+            onTapFavouriteButton: onTapFavouriteButton,
+            isFavorited: false,
+            textEditingController: textEditingController,
+          );
+  }
+}
+
+class RectangularProductCardContent extends StatelessWidget {
+  const RectangularProductCardContent({
+    super.key,
+    required this.onTap,
+    required this.productName,
+    required this.productPrize,
+    required this.isFavoriteCard,
+    required this.deliveryDate,
+    required this.vendorName,
+    required this.textEditingController,
+    required this.productImage,
+    required this.onTapFavouriteButton,
+    required this.isFavorited,
+  });
+
+  final void Function()? onTap;
+  final String productName;
+  final String productPrize;
+  final bool isFavoriteCard;
+  final String deliveryDate;
+  final TextEditingController? textEditingController;
+  final String vendorName;
+  final String? productImage;
+  final Future<bool?> Function(bool boolean)? onTapFavouriteButton;
+  final bool isFavorited;
 
   @override
   Widget build(BuildContext context) {
@@ -155,6 +220,7 @@ class RectangularProductCard extends StatelessWidget {
                         height: 30,
                         width: 70,
                         child: TextFormField(
+                          controller: textEditingController,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
@@ -200,29 +266,9 @@ class RectangularProductCard extends StatelessWidget {
                         onTap: () {},
                       ),
                     //heart button
-                    SquareButton(
-                      // side: 45,
-                      icon: LikeButton(
-                        isLiked: true,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        animationDuration: const Duration(
-                          milliseconds: 500,
-                        ),
-                        onTap: onTapFavouriteButton,
-                        size: 20,
-                        likeBuilder: (isLiked) {
-                          return SvgIcon(
-                            icon: isLiked
-                                ? CustomIcons.heartFilledSvg
-                                : CustomIcons.heartSvg,
-                            color:
-                                isLiked ? Colors.red : AppPallete.greyTextColor,
-                            radius: 5,
-                            fit: BoxFit.scaleDown,
-                          );
-                        },
-                      ),
-                    ),
+                    CustomLikeButton(
+                        isFavorited: isFavorited,
+                        onTapFavouriteButton: onTapFavouriteButton)
                   ],
                 )
               ],

@@ -20,7 +20,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     context.read<HomePageBloc>().add(GetAllProductsEvent());
     context.read<HomePageBloc>().add(GetAllBannerEvent());
-    print('hskdfsjdhfjs');
+    // context.read<HomePageBloc>().add(GetAllCartEvent());
+    // print('hskdfsjdhfjs');
     return const Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,

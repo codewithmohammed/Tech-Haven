@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
-import 'package:tech_haven/core/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/pick_image.dart';
 

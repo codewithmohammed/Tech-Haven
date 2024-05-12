@@ -36,7 +36,7 @@ class CarouselBannerContainer extends StatelessWidget {
           },
           builder: (context, state) {
             if (state is GetAllBannerSuccess) {
-              print('success');
+              // print('success');
               return CarouselSlider(
                 options: CarouselOptions(
                   aspectRatio: 16 / 9, // Set aspect ratio to 16:9

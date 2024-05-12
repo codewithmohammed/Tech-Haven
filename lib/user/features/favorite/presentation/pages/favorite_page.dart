@@ -91,7 +91,7 @@ class FavoritePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final product = state.listOfFavoritedProduct[index];
                       return RectangularProductCard(
-                        items: items,
+                        // items: items,
                         onTap: () {},
                         isFavoriteCard: true,
                         productName: product.name,
@@ -104,7 +104,7 @@ class FavoritePage extends StatelessWidget {
                           print(boolean);
                           return !boolean;
                         },
-                        productImage: product.displayImageURL,
+                        productImage: product.displayImageURL, textEditingController: null,
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {
@@ -122,14 +122,14 @@ class FavoritePage extends StatelessWidget {
                       baseColor: Colors.grey.shade100,
                       highlightColor: Colors.grey.shade300,
                       child: RectangularProductCard(
-                        items: items,
+                        // items: items,
                         onTap: () {},
                         isFavoriteCard: true,
                         productName: 'product.name',
                         productPrize: 'product.prize.toString()',
                         vendorName: ' product.vendorName',
                         deliveryDate: 'product.mainCategory',
-                        productImage: null,
+                        productImage: null, textEditingController: null,
                       ),
                     );
                   },

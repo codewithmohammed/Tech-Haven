@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
+import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/prize_data_widget.dart';
 import 'package:tech_haven/core/common/widgets/square_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
@@ -18,16 +18,30 @@ class ProductCard extends StatelessWidget {
     required this.isHorizontal,
     required this.product,
     required this.onTapFavouriteButton,
-    required this.listOfFavoritedProducts,
+    required this.isFavorited,
+    // required this.currentCartedCount,
+    // this.onTapCartButton,
+    // this.onTapPlusButton,
+    // this.onTapMinusButton,
+    // required this.cartState,
+    required this.shoppingCartWidget,
   });
 
   final int index;
   final bool isHorizontal;
   final Product? product;
-  final List<String>? listOfFavoritedProducts;
+  final bool isFavorited;
   final Future<bool?> Function(bool)? onTapFavouriteButton;
+  // final int currentCartedCount;
+  // final void Function()? onTapCartButton;
+  // final void Function()? onTapPlusButton;
+  // final void Function()? onTapMinusButton;
+  // final UpdateProductToCartState cartState;
+  final Widget shoppingCartWidget;
+
   @override
   Widget build(BuildContext context) {
+    // int initialCount = totalItems;
     return Container(
       width: 185,
       clipBehavior: Clip.antiAlias,
@@ -71,11 +85,6 @@ class ProductCard extends StatelessWidget {
                               alignment: Alignment.center,
                               decoration: const BoxDecoration(
                                 color: AppPallete.lightgreyColor,
-                                // image: DecorationImage(
-                                //   image: AssetImage(
-                                //     'assets/dev/iphone-png.png',
-                                //   ),
-                                // ),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
                                     5,
@@ -142,40 +151,12 @@ class ProductCard extends StatelessWidget {
                             Positioned(
                               top: 5,
                               right: 5,
-                              child: SquareButton(
-                                // side: 45,
-                                icon: LikeButton(
-                                  isLiked: listOfFavoritedProducts!
-                                      .contains(product!.productID),
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  animationDuration: const Duration(
-                                    milliseconds: 500,
-                                  ),
-                                  onTap: onTapFavouriteButton,
-                                  size: 20,
-                                  likeBuilder: (isLiked) {
-                                    // Functiony hello = () {};
-                                    return SvgIcon(
-                                      icon: isLiked
-                                          ? CustomIcons.heartFilledSvg
-                                          : CustomIcons.heartSvg,
-                                      color: isLiked
-                                          ? Colors.red
-                                          : AppPallete.greyTextColor,
-                                      radius: 5,
-                                      fit: BoxFit.scaleDown,
-                                    );
-                                  },
-                                ),
+                              child: CustomLikeButton(
+                                isFavorited: isFavorited,
+                                onTapFavouriteButton: onTapFavouriteButton,
                               ),
                             ),
                             //favorite
-                            //cart
-                            const Positioned(
-                              bottom: 5,
-                              right: 5,
-                              child: ShoppingCartButton(),
-                            ),
                           ],
                         ),
                       ),
@@ -206,8 +187,6 @@ class ProductCard extends StatelessWidget {
                                 previousPrize: '3299',
                               ),
                             ),
-
-                            //product offer green
                             Container(
                               height: 8,
                               width: 40,

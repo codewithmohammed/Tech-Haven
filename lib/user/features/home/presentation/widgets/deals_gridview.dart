@@ -180,7 +180,9 @@ class DealsGridView extends StatelessWidget {
                               const Positioned(
                                   bottom: 5,
                                   right: 5,
-                                  child: ShoppingCartButton()),
+                                  child: ShoppingCartButton(
+                                    currentCount: 0,
+                                  )),
                             ],
                           ),
                         ),

@@ -4,17 +4,17 @@ import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
-import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source.dart';
-import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
+import 'package:tech_haven/user/features/cart/data/datasource/cart_page_data_source.dart';
+import 'package:tech_haven/user/features/cart/domain/repository/cart_page_repository.dart';
 
-class HomePageRepositoryImpl extends HomePageRepository {
-  final HomePageDataSource homePageDataSource;
-  HomePageRepositoryImpl({required this.homePageDataSource});
+class CartPageRepositoryImpl extends CartPageRepository {
+  final CartPageDataSource cartPageDataSource;
+  CartPageRepositoryImpl({required this.cartPageDataSource});
 
   @override
   Future<Either<Failure, List<Product>>> getAllProducts() async {
     try {
-      final result = await homePageDataSource.getAllProducts();
+      final result = await cartPageDataSource.getAllProducts();
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
@@ -24,7 +24,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
   @override
   Future<Either<Failure, List<Banner>>> getAllBanners() async {
     try {
-      final result = await homePageDataSource.getAllBanners();
+      final result = await cartPageDataSource.getAllBanners();
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
@@ -38,7 +38,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
   }) async {
     try {
       // print('updating the favorite');
-      final result = await homePageDataSource.updateProductToFavorite(
+      final result = await cartPageDataSource.updateProductToFavorite(
           isFavorited: isFavorited, product: product);
       return right(result);
     } on ServerException catch (e) {
@@ -50,7 +50,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<Failure, List<String>>> getAllFavoritedProducts() async {
     try {
       // print('updating the favorite');
-      final result = await homePageDataSource.getAllFavoritedProducts();
+      final result = await cartPageDataSource.getAllFavoritedProducts();
       // print('hello how are you');
       return right(result);
     } on ServerException catch (e) {
@@ -63,7 +63,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
       {required int itemCount, required Product product,required Cart? cart}) async {
     try {
       // print('updating the favorite');
-      final result = await homePageDataSource.updateProductToCart(
+      final result = await cartPageDataSource.updateProductToCart(
         itemCount: itemCount,
         product: product,
         cart:  cart
@@ -79,7 +79,7 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<Failure, List<Cart>>> getAllCart() async {
     try {
       // print('updating the favorite');
-      final result = await homePageDataSource.getAllCart();
+      final result = await cartPageDataSource.getAllCart();
       // print('hello how are you');
       return right(result);
     } on ServerException catch (e) {

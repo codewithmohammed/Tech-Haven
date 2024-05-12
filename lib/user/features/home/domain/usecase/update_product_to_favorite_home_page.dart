@@ -4,22 +4,22 @@ import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
 
-class UpdateProductToFavorite
-    implements UseCase<bool, UpdateProductToFavoriteParams> {
+class UpdateProductToFavoriteHomePage
+    implements UseCase<bool, UpdateProductToFavoriteHomePageParams> {
   final HomePageRepository homePageRepository;
-  UpdateProductToFavorite({required this.homePageRepository});
+  UpdateProductToFavoriteHomePage({required this.homePageRepository});
 
   @override
   Future<Either<Failure, bool>> call(
-      UpdateProductToFavoriteParams params) async {
+      UpdateProductToFavoriteHomePageParams params) async {
     return await homePageRepository.updateProductToFavorite(isFavorited: params.isFavorited, product: params.product);
   }
 }
 
-class UpdateProductToFavoriteParams {
+class UpdateProductToFavoriteHomePageParams {
   final bool isFavorited;
   final Product product;
 
-  UpdateProductToFavoriteParams(
+  UpdateProductToFavoriteHomePageParams(
       {required this.isFavorited, required this.product});
 }

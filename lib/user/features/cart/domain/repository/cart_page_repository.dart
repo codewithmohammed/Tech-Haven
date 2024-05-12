@@ -5,7 +5,7 @@ import 'package:tech_haven/core/entities/product.dart';
 
 import '../../../../../core/error/failures.dart';
 
-abstract class HomePageRepository {
+abstract class CartPageRepository {
   Future<Either<Failure, List<Product>>> getAllProducts();
   Future<Either<Failure, List<Banner>>> getAllBanners();
   Future<Either<Failure, bool>> updateProductToFavorite({

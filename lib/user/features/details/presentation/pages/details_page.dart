@@ -1,7 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/icons/icons.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_page_divider.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
@@ -11,6 +12,7 @@ import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
+import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
 
 class DetailsPage extends StatefulWidget {
@@ -459,12 +461,20 @@ class _DetailsPageState extends State<DetailsPage>
                 itemCount: 10,
                 itemBuilder: (context, index) {
                   return ProductCard(
-                    index: index,
+                    index: 1,
                     isHorizontal: false,
                     product: null,
                     onTapFavouriteButton: (bool) async {
                       return null;
-                    }, listOfFavoritedProducts: [],
+                    },
+                    isFavorited: false,
+                    shoppingCartWidget: ShoppingCartButton(
+                      onTapPlusButton: () {},
+                      onTapMinusButton: () {},
+                      onTapCartButton: () {},
+                      currentCount: 0,
+                      isLoading: false,
+                    ),
                   );
                 },
               ),
