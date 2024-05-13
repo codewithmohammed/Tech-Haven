@@ -29,13 +29,13 @@ class FavoritePage extends StatelessWidget {
     }
 
     context.read<FavoritePageBloc>().add(GetAllFavoritedProducts());
-    var items = [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-    ];
+    // var items = [
+    //   '1',
+    //   '2',
+    //   '3',
+    //   '4',
+    //   '5',
+    // ];
     return Scaffold(
       appBar: const AppBarSearchBar(
         favouriteIconNeeded: false,
@@ -91,7 +91,9 @@ class FavoritePage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final product = state.listOfFavoritedProduct[index];
                       return RectangularProductCard(
+                        isFavorite: true,
                         // items: items,
+
                         onTap: () {},
                         isFavoriteCard: true,
                         productName: product.name,
@@ -101,10 +103,10 @@ class FavoritePage extends StatelessWidget {
                         onTapFavouriteButton: (bool isLiked) async {
                           final boolean =
                               await updateProductToFavorite(product: product);
-                          print(boolean);
                           return !boolean;
                         },
-                        productImage: product.displayImageURL, textEditingController: null,
+                        productImage: product.displayImageURL,
+                        textEditingController: null,
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) {

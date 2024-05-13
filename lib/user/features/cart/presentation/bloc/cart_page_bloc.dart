@@ -59,33 +59,29 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       GetAllProductsEvent event, Emitter<CartPageState> emit) async {
     // final allCarted = await _getAllCartCartPage(NoParams());
     // final allFavorited = await _getAllFavoritedProductsCartPage(NoParams());
-    final allProducts = await _getAllProductsCartPage(NoParams());
 
-    // List<String> listOfAllFavorited = [];
-    // String messageOfFavoriteError = 'error';
-    // final allCartedProduct = await _getAllCartCartPage(NoParams());
-    // allCarted.fold(
-    //     (failure) => emit(CartLoadedFailedState(
-    //           message: failure.message,
-    //         )), (success) {
-    //   print(success);
-    //   return emit(CartLoadedSuccessState(
-    //     listOfCart: success,
-    //   ));
-    // });
-    // allFavorited.fold((failure) {
-    //   messageOfFavoriteError = failure.message;
-    // }, (success) {
-    //   listOfAllFavorited = success; // Assigning value here
-    // });
+    // final allCartsResults = await _getAllCartCartPage(NoParams());
 
-    allProducts.fold((failure) {
+    final allCarted = await _getAllCartCartPage(NoParams());
+    final allFavorited = await _getAllFavoritedProductsCartPage(NoParams());
+    final allProductsResult = await _getAllProductsCartPage(NoParams());
+    List<String> listOfFavorites = [];
+    // List<Cart> listOfCarts = [];
+    allFavorited.fold(
+      (failure) => failure,
+      (favorites) {
+        listOfFavorites = favorites;
+      },
+    );
+    allProductsResult.fold((failure) {
       emit(CartProductsListViewFailed(message: failure.message));
-    }, (success) {
-      // print(success);
+    }, (products) {
+      // List<Product> filteredList = getAllProductsThatIsCarted(
+      //     products: products, cartModels: listOfCarts);
+      print(products);
       emit(CartProductsListViewSuccess(
-        listOfProducts: success,
-        // listOfFavoritedProducts: listOfAllFavorited,
+        listOfProducts: products,
+        listOFAllFavorites: listOfFavorites,
       ));
     });
   }
@@ -138,12 +134,14 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
 
   FutureOr<void> _onGetAllCartEvent(
       GetAllCartEvent event, Emitter<CartPageState> emit) async {
+    emit(CartUpdatedToCartLoading());
     final result = await _getAllCartCartPage(NoParams());
 
     result.fold(
         (failure) => emit(CartLoadedFailedState(
               message: failure.message,
             )), (success) {
+      print(success);
       return emit(CartLoadedSuccessState(
         listOfCart: success,
       ));

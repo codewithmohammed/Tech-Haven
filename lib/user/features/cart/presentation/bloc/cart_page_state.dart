@@ -15,9 +15,13 @@ final class CartProductListViewState extends CartPageState {}
 
 final class CartProductsListViewSuccess extends CartProductListViewState {
   final List<Product> listOfProducts;
-  CartProductsListViewSuccess({
-    required this.listOfProducts,
-  });
+  final List<String> listOFAllFavorites;
+  CartProductsListViewSuccess(
+      {required this.listOfProducts, required this.listOFAllFavorites});
+}
+
+final class CartProductsListViewLoading extends CartProductListViewState {
+  CartProductsListViewLoading();
 }
 
 final class CartProductsListViewFailed extends CartProductListViewState {
@@ -25,17 +29,17 @@ final class CartProductsListViewFailed extends CartProductListViewState {
   CartProductsListViewFailed({required this.message});
 }
 
-final class BannerCarouselState extends CartPageState {}
+// final class BannerCarouselState extends CartPageState {}
 
-final class GetAllBannerSuccess extends BannerCarouselState {
-  final List<Banner> listOfBanners;
-  GetAllBannerSuccess({required this.listOfBanners});
-}
+// final class GetAllBannerSuccess extends BannerCarouselState {
+//   final List<Banner> listOfBanners;
+//   GetAllBannerSuccess({required this.listOfBanners});
+// }
 
-final class GetAllBannerFailed extends BannerCarouselState {
-  final String message;
-  GetAllBannerFailed({required this.message});
-}
+// final class GetAllBannerFailed extends BannerCarouselState {
+//   final String message;
+//   GetAllBannerFailed({required this.message});
+// }
 
 final class AddProductToCartState extends CartPageState {}
 

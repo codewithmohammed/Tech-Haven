@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
-import 'package:tech_haven/core/common/widgets/square_button.dart';
-import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/remove_button.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/save_button.dart';
@@ -16,6 +12,7 @@ class RectangularProductCard extends StatelessWidget {
   const RectangularProductCard(
       {super.key,
       // required this.items,
+
       this.isLoading = false,
       required this.onTap,
       required this.isFavoriteCard,
@@ -24,18 +21,24 @@ class RectangularProductCard extends StatelessWidget {
       required this.productPrize,
       required this.vendorName,
       required this.deliveryDate,
-      this.productCount = 0,
       this.onTapFavouriteButton,
-      required this.productImage});
+      required this.productImage,
+      this.isFavorite = false,
+      this.onPressedSaveButton,
+      this.productQuantity = '0',
+      this.onTapRemoveButton});
   final bool isFavoriteCard;
+  final bool isFavorite;
   final bool isLoading;
   final TextEditingController? textEditingController;
   final void Function()? onTap;
   final String productName;
   final String productPrize;
+  final String productQuantity;
+  final void Function()? onTapRemoveButton;
   final String vendorName;
+  final void Function()? onPressedSaveButton;
   final String deliveryDate;
-  final int productCount;
   final String? productImage;
   final Future<bool?> Function(bool)? onTapFavouriteButton;
 
@@ -46,6 +49,7 @@ class RectangularProductCard extends StatelessWidget {
             baseColor: Colors.grey.shade100,
             highlightColor: Colors.grey.shade300,
             child: RectangularProductCardContent(
+              onTapRemoveButton: onTapRemoveButton,
               onTap: onTap,
               productName: productName,
               productPrize: productPrize,
@@ -54,12 +58,15 @@ class RectangularProductCard extends StatelessWidget {
               vendorName: vendorName,
               productImage: productImage,
               onTapFavouriteButton: onTapFavouriteButton,
-              isFavorited: false,
+              isFavorited: isFavorite,
               textEditingController: textEditingController,
+              onPressedSaveButton: onPressedSaveButton,
+              productQuantity: productQuantity,
             ),
           )
         : RectangularProductCardContent(
             onTap: onTap,
+            onTapRemoveButton: onTapRemoveButton,
             productName: productName,
             productPrize: productPrize,
             isFavoriteCard: isFavoriteCard,
@@ -67,8 +74,10 @@ class RectangularProductCard extends StatelessWidget {
             vendorName: vendorName,
             productImage: productImage,
             onTapFavouriteButton: onTapFavouriteButton,
-            isFavorited: false,
+            onPressedSaveButton: onPressedSaveButton,
+            isFavorited: isFavorite,
             textEditingController: textEditingController,
+            productQuantity: productQuantity,
           );
   }
 }
@@ -86,15 +95,21 @@ class RectangularProductCardContent extends StatelessWidget {
     required this.productImage,
     required this.onTapFavouriteButton,
     required this.isFavorited,
+    this.onPressedSaveButton,
+    required this.productQuantity,
+    this.onTapRemoveButton,
   });
 
   final void Function()? onTap;
   final String productName;
+  final String productQuantity;
   final String productPrize;
   final bool isFavoriteCard;
   final String deliveryDate;
+  final void Function()? onPressedSaveButton;
   final TextEditingController? textEditingController;
   final String vendorName;
+  final void Function()? onTapRemoveButton;
   final String? productImage;
   final Future<bool?> Function(bool boolean)? onTapFavouriteButton;
   final bool isFavorited;
@@ -214,61 +229,71 @@ class RectangularProductCardContent extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (!isFavoriteCard)
-                  Row(
+                  Column(
                     children: [
-                      SizedBox(
-                        height: 30,
-                        width: 70,
-                        child: TextFormField(
-                          controller: textEditingController,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                          keyboardType: TextInputType.number,
-                          textAlignVertical: TextAlignVertical.center,
-                          textAlign: TextAlign.center,
-                          decoration: const InputDecoration(
-                            hintText: 'Quantity',
-                            hintStyle: TextStyle(
-                              fontSize: 12,
-                            ),
-                            alignLabelWithHint: true,
-                            contentPadding: EdgeInsets.only(bottom: 2),
-                            fillColor: AppPallete.darkgreyColor,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(style: BorderStyle.solid),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  5,
+                      Row(
+                        children: [
+                          SizedBox(
+                            height: 30,
+                            width: 70,
+                            child: TextFormField(
+                              controller: textEditingController,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              keyboardType: TextInputType.number,
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                hintText: 'Quantity',
+                                hintStyle: TextStyle(
+                                  fontSize: 12,
+                                ),
+                                alignLabelWithHint: true,
+                                contentPadding: EdgeInsets.only(bottom: 2),
+                                fillColor: AppPallete.darkgreyColor,
+                                border: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(style: BorderStyle.solid),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      5,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          SizedBox(
+                            width: 100,
+                            height: 30,
+                            child: SaveButton(
+                              onPressed: onPressedSaveButton,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        'Total Quantity Available : $productQuantity',
+                        style: const TextStyle(
+                          fontSize: 10,
                         ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      SizedBox(
-                          width: 100,
-                          height: 30,
-                          child: SaveButton(
-                            onPressed: () {},
-                          )),
+                      )
                     ],
                   ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     //remove button
-                    if (!isFavoriteCard)
-                      RemoveButton(
-                        onTap: () {},
-                      ),
+                    if (!isFavoriteCard) RemoveButton(onTap: onTapRemoveButton),
                     //heart button
                     CustomLikeButton(
-                        isFavorited: isFavorited,
-                        onTapFavouriteButton: onTapFavouriteButton)
+                      isFavorited: isFavorited,
+                      onTapFavouriteButton: onTapFavouriteButton,
+                    )
                   ],
                 )
               ],

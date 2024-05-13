@@ -157,6 +157,8 @@ class ProductCard extends StatelessWidget {
                               ),
                             ),
                             //favorite
+                            Positioned(
+                                bottom: 5, right: 5, child: shoppingCartWidget),
                           ],
                         ),
                       ),

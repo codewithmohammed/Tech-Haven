@@ -76,6 +76,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         (failure) => emit(CartLoadedFailedState(
               message: failure.message,
             )), (success) {
+      print('yes');
       return emit(CartLoadedSuccessState(
         listOfCart: success,
       ));

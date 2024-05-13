@@ -21,11 +21,11 @@ class CartPageDataSourceImpl extends CartPageDataSource {
   Future<List<ProductModel>> getAllProducts() async {
     try {
       final allCartedProducts = await dataSource.getAllCart();
-      print(allCartedProducts);
+      // print(allCartedProducts);
       final allProducts = await dataSource.getAllProductsData();
       List<ProductModel> filteredProducts = getAllProductsThatIsCarted(
-          productModels: allProducts, cartModels: allCartedProducts);
-      print(filteredProducts);
+          products: allProducts, cartModels: allCartedProducts);
+      // print(filteredProducts);
       return filteredProducts;
     } catch (e) {
       throw ServerException(e.toString());
@@ -88,23 +88,24 @@ class CartPageDataSourceImpl extends CartPageDataSource {
   @override
   Future<List<CartModel>> getAllCart() async {
     try {
-      return dataSource.getAllCart();
+      return await dataSource.getAllCart();
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
+}
 
-  List<ProductModel> getAllProductsThatIsCarted(
-      {required List<ProductModel> productModels,
-      required List<Cart> cartModels}) {
-    List<ProductModel> filteredList = [];
-    for (var product in productModels) {
-      for (var cart in cartModels) {
-        if (product.productID == cart.productID) {
-          filteredList.add(product);
-        }
+List<ProductModel> getAllProductsThatIsCarted({
+  required List<ProductModel> products,
+  required List<CartModel> cartModels,
+}) {
+  List<ProductModel> filteredList = [];
+  for (var product in products) {
+    for (var cart in cartModels) {
+      if (product.productID == cart.productID) {
+        filteredList.add(product);
       }
     }
-    return filteredList;
   }
+  return filteredList;
 }

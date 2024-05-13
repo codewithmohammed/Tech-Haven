@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 
 class SaveButton extends StatefulWidget {
-  final Function()? onPressed;
+  final void Function()? onPressed;
   final bool isLoading;
 
   const SaveButton({

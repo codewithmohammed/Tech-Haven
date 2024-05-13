@@ -1,11 +1,13 @@
-import 'dart:io';
-
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/widgets/rectangular_product_card.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/utils/check_product_is_carted.dart';
+import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/title_with_count_bar.dart';
 
@@ -16,14 +18,6 @@ class CartPage extends StatelessWidget {
   Widget build(BuildContext context) {
     context.read<CartPageBloc>().add(GetAllProductsEvent());
     context.read<CartPageBloc>().add(GetAllCartEvent());
-    //we need list of cartmodel list of wishlistmodel and list of productmodel
-    var items = [
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-    ];
     List<TextEditingController> controllers = [];
     void generateTextEditingController(int length) {
       for (int i = 0; i < length; i++) {
@@ -47,15 +41,31 @@ class CartPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 BlocBuilder<CartPageBloc, CartPageState>(
-                  builder: (context, state) {
-                    if (state is CartProductsListViewSuccess) {
-                      print(state.listOfProducts.length);
-                      return TitleWithCountBar(
-                        title: 'Cart',
-                        itemsCount: '${state.listOfProducts.length} Items',
-                        totalPrize:
-                            calculateTotalPrize(products: state.listOfProducts)
-                                .toString(),
+                  buildWhen: (previous, current) =>
+                      current is CartProductListViewState,
+                  builder: (context, listState) {
+                    if (listState is CartProductsListViewSuccess) {
+                      // print(state.listOfProducts.length);
+                      return BlocBuilder<CartPageBloc, CartPageState>(
+                        buildWhen: (previous, current) =>
+                            current is UpdateProductToCartState,
+                        builder: (context, cartState) {
+                          if (cartState is CartLoadedSuccessState) {
+                            return TitleWithCountBar(
+                              title: 'Cart',
+                              itemsCount:
+                                  '${calculateTotalQuantity(listOfCarts: cartState.listOfCart)} Items',
+                              totalPrize: calculateTotalPrize(
+                                products: listState.listOfProducts,
+                                carts: cartState.listOfCart,
+                              ).toString(),
+                            );
+                          }
+                          return const TitleWithCountBar(
+                              title: 'Cart',
+                              itemsCount: '${0} Items',
+                              totalPrize: '0');
+                        },
                       );
                     }
                     return const TitleWithCountBar(
@@ -70,36 +80,110 @@ class CartPage extends StatelessWidget {
           Expanded(
             child: BlocConsumer<CartPageBloc, CartPageState>(
               listener: (context, state) {},
-              builder: (context, state) {
-                if (state is CartProductsListViewSuccess) {
-                  generateTextEditingController(state.listOfProducts.length);
+              // buildWhen: (previous, current) =>
+              //     current is CartProductListViewState,
+              buildWhen: (previous, current) =>
+                  current is CartProductListViewState,
+              builder: (context, listState) {
+                if (listState is CartProductsListViewSuccess) {
+                  generateTextEditingController(
+                      listState.listOfProducts.length);
                   return ListView.separated(
-                    itemCount: state.listOfProducts.length,
+                    itemCount: listState.listOfProducts.length,
                     itemBuilder: (context, index) {
-                      final currentProduct = state.listOfProducts[index];
+                      final currentProduct = listState.listOfProducts[index];
                       return BlocConsumer<CartPageBloc, CartPageState>(
-                        listener: (context, state) {
-                          // TODO: implement listener
-                        },
+                        listener: (context, cartState) {},
                         buildWhen: (previous, current) =>
                             current is UpdateProductToCartState,
-                        builder: (context, state) {
-                          bool stateSuccess = state is CartLoadedSuccessState;
-                          bool stateLoading = state is CartUpdatedToCartLoading;
-                          bool stateFailed = state is CartLoadedFailedState;
-                          print(stateSuccess ? state.listOfCart[1].cartID : 0);
-                          // controllers[index] = stateSuccess?
+                        builder: (context, cartState) {
+                          bool stateSuccess =
+                              cartState is CartLoadedSuccessState;
+                          bool stateLoading =
+                              cartState is CartUpdatedToCartLoading;
+
+                          if (stateSuccess) {
+                            bool productIsCarted = false;
+                            //we check whether the product is carted already or not .if yes we put the
+                            final cartIndex = checkCurrentProductIsCarted(
+                              product: listState.listOfProducts[index],
+                              carts: cartState.listOfCart,
+                            );
+
+                            if (cartIndex > -1) {
+                              productIsCarted = true;
+                              controllers[cartIndex].text = cartState
+                                  .listOfCart[cartIndex].productCount
+                                  .toString();
+                            }
+
+                            // print(stateSuccess);
+                            return RectangularProductCard(
+                              isFavorite: listState.listOFAllFavorites
+                                  .contains(currentProduct.productID),
+                              // items: const [],
+                              isLoading: stateLoading ? true : false,
+                              onTap: () {},
+                              onTapFavouriteButton: (bool isLiked) async {
+                                return null;
+                              },
+                              onTapRemoveButton: () {
+                                context.read<CartPageBloc>().add(
+                                      UpdateProductToCartEvent(
+                                        itemCount: 0,
+                                        product: currentProduct,
+                                        cart: cartState.listOfCart[cartIndex],
+                                      ),
+                                    );
+                              },
+                              isFavoriteCard: false,
+                              productName: currentProduct.name,
+                              productPrize: currentProduct.prize.toString(),
+                              vendorName: currentProduct.vendorName,
+                              deliveryDate: currentProduct.brandName,
+                              productImage: currentProduct.displayImageURL,
+                              productQuantity:
+                                  currentProduct.quantity.toString(),
+                              textEditingController: controllers[index],
+                              onPressedSaveButton: () {
+                                final newCount =
+                                    int.parse(controllers[cartIndex].text);
+                                if (currentProduct.quantity >= newCount &&
+                                    newCount > 0) {
+                                  if (productIsCarted) {
+                                    context.read<CartPageBloc>().add(
+                                          UpdateProductToCartEvent(
+                                            itemCount: newCount,
+                                            product: currentProduct,
+                                            cart:
+                                                cartState.listOfCart[cartIndex],
+                                          ),
+                                        );
+                                  }
+                                } else {
+                                  showSnackBar(
+                                      context: context,
+                                      title: 'Amount',
+                                      content: 'insufficient Amount',
+                                      contentType: ContentType.failure);
+                                }
+                              },
+                            );
+                          }
+
                           return RectangularProductCard(
                             // items: const [],
+                            isLoading: stateLoading ? true : false,
                             onTap: () {},
                             isFavoriteCard: false,
                             productName: currentProduct.name,
                             productPrize: currentProduct.prize.toString(),
                             vendorName: currentProduct.vendorName,
                             deliveryDate: currentProduct.brandName,
-                            productCount: currentProduct.quantity,
+
                             productImage: currentProduct.displayImageURL,
                             textEditingController: controllers[index],
+                            productQuantity: currentProduct.quantity.toString(),
                           );
                         },
                       );
@@ -116,19 +200,18 @@ class CartPage extends StatelessWidget {
                   itemCount: 5,
                   itemBuilder: (context, index) {
                     return RectangularProductCard(
-                      isLoading: state is CartPageLoadingState ? true : false,
-                      // items: items,
-                      onTap: () {},
-                      isFavoriteCard: false,
-                      productName:
-                          ' Sony PlayStation 5 Console (Disc Version) With Controller',
-                      productPrize: '2888',
-                      vendorName: 'Mohammed Rayid',
-                      deliveryDate: 'Tomorrow 5 March',
-                      productCount: 12,
-                      productImage: null,
-                      textEditingController: null,
-                    );
+                        isLoading: true,
+                        // items: items,
+                        onTap: () {},
+                        isFavoriteCard: false,
+                        productName:
+                            ' Sony PlayStation 5 Console (Disc Version) With Controller',
+                        productPrize: '2888',
+                        vendorName: 'Mohammed Rayid',
+                        deliveryDate: 'Tomorrow 5 March',
+                        productImage: null,
+                        textEditingController: null,
+                        productQuantity: '0');
                   },
                   separatorBuilder: (BuildContext context, int index) {
                     return Container(
@@ -145,11 +228,26 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  double calculateTotalPrize({required List<Product> products}) {
+  double calculateTotalPrize(
+      {required List<Product> products, required List<Cart> carts}) {
     double sum = 0;
     for (var product in products) {
-      sum += product.prize;
+      final cartIndex =
+          checkCurrentProductIsCarted(product: product, carts: carts);
+      sum += product.prize * carts[cartIndex].productCount;
     }
     return sum;
   }
+
+  calculateTotalQuantity({required List<Cart> listOfCarts}) {
+    int quantity = 0;
+    for (var cart in listOfCarts) {
+      quantity += cart.productCount;
+    }
+    return quantity;
+  }
 }
+
+//if there is carted product in list of products then it will return true on the index of the product that means that the current product is carted
+
+//then if that product is carted then it will return true at that index ....

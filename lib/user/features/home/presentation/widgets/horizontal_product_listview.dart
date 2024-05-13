@@ -5,6 +5,7 @@ import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/utils/check_product_is_carted.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
@@ -77,6 +78,7 @@ class HorizontalProductListView extends StatelessWidget {
               },
               builder: (context, listState) {
                 if (listState is HorizontalProductsListViewSuccess) {
+                  print(listState.listOfProducts);
                   // print('object');
                   return ListView.builder(
                     // physics: const BouncingScrollPhysics(),
@@ -104,25 +106,28 @@ class HorizontalProductListView extends StatelessWidget {
                           builder: (context, cartState) {
                             // print(cartState is CartLoadedSuccessState);
                             if (cartState is CartLoadedSuccessState) {
-                              final productIsCarted =
-                                  checkCurrentProductIsCarted(
-                                      product: listState.listOfProducts[index],
-                                      carts: cartState.listOfCart);
-                              // print(productIsCarted);
-                              print(productIsCarted);
+                              // print(cartState.listOfCart);
+                              bool productIsCarted = false;
+                              final cartIndex = checkCurrentProductIsCarted(
+                                  product: listState.listOfProducts[index],
+                                  carts: cartState.listOfCart);
+
+                              if (cartIndex > -1) {
+                                productIsCarted = true;
+                              }
 
                               return ShoppingCartButton(
                                 onTapPlusButton: () {
                                   //if the product is already carted and the current cartedcount is less than the total quantity of the product
                                   if (productIsCarted &&
-                                      cartState
-                                              .listOfCart[index].productCount <=
+                                      cartState.listOfCart[cartIndex]
+                                              .productCount <=
                                           currentProduct.quantity) {
                                     updateProductToCart(
                                       product: currentProduct,
-                                      cart: cartState.listOfCart[index],
-                                      itemCount: cartState
-                                              .listOfCart[index].productCount +
+                                      cart: cartState.listOfCart[cartIndex],
+                                      itemCount: cartState.listOfCart[cartIndex]
+                                              .productCount +
                                           1,
                                     );
                                     //if the product is not carted yet . then we increase it by one
@@ -138,15 +143,16 @@ class HorizontalProductListView extends StatelessWidget {
                                   //if the product is cared and the carted product count-1 is greater than 0 then we decrease by one
                                   //carted already means there is one product in the cart
                                   if (productIsCarted &&
-                                      cartState.listOfCart[index].productCount -
+                                      cartState.listOfCart[cartIndex]
+                                                  .productCount -
                                               1 >=
                                           0) {
                                     // print('object');
                                     updateProductToCart(
                                       product: currentProduct,
-                                      cart: cartState.listOfCart[index],
-                                      itemCount: cartState
-                                              .listOfCart[index].productCount -
+                                      cart: cartState.listOfCart[cartIndex],
+                                      itemCount: cartState.listOfCart[cartIndex]
+                                              .productCount -
                                           1,
                                     );
                                   }
@@ -155,13 +161,14 @@ class HorizontalProductListView extends StatelessWidget {
                                 },
                                 onTapCartButton: () {},
                                 currentCount: productIsCarted
-                                    ? cartState.listOfCart[index].productCount
+                                    ? cartState
+                                        .listOfCart[cartIndex].productCount
                                     : 0,
                                 isLoading: false,
                               );
                             }
                             // if (cartState is CartLoadedSuccesscartState) {
-                            //   print(cartState.listOfCart[index].productCount);
+                            //   print(cartState.listOfCart[cartIndex].productCount);
                             // }
                             return ShoppingCartButton(
                               currentCount: 0,
@@ -208,16 +215,5 @@ class HorizontalProductListView extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  bool checkCurrentProductIsCarted(
-      {required Product product, required List<Cart> carts}) {
-    for (var cart in carts) {
-      // Check if the product ID in the cart exists in the list of products
-      if (product.productID == cart.productID) {
-        return true;
-      }
-    }
-    return false;
   }
 }
