@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:tech_haven/core/common/model/category_model.dart';
-import 'package:tech_haven/core/common/model/product_model.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
 
@@ -8,8 +7,10 @@ abstract class RegisterProductDataSource {
   Future<List<CategoryModel>> getAllCategoryModel(bool refresh);
   Future<bool> registerNewProduct({
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -33,8 +34,10 @@ abstract class RegisterProductDataSource {
   Future<bool> updateExistingProduct({
     required Product product,
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -49,4 +52,6 @@ abstract class RegisterProductDataSource {
     required List<int> deleteImagesIndexes,
     required bool isPublished,
   });
+
+  Future<List<CategoryModel>> getAllBrands();
 }

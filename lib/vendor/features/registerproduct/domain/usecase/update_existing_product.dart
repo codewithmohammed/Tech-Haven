@@ -18,8 +18,10 @@ class UpdateExistingProduct
     return await registerProductRepository.updateExistingProduct(
       product: params.product,
       brandName: params.brandName,
+      brandID: params.brandID,
       name: params.productName,
       prize: params.productPrize,
+      oldPrize: params.oldProductPrize,
       quantity: params.productQuantity,
       mainCategory: params.mainCategory,
       mainCategoryID: params.mainCategoryID,
@@ -31,8 +33,8 @@ class UpdateExistingProduct
       specifications: params.specifications,
       shippingCharge: params.shippingCharge,
       productImages: params.productImages,
-       deleteImagesIndexes :params.deleteImagesIndexes,
-      isPublished: params.isPublished,
+      deleteImagesIndexes: params.deleteImagesIndexes,
+      isPublished: params.isPublished, 
     );
   }
 }
@@ -40,8 +42,10 @@ class UpdateExistingProduct
 class UpdateExistingProductParams {
   final Product product;
   final String brandName;
+  final String brandID;
   final String productName;
   final double productPrize;
+  final double oldProductPrize;
   final int productQuantity;
   final String mainCategory;
   final String mainCategoryID;
@@ -53,14 +57,16 @@ class UpdateExistingProductParams {
   final Map<String, String>? specifications;
   final double shippingCharge;
   final Map<int, List<File>>? productImages;
-   final List<int> deleteImagesIndexes;
+  final List<int> deleteImagesIndexes;
   final bool isPublished;
 
   UpdateExistingProductParams({
     required this.product,
     required this.brandName,
+    required this.brandID,
     required this.productName,
     required this.productPrize,
+    required this.oldProductPrize,
     required this.productQuantity,
     required this.mainCategory,
     required this.mainCategoryID,

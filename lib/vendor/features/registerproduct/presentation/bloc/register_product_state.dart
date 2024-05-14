@@ -15,8 +15,9 @@ final class RegisterProductPageState extends RegisterProductState {}
 final class RegisterProductAllCategoryLoadedSuccess
     extends RegisterProductPageActionState {
   final List<Category> allCategoryModel;
+  final List<Category> allBrandModel;
   RegisterProductAllCategoryLoadedSuccess({
-    required this.allCategoryModel,
+    required this.allCategoryModel,required this.allBrandModel
   });
 }
 
@@ -44,4 +45,16 @@ final class DeleteProductSuccess extends RegisterProductPageActionState {
 final class DeleteProductFailed extends RegisterProductPageActionState {
   final String message;
   DeleteProductFailed({required this.message});
+}
+
+final class AllBrandsPageState extends RegisterProductPageState {}
+
+final class GetAllBrandsSuccess extends AllBrandsPageState {
+  final List<Category> listOfBrands;
+  GetAllBrandsSuccess({required this.listOfBrands});
+}
+
+final class GetAllBrandsFailed extends AllBrandsPageState {
+  final String message;
+  GetAllBrandsFailed({required this.message});
 }

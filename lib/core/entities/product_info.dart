@@ -1,4 +1,6 @@
 class ProductInfo {
+  final String brandName;
+  final String brandID;
   final String mainCategoryName;
   final String mainCategoryID;
   final String subCategoryName;
@@ -9,6 +11,8 @@ class ProductInfo {
   final String productName;
 
   ProductInfo({
+    required this.brandID,
+    required this.brandName,
     required this.mainCategoryName,
     required this.mainCategoryID,
     required this.subCategoryName,

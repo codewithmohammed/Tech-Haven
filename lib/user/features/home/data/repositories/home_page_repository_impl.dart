@@ -15,8 +15,10 @@ class HomePageRepositoryImpl extends HomePageRepository {
   Future<Either<Failure, List<Product>>> getAllProducts() async {
     try {
       final result = await homePageDataSource.getAllProducts();
+      print(result);
       return right(result);
     } on ServerException catch (e) {
+      print(e);
       return left(Failure(e.message));
     }
   }
@@ -60,14 +62,13 @@ class HomePageRepositoryImpl extends HomePageRepository {
 
   @override
   Future<Either<Failure, List<Cart>>> updateProductToCart(
-      {required int itemCount, required Product product,required Cart? cart}) async {
+      {required int itemCount,
+      required Product product,
+      required Cart? cart}) async {
     try {
       // print('updating the favorite');
       final result = await homePageDataSource.updateProductToCart(
-        itemCount: itemCount,
-        product: product,
-        cart:  cart
-      );
+          itemCount: itemCount, product: product, cart: cart);
       // print('hello how are you');
       return right(result);
     } on ServerException catch (e) {

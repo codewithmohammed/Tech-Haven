@@ -14,6 +14,8 @@ class RegisterNewProduct implements UseCase<bool, RegisterNewProductParams> {
   Future<Either<Failure, bool>> call(RegisterNewProductParams params) async {
     return await registerProductRepository.registerNewProduct(
       brandName: params.brandName,
+      brandID: params.brandID,
+      oldPrize: params.oldPrize,
       name: params.productName,
       prize: params.productPrize,
       quantity: params.productQuantity,
@@ -34,8 +36,10 @@ class RegisterNewProduct implements UseCase<bool, RegisterNewProductParams> {
 
 class RegisterNewProductParams {
   final String brandName;
+  final String brandID;
   final String productName;
   final double productPrize;
+  final double oldPrize;
   final int productQuantity;
   final String mainCategory;
   final String mainCategoryID;
@@ -51,8 +55,10 @@ class RegisterNewProductParams {
 
   RegisterNewProductParams({
     required this.brandName,
+    required this.brandID,
     required this.productName,
     required this.productPrize,
+    required this.oldPrize,
     required this.productQuantity,
     required this.mainCategory,
     required this.mainCategoryID,

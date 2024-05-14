@@ -22,10 +22,12 @@ class VendorBottomNavigationBar extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () {
-          GoRouter.of(context).pushNamed(AppRouteConstants.registerProductPage,extra: null);
+          GoRouter.of(context)
+              .pushNamed(AppRouteConstants.registerProductPage, extra: null);
         },
         child: const SvgIcon(
           icon: CustomIcons.plusSvg,
+          color: AppPallete.whiteColor,
           radius: 20,
         ),
       ),

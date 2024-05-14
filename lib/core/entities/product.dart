@@ -1,12 +1,12 @@
-
-
 class Product {
   final String productID;
   final String vendorName;
   final String brandName;
+  final String brandID;
   final String displayImageURL;
   final String name;
   final double prize;
+  final double oldPrize;
   final int quantity;
   final String mainCategory;
   final String mainCategoryID;
@@ -26,9 +26,11 @@ class Product {
     required this.productID,
     required this.vendorName,
     required this.brandName,
+    required this.brandID,
     required this.displayImageURL,
     required this.name,
     required this.prize,
+    required this.oldPrize,
     required this.quantity,
     required this.mainCategory,
     required this.mainCategoryID,

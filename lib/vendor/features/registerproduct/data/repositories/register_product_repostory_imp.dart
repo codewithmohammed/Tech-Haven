@@ -27,8 +27,10 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
   @override
   Future<Either<Failure, bool>> registerNewProduct({
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -43,8 +45,11 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
     required bool isPublished,
   }) async {
     try {
+      print(brandID);
       final result = await registerProductDataSource.registerNewProduct(
         brandName: brandName,
+        brandID: brandID,
+        oldPrize: oldPrize,
         name: name,
         prize: prize,
         quantity: quantity,
@@ -80,7 +85,7 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
 
   @override
   Future<Either<Failure, bool>> deleteProduct(
-      {required  Product product,
+      {required Product product,
       required Map<int, List<model.Image>> mapOfListOfImages}) async {
     try {
       final result = await registerProductDataSource.deleteProduct(
@@ -90,15 +95,36 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, bool>> updateExistingProduct({required Product product, required String brandName, required String name, required double prize, required int quantity, required String mainCategory, required String mainCategoryID, required String subCategory, required String subCategoryID, required String variantCategory, required String variantCategoryID, required String overview, required Map<String, String>? specifications, required double? shippingCharge, required Map<int, List<File>>? productImages, required List<int> deleteImagesIndexes, required bool isPublished}) async{
-     try {
+  Future<Either<Failure, bool>> updateExistingProduct(
+      {required Product product,
+      required String brandName,
+      required String brandID,
+      required String name,
+      required double prize,
+      required double oldPrize,
+      required int quantity,
+      required String mainCategory,
+      required String mainCategoryID,
+      required String subCategory,
+      required String subCategoryID,
+      required String variantCategory,
+      required String variantCategoryID,
+      required String overview,
+      required Map<String, String>? specifications,
+      required double? shippingCharge,
+      required Map<int, List<File>>? productImages,
+      required List<int> deleteImagesIndexes,
+      required bool isPublished}) async {
+    try {
       final result = await registerProductDataSource.updateExistingProduct(
-        product: product ,
+        product: product,
         brandName: brandName,
+        brandID: brandID,
         name: name,
         prize: prize,
+        oldPrize: oldPrize,
         quantity: quantity,
         mainCategory: mainCategory,
         mainCategoryID: mainCategoryID,
@@ -113,6 +139,16 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
         deleteImagesIndexes: deleteImagesIndexes,
         isPublished: isPublished,
       );
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> getAllBrands() async {
+    try {
+      final result = await registerProductDataSource.getAllBrands();
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

@@ -10,8 +10,10 @@ abstract class RegisterProductRepository {
   Future<Either<Failure, List<Category>>> getAllCategories(bool refresh);
   Future<Either<Failure, bool>> registerNewProduct({
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -25,15 +27,19 @@ abstract class RegisterProductRepository {
     required Map<int, List<File>> productImages,
     required bool isPublished,
   });
-    Future<Either<Failure, Map<int, List<model.Image>>>> getImagesForTheProduct(
+  Future<Either<Failure, Map<int, List<model.Image>>>> getImagesForTheProduct(
     String productID,
   );
-  Future<Either<Failure, bool>> deleteProduct({required Product product,required Map<int,List<model.Image>> mapOfListOfImages});
-    Future<Either<Failure, bool>> updateExistingProduct({
-      required Product product,
+  Future<Either<Failure, bool>> deleteProduct(
+      {required Product product,
+      required Map<int, List<model.Image>> mapOfListOfImages});
+  Future<Either<Failure, bool>> updateExistingProduct({
+    required Product product,
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -45,7 +51,9 @@ abstract class RegisterProductRepository {
     required Map<String, String>? specifications,
     required double? shippingCharge,
     required Map<int, List<File>>? productImages,
-     required List<int> deleteImagesIndexes,
+    required List<int> deleteImagesIndexes,
     required bool isPublished,
   });
+
+  Future<Either<Failure, List<Category>>> getAllBrands();
 }

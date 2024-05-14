@@ -63,6 +63,7 @@ import 'package:tech_haven/vendor/features/registerproduct/data/datasource/regis
 import 'package:tech_haven/vendor/features/registerproduct/data/repositories/register_product_repostory_imp.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/repository/register_product_repository.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/delete_product.dart';
+import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_brands.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_images_for_the_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/register_new_product.dart';
@@ -205,11 +206,14 @@ _initRegisterProduct() {
         () => DeleteProduct(registerProductRepository: serviceLocator()))
     ..registerFactory(() =>
         UpdateExistingProduct(registerProductRepository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllBrands(registerProductRepository: serviceLocator()))
     ..registerLazySingleton(() => RegisterProductBloc(
           getAllCategoryForRegister: serviceLocator(),
           registerNewProduct: serviceLocator(),
           deleteProduct: serviceLocator(),
           updateExistingProduct: serviceLocator(),
+          getAllBrands: serviceLocator(),
         ))
     ..registerLazySingleton(
         () => GetImagesBloc(getImagesForTheProduct: serviceLocator()));

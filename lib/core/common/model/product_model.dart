@@ -2,12 +2,14 @@ import 'package:tech_haven/core/entities/product.dart';
 
 class ProductModel extends Product {
   ProductModel({
+    required super.brandID,
     required super.productID,
     required super.vendorName,
     required super.brandName,
     required super.displayImageURL,
     required super.name,
     required super.prize,
+    required super.oldPrize,
     required super.quantity,
     required super.mainCategory,
     required super.mainCategoryID,
@@ -28,9 +30,12 @@ class ProductModel extends Product {
       productID: json['productID'],
       vendorName: json['vendorName'],
       brandName: json['brandName'],
+      brandID: json['brandID'],
       displayImageURL: json['displayImageURL'],
       name: json['name'],
-      prize: json['prize'],
+      prize: json['prize'] ?? 0.0, // Provide a default value if prize is null
+      oldPrize: json['oldPrize'] ??
+          0.0, // Provide a default value if oldPrize is null
       quantity: json['quantity'],
       mainCategory: json['mainCategory'],
       mainCategoryID: json['mainCategoryID'],
@@ -53,6 +58,7 @@ class ProductModel extends Product {
       'productID': productID,
       'vendorName': vendorName,
       'brandName': brandName,
+      'brandID': brandID,
       'displayImageURL': displayImageURL,
       'name': name,
       'prize': prize,

@@ -12,8 +12,11 @@ final class GetAllCategoryEvent extends RegisterProductEvent {
 
 final class RegisterNewProductEvent extends RegisterProductEvent {
   final String brandName;
+  final String brandID;
+
   final String productName;
   final double productPrize;
+  final double productOldPrize;
   final int productQuantity;
   final String mainCategory;
   final String mainCategoryID;
@@ -28,8 +31,10 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
 
   RegisterNewProductEvent({
     required this.brandName,
+    required this.brandID,
     required this.productName,
     required this.productPrize,
+    required this.productOldPrize,
     required this.productQuantity,
     required this.mainCategory,
     required this.mainCategoryID,
@@ -55,9 +60,12 @@ final class DeleteTheProductEvent extends RegisterProductEvent {
 
 final class UpdateExistingProductEvent extends RegisterProductEvent {
   final Product product;
+
   final String brandName;
+  final String brandID;
   final String productName;
   final double productPrize;
+  final double productOldPrize;
   final int productQuantity;
   final String mainCategory;
   final String mainCategoryID;
@@ -74,8 +82,10 @@ final class UpdateExistingProductEvent extends RegisterProductEvent {
   UpdateExistingProductEvent({
     required this.product,
     required this.brandName,
+    required this.brandID,
     required this.productName,
     required this.productPrize,
+    required this.productOldPrize,
     required this.productQuantity,
     required this.mainCategory,
     required this.mainCategoryID,
@@ -90,3 +100,5 @@ final class UpdateExistingProductEvent extends RegisterProductEvent {
     required this.isPublished,
   });
 }
+
+final class GetAllBrandEvent extends RegisterProductEvent {}

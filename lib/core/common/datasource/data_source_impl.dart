@@ -119,13 +119,15 @@ class DataSourceImpl implements DataSource {
     try {
       QuerySnapshot productSnapshot =
           await firebaseFirestore.collection('products').get();
-
+      print(productSnapshot.docs[0].data());
       List<ProductModel> products = [];
       for (var doc in productSnapshot.docs) {
         products.add(ProductModel.fromJson(doc.data() as Map<String, dynamic>));
       }
+      print(products[0].oldPrize);
       return products;
     } catch (e) {
+      print(e.toString());
       throw ServerException(e.toString());
     }
   }
@@ -255,7 +257,10 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<List<CartModel>> updateProductToCart({required int itemCount, required Product product, required Cart? cart})async {
+  Future<List<CartModel>> updateProductToCart(
+      {required int itemCount,
+      required Product product,
+      required Cart? cart}) async {
     try {
       final user = await getUserData();
       if (user != null) {

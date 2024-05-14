@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/common/model/category_model.dart';
+import 'package:tech_haven/core/common/widgets/custom_drop_down.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
@@ -16,12 +18,13 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
-import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/add_images_widget.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/brand_drop_down.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/drop_down_widgets.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/sub_text.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterProductPage extends StatefulWidget {
   const RegisterProductPage({super.key, required this.product});
@@ -33,13 +36,16 @@ class RegisterProductPage extends StatefulWidget {
 }
 
 class _RegisterProductPageState extends State<RegisterProductPage> {
-  final TextEditingController brandNameTextEditingController =
-      TextEditingController();
+  // final TextEditingController brandNameTextEditingController =
+  //     TextEditingController();
 
   final TextEditingController productNameTextEditingController =
       TextEditingController();
 
   final TextEditingController productPrizeTextEditingController =
+      TextEditingController();
+
+  final TextEditingController productOldPrizeTextEditingController =
       TextEditingController();
 
   final TextEditingController productQuantityTextEditingController =
@@ -53,6 +59,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   List<int?> categoryIndexes = [null, null, null];
 
   List<Category> allCategories = [];
+  List<Category> allBrands = [];
+
+  List<int?> selectedBrandIndex = [null];
 
   GlobalKey<FormState> globalFormKey = GlobalKey();
 
@@ -66,12 +75,32 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<bool> deleteProduct(
+        {required Product product,
+        required Map<int, List<model.Image>> listOfImagesLinks}) async {
+      final boolean = await showConfirmationDialog(
+          context,
+          'Delete This Product',
+          'Are You Sure You Want To Delete this Product Forever', () {
+        context.read<RegisterProductBloc>().add(
+              DeleteTheProductEvent(
+                product: widget.product!,
+                mapOfListOfImages: listOfImagesLinks,
+              ),
+            );
+      });
+      return boolean!;
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!RegisterProductBloc.isDataLoaded) {
+      if (!RegisterProductBloc.isCategoryLoaded) {
         // If data is not loaded and not loading, fetch the data
         BlocProvider.of<RegisterProductBloc>(context)
             .add(GetAllCategoryEvent(refreshPage: false));
       }
+      // if (!RegisterProductBloc.isBrandLoaded) {
+      //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
+      // }
     });
 
     Map<int, List<model.Image>>? listOfImagesLinks;
@@ -79,7 +108,6 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     return BlocConsumer<RegisterProductBloc, RegisterProductState>(
       listener: (context, state) {
         if (state is NewProductRegisteredSuccess) {
-        
           GoRouter.of(context).pop();
         }
         if (state is NewProductRegisteredFailed) {
@@ -91,6 +119,14 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           );
         }
         if (state is DeleteProductSuccess) {
+          Fluttertoast.showToast(
+              msg: "The Product is Deleted Successfully",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
           GoRouter.of(context).pop();
         }
         if (state is DeleteProductFailed) {
@@ -109,8 +145,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
         if (state is RegisterProductAllCategoryLoadedSuccess) {
           context.read<GetImagesBloc>().add(EmitInitialEvent());
           allCategories = state.allCategoryModel;
+          allBrands = state.allBrandModel;
           if (widget.product != null) {
-            brandNameTextEditingController.text = widget.product!.brandName;
+            selectedBrandIndex[0] = allBrands
+                .indexWhere((element) => element.id == widget.product!.brandID);
             productNameTextEditingController.text = widget.product!.name;
             productPrizeTextEditingController.text =
                 widget.product!.prize.toString();
@@ -121,18 +159,18 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             shippingChargeBool.value = widget.product!.shippingCharge != 0;
             shippingChargeController.text =
                 widget.product!.shippingCharge.toString();
-            categoryIndexes[0] = allCategories.indexWhere((element) =>
-                element.categoryName == widget.product!.mainCategory);
+            categoryIndexes[0] = allCategories.indexWhere(
+                (element) => element.id == widget.product!.mainCategoryID);
             categoryIndexes[1] = allCategories[categoryIndexes[0]!]
                 .subCategories
-                .indexWhere((element) =>
-                    element.categoryName == widget.product!.subCategory);
+                .indexWhere(
+                    (element) => element.id == widget.product!.subCategoryID);
 
             categoryIndexes[2] = allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .subCategories
                 .indexWhere((element) =>
-                    element.categoryName == widget.product!.variantCategory);
+                    element.id == widget.product!.variantCategoryID);
             context.read<GetImagesBloc>().add(GetImagesForTheProductEvent(
                   productID: widget.product!.productID,
                 ));
@@ -147,12 +185,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 trailingIcon:
                     widget.product != null ? CustomIcons.trashBinSvg : null,
                 onPressedTrailingIcon: () {
-                  context.read<RegisterProductBloc>().add(
-                        DeleteTheProductEvent(
-                          product: widget.product!,
-                          mapOfListOfImages: listOfImagesLinks!,
-                        ),
-                      );
+                  deleteProduct(
+                    product: widget.product!,
+                    listOfImagesLinks: listOfImagesLinks!,
+                  );
                 },
               ),
               body: SingleChildScrollView(
@@ -169,11 +205,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                         title: 'General',
                       ),
                       Constants.kHeight,
-                      CustomTextFormField(
-                        labelText: 'Brand Name',
-                        hintText: 'Brand Name',
-                        textEditingController: brandNameTextEditingController,
-                        validator: Validator.validateEmptyField,
+                      BrandDropDown(
+                        allBrandsModel: allBrands,
+                        selectedBrandIndex: selectedBrandIndex,
                       ),
                       Constants.kHeight,
                       CustomTextFormField(
@@ -205,8 +239,26 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                           Constants.kWidth,
                           Expanded(
                             child: CustomTextFormField(
-                              labelText: 'Product Quantity',
-                              hintText: 'Product Quantity',
+                              labelText: 'Old Prize',
+                              hintText: 'Old Prize',
+                              textEditingController:
+                                  productOldPrizeTextEditingController,
+                              validator: Validator.validateEmptyField,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}$')),
+                              ],
+                            ),
+                          ),
+                          Constants.kWidth,
+                          Expanded(
+                            child: CustomTextFormField(
+                              labelText: 'Quantity',
+                              hintText: 'Quantity',
                               textEditingController:
                                   productQuantityTextEditingController,
                               validator: Validator.validateEmptyField,
@@ -404,6 +456,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                       categoryIndexes[0] != null &&
                                       categoryIndexes[1] != null &&
                                       categoryIndexes[2] != null &&
+                                      selectedBrandIndex[0] != null &&
                                       productImages.isNotEmpty) {
                                     registerNewProduct(isPublished: false);
                                   } else if (productImages.isEmpty) {
@@ -427,7 +480,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                     globalFormKey.currentState!.validate() &&
                                     categoryIndexes[0] != null &&
                                     categoryIndexes[1] != null &&
-                                    categoryIndexes[2] != null) {
+                                    categoryIndexes[2] != null &&
+                                    selectedBrandIndex[0] != null) {
                                   if (listOfImagesLinks!.length.compareTo(
                                               deletedImagesIndex.length) >
                                           0 ||
@@ -447,7 +501,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                     categoryIndexes[0] != null &&
                                     categoryIndexes[1] != null &&
                                     categoryIndexes[2] != null &&
+                                    selectedBrandIndex[0] != null &&
                                     productImages.isNotEmpty) {
+                                  // print(allBrands[selectedBrandIndex[0]!].id);
                                   registerNewProduct(isPublished: true);
                                 } else if (productImages.isEmpty) {
                                   showSnackBar(
@@ -477,9 +533,12 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     Product product = widget.product!;
     context.read<RegisterProductBloc>().add(UpdateExistingProductEvent(
           product: product,
-          brandName: brandNameTextEditingController.text,
+          brandName: allBrands[selectedBrandIndex[0]!].categoryName,
+          brandID: allBrands[selectedBrandIndex[0]!].id,
           productName: productNameTextEditingController.text,
           productPrize: double.parse(productPrizeTextEditingController.text),
+          productOldPrize:
+              double.parse(productOldPrizeTextEditingController.text),
           productQuantity: int.parse(productQuantityTextEditingController.text),
           mainCategory: allCategories[categoryIndexes[0]!].categoryName,
           mainCategoryID: allCategories[categoryIndexes[0]!].id,
@@ -506,12 +565,15 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   }
 
   void registerNewProduct({required bool isPublished}) {
+    print(allBrands[selectedBrandIndex[0]!].id);
     context.read<RegisterProductBloc>().add(
           RegisterNewProductEvent(
-            brandName: brandNameTextEditingController.text,
+            brandName: allBrands[selectedBrandIndex[0]!].categoryName,
+            brandID: allBrands[selectedBrandIndex[0]!].id,
             productName: productNameTextEditingController.text,
             productPrize: double.parse(productPrizeTextEditingController.text),
-            // productPrizeTextEditingController.text,
+            productOldPrize:
+                double.parse(productOldPrizeTextEditingController.text),
             productQuantity:
                 int.parse(productQuantityTextEditingController.text),
             mainCategory: allCategories[categoryIndexes[0]!].categoryName,

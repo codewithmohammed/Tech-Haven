@@ -6,10 +6,12 @@ class CustomDropDown extends StatelessWidget {
       {super.key,
       required this.items,
       required this.currentItem,
-      this.onChanged});
+      this.onChanged,
+      this.hintText = 'Select Item'});
   final List<String> items;
   final String? currentItem;
   final void Function(String?)? onChanged;
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class CustomDropDown extends StatelessWidget {
       child: DropdownButton2<String>(
         isExpanded: true,
         hint: Text(
-          'Select Item',
+          hintText,
           style: TextStyle(
             fontSize: 14,
             color: Theme.of(context).hintColor,

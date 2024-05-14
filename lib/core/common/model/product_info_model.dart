@@ -2,6 +2,8 @@ import 'package:tech_haven/core/entities/product_info.dart';
 
 class ProductInfoModel extends ProductInfo {
   ProductInfoModel({
+    required super.brandName,
+    required super.brandID,
     required super.mainCategoryName,
     required super.mainCategoryID,
     required super.subCategoryName,
@@ -14,6 +16,8 @@ class ProductInfoModel extends ProductInfo {
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) {
     return ProductInfoModel(
+      brandName: json['brandName'],
+      brandID: json['brandID'],
       mainCategoryName: json['mainCategoryName'],
       mainCategoryID: json['mainCategoryID'],
       subCategoryName: json['subCategoryName'],
@@ -26,6 +30,8 @@ class ProductInfoModel extends ProductInfo {
   }
   Map<String, dynamic> toJson() {
     return {
+      'brandName' : brandName,
+      'brandID' : brandID,
       'mainCategoryName': mainCategoryName,
       'mainCategoryID': mainCategoryID,
       'subCategoryName': subCategoryName,

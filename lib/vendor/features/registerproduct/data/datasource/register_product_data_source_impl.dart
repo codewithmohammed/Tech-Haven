@@ -36,8 +36,10 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
   @override
   Future<bool> registerNewProduct({
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -52,6 +54,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required bool isPublished,
   }) async {
     try {
+      print(brandID);
       final userdata = await dataSource.getUserData();
       if (userdata != null) {
         final productID = const Uuid().v1();
@@ -62,6 +65,8 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
         );
 
         ProductInfoModel productInfoModel = ProductInfoModel(
+          brandID: brandID,
+          brandName: brandName,
           mainCategoryName: mainCategory,
           mainCategoryID: mainCategoryID,
           subCategoryName: subCategory,
@@ -82,7 +87,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             .collection('products')
             .doc(productID)
             .set(productInfoModel.toJson());
-
+        print(oldPrize);
         ProductModel productModel = ProductModel(
             productID: productID,
             vendorName: userdata.username!,
@@ -90,6 +95,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             displayImageURL: mapOfImageModels.values.first.first.imageURL,
             name: name,
             prize: prize,
+            oldPrize: oldPrize,
             quantity: quantity,
             mainCategory: mainCategory,
             mainCategoryID: mainCategoryID,
@@ -101,11 +107,14 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             specifications: specifications,
             shippingCharge: shippingCharge,
             rating: 0,
-            isPublished: isPublished);
+            isPublished: isPublished,
+            brandID: brandID);
         firebaseFirestore
             .collection('products')
             .doc(productID)
             .set(productModel.toJson());
+
+        print(productModel.toJson());
 
         for (final entry in mapOfImageModels.entries) {
           final List<ImageModel> imageModels = entry.value;
@@ -219,8 +228,10 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
   Future<bool> updateExistingProduct({
     required Product product,
     required String brandName,
+    required String brandID,
     required String name,
     required double prize,
+    required double oldPrize,
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
@@ -239,15 +250,16 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
       final userdata = await dataSource.getUserData();
       if (userdata != null) {
         ProductInfoModel productInfoModel = ProductInfoModel(
-          mainCategoryName: mainCategory,
-          mainCategoryID: mainCategoryID,
-          subCategoryName: subCategory,
-          subCategoryID: subCategoryID,
-          variantCategoryName: variantCategory,
-          variantCategoryID: variantCategoryID,
-          productID: product.productID,
-          productName: name,
-        );
+            mainCategoryName: mainCategory,
+            mainCategoryID: mainCategoryID,
+            subCategoryName: subCategory,
+            subCategoryID: subCategoryID,
+            variantCategoryName: variantCategory,
+            variantCategoryID: variantCategoryID,
+            productID: product.productID,
+            productName: name,
+            brandName: brandName,
+            brandID: brandID);
         firebaseFirestore
             .collection('categories')
             .doc(mainCategoryID)
@@ -303,30 +315,49 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
           }
         }
         ProductModel productModel = ProductModel(
-            productID: product.productID,
-            vendorName: userdata.username!,
-            brandName: brandName,
-            displayImageURL: newDisplayImageURL,
-            name: name,
-            prize: prize,
-            quantity: quantity,
-            mainCategory: mainCategory,
-            mainCategoryID: mainCategoryID,
-            subCategory: subCategory,
-            subCategoryID: subCategoryID,
-            variantCategory: variantCategory,
-            variantCategoryID: variantCategoryID,
-            overview: overview,
-            specifications: specifications,
-            shippingCharge: shippingCharge,
-            rating: product.rating,
-            isPublished: isPublished);
+          productID: product.productID,
+          vendorName: userdata.username!,
+          brandName: brandName,
+          brandID: brandID,
+          oldPrize: oldPrize,
+          displayImageURL: newDisplayImageURL,
+          name: name,
+          prize: prize,
+          quantity: quantity,
+          mainCategory: mainCategory,
+          mainCategoryID: mainCategoryID,
+          subCategory: subCategory,
+          subCategoryID: subCategoryID,
+          variantCategory: variantCategory,
+          variantCategoryID: variantCategoryID,
+          overview: overview,
+          specifications: specifications,
+          shippingCharge: shippingCharge,
+          rating: product.rating,
+          isPublished: isPublished,
+        );
         firebaseFirestore
             .collection('products')
             .doc(product.productID)
             .update(productModel.toJson());
       }
       return true;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> getAllBrands() async {
+    try {
+      final allBrands = await firebaseFirestore.collection('brand').get();
+      List<CategoryModel> listOfBrandModels = [];
+      for (var brand in allBrands.docs) {
+        listOfBrandModels.add(CategoryModel.fromJson(brand.data()));
+      }
+      print(listOfBrandModels[0].categoryName);
+      print('notheing');
+      return listOfBrandModels;
     } catch (e) {
       throw ServerException(e.toString());
     }
