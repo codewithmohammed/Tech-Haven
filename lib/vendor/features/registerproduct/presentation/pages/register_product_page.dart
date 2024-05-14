@@ -18,6 +18,8 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
+import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
+import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source_impl.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/add_images_widget.dart';
@@ -108,6 +110,14 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     return BlocConsumer<RegisterProductBloc, RegisterProductState>(
       listener: (context, state) {
         if (state is NewProductRegisteredSuccess) {
+          Fluttertoast.showToast(
+              msg: "The Product is Registered Successfully",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0);
           GoRouter.of(context).pop();
         }
         if (state is NewProductRegisteredFailed) {
@@ -118,13 +128,14 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             contentType: ContentType.failure,
           );
         }
+
         if (state is DeleteProductSuccess) {
           Fluttertoast.showToast(
               msg: "The Product is Deleted Successfully",
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 16.0);
           GoRouter.of(context).pop();

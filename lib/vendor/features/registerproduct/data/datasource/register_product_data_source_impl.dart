@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,6 +24,12 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
       required this.firebaseAuth,
       required this.firebaseFirestore,
       required this.firebaseStorage});
+  @override
+  static double _uploadProgress = 0.0;
+ StreamController<double> _progressController = StreamController<double>();
+
+  Stream<double> get uploadProgressStream => _progressController.stream;
+
   @override
   Future<List<CategoryModel>> getAllCategoryModel(bool refresh) async {
     try {
@@ -161,8 +168,22 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
               .child(imageID);
 
           final UploadTask uploadTask = imageReference.putFile(image);
-          final TaskSnapshot taskSnapshot = await uploadTask;
-          final String downloadURL = await taskSnapshot.ref.getDownloadURL();
+          uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+            // Update upload progress
+            _uploadProgress =
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            _progressController.add(_uploadProgress);
+          }, onError: (error) {
+            // Handle upload error
+            print('Error uploading image: $error');
+          });
+          await uploadTask.whenComplete(() {
+            print('Image uploaded successfully');
+            _progressController.close();
+          });
+          final String downloadURL =
+              await uploadTask.snapshot.ref.getDownloadURL();
+          // = await taskSnapshot.ref.getDownloadURL();
 
           final ImageModel imageModel =
               ImageModel(imageID: imageID, imageURL: downloadURL);
