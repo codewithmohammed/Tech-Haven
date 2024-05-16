@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:tech_haven/core/common/model/category_model.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
 

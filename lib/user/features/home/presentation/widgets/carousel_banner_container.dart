@@ -15,58 +15,74 @@ class CarouselBannerContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          minHeight: 275,
-          maxHeight: 410,
-        ),
-        child: BlocConsumer<HomePageBloc, HomePageState>(
-          buildWhen: (previous, current) => current is BannerCarouselState,
-          listener: (context, state) {
-            if (state is GetAllBannerFailed) {
-              showSnackBar(
-                context: context,
-                title: 'Oh',
-                content: state.message,
-                contentType: ContentType.failure,
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state is GetAllBannerSuccess) {
-              // print('success');
-              return CarouselSlider(
-                options: CarouselOptions(
-                  aspectRatio: 16 / 9, // Set aspect ratio to 16:9
-                  viewportFraction: 0.8, // Set width of carousel items
-                  enlargeCenterPage: true,
-                  enableInfiniteScroll: true,
-                ),
-                items:
-                    //here there must be builder of items from the firebase
-                    [
-                  ...List.generate(state.listOfBanners.length, (index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: AppPallete.whiteColor,
-                        boxShadow: const [Constants.globalBoxBlur],
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(
-                            10,
-                          ),
-                        ),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            state.listOfBanners[index].imageURL,
-                          ),
+    return SizedBox(
+      // height: 300,
+      // margin: const EdgeInsets.all(8),
+      // padding: const EdgeInsets.all(8.0),
+      child: BlocConsumer<HomePageBloc, HomePageState>(
+        buildWhen: (previous, current) => current is BannerCarouselState,
+        listener: (context, state) {
+          if (state is GetAllBannerFailed) {
+            showSnackBar(
+              context: context,
+              title: 'Oh',
+              content: state.message,
+              contentType: ContentType.failure,
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is GetAllBannerSuccess) {
+            // print('success');
+            return CarouselSlider(
+              options: CarouselOptions(
+                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
+                viewportFraction: 0.8, // Set width of carousel items
+                enlargeCenterPage: true,
+                enableInfiniteScroll: true,
+              ),
+              items:
+                  //here there must be builder of items from the firebase
+                  [
+                ...List.generate(state.listOfBanners.length, (index) {
+                  return Container(
+                    margin: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppPallete.whiteColor,
+                      boxShadow: const [Constants.globalBoxBlur],
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(
+                          10,
                         ),
                       ),
-                    );
-                  }),
-                  Container(
-                    // width: 480,
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          state.listOfBanners[index].imageURL,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            );
+          }
+          return CarouselSlider(
+            options: CarouselOptions(
+              aspectRatio: 16 / 9, // Set aspect ratio to 16:9
+              viewportFraction: 0.8, // Set width of carousel items
+              enlargeCenterPage: true,
+              enableInfiniteScroll: false,
+              clipBehavior: Clip.antiAlias,
+            ),
+            items:
+                //here there must be builder of items from the firebase
+                [
+              ...List.generate(10, (index) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade100,
+                  highlightColor: Colors.grey.shade300,
+                  child: Container(
+                    margin: const EdgeInsets.all(20),
                     decoration: const BoxDecoration(
                       color: AppPallete.whiteColor,
                       boxShadow: [Constants.globalBoxBlur],
@@ -76,42 +92,12 @@ class CarouselBannerContainer extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
-                ],
-              );
-            }
-            return CarouselSlider(
-              options: CarouselOptions(
-                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
-                viewportFraction: 0.8, // Set width of carousel items
-                enlargeCenterPage: true,
-                enableInfiniteScroll: false,
-                clipBehavior: Clip.antiAlias,
-              ),
-              items:
-                  //here there must be builder of items from the firebase
-                  [
-                ...List.generate(10, (index) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey.shade100,
-                    highlightColor: Colors.grey.shade300,
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: AppPallete.whiteColor,
-                        boxShadow: [Constants.globalBoxBlur],
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            10,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-              ],
-            );
-          },
-        ),
+                  ),
+                );
+              }),
+            ],
+          );
+        },
       ),
     );
   }

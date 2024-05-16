@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:tech_haven/core/common/datasource/data_source.dart';
-import 'package:tech_haven/core/common/model/image_model.dart';
-import 'package:tech_haven/core/common/model/product_model.dart';
-import 'package:tech_haven/core/common/model/user_model.dart' as model;
+import 'package:tech_haven/core/common/data/datasource/data_source.dart';
+import 'package:tech_haven/core/common/data/model/image_model.dart';
+import 'package:tech_haven/core/common/data/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
-import 'package:tech_haven/core/common/model/category_model.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:tech_haven/user/features/auth/data/models/user_model.dart';
@@ -304,6 +304,30 @@ class DataSourceImpl implements DataSource {
         throw const ServerException('Unexpected Error Occured');
       }
       return await getAllCart();
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> getAllSubCategories() async {
+    try {
+      List<CategoryModel> subcategories = [];
+      final mainSnapshot =
+          await firebaseFirestore.collection('categories').get();
+      for (var mainCategoryDoc in mainSnapshot.docs) {
+        final subSnapshotDocs =
+            await fetchSubcollectionData(mainCategoryDoc.reference);
+        for (var subCategoryDoc in subSnapshotDocs) {
+          var subDocumentData = subCategoryDoc.data() as Map<String, dynamic>;
+          CategoryModel subCategory = CategoryModel.fromJson(subDocumentData);
+          subcategories.add(subCategory); 
+        }
+      }
+
+      return subcategories;
+    } on FirebaseException catch (e) {
+      throw ServerException(e.toString());
     } catch (e) {
       throw ServerException(e.toString());
     }

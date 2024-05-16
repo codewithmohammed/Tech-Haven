@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
-import 'package:tech_haven/core/common/model/category_model.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/common/widgets/custom_drop_down.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';

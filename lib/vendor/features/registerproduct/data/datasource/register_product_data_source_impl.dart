@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tech_haven/core/common/datasource/data_source.dart';
-import 'package:tech_haven/core/common/model/category_model.dart';
-import 'package:tech_haven/core/common/model/image_model.dart';
-import 'package:tech_haven/core/common/model/product_info_model.dart';
-import 'package:tech_haven/core/common/model/product_model.dart';
+import 'package:tech_haven/core/common/data/datasource/data_source.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
+import 'package:tech_haven/core/common/data/model/image_model.dart';
+import 'package:tech_haven/core/common/data/model/product_info_model.dart';
+import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
@@ -25,10 +25,10 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
       required this.firebaseFirestore,
       required this.firebaseStorage});
   @override
-  static double _uploadProgress = 0.0;
- StreamController<double> _progressController = StreamController<double>();
+  // static double _uploadProgress = 0.0;
+//  StreamController<double> _progressController = StreamController<double>();
 
-  Stream<double> get uploadProgressStream => _progressController.stream;
+  // Stream<double> get uploadProgressStream => _progressController.stream;
 
   @override
   Future<List<CategoryModel>> getAllCategoryModel(bool refresh) async {
@@ -168,19 +168,19 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
               .child(imageID);
 
           final UploadTask uploadTask = imageReference.putFile(image);
-          uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+          // uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
             // Update upload progress
-            _uploadProgress =
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            _progressController.add(_uploadProgress);
-          }, onError: (error) {
+            // _uploadProgress =
+                // (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            // _progressController.add(_uploadProgress);
+          // }, onError: (error) {
             // Handle upload error
-            print('Error uploading image: $error');
-          });
-          await uploadTask.whenComplete(() {
-            print('Image uploaded successfully');
-            _progressController.close();
-          });
+            // print('Error uploading image: $error');
+          // });
+          // await uploadTask.whenComplete(() {
+            // print('Image uploaded successfully');
+            // _progressController.close();
+          // });
           final String downloadURL =
               await uploadTask.snapshot.ref.getDownloadURL();
           // = await taskSnapshot.ref.getDownloadURL();

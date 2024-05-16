@@ -1,5 +1,5 @@
-import 'package:tech_haven/core/common/datasource/data_source.dart';
-import 'package:tech_haven/core/common/model/product_model.dart';
+import 'package:tech_haven/core/common/data/datasource/data_source.dart';
+import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/vendor/features/manageproduct/data/datasource/manage_product_data_source.dart';
 

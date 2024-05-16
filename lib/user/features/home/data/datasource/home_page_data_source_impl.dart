@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tech_haven/core/common/datasource/data_source.dart';
-import 'package:tech_haven/core/common/model/product_model.dart';
+import 'package:tech_haven/core/common/data/datasource/data_source.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
+import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
@@ -84,6 +85,15 @@ class HomePageDataSourceImpl extends HomePageDataSource {
   Future<List<CartModel>> getAllCart() async {
     try {
       return dataSource.getAllCart();
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<CategoryModel>> getAllSubCategories() {
+    try {
+      return dataSource.getAllSubCategories();
     } catch (e) {
       throw ServerException(e.toString());
     }

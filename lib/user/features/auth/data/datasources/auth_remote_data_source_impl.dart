@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:tech_haven/core/common/model/user_model.dart' as model;
+import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';

@@ -81,3 +81,19 @@ final class CartLoadedFailedState extends UpdateProductToCartState {
   final String message;
   CartLoadedFailedState({required this.message});
 }
+
+final class GetAllSubCategoriesState extends HomePageState {}
+
+final class GetAllSubCategoriesSuccessState extends GetAllSubCategoriesState {
+  final List<Category> listOfSubCategories;
+  GetAllSubCategoriesSuccessState({required this.listOfSubCategories});
+}
+
+final class GetAllSubCategoriesFailedState extends GetAllSubCategoriesState {
+  final String message;
+  GetAllSubCategoriesFailedState({required this.message});
+}
+
+final class GetAllSubCategoriesLoadingState extends GetAllSubCategoriesState {
+}
+

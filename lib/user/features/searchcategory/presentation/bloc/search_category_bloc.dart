@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/core/entities/category.dart';
-import 'package:tech_haven/core/usecase/usecase.dart';
-import 'package:tech_haven/user/features/searchcategory/domain/usecase/get_all_category.dart';
 
 part 'search_category_event.dart';
 part 'search_category_state.dart';
@@ -12,7 +11,7 @@ part 'search_category_state.dart';
 class SearchCategoryBloc
     extends Bloc<SearchCategoryEvent, SearchCategoryState> {
   final GetAllCategory _getAllCategory;
- static bool isDataLoaded = false;
+  static bool isDataLoaded = false;
   SearchCategoryBloc({required GetAllCategory getAllCategory})
       : _getAllCategory = getAllCategory,
         super(SearchCategoryInitial()) {
@@ -25,7 +24,8 @@ class SearchCategoryBloc
   FutureOr<void> _onGetAllSearchCategoryEvent(GetAllSearchCategoryEvent event,
       Emitter<SearchCategoryState> emit) async {
     if (isDataLoaded == false) {
-      final result = await _getAllCategory(GetAllCategoryParams(refreshPage: event.refreshPage));
+      final result = await _getAllCategory(
+          GetAllCategoryParams(refreshPage: event.refreshPage));
 
       result.fold(
           (failure) => emit(

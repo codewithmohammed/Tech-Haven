@@ -11,13 +11,28 @@ final class DetailsPageInitial extends DetailsPageState {}
 
 final class DetailsPageLoadingState extends DetailsPageState {}
 
-final class DetailsGetAllCategoryImagesSuccess extends DetailsPageState {
-  final Map<int, List<Image>> mapOfListOfImages;
-  const DetailsGetAllCategoryImagesSuccess({required this.mapOfListOfImages});
+// final class DetailsGetAllCategoryImagesSuccessState extends DetailsPageState {
+//   final Map<int, List<Image>> mapOfListOfImages;
+//   const DetailsGetAllCategoryImagesSuccessState({required this.mapOfListOfImages});
+// }
+
+// final class DetailsGetAllCategoryImagesFailedState extends DetailsPageState {
+//   final String message;
+//   const DetailsGetAllCategoryImagesFailedState({required this.message});
+// }
+
+final class GetAllBrandRelatedProductsState extends DetailsPageState {}
+
+final class GetAllBrandRelatedProductsSuccessState
+    extends GetAllBrandRelatedProductsState {
+  final List<Product> listOfBrandedProducts;
+  GetAllBrandRelatedProductsSuccessState({required this.listOfBrandedProducts});
 }
 
-final class DetailsGetAllCategoryImagesFailed extends DetailsPageState {
+final class GetAllBrandRelatedProductsLoading extends GetAllBrandRelatedProductsState{}
+
+final class GetAllBrandRelatedProductsFailedState
+    extends GetAllBrandRelatedProductsState {
   final String message;
-  const DetailsGetAllCategoryImagesFailed({required this.message});
+  GetAllBrandRelatedProductsFailedState({required this.message});
 }
-

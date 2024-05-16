@@ -27,3 +27,7 @@ final class UpdateProductToCartEvent extends HomePageEvent {
   const UpdateProductToCartEvent(
       {required this.itemCount, required this.product,required this.cart});
 }
+
+
+final class GetAllSubCategoriesEvent extends HomePageEvent{
+}

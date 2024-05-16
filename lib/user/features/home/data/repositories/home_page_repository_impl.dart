@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/entities/banner.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
@@ -81,6 +82,18 @@ class HomePageRepositoryImpl extends HomePageRepository {
     try {
       // print('updating the favorite');
       final result = await homePageDataSource.getAllCart();
+      // print('hello how are you');
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CategoryModel>>> getAllSubCategories() async{
+      try {
+      // print('updating the favorite');
+      final result = await homePageDataSource.getAllSubCategories();
       // print('hello how are you');
       return right(result);
     } on ServerException catch (e) {

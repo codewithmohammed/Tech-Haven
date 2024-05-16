@@ -1,4 +1,4 @@
-import 'package:tech_haven/core/common/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/user/features/home/data/models/banner_model.dart';

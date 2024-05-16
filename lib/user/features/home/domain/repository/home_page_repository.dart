@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/entities/banner.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
@@ -19,4 +20,5 @@ abstract class HomePageRepository {
     required Cart? cart,
   });
     Future<Either<Failure, List<Cart>>> getAllCart();
+    Future<Either<Failure, List<CategoryModel>>> getAllSubCategories();
 }

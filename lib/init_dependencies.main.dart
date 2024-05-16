@@ -4,8 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
-import 'package:tech_haven/core/common/datasource/data_source.dart';
-import 'package:tech_haven/core/common/datasource/data_source_impl.dart';
+import 'package:tech_haven/core/common/data/datasource/data_source.dart';
+import 'package:tech_haven/core/common/data/datasource/data_source_impl.dart';
+import 'package:tech_haven/core/common/data/repositories/repository_impl.dart';
+import 'package:tech_haven/core/common/domain/repository/repository.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_category.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
+import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import 'package:tech_haven/user/features/auth/data/repositories/auth_repository_impl.dart';
@@ -27,6 +35,7 @@ import 'package:tech_haven/user/features/cart/domain/usecase/get_all_products_ca
 import 'package:tech_haven/user/features/cart/domain/usecase/update_product_to_cart_cart_page.dart';
 import 'package:tech_haven/user/features/cart/domain/usecase/update_product_to_favorite_cart_page.dart';
 import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
+import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
 import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source_impl.dart';
 import 'package:tech_haven/user/features/favorite/data/repositories/favorite_page_repository_impl.dart';
@@ -39,17 +48,12 @@ import 'package:tech_haven/user/features/home/data/datasource/home_page_data_sou
 import 'package:tech_haven/user/features/home/data/repositories/home_page_repository_impl.dart';
 import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_cart_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_favorited_products_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_products_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_cart_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_favorite_home_page.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_sub_categories_home_page.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source_impl.dart';
 import 'package:tech_haven/user/features/searchcategory/data/repositories/search_category_repository_impl.dart';
 import 'package:tech_haven/user/features/searchcategory/domain/repository/search_category_repository.dart';
-import 'package:tech_haven/user/features/searchcategory/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
 import 'package:tech_haven/vendor/features/manageproduct/data/datasource/manage_product_data_source.dart';
@@ -83,7 +87,8 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => FirebaseStorage.instance);
   _initAuth();
   _initHomePage();
-  _initDataSource();
+  _initDetailsPage();
+  _initDataCommon();
   _initSearchCategory();
   _initRegisterProduct();
   _initManageProduct();
@@ -136,9 +141,14 @@ _initAuth() {
     );
 }
 
-_initDataSource() {
-  serviceLocator.registerFactory<DataSource>(() => DataSourceImpl(
-      firebaseFirestore: serviceLocator(), firebaseAuth: serviceLocator()));
+_initDataCommon() {
+  serviceLocator
+    ..registerFactory<DataSource>(() => DataSourceImpl(
+        firebaseAuth: serviceLocator(), firebaseFirestore: serviceLocator()))
+    ..registerFactory<Repository>(
+        () => RepositoryImpl(dataSource: serviceLocator()));
+  // ..registerFactory(
+  //     () => UpdateProductToFavorite(repository: serviceLocator()));
 }
 
 void _initHomePage() {
@@ -147,25 +157,29 @@ void _initHomePage() {
         dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
     ..registerFactory<HomePageRepository>(
         () => HomePageRepositoryImpl(homePageDataSource: serviceLocator()))
-    ..registerFactory(
-        () => GetAllProductsHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(() => GetAllProduct(repository: serviceLocator()))
     ..registerFactory(
         () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
-    ..registerFactory(() =>
-        UpdateProductToFavoriteHomePage(homePageRepository: serviceLocator()))
-    ..registerFactory(() =>
-        GetAllFavoritedProductsHomePage(homePageRepository: serviceLocator()))
     ..registerFactory(
-        () => UpdateProductToCartHomePage(homePageRepository: serviceLocator()))
+        () => UpdateProductToFavorite(repository: serviceLocator()))
     ..registerFactory(
-        () => GetAllCartHomePage(homePageRepository: serviceLocator()))
+        () => GetAllFavoritedProduct(repository: serviceLocator()))
+    ..registerFactory(() => UpdateProductToCart(repository: serviceLocator()))
+    ..registerFactory(() => GetAllCart(repository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllSubCategoriesHomePage(homePageRepository: serviceLocator()))
     ..registerLazySingleton(() => HomePageBloc(
-        getAllProductsHomePage: serviceLocator(),
+        getAllProduct: serviceLocator(),
         getAllBannerHomePage: serviceLocator(),
-        updateProductToFavoriteHomePage: serviceLocator(),
-        getAllFavoritedProductsHomePage: serviceLocator(),
-        updateProductToCartHomePage: serviceLocator(),
-        getAllCartHomePage: serviceLocator()));
+        updateProductToFavorite: serviceLocator(),
+        getAllFavoritedProduct: serviceLocator(),
+        updateProductToCart: serviceLocator(),
+        getAllCart: serviceLocator(),
+        getAllSubCategoriesHomePage: serviceLocator()));
+}
+
+_initDetailsPage() {
+  serviceLocator.registerLazySingleton(() => DetailsPageBloc());
 }
 
 void _initSearchCategory() {
@@ -175,8 +189,7 @@ void _initSearchCategory() {
     ..registerFactory<SearchCategoryRepository>(() =>
         SearchCategoryRepositoryImpl(
             searchCategoryDataSource: serviceLocator()))
-    ..registerFactory(
-        () => GetAllCategory(searchCategoryRepository: serviceLocator()))
+    ..registerFactory(() => GetAllCategory(repository: serviceLocator()))
     ..registerLazySingleton(
         () => SearchCategoryBloc(getAllCategory: serviceLocator()))
     ..registerLazySingleton(

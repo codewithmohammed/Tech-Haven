@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
+import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/core/entities/banner.dart';
 import 'package:tech_haven/core/entities/cart.dart';
+import 'package:tech_haven/core/entities/category.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_cart_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_favorited_products_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/get_all_products_home_page.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_cart_home_page.dart';
-import 'package:tech_haven/user/features/home/domain/usecase/update_product_to_favorite_home_page.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/get_all_sub_categories_home_page.dart';
 part 'home_page_event.dart';
 part 'home_page_state.dart';
 
@@ -20,25 +22,28 @@ EventTransformer<Event> debounceSequential<Event>(Duration duration) {
 }
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
-  final GetAllProductsHomePage _getAllProductsHomePage;
+  final GetAllProduct _getAllProduct;
   final GetAllBannerHomePage _getAllBannerHomePage;
-  final GetAllCartHomePage _getAllCartHomePage;
-  final UpdateProductToFavoriteHomePage _updateProductToFavoriteHomePage;
-  final GetAllFavoritedProductsHomePage _getAllFavoritedProductsHomePage;
-  final UpdateProductToCartHomePage _updateProductToCartHomePage;
-  HomePageBloc(
-      {required GetAllProductsHomePage getAllProductsHomePage,
-      required GetAllBannerHomePage getAllBannerHomePage,
-      required GetAllCartHomePage getAllCartHomePage,
-      required UpdateProductToFavoriteHomePage updateProductToFavoriteHomePage,
-      required GetAllFavoritedProductsHomePage getAllFavoritedProductsHomePage,
-      required UpdateProductToCartHomePage updateProductToCartHomePage})
-      : _getAllProductsHomePage = getAllProductsHomePage,
+  final GetAllCart _getAllCart;
+  final UpdateProductToFavorite _updateProductToFavorite;
+  final GetAllFavoritedProduct _getAllFavoritedProduct;
+  final UpdateProductToCart _updateProductToCart;
+  final GetAllSubCategoriesHomePage _getAllSubCategoriesHomePage;
+  HomePageBloc({
+    required GetAllProduct getAllProduct,
+    required GetAllBannerHomePage getAllBannerHomePage,
+    required GetAllCart getAllCart,
+    required UpdateProductToFavorite updateProductToFavorite,
+    required GetAllFavoritedProduct getAllFavoritedProduct,
+    required UpdateProductToCart updateProductToCart,
+    required GetAllSubCategoriesHomePage getAllSubCategoriesHomePage,
+  })  : _getAllProduct = getAllProduct,
         _getAllBannerHomePage = getAllBannerHomePage,
-        _getAllCartHomePage = getAllCartHomePage,
-        _updateProductToFavoriteHomePage = updateProductToFavoriteHomePage,
-        _getAllFavoritedProductsHomePage = getAllFavoritedProductsHomePage,
-        _updateProductToCartHomePage = updateProductToCartHomePage,
+        _getAllCart = getAllCart,
+        _updateProductToFavorite = updateProductToFavorite,
+        _getAllFavoritedProduct = getAllFavoritedProduct,
+        _updateProductToCart = updateProductToCart,
+        _getAllSubCategoriesHomePage = getAllSubCategoriesHomePage,
         super(HomePageInitial()) {
     on<HomePageEvent>((event, emit) {
       emit(HomePageLoadingState());
@@ -48,28 +53,20 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<GetAllCartEvent>(_onGetAllCartEvent);
     on<UpdateProductToFavoriteEvent>(
       _onUpdateProductToFavoriteEvent,
-      // transformer: debounceSequential(
-      //   const Duration(
-      //     milliseconds: 3000,
-      //   ),
-      // ),
     );
+
     on<UpdateProductToCartEvent>(
       _onUpdateProductToCartEvent,
-      // transformer: debounceSequential(
-      //   const Duration(
-      //     milliseconds: 300,
-      //   ),
-      // ),
     );
+    on<GetAllSubCategoriesEvent>(_onGetAllSubCategoriesEvent);
     // on<UpdateProductToCart>(_onUpdateProductToCart);
   }
 
   FutureOr<void> _onGetAllProductsEvent(
       GetAllProductsEvent event, Emitter<HomePageState> emit) async {
-    final allCarted = await _getAllCartHomePage(NoParams());
-    final allFavorited = await _getAllFavoritedProductsHomePage(NoParams());
-    final allProducts = await _getAllProductsHomePage(NoParams());
+    final allCarted = await _getAllCart(NoParams());
+    final allFavorited = await _getAllFavoritedProduct(NoParams());
+    final allProducts = await _getAllProduct(NoParams());
     List<String> listOfAllFavorited = [];
     String messageOfFavoriteError = 'error';
     allCarted.fold(
@@ -110,8 +107,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   FutureOr<void> _onUpdateProductToFavoriteEvent(
       UpdateProductToFavoriteEvent event, Emitter<HomePageState> emit) async {
-    final result = await _updateProductToFavoriteHomePage(
-      UpdateProductToFavoriteHomePageParams(
+    final result = await _updateProductToFavorite(
+      UpdateProductToFavoriteParams(
         isFavorited: event.isFavorited,
         product: event.product,
       ),
@@ -128,8 +125,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   FutureOr<void> _onUpdateProductToCartEvent(
       UpdateProductToCartEvent event, Emitter<HomePageState> emit) async {
     emit(ProductUpdatedToCartLoading());
-    final result = await _updateProductToCartHomePage(
-        UpdateProductToCartHomePageParams(
+    final result = await _updateProductToCart(
+        UpdateProductToCartParams(
             itemCount: event.itemCount,
             product: event.product,
             cart: event.cart));
@@ -145,7 +142,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   FutureOr<void> _onGetAllCartEvent(
       GetAllCartEvent event, Emitter<HomePageState> emit) async {
-    final result = await _getAllCartHomePage(NoParams());
+    final result = await _getAllCart(NoParams());
 
     result.fold(
         (failure) => emit(CartLoadedFailedState(
@@ -153,6 +150,20 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
             )), (success) {
       return emit(CartLoadedSuccessState(
         listOfCart: success,
+      ));
+    });
+  }
+
+  FutureOr<void> _onGetAllSubCategoriesEvent(
+      GetAllSubCategoriesEvent event, Emitter<HomePageState> emit) async {
+    final result = await _getAllSubCategoriesHomePage(NoParams());
+
+    result.fold(
+        (failure) => emit(GetAllSubCategoriesFailedState(
+              message: failure.message,
+            )), (success) {
+      return emit(GetAllSubCategoriesSuccessState(
+        listOfSubCategories: success,
       ));
     });
   }

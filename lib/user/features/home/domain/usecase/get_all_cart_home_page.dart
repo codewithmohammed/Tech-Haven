@@ -5,12 +5,12 @@ import 'package:tech_haven/user/features/home/domain/repository/home_page_reposi
 
 import '../../../../../core/usecase/usecase.dart';
 
-class GetAllCartHomePage implements UseCase<List<Cart>, NoParams> {
-  final HomePageRepository homePageRepository;
-  GetAllCartHomePage({required this.homePageRepository});
+// class GetAllCartHomePage implements UseCase<List<Cart>, NoParams> {
+//   final HomePageRepository homePageRepository;
+//   GetAllCartHomePage({required this.homePageRepository});
 
-  @override
-  Future<Either<Failure, List<Cart>>> call(NoParams params) async {
-    return await homePageRepository.getAllCart();
-  }
-}
+//   @override
+//   Future<Either<Failure, List<Cart>>> call(NoParams params) async {
+//     return await homePageRepository.getAllCart();
+//   }
+// }
