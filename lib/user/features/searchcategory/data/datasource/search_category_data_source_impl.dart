@@ -9,7 +9,7 @@ class SearchCategoryDataSourceImpl implements SearchCategoryDataSource {
   @override
   Future<List<CategoryModel>> getAllCategoryModel(bool refresh) async {
     try {
-      final listOfCategories = await dataSource.getAllCategoryData(refresh);
+      final listOfCategories = await dataSource.getAllCategory(refresh);
       return listOfCategories;
     } catch (e) {
       throw ServerException(e.toString());

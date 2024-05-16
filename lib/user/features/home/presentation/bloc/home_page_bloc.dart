@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';
-import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
@@ -26,7 +26,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final GetAllBannerHomePage _getAllBannerHomePage;
   final GetAllCart _getAllCart;
   final UpdateProductToFavorite _updateProductToFavorite;
-  final GetAllFavoritedProduct _getAllFavoritedProduct;
+  final GetAllFavorite _getAllFavorite;
   final UpdateProductToCart _updateProductToCart;
   final GetAllSubCategoriesHomePage _getAllSubCategoriesHomePage;
   HomePageBloc({
@@ -34,14 +34,14 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     required GetAllBannerHomePage getAllBannerHomePage,
     required GetAllCart getAllCart,
     required UpdateProductToFavorite updateProductToFavorite,
-    required GetAllFavoritedProduct getAllFavoritedProduct,
+    required GetAllFavorite getAllFavorite,
     required UpdateProductToCart updateProductToCart,
     required GetAllSubCategoriesHomePage getAllSubCategoriesHomePage,
   })  : _getAllProduct = getAllProduct,
         _getAllBannerHomePage = getAllBannerHomePage,
         _getAllCart = getAllCart,
         _updateProductToFavorite = updateProductToFavorite,
-        _getAllFavoritedProduct = getAllFavoritedProduct,
+        _getAllFavorite = getAllFavorite,
         _updateProductToCart = updateProductToCart,
         _getAllSubCategoriesHomePage = getAllSubCategoriesHomePage,
         super(HomePageInitial()) {
@@ -64,32 +64,32 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   FutureOr<void> _onGetAllProductsEvent(
       GetAllProductsEvent event, Emitter<HomePageState> emit) async {
-    final allCarted = await _getAllCart(NoParams());
-    final allFavorited = await _getAllFavoritedProduct(NoParams());
-    final allProducts = await _getAllProduct(NoParams());
     List<String> listOfAllFavorited = [];
     String messageOfFavoriteError = 'error';
-    allCarted.fold(
-        (failure) => emit(CartLoadedFailedState(
-              message: failure.message,
-            )), (success) {
-      print('yes');
-      return emit(CartLoadedSuccessState(
-        listOfCart: success,
-      ));
-    });
+
+    final allFavorited = await _getAllFavorite(NoParams());
     allFavorited.fold((failure) {
       messageOfFavoriteError = failure.message;
     }, (success) {
       listOfAllFavorited = success; // Assigning value here
     });
-
+    final allProducts = await _getAllProduct(NoParams());
     allProducts.fold((failure) {
       emit(HorizontalProductsListViewFailed(message: failure.message));
     }, (success) {
       emit(HorizontalProductsListViewSuccess(
         listOfProducts: success,
         listOfFavoritedProducts: listOfAllFavorited,
+      ));
+    });
+
+    final allCarted = await _getAllCart(NoParams());
+    allCarted.fold(
+        (failure) => emit(CartLoadedFailedState(
+              message: failure.message,
+            )), (success) {
+      return emit(CartLoadedSuccessState(
+        listOfCart: success,
       ));
     });
   }
@@ -115,7 +115,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     );
 
     result.fold(
-        (failure) => emit(ProductAddedToCartFailed(
+        (failure) => emit(ProductUpdatedToFavoriteFailed(
               message: failure.message,
             )),
         (success) =>
@@ -124,24 +124,20 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   FutureOr<void> _onUpdateProductToCartEvent(
       UpdateProductToCartEvent event, Emitter<HomePageState> emit) async {
-    emit(ProductUpdatedToCartLoading());
-    final result = await _updateProductToCart(
-        UpdateProductToCartParams(
-            itemCount: event.itemCount,
-            product: event.product,
-            cart: event.cart));
+    emit(CartLoadingState());
+    final result = await _updateProductToCart(UpdateProductToCartParams(
+        itemCount: event.itemCount, product: event.product, cart: event.cart));
 
     result.fold(
-        (failed) => emit(CartLoadedFailedState(message: failed.message)),
-        (success) => emit(CartLoadedSuccessState(
-              listOfCart: success,
+        (failed) => emit(ProductUpdatedToCartFailed(message: failed.message)),
+        (success) => emit(ProductUpdatedToCartSuccess(
+              updatedSuccess: success,
             )));
-    // await Future.delayed(const Duration(seconds: 3));
-    // emit(ProductUpdatedToCartSuccess(updatedSuccess: true));
   }
 
   FutureOr<void> _onGetAllCartEvent(
       GetAllCartEvent event, Emitter<HomePageState> emit) async {
+    emit(CartLoadingState());
     final result = await _getAllCart(NoParams());
 
     result.fold(

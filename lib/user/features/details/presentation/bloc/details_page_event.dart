@@ -7,4 +7,9 @@ sealed class DetailsPageEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class GetAllImagesForProductEvent extends DetailsPageEvent {
+  final String productID;
+  const GetAllImagesForProductEvent({required this.productID});
+}
 
+final class EmitInitial extends DetailsPageEvent{}

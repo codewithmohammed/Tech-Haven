@@ -12,8 +12,8 @@ class FavoritePageDataSourceImpl extends FavoritePageDataSource {
   @override
   Future<List<Product>> getAllFavoritedProducts() async {
     try {
-      final allFavoritedProducts = await dataSource.getAllFavoritedProducts();
-      final allProducts = await dataSource.getAllProductsData();
+      final allFavoritedProducts = await dataSource.getAllFavorite();
+      final allProducts = await dataSource.getAllProduct();
 
       return allProducts
           .where((element) => allFavoritedProducts.contains(element.productID))

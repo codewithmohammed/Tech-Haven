@@ -5,6 +5,7 @@ import 'package:tech_haven/core/common/data/model/image_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
 import 'package:tech_haven/core/entities/cart.dart';
+import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
@@ -57,7 +58,7 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<List<CategoryModel>> getAllCategoryData(bool refresh) async {
+  Future<List<CategoryModel>> getAllCategory(bool refresh) async {
     if (mainCategories.isNotEmpty && !refresh) {
       return mainCategories;
     }
@@ -115,7 +116,7 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<List<ProductModel>> getAllProductsData() async {
+  Future<List<ProductModel>> getAllProduct() async {
     try {
       QuerySnapshot productSnapshot =
           await firebaseFirestore.collection('products').get();
@@ -132,39 +133,6 @@ class DataSourceImpl implements DataSource {
     }
   }
 
-  @override
-  Future<Map<int, List<ImageModel>>> getImageForTheProduct(
-      {required String productID}) async {
-    try {
-      Map<int, List<ImageModel>> resultMap = {};
-
-      // Retrieve the document containing the image map
-      final QuerySnapshot<Map<String, dynamic>> snapshot =
-          await firebaseFirestore
-              .collection('products')
-              .doc(productID)
-              .collection('images')
-              .get();
-      int count = 0;
-      for (var document in snapshot.docs) {
-        Map<String, dynamic> mapOfImages = document.data();
-        mapOfImages.forEach((key, value) {
-          if (resultMap.containsKey(count)) {
-            resultMap[count]!.add(ImageModel(imageID: key, imageURL: value));
-          } else {
-            resultMap[count] = [ImageModel(imageID: key, imageURL: value)];
-          }
-        });
-        count++;
-      }
-
-      return resultMap;
-    } on ServerException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
 
   @override
   Future<bool> updateProductToFavorite(
@@ -210,7 +178,7 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<List<String>> getAllFavoritedProducts() async {
+  Future<List<String>> getAllFavorite() async {
     try {
       // print('updating the favorite');
       List<String> listOfFavoritedProduct = [];
@@ -257,7 +225,7 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<List<CartModel>> updateProductToCart(
+  Future<bool> updateProductToCart(
       {required int itemCount,
       required Product product,
       required Cart? cart}) async {
@@ -303,14 +271,14 @@ class DataSourceImpl implements DataSource {
       } else {
         throw const ServerException('Unexpected Error Occured');
       }
-      return await getAllCart();
+      return true;
     } catch (e) {
       throw ServerException(e.toString());
     }
   }
 
   @override
-  Future<List<CategoryModel>> getAllSubCategories() async {
+  Future<List<CategoryModel>> getAllSubCategory() async {
     try {
       List<CategoryModel> subcategories = [];
       final mainSnapshot =
@@ -321,7 +289,7 @@ class DataSourceImpl implements DataSource {
         for (var subCategoryDoc in subSnapshotDocs) {
           var subDocumentData = subCategoryDoc.data() as Map<String, dynamic>;
           CategoryModel subCategory = CategoryModel.fromJson(subDocumentData);
-          subcategories.add(subCategory); 
+          subcategories.add(subCategory);
         }
       }
 
@@ -332,4 +300,98 @@ class DataSourceImpl implements DataSource {
       throw ServerException(e.toString());
     }
   }
+
+  @override
+  Future<List<ProductModel>> getAllCartProduct() async {
+    try {
+      List<ProductModel> allProduct = await getAllProduct();
+      List<CartModel> allCart = await getAllCart();
+
+      List<ProductModel> filteredList =
+          getAllProductsThatIsCarted(products: allProduct, cartModels: allCart);
+
+      return filteredList;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<ProductModel>> getAllFavoriteProduct() async{
+     try {
+      List<ProductModel> allProduct = await getAllProduct();
+      List<String> allFavorite = await getAllFavorite();
+
+      List<ProductModel> filteredList =
+          getAllProductsThatIsFavorited(products: allProduct, favoritedModels: allFavorite);
+
+      return filteredList;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<Map<int, List<Image>>> getImagesForProduct({required String productID})async {
+     try {
+      Map<int, List<ImageModel>> resultMap = {};
+
+      // Retrieve the document containing the image map
+      final QuerySnapshot<Map<String, dynamic>> snapshot =
+          await firebaseFirestore
+              .collection('products')
+              .doc(productID)
+              .collection('images')
+              .get();
+      int count = 0;
+      for (var document in snapshot.docs) {
+        Map<String, dynamic> mapOfImages = document.data();
+        mapOfImages.forEach((key, value) {
+          if (resultMap.containsKey(count)) {
+            resultMap[count]!.add(ImageModel(imageID: key, imageURL: value));
+          } else {
+            resultMap[count] = [ImageModel(imageID: key, imageURL: value)];
+          }
+        });
+        count++;
+      }
+
+      return resultMap;
+    } on ServerException catch (e) {
+      throw ServerException(e.message);
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+}
+
+List<ProductModel> getAllProductsThatIsCarted({
+  required List<ProductModel> products,
+  required List<CartModel> cartModels,
+}) {
+  List<ProductModel> filteredList = [];
+  for (var product in products) {
+    for (var cart in cartModels) {
+      if (product.productID == cart.productID) {
+        filteredList.add(product);
+      }
+    }
+  }
+  return filteredList;
+}
+
+
+List<ProductModel> getAllProductsThatIsFavorited({
+  required List<ProductModel> products,
+  required List<String> favoritedModels,
+}) {
+  List<ProductModel> filteredList = [];
+  for (var product in products) {
+    for (var favorited in favoritedModels) {
+      if (product.productID == favorited) {
+        filteredList.add(product);
+      }
+    }
+  }
+  return filteredList;
 }

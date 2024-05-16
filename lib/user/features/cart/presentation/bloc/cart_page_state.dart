@@ -15,43 +15,43 @@ final class CartProductListViewState extends CartPageState {}
 
 final class CartProductsListViewSuccess extends CartProductListViewState {
   final List<Product> listOfProducts;
-  final List<String> listOFAllFavorites;
-  CartProductsListViewSuccess(
-      {required this.listOfProducts, required this.listOFAllFavorites});
+  final List<String> listOfFavorites;
+  final List<Cart> listOfCarts;
+  CartProductsListViewSuccess({
+    required this.listOfCarts,
+    required this.listOfProducts,
+    required this.listOfFavorites,
+  });
 }
 
-final class CartProductsListViewLoading extends CartProductListViewState {
-  CartProductsListViewLoading();
-}
+final class CartProductsListViewLoading extends CartProductListViewState {}
 
 final class CartProductsListViewFailed extends CartProductListViewState {
   final String message;
   CartProductsListViewFailed({required this.message});
 }
 
-// final class BannerCarouselState extends CartPageState {}
-
-// final class GetAllBannerSuccess extends BannerCarouselState {
-//   final List<Banner> listOfBanners;
-//   GetAllBannerSuccess({required this.listOfBanners});
-// }
-
-// final class GetAllBannerFailed extends BannerCarouselState {
-//   final String message;
-//   GetAllBannerFailed({required this.message});
-// }
-
-final class AddProductToCartState extends CartPageState {}
-
-final class ProductAddedToCartSuccess extends AddProductToCartState {
-  final bool addedSuccess;
-  ProductAddedToCartSuccess({required this.addedSuccess});
+final class CartUpdatedSuccess extends CartProductListViewState {
+  final bool updatedSuccess;
+  CartUpdatedSuccess({required this.updatedSuccess});
 }
 
-final class ProductAddedToCartFailed extends AddProductToCartState {
+final class CartUpdatedFailed extends CartProductListViewState {
   final String message;
-  ProductAddedToCartFailed({required this.message});
+  CartUpdatedFailed({required this.message});
 }
+
+// final class AddProductToCartState extends CartPageState {}
+
+// final class ProductAddedToCartSuccess extends AddProductToCartState {
+//   final bool addedSuccess;
+//   ProductAddedToCartSuccess({required this.addedSuccess});
+// }
+
+// final class ProductAddedToCartFailed extends AddProductToCartState {
+//   final String message;
+//   ProductAddedToCartFailed({required this.message});
+// }
 
 final class UpdateProductToFavoriteState extends CartPageState {}
 
@@ -67,16 +67,12 @@ final class ProductUpdatedToFavoriteFailed
   ProductUpdatedToFavoriteFailed({required this.message});
 }
 
-final class UpdateProductToCartState extends CartPageState {}
+// final class CartLoadedSuccessState extends CartProductListViewState {
+//   final List<Cart> listOfCart;
+//   CartLoadedSuccessState({required this.listOfCart});
+// }
 
-final class CartLoadedSuccessState extends UpdateProductToCartState {
-  final List<Cart> listOfCart;
-  CartLoadedSuccessState({required this.listOfCart});
-}
-
-final class CartUpdatedToCartLoading extends UpdateProductToCartState {}
-
-final class CartLoadedFailedState extends UpdateProductToCartState {
-  final String message;
-  CartLoadedFailedState({required this.message});
-}
+// final class CartLoadedFailedState extends CartProductListViewState {
+//   final String message;
+//   CartLoadedFailedState({required this.message});
+// }

@@ -37,7 +37,7 @@ class CartPage extends StatelessWidget {
             height: 50,
             width: double.infinity,
             alignment: Alignment.centerLeft,
-            child: Row(
+            child:  Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 BlocBuilder<CartPageBloc, CartPageState>(
@@ -45,28 +45,15 @@ class CartPage extends StatelessWidget {
                       current is CartProductListViewState,
                   builder: (context, listState) {
                     if (listState is CartProductsListViewSuccess) {
-                      // print(state.listOfProducts.length);
-                      return BlocBuilder<CartPageBloc, CartPageState>(
-                        buildWhen: (previous, current) =>
-                            current is UpdateProductToCartState,
-                        builder: (context, cartState) {
-                          if (cartState is CartLoadedSuccessState) {
-                            return TitleWithCountBar(
+                          return TitleWithCountBar(
                               title: 'Cart',
                               itemsCount:
-                                  '${calculateTotalQuantity(listOfCarts: cartState.listOfCart)} Items',
+                                  '${calculateTotalQuantity(listOfCarts: listState.listOfCarts)} Items',
                               totalPrize: calculateTotalPrize(
                                 products: listState.listOfProducts,
-                                carts: cartState.listOfCart,
+                                carts: listState.listOfCarts,
                               ).toString(),
                             );
-                          }
-                          return const TitleWithCountBar(
-                              title: 'Cart',
-                              itemsCount: '${0} Items',
-                              totalPrize: '0');
-                        },
-                      );
                     }
                     return const TitleWithCountBar(
                       title: 'Cart',
@@ -79,9 +66,9 @@ class CartPage extends StatelessWidget {
           ),
           Expanded(
             child: BlocConsumer<CartPageBloc, CartPageState>(
-              listener: (context, state) {},
-              // buildWhen: (previous, current) =>
-              //     current is CartProductListViewState,
+              listener: (context, state) {
+                // if()
+              },
               buildWhen: (previous, current) =>
                   current is CartProductListViewState,
               builder: (context, listState) {
@@ -92,99 +79,65 @@ class CartPage extends StatelessWidget {
                     itemCount: listState.listOfProducts.length,
                     itemBuilder: (context, index) {
                       final currentProduct = listState.listOfProducts[index];
-                      return BlocConsumer<CartPageBloc, CartPageState>(
-                        listener: (context, cartState) {},
-                        buildWhen: (previous, current) =>
-                            current is UpdateProductToCartState,
-                        builder: (context, cartState) {
-                          bool stateSuccess =
-                              cartState is CartLoadedSuccessState;
-                          bool stateLoading =
-                              cartState is CartUpdatedToCartLoading;
+                      bool productIsCarted = false;
+                      final cartIndex = checkCurrentProductIsCarted(
+                        product: listState.listOfProducts[index],
+                        carts: listState.listOfCarts,
+                      );
 
-                          if (stateSuccess) {
-                            bool productIsCarted = false;
-                            //we check whether the product is carted already or not .if yes we put the
-                            final cartIndex = checkCurrentProductIsCarted(
-                              product: listState.listOfProducts[index],
-                              carts: cartState.listOfCart,
-                            );
-
-                            if (cartIndex > -1) {
-                              productIsCarted = true;
-                              controllers[cartIndex].text = cartState
-                                  .listOfCart[cartIndex].productCount
-                                  .toString();
+                      if (cartIndex > -1) {
+                        productIsCarted = true;
+                        controllers[cartIndex].text = listState
+                            .listOfCarts[cartIndex].productCount
+                            .toString();
+                      }
+                      return RectangularProductCard(
+                        isFavorite: listState.listOfFavorites
+                            .contains(currentProduct.productID),
+                        // items: const [],
+                        isLoading: false,
+                        onTap: () {},
+                        onTapFavouriteButton: (bool isLiked) async {
+                          return null;
+                        },
+                        onTapRemoveButton: () {
+                          context.read<CartPageBloc>().add(
+                                UpdateProductToCartEvent(
+                                  itemCount: 0,
+                                  product: currentProduct,
+                                  cart: listState.listOfCarts[cartIndex],
+                                ),
+                              );
+                        },
+                        isFavoriteCard: false,
+                        productName: currentProduct.name,
+                        productPrize: currentProduct.prize.toString(),
+                        vendorName: currentProduct.vendorName,
+                        deliveryDate: currentProduct.brandName,
+                        productImage: currentProduct.displayImageURL,
+                        productQuantity: currentProduct.quantity.toString(),
+                        textEditingController: controllers[index],
+                        onPressedSaveButton: () {
+                          final newCount =
+                              int.parse(controllers[cartIndex].text);
+                          if (currentProduct.quantity >= newCount &&
+                              newCount > 0) {
+                            if (productIsCarted) {
+                              context.read<CartPageBloc>().add(
+                                    UpdateProductToCartEvent(
+                                      itemCount: newCount,
+                                      product: currentProduct,
+                                      cart: listState.listOfCarts[cartIndex],
+                                    ),
+                                  );
                             }
-
-                            // print(stateSuccess);
-                            return RectangularProductCard(
-                              isFavorite: listState.listOFAllFavorites
-                                  .contains(currentProduct.productID),
-                              // items: const [],
-                              isLoading: stateLoading ? true : false,
-                              onTap: () {},
-                              onTapFavouriteButton: (bool isLiked) async {
-                                return null;
-                              },
-                              onTapRemoveButton: () {
-                                context.read<CartPageBloc>().add(
-                                      UpdateProductToCartEvent(
-                                        itemCount: 0,
-                                        product: currentProduct,
-                                        cart: cartState.listOfCart[cartIndex],
-                                      ),
-                                    );
-                              },
-                              isFavoriteCard: false,
-                              productName: currentProduct.name,
-                              productPrize: currentProduct.prize.toString(),
-                              vendorName: currentProduct.vendorName,
-                              deliveryDate: currentProduct.brandName,
-                              productImage: currentProduct.displayImageURL,
-                              productQuantity:
-                                  currentProduct.quantity.toString(),
-                              textEditingController: controllers[index],
-                              onPressedSaveButton: () {
-                                final newCount =
-                                    int.parse(controllers[cartIndex].text);
-                                if (currentProduct.quantity >= newCount &&
-                                    newCount > 0) {
-                                  if (productIsCarted) {
-                                    context.read<CartPageBloc>().add(
-                                          UpdateProductToCartEvent(
-                                            itemCount: newCount,
-                                            product: currentProduct,
-                                            cart:
-                                                cartState.listOfCart[cartIndex],
-                                          ),
-                                        );
-                                  }
-                                } else {
-                                  showSnackBar(
-                                      context: context,
-                                      title: 'Amount',
-                                      content: 'insufficient Amount',
-                                      contentType: ContentType.failure);
-                                }
-                              },
-                            );
+                          } else {
+                            showSnackBar(
+                                context: context,
+                                title: 'Amount',
+                                content: 'insufficient Amount',
+                                contentType: ContentType.failure);
                           }
-
-                          return RectangularProductCard(
-                            // items: const [],
-                            isLoading: stateLoading ? true : false,
-                            onTap: () {},
-                            isFavoriteCard: false,
-                            productName: currentProduct.name,
-                            productPrize: currentProduct.prize.toString(),
-                            vendorName: currentProduct.vendorName,
-                            deliveryDate: currentProduct.brandName,
-
-                            productImage: currentProduct.displayImageURL,
-                            textEditingController: controllers[index],
-                            productQuantity: currentProduct.quantity.toString(),
-                          );
                         },
                       );
                     },
@@ -201,7 +154,6 @@ class CartPage extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return RectangularProductCard(
                         isLoading: true,
-                        // items: items,
                         onTap: () {},
                         isFavoriteCard: false,
                         productName:

@@ -8,10 +8,13 @@ import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source_impl.dart';
 import 'package:tech_haven/core/common/data/repositories/repository_impl.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_category.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_images_for_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -25,15 +28,6 @@ import 'package:tech_haven/user/features/auth/domain/usecases/create_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:tech_haven/user/features/cart/data/datasource/cart_page_data_source.dart';
-import 'package:tech_haven/user/features/cart/data/datasource/cart_page_data_source_impl.dart';
-import 'package:tech_haven/user/features/cart/data/repositories/cart_page_repository_impl.dart';
-import 'package:tech_haven/user/features/cart/domain/repository/cart_page_repository.dart';
-import 'package:tech_haven/user/features/cart/domain/usecase/get_all_cart_cart_page.dart';
-import 'package:tech_haven/user/features/cart/domain/usecase/get_all_favorited_products_cart_page.dart';
-import 'package:tech_haven/user/features/cart/domain/usecase/get_all_products_cart_page.dart';
-import 'package:tech_haven/user/features/cart/domain/usecase/update_product_to_cart_cart_page.dart';
-import 'package:tech_haven/user/features/cart/domain/usecase/update_product_to_favorite_cart_page.dart';
 import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
@@ -121,20 +115,15 @@ _initAuth() {
     ..registerFactory(() => VerifyPhoneAndSignUpUser(serviceLocator()))
     ..registerFactory(() => CreateUser(authRepository: serviceLocator()))
     ..registerFactory(() => UserSignIn(authRepository: serviceLocator()))
-    // ..registerFactory(() => UserSignUp(serviceLocator()))
-    // ..registerFactory(() => CurrentUser(authRepository: serviceLocator()))
     ..registerFactory(() => GoogleSignUp(authRepository: serviceLocator()))
     ..registerFactory(
         () => ForgotPasswordSendEmail(authRepository: serviceLocator()))
-    // ..registerFactory(() => UserProfileUpload(authRepository: serviceLocator()))
     ..registerLazySingleton(
       () => AuthBloc(
-          // currentUser: serviceLocator(),
           sendOTPToPhoneNumber: serviceLocator(),
           verifyPhoneAndSignUpUser: serviceLocator(),
           createUser: serviceLocator(),
           userSignIn: serviceLocator(),
-          // userProfileUpload: serviceLocator(),
           googleSignUp: serviceLocator(),
           appUserCubit: serviceLocator(),
           forgotPasswordSendEmail: serviceLocator()),
@@ -146,9 +135,18 @@ _initDataCommon() {
     ..registerFactory<DataSource>(() => DataSourceImpl(
         firebaseAuth: serviceLocator(), firebaseFirestore: serviceLocator()))
     ..registerFactory<Repository>(
-        () => RepositoryImpl(dataSource: serviceLocator()));
-  // ..registerFactory(
-  //     () => UpdateProductToFavorite(repository: serviceLocator()));
+        () => RepositoryImpl(dataSource: serviceLocator()))
+    ..registerFactory(() => GetAllCategory(repository: serviceLocator()))
+    ..registerFactory(() => GetAllProduct(repository: serviceLocator()))
+    ..registerFactory(() => GetImagesForProduct(repository: serviceLocator()))
+    ..registerFactory(() => GetAllCart(repository: serviceLocator()))
+    ..registerFactory(() => GetAllFavorite(repository: serviceLocator()))
+    ..registerFactory(() => GetAllCartProduct(repository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllFavoritedProduct(repository: serviceLocator()))
+    ..registerFactory(
+        () => UpdateProductToFavorite(repository: serviceLocator()))
+    ..registerFactory(() => UpdateProductToCart(repository: serviceLocator()));
 }
 
 void _initHomePage() {
@@ -157,29 +155,22 @@ void _initHomePage() {
         dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
     ..registerFactory<HomePageRepository>(
         () => HomePageRepositoryImpl(homePageDataSource: serviceLocator()))
-    ..registerFactory(() => GetAllProduct(repository: serviceLocator()))
-    ..registerFactory(
-        () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
-    ..registerFactory(
-        () => UpdateProductToFavorite(repository: serviceLocator()))
-    ..registerFactory(
-        () => GetAllFavoritedProduct(repository: serviceLocator()))
-    ..registerFactory(() => UpdateProductToCart(repository: serviceLocator()))
-    ..registerFactory(() => GetAllCart(repository: serviceLocator()))
     ..registerFactory(
         () => GetAllSubCategoriesHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
     ..registerLazySingleton(() => HomePageBloc(
         getAllProduct: serviceLocator(),
         getAllBannerHomePage: serviceLocator(),
         updateProductToFavorite: serviceLocator(),
-        getAllFavoritedProduct: serviceLocator(),
         updateProductToCart: serviceLocator(),
         getAllCart: serviceLocator(),
-        getAllSubCategoriesHomePage: serviceLocator()));
+        getAllSubCategoriesHomePage: serviceLocator(),
+        getAllFavorite: serviceLocator()));
 }
 
 _initDetailsPage() {
-  serviceLocator.registerLazySingleton(() => DetailsPageBloc());
+  serviceLocator.registerLazySingleton(() => DetailsPageBloc(getImagesForProduct: serviceLocator()));
 }
 
 void _initSearchCategory() {
@@ -189,7 +180,6 @@ void _initSearchCategory() {
     ..registerFactory<SearchCategoryRepository>(() =>
         SearchCategoryRepositoryImpl(
             searchCategoryDataSource: serviceLocator()))
-    ..registerFactory(() => GetAllCategory(repository: serviceLocator()))
     ..registerLazySingleton(
         () => SearchCategoryBloc(getAllCategory: serviceLocator()))
     ..registerLazySingleton(
@@ -213,8 +203,6 @@ _initRegisterProduct() {
         ))
     ..registerFactory(
         () => RegisterNewProduct(registerProductRepository: serviceLocator()))
-    ..registerFactory(() =>
-        GetImagesForTheProduct(registerProductRepository: serviceLocator()))
     ..registerFactory(
         () => DeleteProduct(registerProductRepository: serviceLocator()))
     ..registerFactory(() =>
@@ -229,8 +217,7 @@ _initRegisterProduct() {
           getAllBrands: serviceLocator(),
         ))
     ..registerLazySingleton(
-        () => GetImagesBloc(getImagesForTheProduct: serviceLocator()));
-  // ..registerLazySingleton(() => ChangeCategoryModelBloc());
+        () => GetImagesBloc(getImagesForProduct: serviceLocator()));
 }
 
 _initManageProduct() {
@@ -242,14 +229,10 @@ _initManageProduct() {
     )
     ..registerFactory<ManageProductRepository>(() =>
         ManageProductRepositoryImpl(manageProductDataSource: serviceLocator()))
-    // ..registerFactory(() => GetAllCategoryForRegister(
-    //       registerProductRepository: serviceLocator(),
-    //     ))
     ..registerFactory(
         () => GetAllProducts(manageProductRepository: serviceLocator()))
     ..registerLazySingleton(
         () => ManageProductBloc(getAllProducts: serviceLocator()));
-  // ..registerLazySingleton(() => ChangeCategoryModelBloc());
 }
 
 _initFavorite() {
@@ -258,9 +241,6 @@ _initFavorite() {
         dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
     ..registerFactory<FavoritePageRepository>(() =>
         FavoritePageRepositoryImpl(favoritePageDataSource: serviceLocator()))
-    // ..registerFactory(() => GetAllCategoryForRegister(
-    //       registerProductRepository: serviceLocator(),
-    //     ))
     ..registerFactory(() => GetAllFavoritedProductFavoritePage(
         favoritePageRepository: serviceLocator()))
     ..registerFactory(
@@ -268,34 +248,14 @@ _initFavorite() {
     ..registerLazySingleton(() => FavoritePageBloc(
         getAllFavoritedProduct: serviceLocator(),
         removeProductFavorite: serviceLocator()));
-  // ..registerLazySingleton(() => ChangeCategoryModelBloc());
 }
 
 _initCart() {
-  serviceLocator
-    ..registerFactory<CartPageDataSource>(() => CartPageDataSourceImpl(
-        dataSource: serviceLocator(), firebaseFirestore: serviceLocator()))
-    ..registerFactory<CartPageRepository>(
-        () => CartPageRepositoryImpl(cartPageDataSource: serviceLocator()))
-    // ..registerFactory(() => GetAllCategoryForRegister(
-    //       registerProductRepository: serviceLocator(),
-    //     ))
-    ..registerFactory(
-        () => GetAllProductsCartPage(cartPageRepository: serviceLocator()))
-    // ..registerFactory(() => GetAllBannerCartPage(CartPageRepository: serviceLocator()))
-    ..registerFactory(() =>
-        UpdateProductToFavoriteCartPage(cartPageRepository: serviceLocator()))
-    ..registerFactory(() =>
-        GetAllFavoritedProductsCartPage(cartPageRepository: serviceLocator()))
-    ..registerFactory(
-        () => UpdateProductToCartCartPage(cartPageRepository: serviceLocator()))
-    ..registerFactory(
-        () => GetAllCartCartPage(cartPageRepository: serviceLocator()))
-    ..registerLazySingleton(() => CartPageBloc(
-        getAllProductsCartPage: serviceLocator(),
-        // getAllBannerCartPage: serviceLocator(),
-        updateProductToFavoriteCartPage: serviceLocator(),
-        getAllFavoritedProductsCartPage: serviceLocator(),
-        updateProductToCartCartPage: serviceLocator(),
-        getAllCartCartPage: serviceLocator()));
+  serviceLocator.registerLazySingleton(() => CartPageBloc(
+      getAllProduct: serviceLocator(),
+      updateProductToFavorite: serviceLocator(),
+      getAllCartProduct: serviceLocator(),
+      getAllFavorite: serviceLocator(),
+      updateProductToCart: serviceLocator(),
+      getAllCart: serviceLocator()));
 }

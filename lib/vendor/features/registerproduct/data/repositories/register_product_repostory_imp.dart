@@ -71,17 +71,17 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
     }
   }
 
-  @override
-  Future<Either<Failure, Map<int, List<Image>>>> getImagesForTheProduct(
-      String productID) async {
-    try {
-      final result = await registerProductDataSource.getImagesForTheProduct(
-          productID: productID);
-      return right(result);
-    } on ServerException catch (e) {
-      return left(Failure(e.message));
-    }
-  }
+  // @override
+  // Future<Either<Failure, Map<int, List<Image>>>> getImagesForTheProduct(
+  //     String productID) async {
+  //   try {
+  //     final result = await registerProductDataSource.getImagesForTheProduct(
+  //         productID: productID);
+  //     return right(result);
+  //   } on ServerException catch (e) {
+  //     return left(Failure(e.message));
+  //   }
+  // }
 
   @override
   Future<Either<Failure, bool>> deleteProduct(

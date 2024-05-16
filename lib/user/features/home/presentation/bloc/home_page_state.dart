@@ -42,16 +42,28 @@ final class GetAllBannerFailed extends BannerCarouselState {
   GetAllBannerFailed({required this.message});
 }
 
-final class AddProductToCartState extends HomePageState {}
+final class ProductCartState extends HomePageState {}
 
-final class ProductAddedToCartSuccess extends AddProductToCartState {
-  final bool addedSuccess;
-  ProductAddedToCartSuccess({required this.addedSuccess});
+final class CartLoadingState extends ProductCartState{}
+
+final class CartLoadedSuccessState extends ProductCartState {
+  final List<Cart> listOfCart;
+  CartLoadedSuccessState({required this.listOfCart});
 }
 
-final class ProductAddedToCartFailed extends AddProductToCartState {
+final class CartLoadedFailedState extends ProductCartState {
   final String message;
-  ProductAddedToCartFailed({required this.message});
+  CartLoadedFailedState({required this.message});
+}
+
+final class ProductUpdatedToCartSuccess extends ProductCartState {
+  final bool updatedSuccess;
+  ProductUpdatedToCartSuccess({required this.updatedSuccess});
+}
+
+final class ProductUpdatedToCartFailed extends ProductCartState {
+  final String message;
+  ProductUpdatedToCartFailed({required this.message});
 }
 
 final class UpdateProductToFavoriteState extends HomePageState {}
@@ -68,19 +80,28 @@ final class ProductUpdatedToFavoriteFailed
   ProductUpdatedToFavoriteFailed({required this.message});
 }
 
-final class UpdateProductToCartState extends HomePageState {}
+// final class ProductCartState extends HomePageState {}
 
-final class CartLoadedSuccessState extends UpdateProductToCartState {
-  final List<Cart> listOfCart;
-  CartLoadedSuccessState({required this.listOfCart});
-}
 
-final class ProductUpdatedToCartLoading extends UpdateProductToCartState {}
 
-final class CartLoadedFailedState extends UpdateProductToCartState {
-  final String message;
-  CartLoadedFailedState({required this.message});
-}
+// final class ProductUpdatedToCartLoading extends UpdateProductToCartState {}
+
+// final class CartLoadedFailedState extends UpdateProductToCartState {
+//   final String message;
+//   CartLoadedFailedState({required this.message});
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 final class GetAllSubCategoriesState extends HomePageState {}
 

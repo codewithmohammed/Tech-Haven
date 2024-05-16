@@ -1,15 +1,15 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
-import 'package:tech_haven/core/entities/cart.dart';
+import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import '../../../usecase/usecase.dart';
 
-class GetAllCart implements UseCase<List<Cart>, NoParams> {
+class GetAllCartProduct implements UseCase<List<Product>, NoParams> {
   final Repository repository;
-  GetAllCart({required this.repository});
+  GetAllCartProduct({required this.repository});
 
   @override
-  Future<Either<Failure, List<Cart>>> call(NoParams params) async {
+  Future<Either<Failure, List<Product>>> call(NoParams params) async {
     return await repository.getAllCartProduct();
   }
 }

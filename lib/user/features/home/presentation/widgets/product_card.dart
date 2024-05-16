@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
@@ -10,6 +11,7 @@ import 'package:tech_haven/core/common/widgets/square_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
@@ -70,6 +72,7 @@ class ProductCard extends StatelessWidget {
                 onTap: () {
                   GoRouter.of(context)
                       .pushNamed(AppRouteConstants.detailsPage, extra: product);
+
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(5),

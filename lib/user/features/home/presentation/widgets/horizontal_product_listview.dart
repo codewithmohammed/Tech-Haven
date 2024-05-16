@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/cart.dart';
@@ -75,10 +76,64 @@ class HorizontalProductListView extends StatelessWidget {
                       content: state.message,
                       contentType: ContentType.failure);
                 }
+
+                if (state is CartLoadedFailedState) {
+                  showSnackBar(
+                      context: context,
+                      title: 'Oh',
+                      content: state.message,
+                      contentType: ContentType.failure);
+
+                  context.read<HomePageBloc>().add(GetAllCartEvent());
+                }
+                if (state is ProductUpdatedToCartSuccess) {
+                  Fluttertoast.showToast(
+                      msg: "The Cart is Updated Successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+
+                  context.read<HomePageBloc>().add(GetAllCartEvent());
+                }
+                if (state is ProductUpdatedToCartFailed) {
+                  Fluttertoast.showToast(
+                      msg: state.message,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+
+                  context.read<HomePageBloc>().add(GetAllCartEvent());
+                }
+                if (state is ProductUpdatedToFavoriteSuccess) {
+                  Fluttertoast.showToast(
+                      msg: "The Favorites is Updated Successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                if (state is ProductUpdatedToFavoriteFailed) {
+                  Fluttertoast.showToast(
+                      msg: state.message,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
               },
               builder: (context, listState) {
                 if (listState is HorizontalProductsListViewSuccess) {
-                  print(listState.listOfProducts);
+                  // print(listState.listOfProducts);
                   // print('object');
                   return ListView.builder(
                     // physics: const BouncingScrollPhysics(),
@@ -102,11 +157,20 @@ class HorizontalProductListView extends StatelessWidget {
                         shoppingCartWidget:
                             BlocBuilder<HomePageBloc, HomePageState>(
                           buildWhen: (previous, current) =>
-                              current is UpdateProductToCartState,
+                              current is ProductCartState,
                           builder: (context, cartState) {
-                            // print(cartState is CartLoadedSuccessState);
                             if (cartState is CartLoadedSuccessState) {
-                              // print(cartState.listOfCart);
+                              ///if index =  0, then it will return -1 if the product is not carted
+                              ///if index = 1, then it will return -1
+                              ///if index = 2 , then it will return -1
+                              ///
+                              ///if there is product it will return the cart index
+
+                              // final Product product =
+                              //     listState.listOfProducts[index];
+                              // final Cart cart = cartState.listOfCart.firstWhere(
+                              //   (cart) => cart.productID == product.productID,
+                              // );
                               bool productIsCarted = false;
                               final cartIndex = checkCurrentProductIsCarted(
                                   product: listState.listOfProducts[index],
@@ -116,9 +180,10 @@ class HorizontalProductListView extends StatelessWidget {
                                 productIsCarted = true;
                               }
 
+                              // print(productIsCarted);
+
                               return ShoppingCartButton(
                                 onTapPlusButton: () {
-                                  //if the product is already carted and the current cartedcount is less than the total quantity of the product
                                   if (productIsCarted &&
                                       cartState.listOfCart[cartIndex]
                                               .productCount <=
@@ -140,14 +205,11 @@ class HorizontalProductListView extends StatelessWidget {
                                   }
                                 },
                                 onTapMinusButton: () {
-                                  //if the product is cared and the carted product count-1 is greater than 0 then we decrease by one
-                                  //carted already means there is one product in the cart
                                   if (productIsCarted &&
                                       cartState.listOfCart[cartIndex]
                                                   .productCount -
                                               1 >=
                                           0) {
-                                    // print('object');
                                     updateProductToCart(
                                       product: currentProduct,
                                       cart: cartState.listOfCart[cartIndex],
@@ -157,7 +219,11 @@ class HorizontalProductListView extends StatelessWidget {
                                     );
                                   }
                                   //if there is no product carted and the user clicks '-' then we show a
-                                  if (!productIsCarted) {}
+                                  if (!productIsCarted) {
+                                    Fluttertoast.showToast(
+                                      msg: 'Add Product To Cart First',
+                                    );
+                                  }
                                 },
                                 onTapCartButton: () {},
                                 currentCount: productIsCarted
@@ -167,15 +233,9 @@ class HorizontalProductListView extends StatelessWidget {
                                 isLoading: false,
                               );
                             }
-                            // if (cartState is CartLoadedSuccesscartState) {
-                            //   print(cartState.listOfCart[cartIndex].productCount);
-                            // }
-                            return ShoppingCartButton(
+                            return const ShoppingCartButton(
                               currentCount: 0,
-                              isLoading:
-                                  cartState is ProductUpdatedToCartLoading
-                                      ? true
-                                      : false,
+                              isLoading: true,
                             );
                           },
                         ),

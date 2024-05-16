@@ -24,8 +24,8 @@ abstract class RegisterProductDataSource {
     required Map<int, List<File>> productImages,
     required bool isPublished,
   });
-  Future<Map<int, List<model.Image>>> getImagesForTheProduct(
-      {required String productID});
+  // Future<Map<int, List<model.Image>>> getImagesForTheProduct(
+  //     {required String productID});
 
   Future<bool> deleteProduct(
       {required Product productModel,

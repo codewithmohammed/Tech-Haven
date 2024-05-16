@@ -9,7 +9,7 @@ class ManageProductDataSourceImpl extends ManageProductDataSource {
   @override
   Future<List<ProductModel>> getAllProducts() {
     try {
-      final allProducts = dataSource.getAllProductsData();
+      final allProducts = dataSource.getAllProduct();
       return allProducts;
     } catch (e) {
       throw ServerException(e.toString());

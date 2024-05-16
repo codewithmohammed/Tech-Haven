@@ -18,15 +18,15 @@ class HomePageDataSourceImpl extends HomePageDataSource {
     required this.firebaseFirestore,
     // required this.firebaseStorage
   });
-  @override
-  Future<List<ProductModel>> getAllProducts() async {
-    try {
-      final allProducts = await dataSource.getAllProductsData();
-      return allProducts;
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
+  // @override
+  // Future<List<ProductModel>> getAllProducts() async {
+  //   try {
+  //     final allProducts = await dataSource.getAllProduct();
+  //     return allProducts;
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
 
   @override
   Future<List<BannerModel>> getAllBanners() async {
@@ -44,56 +44,56 @@ class HomePageDataSourceImpl extends HomePageDataSource {
     }
   }
 
-  @override
-  Future<bool> updateProductToFavorite(
-      {required bool isFavorited, required Product product}) async {
-    try {
-      await dataSource.updateProductToFavorite(
-        isFavorited: isFavorited,
-        product: product,
-      );
-      return true;
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
+  // @override
+  // Future<bool> updateProductToFavorite(
+  //     {required bool isFavorited, required Product product}) async {
+  //   try {
+  //     await dataSource.updateProductToFavorite(
+  //       isFavorited: isFavorited,
+  //       product: product,
+  //     );
+  //     return true;
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
 
-  @override
-  Future<List<String>> getAllFavoritedProducts() async {
-    try {
-      return await dataSource.getAllFavoritedProducts();
-      // return true;
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
+  // @override
+  // Future<List<String>> getAllFavoritedProducts() async {
+  //   try {
+  //     return await dataSource.getAllFavorite();
+  //     // return true;
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
 
-  @override
-  Future<List<CartModel>> updateProductToCart(
-      {required int itemCount,
-      required Product product,
-      required Cart? cart}) async {
-    try {
-      return await dataSource.updateProductToCart(
-          itemCount: itemCount, product: product, cart: cart);
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
+  // @override
+  // Future<List<CartModel>> updateProductToCart(
+  //     {required int itemCount,
+  //     required Product product,
+  //     required Cart? cart}) async {
+  //   try {
+  //     return await dataSource.updateProductToCart(
+  //         itemCount: itemCount, product: product, cart: cart);
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
 
-  @override
-  Future<List<CartModel>> getAllCart() async {
-    try {
-      return dataSource.getAllCart();
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
+  // @override
+  // Future<List<CartModel>> getAllCart() async {
+  //   try {
+  //     return dataSource.getAllCart();
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
 
   @override
   Future<List<CategoryModel>> getAllSubCategories() {
     try {
-      return dataSource.getAllSubCategories();
+      return dataSource.getAllSubCategory();
     } catch (e) {
       throw ServerException(e.toString());
     }

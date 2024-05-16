@@ -29,10 +29,25 @@ final class GetAllBrandRelatedProductsSuccessState
   GetAllBrandRelatedProductsSuccessState({required this.listOfBrandedProducts});
 }
 
-final class GetAllBrandRelatedProductsLoading extends GetAllBrandRelatedProductsState{}
+final class GetAllBrandRelatedProductsLoading
+    extends GetAllBrandRelatedProductsState {}
 
 final class GetAllBrandRelatedProductsFailedState
     extends GetAllBrandRelatedProductsState {
   final String message;
   GetAllBrandRelatedProductsFailedState({required this.message});
+}
+
+final class GetAllImagesForProductState extends DetailsPageState {}
+
+final class GetAllImagesForProductSuccess extends GetAllImagesForProductState {
+ final Map<int, List<model.Image>> allImages;
+  GetAllImagesForProductSuccess({required this.allImages});
+}
+
+final class GetAllImagesForProductLoading extends GetAllImagesForProductState {}
+
+final class GetAllImagesForProductFailed extends GetAllImagesForProductState {
+  final String message;
+  GetAllImagesForProductFailed({required this.message});
 }

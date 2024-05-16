@@ -6,12 +6,12 @@ import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 
 class UpdateProductToCart
-    implements UseCase<List<Cart>, UpdateProductToCartParams> {
+    implements UseCase<bool, UpdateProductToCartParams> {
   final Repository repository;
   UpdateProductToCart({required this.repository});
 
   @override
-  Future<Either<Failure, List<Cart>>> call(
+  Future<Either<Failure, bool>> call(
       UpdateProductToCartParams params) async {
     return await repository.updateProductToCart(itemCount: params.itemCount, product: params.product,cart: params.cart);
   }

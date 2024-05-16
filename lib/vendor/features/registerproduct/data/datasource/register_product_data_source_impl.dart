@@ -33,7 +33,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
   @override
   Future<List<CategoryModel>> getAllCategoryModel(bool refresh) async {
     try {
-      final listOfCategories = await dataSource.getAllCategoryData(refresh);
+      final listOfCategories = await dataSource.getAllCategory(refresh);
       return listOfCategories;
     } catch (e) {
       throw ServerException(e.toString());
@@ -200,17 +200,17 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     }
   }
 
-  @override
-  Future<Map<int, List<Image>>> getImagesForTheProduct(
-      {required String productID}) async {
-    try {
-      return dataSource.getImageForTheProduct(productID: productID);
-    } on ServerException catch (e) {
-      throw ServerException(e.message);
-    } catch (e) {
-      throw ServerException(e.toString());
-    }
-  }
+  // @override
+  // Future<Map<int, List<Image>>> getImagesForTheProduct(
+  //     {required String productID}) async {
+  //   try {
+  //     return dataSource.getImageForTheProduct(productID: productID);
+  //   } on ServerException catch (e) {
+  //     throw ServerException(e.message);
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
 
   @override
   Future<bool> deleteProduct(

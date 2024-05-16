@@ -27,9 +27,9 @@ abstract class RegisterProductRepository {
     required Map<int, List<File>> productImages,
     required bool isPublished,
   });
-  Future<Either<Failure, Map<int, List<model.Image>>>> getImagesForTheProduct(
-    String productID,
-  );
+  // Future<Either<Failure, Map<int, List<model.Image>>>> getImagesForTheProduct(
+  //   String productID,
+  // );
   Future<Either<Failure, bool>> deleteProduct(
       {required Product product,
       required Map<int, List<model.Image>> mapOfListOfImages});
