@@ -13,71 +13,71 @@ final class HomePageLoadingState extends HomePageState {}
 
 final class HorizontalProductListViewState extends HomePageState {}
 
-final class HorizontalProductsListViewSuccess
+final class HorizontalProductsListViewHomeSuccess
     extends HorizontalProductListViewState {
   final List<Product> listOfProducts;
   final List<String> listOfFavoritedProducts;
 
-  HorizontalProductsListViewSuccess({
+  HorizontalProductsListViewHomeSuccess({
     required this.listOfProducts,
     required this.listOfFavoritedProducts,
   });
 }
 
-final class HorizontalProductsListViewFailed
+final class HorizontalProductsListViewHomeFailed
     extends HorizontalProductListViewState {
   final String message;
-  HorizontalProductsListViewFailed({required this.message});
+  HorizontalProductsListViewHomeFailed({required this.message});
 }
 
 final class BannerCarouselState extends HomePageState {}
 
-final class GetAllBannerSuccess extends BannerCarouselState {
+final class GetAllBannerHomeSuccess extends BannerCarouselState {
   final List<Banner> listOfBanners;
-  GetAllBannerSuccess({required this.listOfBanners});
+  GetAllBannerHomeSuccess({required this.listOfBanners});
 }
 
-final class GetAllBannerFailed extends BannerCarouselState {
+final class GetAllBannerHomeFailed extends BannerCarouselState {
   final String message;
-  GetAllBannerFailed({required this.message});
+  GetAllBannerHomeFailed({required this.message});
 }
 
-final class ProductCartState extends HomePageState {}
+final class ProductCartHomeState extends HomePageState {}
 
-final class CartLoadingState extends ProductCartState{}
+final class CartLoadingHomeState extends ProductCartHomeState{}
 
-final class CartLoadedSuccessState extends ProductCartState {
+final class CartLoadedSuccessHomeState extends ProductCartHomeState {
   final List<Cart> listOfCart;
-  CartLoadedSuccessState({required this.listOfCart});
+  CartLoadedSuccessHomeState({required this.listOfCart});
 }
 
-final class CartLoadedFailedState extends ProductCartState {
+final class CartLoadedFailedHomeState extends ProductCartHomeState {
   final String message;
-  CartLoadedFailedState({required this.message});
+  CartLoadedFailedHomeState({required this.message});
 }
 
-final class ProductUpdatedToCartSuccess extends ProductCartState {
+final class ProductUpdatedToCartHomeSuccess extends ProductCartHomeState {
   final bool updatedSuccess;
-  ProductUpdatedToCartSuccess({required this.updatedSuccess});
+  ProductUpdatedToCartHomeSuccess({required this.updatedSuccess});
 }
 
-final class ProductUpdatedToCartFailed extends ProductCartState {
+final class ProductUpdatedToCartHomeFailed extends ProductCartHomeState {
   final String message;
-  ProductUpdatedToCartFailed({required this.message});
+  ProductUpdatedToCartHomeFailed({required this.message});
 }
 
 final class UpdateProductToFavoriteState extends HomePageState {}
 
-final class ProductUpdatedToFavoriteSuccess
+final class ProductUpdatedToFavoriteHomeSuccess
     extends UpdateProductToFavoriteState {
   final bool updatedSuccess;
-  ProductUpdatedToFavoriteSuccess({required this.updatedSuccess});
+  ProductUpdatedToFavoriteHomeSuccess({required this.updatedSuccess});
 }
 
-final class ProductUpdatedToFavoriteFailed
+final class ProductUpdatedToFavoriteHomeFailed
     extends UpdateProductToFavoriteState {
   final String message;
-  ProductUpdatedToFavoriteFailed({required this.message});
+  ProductUpdatedToFavoriteHomeFailed({required this.message});
 }
 
 // final class ProductCartState extends HomePageState {}

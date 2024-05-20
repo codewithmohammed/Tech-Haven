@@ -26,3 +26,4 @@ final class UpdateProductToCartEvent extends CartPageEvent {
   const UpdateProductToCartEvent(
       {required this.itemCount, required this.product,required this.cart});
 }
+

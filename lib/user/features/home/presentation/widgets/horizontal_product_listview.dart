@@ -2,12 +2,16 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/utils/check_product_is_carted.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
+import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
+import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
 // import 'package:shimmer/shimmer.dart';
@@ -25,7 +29,7 @@ class HorizontalProductListView extends StatelessWidget {
     void updateProductToFavorite(Product product, bool isLiked) {
       // print('updating the favorite');
       context.read<HomePageBloc>().add(
-            UpdateProductToFavoriteEvent(
+            UpdateProductToFavoriteHomeEvent(
               product: product,
               isFavorited: !isLiked,
             ),
@@ -37,7 +41,7 @@ class HorizontalProductListView extends StatelessWidget {
         required Cart? cart,
         required int itemCount}) {
       context.read<HomePageBloc>().add(
-            UpdateProductToCartEvent(
+            UpdateProductToCartHomeEvent(
               product: product,
               itemCount: itemCount,
               cart: cart,
@@ -69,7 +73,7 @@ class HorizontalProductListView extends StatelessWidget {
               buildWhen: (previous, current) =>
                   current is HorizontalProductListViewState,
               listener: (context, state) {
-                if (state is HorizontalProductsListViewFailed) {
+                if (state is HorizontalProductsListViewHomeFailed) {
                   return showSnackBar(
                       context: context,
                       title: 'Oh',
@@ -77,16 +81,16 @@ class HorizontalProductListView extends StatelessWidget {
                       contentType: ContentType.failure);
                 }
 
-                if (state is CartLoadedFailedState) {
+                if (state is CartLoadedFailedHomeState) {
                   showSnackBar(
                       context: context,
                       title: 'Oh',
                       content: state.message,
                       contentType: ContentType.failure);
 
-                  context.read<HomePageBloc>().add(GetAllCartEvent());
+                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
                 }
-                if (state is ProductUpdatedToCartSuccess) {
+                if (state is ProductUpdatedToCartHomeSuccess) {
                   Fluttertoast.showToast(
                       msg: "The Cart is Updated Successfully",
                       toastLength: Toast.LENGTH_SHORT,
@@ -96,9 +100,9 @@ class HorizontalProductListView extends StatelessWidget {
                       textColor: Colors.white,
                       fontSize: 16.0);
 
-                  context.read<HomePageBloc>().add(GetAllCartEvent());
+                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
                 }
-                if (state is ProductUpdatedToCartFailed) {
+                if (state is ProductUpdatedToCartHomeFailed) {
                   Fluttertoast.showToast(
                       msg: state.message,
                       toastLength: Toast.LENGTH_SHORT,
@@ -108,9 +112,9 @@ class HorizontalProductListView extends StatelessWidget {
                       textColor: Colors.white,
                       fontSize: 16.0);
 
-                  context.read<HomePageBloc>().add(GetAllCartEvent());
+                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
                 }
-                if (state is ProductUpdatedToFavoriteSuccess) {
+                if (state is ProductUpdatedToFavoriteHomeSuccess) {
                   Fluttertoast.showToast(
                       msg: "The Favorites is Updated Successfully",
                       toastLength: Toast.LENGTH_SHORT,
@@ -120,7 +124,7 @@ class HorizontalProductListView extends StatelessWidget {
                       textColor: Colors.white,
                       fontSize: 16.0);
                 }
-                if (state is ProductUpdatedToFavoriteFailed) {
+                if (state is ProductUpdatedToFavoriteHomeFailed) {
                   Fluttertoast.showToast(
                       msg: state.message,
                       toastLength: Toast.LENGTH_SHORT,
@@ -132,7 +136,7 @@ class HorizontalProductListView extends StatelessWidget {
                 }
               },
               builder: (context, listState) {
-                if (listState is HorizontalProductsListViewSuccess) {
+                if (listState is HorizontalProductsListViewHomeSuccess) {
                   // print(listState.listOfProducts);
                   // print('object');
                   return ListView.builder(
@@ -144,7 +148,12 @@ class HorizontalProductListView extends StatelessWidget {
                       final currentProduct = listState.listOfProducts[index];
                       //column since the container is divided into two
                       return ProductCard(
-                        index: index,
+                        onTapCard: () {
+                          // context.read<DetailsPageBloc>().add(EmitInitial());
+                          GoRouter.of(context).pushNamed(
+                              AppRouteConstants.detailsPage,
+                              extra: currentProduct);
+                        },
                         isFavorited: listState.listOfFavoritedProducts
                             .contains(currentProduct.productID),
                         // index: index,
@@ -157,9 +166,9 @@ class HorizontalProductListView extends StatelessWidget {
                         shoppingCartWidget:
                             BlocBuilder<HomePageBloc, HomePageState>(
                           buildWhen: (previous, current) =>
-                              current is ProductCartState,
+                              current is ProductCartHomeState,
                           builder: (context, cartState) {
-                            if (cartState is CartLoadedSuccessState) {
+                            if (cartState is CartLoadedSuccessHomeState) {
                               ///if index =  0, then it will return -1 if the product is not carted
                               ///if index = 1, then it will return -1
                               ///if index = 2 , then it will return -1
@@ -251,7 +260,7 @@ class HorizontalProductListView extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     //column since the container is divided into two
                     return ProductCard(
-                      index: index,
+                      // index: index,
                       isFavorited: false,
                       // index: index,
                       isHorizontal: true,

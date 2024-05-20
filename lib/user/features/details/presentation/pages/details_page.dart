@@ -1,22 +1,20 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
-import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_page_divider.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
-import 'package:tech_haven/core/common/widgets/square_button.dart';
-import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
+import 'package:tech_haven/user/features/details/presentation/widgets/available_color_horizontal_list_view.dart';
+import 'package:tech_haven/user/features/details/presentation/widgets/bottom_cart_quantity_and_button.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/overview_and_sprecification_tab_bar.dart';
+import 'package:tech_haven/user/features/details/presentation/widgets/product_brand_and_title.dart';
+import 'package:tech_haven/user/features/details/presentation/widgets/product_images_display_widget.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
+import 'package:tech_haven/user/features/details/presentation/widgets/user_review_container_widget.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -26,17 +24,20 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-    context.read<DetailsPageBloc>().add(EmitInitial());
-    context
-        .read<DetailsPageBloc>()
-        .add(GetAllImagesForProductEvent(productID: product.productID));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context
+          .read<DetailsPageBloc>()
+          .add(GetAllImagesForProductEvent(productID: product.productID));
+      context
+          .read<DetailsPageBloc>()
+          .add(GetProductCartDetailsEvent(productID: product.productID));
 
-    CarouselController carouselController = CarouselController();
-    // PageController pageController = PageController();
-    int selectedColor = 0;
+      context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
+      context
+          .read<DetailsPageBloc>()
+          .add(GetAllBrandRelatedProductsDetailsEvent(product: product));
+    });
 
-    // TabController controller = TabController(length: 2, vsync: this);
     return Scaffold(
       appBar: const AppBarSearchBar(
         backButton: true,
@@ -48,132 +49,11 @@ class DetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //for the brand name
-              Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GlobalTitleText(
-                      title: product.brandName,
-                      fontSize: 16,
-                      color: AppPallete.primaryAppColor,
-                    ),
-                    Constants.kHeight,
-                    Text(
-                      product.name,
-                    ),
-                  ],
-                ),
-              ),
+              ProductBrandAndTitle(product: product),
               const SizedBox(
                 height: 25,
               ),
-              BlocConsumer<DetailsPageBloc, DetailsPageState>(
-                listener: (context, state) {
-                  if (state is GetAllImagesForProductFailed) {
-                    Fluttertoast.showToast(msg: state.message);
-                  }
-                },
-                // buildWhen: (previous, current) =>
-                //     current is GetAllImagesForProductState,
-                builder: (context, state) {
-                  if (state is GetAllImagesForProductSuccess) {
-                    return Stack(
-                      children: [
-                        CarouselSlider.builder(
-                          carouselController: carouselController,
-                          itemCount: state.allImages[selectedColor]!.length,
-                          itemBuilder: (context, index, realIndex) {
-                            List<model.Image> images = [];
-                            images = state.allImages[selectedColor]!;
-                            return Hero(
-                                tag: product.productID,
-                                child: Image.network(
-                                  images[index].imageURL,
-                                ));
-                          },
-                          options: CarouselOptions(
-                            height: 350,
-                            viewportFraction: 1,
-                            enableInfiniteScroll: false,
-                          ),
-                        ),
-                        const Positioned(
-                          right: 10,
-                          top: 5,
-                          child: Column(
-                            children: [
-                              SquareButton(
-                                icon: SvgIcon(
-                                  icon: CustomIcons.heartSvg,
-                                  color: AppPallete.greyTextColor,
-                                  radius: 5,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              ),
-                              Constants.kHeight,
-                              SquareButton(
-                                icon: SvgIcon(
-                                  icon: CustomIcons.shareSvg,
-                                  color: AppPallete.greyTextColor,
-                                  radius: 5,
-                                  fit: BoxFit.scaleDown,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  return Stack(
-                    children: [
-                      CarouselSlider.builder(
-                        carouselController: carouselController,
-                        itemCount: 1,
-                        itemBuilder: (context, index, realIndex) {
-                          return Hero(
-                            tag: product.productID,
-                            child: state is DetailsPageLoadingState
-                                ? Image.network(product.displayImageURL)
-                                : Image.network(product.displayImageURL),
-                          );
-                        },
-                        options: CarouselOptions(
-                          height: 350,
-                          viewportFraction: 1,
-                          enableInfiniteScroll: false,
-                        ),
-                      ),
-                      const Positioned(
-                        right: 10,
-                        top: 5,
-                        child: Column(
-                          children: [
-                            SquareButton(
-                              icon: SvgIcon(
-                                icon: CustomIcons.heartSvg,
-                                color: AppPallete.greyTextColor,
-                                radius: 5,
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                            Constants.kHeight,
-                            SquareButton(
-                              icon: SvgIcon(
-                                icon: CustomIcons.shareSvg,
-                                color: AppPallete.greyTextColor,
-                                radius: 5,
-                                fit: BoxFit.scaleDown,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
+              ProductImagesDisplayWidget(product: product),
 
               //for the indicator
 
@@ -204,104 +84,7 @@ class DetailsPage extends StatelessWidget {
                         title: 'Available Colors',
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: 5,
-                          right: 5,
-                          left: 5,
-                        ),
-                        child: BlocBuilder<DetailsPageBloc, DetailsPageState>(
-                          // buildWhen: (previous, current) =>
-                          //     current is GetAllImagesForProductState,
-                          builder: (context, state) {
-                            if (state is GetAllImagesForProductSuccess) {
-                              return GridView.builder(
-                                // shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                gridDelegate:
-                                    const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 175,
-                                ),
-                                itemCount: state.allImages.length,
-                                itemBuilder: (context, index) {
-                                  final mainImage =
-                                      state.allImages[index]!.first.imageURL;
-                                  return Container(
-                                    width: 100,
-                                    height: 100,
-                                    margin: const EdgeInsets.all(
-                                      5,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(
-                                          10,
-                                        ),
-                                      ),
-                                      border: Border.all(
-                                        color: selectedColor == index
-                                            ? AppPallete.primaryAppColor
-                                            : AppPallete.darkgreyColor,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: Center(
-                                        child: Image.network(
-                                          mainImage,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                            return GridView.builder(
-                              // shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              gridDelegate:
-                                  const SliverGridDelegateWithMaxCrossAxisExtent(
-                                maxCrossAxisExtent: 175,
-                              ),
-                              itemCount: 1,
-                              itemBuilder: (context, index) {
-                                final mainImage = product.displayImageURL;
-                                return Container(
-                                  width: 100,
-                                  height: 100,
-                                  margin: const EdgeInsets.all(
-                                    5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                      Radius.circular(
-                                        10,
-                                      ),
-                                    ),
-                                    border: Border.all(
-                                      color: selectedColor == index
-                                          ? AppPallete.primaryAppColor
-                                          : AppPallete.darkgreyColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: Center(
-                                      child: Image.network(
-                                        mainImage,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ),
+                    AvailableColorHorizontalListView(product: product),
                   ],
                 ),
               ),
@@ -354,128 +137,7 @@ class DetailsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Column(
-                // physics: const NeverScrollableScrollPhysics(),
-                // shrinkWrap: true,
-                children: [
-                  Container(
-                    // height: 500,
-                    // decoration: const BoxDecoration(color: Colors.amber),
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            //container for the picture
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              height: 50,
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
-                            ),
-                            const GlobalTitleText(
-                              title: 'Notification Heading',
-                            ),
-                            //container for the title and the subtitle
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: StarsWidget(),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            'The standard Lorem Ipsum passage is: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.The standard Lorem Ipsum passage is: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                            style: TextStyle(
-                              fontSize: 16,
-                              // color: AppPallete.blackColor,
-                            ),
-                          ),
-                        ),
-                        OutlinedButton.icon(
-                          style: const ButtonStyle(),
-                          onPressed: () {},
-                          icon: const SvgIcon(
-                            icon: CustomIcons.thumbUpSvg,
-                            radius: 20,
-                            color: AppPallete.greyTextColor,
-                          ),
-                          label: const Text(
-                            'Helpful(21)',
-                            style: TextStyle(
-                              color: AppPallete.greyTextColor,
-                            ),
-                          ),
-                        ),
-                        const Divider()
-                      ],
-                    ),
-                  ),
-                  Container(
-                    // height: 500,
-                    // decoration: const BoxDecoration(color: Colors.amber),
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            //container for the picture
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 10),
-                              height: 50,
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                  color: Colors.red, shape: BoxShape.circle),
-                            ),
-                            const GlobalTitleText(
-                              title: 'Notification Heading',
-                            ),
-                            //container for the title and the subtitle
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: StarsWidget(),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Text(
-                            'The standard Lorem Ipsum passage is: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.The standard Lorem Ipsum passage is: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-                            style: TextStyle(
-                              fontSize: 16,
-                              // color: AppPallete.blackColor,
-                            ),
-                          ),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const SvgIcon(
-                            icon: CustomIcons.thumbUpSvg,
-                            radius: 20,
-                            color: AppPallete.greyTextColor,
-                          ),
-                          label: const Text(
-                            'Helpful(21)',
-                            style: TextStyle(
-                              color: AppPallete.greyTextColor,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              const UserReviewContainerWidget(),
               Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -500,30 +162,72 @@ class DetailsPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 300,
-                  mainAxisExtent: 300,
-                ),
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return ProductCard(
-                    index: 1,
-                    isHorizontal: false,
-                    product: null,
-                    onTapFavouriteButton: (bool) async {
-                      return null;
-                    },
-                    isFavorited: false,
-                    shoppingCartWidget: ShoppingCartButton(
-                      onTapPlusButton: () {},
-                      onTapMinusButton: () {},
-                      onTapCartButton: () {},
-                      currentCount: 0,
-                      isLoading: false,
+              BlocConsumer<DetailsPageBloc, DetailsPageState>(
+                listener: (context, state) {
+                  // TODO: implement listener
+                },
+                buildWhen: (previous, current) =>
+                    current is GetAllBrandRelatedProductsDetailsState,
+                builder: (context, state) {
+                  if (state is GetAllBrandRelatedProductsDetailsSuccessState) {
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 300,
+                        mainAxisExtent: 300,
+                      ),
+                      itemCount: state.listOfBrandedProducts.length,
+                      itemBuilder: (context, index) {
+                        // if (state.listOfBrandedProducts[index].productID ==
+                        //     product.productID) {
+                        //   return null;
+                        // }
+                        return ProductCard(
+                          isHorizontal: false,
+                          product: state.listOfBrandedProducts[index],
+                          onTapFavouriteButton: (bool) async {
+                            return null;
+                          },
+                          isFavorited: false,
+                          shoppingCartWidget: ShoppingCartButton(
+                            onTapPlusButton: () {},
+                            onTapMinusButton: () {},
+                            onTapCartButton: () {},
+                            currentCount: 0,
+                            isLoading: false,
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 300,
+                      mainAxisExtent: 300,
                     ),
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return ProductCard(
+                        isHorizontal: false,
+                        product: null,
+                        onTapFavouriteButton: (bool) async {
+                          return null;
+                        },
+                        isFavorited: false,
+                        shoppingCartWidget: ShoppingCartButton(
+                          onTapPlusButton: () {},
+                          onTapMinusButton: () {},
+                          onTapCartButton: () {},
+                          currentCount: 0,
+                          isLoading: false,
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -534,83 +238,7 @@ class DetailsPage extends StatelessWidget {
           ),
         ),
       ),
-      bottomSheet: Container(
-        width: double.infinity,
-        height: 70,
-        decoration: const BoxDecoration(
-          color: AppPallete.whiteColor,
-          border: Border(
-            top: BorderSide(
-              color: AppPallete.greyTextColor,
-              width: 0.5,
-            ),
-          ),
-        ),
-        padding: const EdgeInsets.all(8),
-        child: Row(
-          children: [
-            Container(
-              height: 50,
-              width: 50,
-              decoration: const BoxDecoration(
-                color: AppPallete.whiteColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(
-                    5,
-                  ),
-                ),
-                border: Border(
-                  top: BorderSide(
-                    color: AppPallete.greyTextColor,
-                    width: 0.5,
-                  ),
-                  bottom: BorderSide(
-                    color: AppPallete.greyTextColor,
-                    width: 0.5,
-                  ),
-                  right: BorderSide(
-                    color: AppPallete.greyTextColor,
-                    width: 0.5,
-                  ),
-                  left: BorderSide(
-                    color: AppPallete.greyTextColor,
-                    width: 0.5,
-                  ),
-                ),
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'QTY',
-                    style: TextStyle(
-                        color: AppPallete.greyTextColor, fontSize: 10),
-                  ),
-                  Text(
-                    '1',
-                    style: TextStyle(
-                      color: AppPallete.textColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            const Expanded(
-              child: SizedBox(
-                height: 50,
-                child: RoundedRectangularButton(
-                  title: 'ADD TO CART',
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomSheet: BottomCartQuantityAndButton(product: product),
     );
   }
 }

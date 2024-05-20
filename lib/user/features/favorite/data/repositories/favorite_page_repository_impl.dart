@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
-import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
+import 'package:tech_haven/user/features/favorite/data/datasource/favorite_page_data_source.dart';
 import 'package:tech_haven/user/features/favorite/domain/repository/favorite_page_repository.dart';
 
 class FavoritePageRepositoryImpl extends FavoritePageRepository {

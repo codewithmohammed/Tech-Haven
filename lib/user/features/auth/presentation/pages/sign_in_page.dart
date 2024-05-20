@@ -17,7 +17,7 @@ import 'package:tech_haven/user/features/auth/presentation/bloc/sign_in_page_sta
 import 'package:tech_haven/user/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/phone_number_text_field.dart';
+import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

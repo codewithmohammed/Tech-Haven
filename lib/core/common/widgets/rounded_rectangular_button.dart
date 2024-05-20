@@ -3,9 +3,14 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class RoundedRectangularButton extends StatelessWidget {
   const RoundedRectangularButton(
-      {super.key, required this.title, this.onPressed, this.outlined = false});
+      {super.key,
+      required this.title,
+      this.onPressed,
+      this.outlined = false,
+      this.isLoading = false});
 
   final bool outlined;
+  final bool isLoading;
 
   final String title;
   final void Function()? onPressed;
@@ -24,17 +29,20 @@ class RoundedRectangularButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(5.0),
         ),
       ).copyWith(
-          backgroundColor: MaterialStatePropertyAll(
-        outlined ? AppPallete.whiteColor : AppPallete.primaryAppButtonColor,
-      )),
-      onPressed: onPressed,
-      child: Text(
-        title,
-        style: TextStyle(
-            color: outlined
-                ? AppPallete.primaryAppButtonColor
-                : AppPallete.whiteColor),
+        backgroundColor: MaterialStatePropertyAll(
+          outlined ? AppPallete.whiteColor : AppPallete.primaryAppButtonColor,
+        ),
       ),
+      onPressed: onPressed,
+      child: isLoading
+          ? const CircularProgressIndicator()
+          : Text(
+              title,
+              style: TextStyle(
+                  color: outlined
+                      ? AppPallete.primaryAppButtonColor
+                      : AppPallete.whiteColor),
+            ),
     );
   }
 }

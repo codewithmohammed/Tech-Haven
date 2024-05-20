@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/bloc/common_bloc.dart';
 import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
@@ -26,6 +29,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.read<CommonBloc>().add(GetUserLocationDataEvent());
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       child: Column(
@@ -83,38 +87,53 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
           //given a visibily widget to hide the location when scrolling yet to complete this.
           deliveryPlaceNeeded
               ? GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    GoRouter.of(context)
+                        .pushNamed(AppRouteConstants.googleMapPage);
+                  },
                   child: Container(
                     padding: const EdgeInsets.only(top: 5),
                     height: 30,
-                    child: const Row(
-                      children: [
-                        SvgIcon(
-                          icon: CustomIcons.mapPinSvg,
-                          radius: 15,
-                          fit: BoxFit.scaleDown,
-                        ),
-                        Text(
-                          'Delivering to',
-                          style: TextStyle(
-                              fontSize: 13, color: AppPallete.blackColor),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "\tDelivering to",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppPallete.blackColor,
-                              fontWeight: FontWeight.w700,
-                              overflow: TextOverflow.ellipsis,
+                    child: BlocConsumer<CommonBloc, CommonState>(
+                      listener: (context, state) {
+                        if (state is LocationFailedState) {
+                          Fluttertoast.showToast(msg: state.message);
+                        }
+                      },
+                      builder: (context, state) {
+                        return Row(
+                          children: [
+                            const SvgIcon(
+                              icon: CustomIcons.mapPinSvg,
+                              radius: 15,
+                              fit: BoxFit.scaleDown,
                             ),
-                          ),
-                        ),
-                        SvgIcon(
-                          icon: CustomIcons.chevronDownSvg,
-                          radius: 25,
-                        ),
-                      ],
+                            const Text(
+                              'Delivering to',
+                              style: TextStyle(
+                                  fontSize: 13, color: AppPallete.blackColor),
+                            ),
+                            Expanded(
+                              child: Text(
+                                state is LocationSuccessState &&
+                                        state.location != null
+                                    ? '\t ${state.location!.location}'
+                                    : "Click here to enter your location",
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: AppPallete.blackColor,
+                                  fontWeight: FontWeight.w700,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            const SvgIcon(
+                              icon: CustomIcons.chevronDownSvg,
+                              radius: 25,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 )

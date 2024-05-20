@@ -22,7 +22,7 @@ class CarouselBannerContainer extends StatelessWidget {
       child: BlocConsumer<HomePageBloc, HomePageState>(
         buildWhen: (previous, current) => current is BannerCarouselState,
         listener: (context, state) {
-          if (state is GetAllBannerFailed) {
+          if (state is GetAllBannerHomeFailed) {
             showSnackBar(
               context: context,
               title: 'Oh',
@@ -32,7 +32,7 @@ class CarouselBannerContainer extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state is GetAllBannerSuccess) {
+          if (state is GetAllBannerHomeSuccess) {
             // print('success');
             return CarouselSlider(
               options: CarouselOptions(

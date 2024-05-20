@@ -10,7 +10,7 @@ import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/forgot_password_page_state.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/phone_number_text_field.dart';
+import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});

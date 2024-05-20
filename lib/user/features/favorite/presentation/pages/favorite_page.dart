@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/title_with_count_bar.dart';
@@ -28,7 +30,9 @@ class FavoritePage extends StatelessWidget {
       return boolean!;
     }
 
-    context.read<FavoritePageBloc>().add(GetAllFavoritedProducts());
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<FavoritePageBloc>().add(GetAllFavoritedProducts());
+    });
     // var items = [
     //   '1',
     //   '2',
@@ -86,36 +90,47 @@ class FavoritePage extends StatelessWidget {
               },
               builder: (context, state) {
                 if (state is FavoritePageLoadedSuccess) {
-                  return ListView.separated(
-                    itemCount: state.listOfFavoritedProduct.length,
-                    itemBuilder: (context, index) {
-                      final product = state.listOfFavoritedProduct[index];
-                      return RectangularProductCard(
-                        isFavorite: true,
-                        // items: items,
+                  return state.listOfFavoritedProduct.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'Your Favorite Is Empty',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        )
+                      : ListView.separated(
+                          itemCount: state.listOfFavoritedProduct.length,
+                          itemBuilder: (context, index) {
+                            final product = state.listOfFavoritedProduct[index];
+                            return RectangularProductCard(
+                              isFavorite: true,
+                              // items: items,
 
-                        onTap: () {},
-                        isFavoriteCard: true,
-                        productName: product.name,
-                        productPrize: product.prize.toString(),
-                        vendorName: product.vendorName,
-                        deliveryDate: product.mainCategory,
-                        onTapFavouriteButton: (bool isLiked) async {
-                          final boolean =
-                              await updateProductToFavorite(product: product);
-                          return !boolean;
-                        },
-                        productImage: product.displayImageURL,
-                        textEditingController: null,
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return Container(
-                        height: 10,
-                        color: AppPallete.lightgreyColor,
-                      );
-                    },
-                  );
+                              onTap: () {
+                                GoRouter.of(context).pushNamed(
+                                    AppRouteConstants.detailsPage,
+                                    extra: product);
+                              },
+                              isFavoriteCard: true,
+                              productName: product.name,
+                              productPrize: product.prize.toString(),
+                              vendorName: product.vendorName,
+                              deliveryDate: product.mainCategory,
+                              onTapFavouriteButton: (bool isLiked) async {
+                                final boolean = await updateProductToFavorite(
+                                    product: product);
+                                return !boolean;
+                              },
+                              productImage: product.displayImageURL,
+                              textEditingController: null,
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return Container(
+                              height: 10,
+                              color: AppPallete.lightgreyColor,
+                            );
+                          },
+                        );
                 }
                 return ListView.separated(
                   itemCount: 10,

@@ -17,4 +17,5 @@ class AppRouteConstants {
   static const String searchPage = 'search_page';
   static const String registerProductPage = 'register_product_page';
   static const String favoritePage = 'favorite_page';
+  static const String checkoutPage = 'checkout_page';
 }

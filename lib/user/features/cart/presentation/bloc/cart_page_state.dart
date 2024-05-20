@@ -55,16 +55,16 @@ final class CartUpdatedFailed extends CartProductListViewState {
 
 final class UpdateProductToFavoriteState extends CartPageState {}
 
-final class ProductUpdatedToFavoriteSuccess
+final class ProductUpdatedToFavoriteCartSuccess
     extends UpdateProductToFavoriteState {
   final bool updatedSuccess;
-  ProductUpdatedToFavoriteSuccess({required this.updatedSuccess});
+  ProductUpdatedToFavoriteCartSuccess({required this.updatedSuccess});
 }
 
-final class ProductUpdatedToFavoriteFailed
+final class ProductUpdatedToFavoriteCartFailed
     extends UpdateProductToFavoriteState {
   final String message;
-  ProductUpdatedToFavoriteFailed({required this.message});
+  ProductUpdatedToFavoriteCartFailed({required this.message});
 }
 
 // final class CartLoadedSuccessState extends CartProductListViewState {

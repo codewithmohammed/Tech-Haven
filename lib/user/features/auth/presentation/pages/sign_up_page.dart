@@ -14,7 +14,7 @@ import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/sign_up_page_state.dart';
 import 'package:tech_haven/user/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
-import 'package:tech_haven/user/features/auth/presentation/widgets/phone_number_text_field.dart';
+import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
 import '../../../../../core/theme/app_pallete.dart';
 import '../widgets/authentication_container.dart';
 

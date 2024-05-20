@@ -9,25 +9,25 @@ sealed class HomePageEvent extends Equatable {
 
 final class GetAllProductsEvent extends HomePageEvent {}
 
-final class GetAllBannerEvent extends HomePageEvent {}
+final class GetAllBannerHomeEvent extends HomePageEvent {}
 
-final class GetAllCartEvent extends HomePageEvent {}
+final class GetAllCartHomeEvent extends HomePageEvent {}
 
-final class UpdateProductToFavoriteEvent extends HomePageEvent {
+final class UpdateProductToFavoriteHomeEvent extends HomePageEvent {
   final bool isFavorited;
   final Product product;
 
-  const UpdateProductToFavoriteEvent(
+  const UpdateProductToFavoriteHomeEvent(
       {required this.product, required this.isFavorited});
 }
 
-final class UpdateProductToCartEvent extends HomePageEvent {
+final class UpdateProductToCartHomeEvent extends HomePageEvent {
   final int itemCount;
   final Product product;  final Cart? cart;
-  const UpdateProductToCartEvent(
+  const UpdateProductToCartHomeEvent(
       {required this.itemCount, required this.product,required this.cart});
 }
 
 
-final class GetAllSubCategoriesEvent extends HomePageEvent{
+final class GetAllSubCategoriesHomeEvent extends HomePageEvent{
 }

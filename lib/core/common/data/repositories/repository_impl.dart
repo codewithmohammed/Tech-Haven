@@ -1,11 +1,14 @@
 import 'package:fpdart/src/either.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
+import 'package:tech_haven/core/common/data/model/location_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
@@ -15,7 +18,7 @@ class RepositoryImpl implements Repository {
   RepositoryImpl({required this.dataSource});
   @override
   Future<Either<Failure, List<ProductModel>>> getAllCartProduct() async {
- try {
+    try {
       final result = await dataSource.getAllCartProduct();
       print(result);
       return right(result);
@@ -88,10 +91,10 @@ class RepositoryImpl implements Repository {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<CartModel>>> getAllCart()async {
-      try {
+  Future<Either<Failure, List<CartModel>>> getAllCart() async {
+    try {
       // print('updating the favorite');
       final result = await dataSource.getAllCart();
       // print('hello how are you');
@@ -100,9 +103,9 @@ class RepositoryImpl implements Repository {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, List<String>>> getAllFavorite()async {
+  Future<Either<Failure, List<String>>> getAllFavorite() async {
     try {
       // print('updating the favorite');
       final result = await dataSource.getAllFavorite();
@@ -114,11 +117,70 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, Map<int, List<Image>>>> getImagesForProduct({required String productID}) async{
-       try {
+  Future<Either<Failure, Map<int, List<Image>>>> getImagesForProduct(
+      {required String productID}) async {
+    try {
       // print('updating the favorite');
       final result = await dataSource.getImagesForProduct(productID: productID);
       // print('hello how are you');
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProductModel>>> getAllBrandRelatedProduct(
+      {required Product product}) async {
+    try {
+      // print('updating the favorite');
+      final result =
+          await dataSource.getAllBrandRelatedProduct(product: product);
+      // print('hello how are you');
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateLocation(
+      {
+      required String name,
+      required String phoneNumber,
+      required String location,
+      required String apartmentHouseNumber,
+      required String emailAddress,
+      required String addressInstructions}) async {
+    try {
+      final result = await dataSource.updateLocation(
+        
+          name: name,
+          phoneNumber: phoneNumber,
+          location: location,
+          apartmentHouseNumber: apartmentHouseNumber,
+          emailAddress: emailAddress,
+          addressInstructions: addressInstructions);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, LocationModel?>> getCurrentLocationDetails() async {
+    try {
+      final result = await dataSource.getCurrentLocationDetails();
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserModel?>> getUserData()async {
+     try {
+      final result = await dataSource.getUserData();
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
-import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
+import 'package:tech_haven/user/features/favorite/data/datasource/favorite_page_data_source.dart';
 
 class FavoritePageDataSourceImpl extends FavoritePageDataSource {
   final DataSource dataSource;

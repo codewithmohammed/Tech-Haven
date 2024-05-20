@@ -3,18 +3,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:tech_haven/core/common/bloc/common_bloc.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source_impl.dart';
 import 'package:tech_haven/core/common/data/repositories/repository_impl.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_brand_related_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_current_location_details.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_images_for_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/user/features/auth/data/datasources/auth_remote_data_source.dart';
@@ -30,8 +34,8 @@ import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_numbe
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
-import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source.dart';
-import 'package:tech_haven/user/features/favorite/data/favorite_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/favorite/data/datasource/favorite_page_data_source.dart';
+import 'package:tech_haven/user/features/favorite/data/datasource/favorite_page_data_source_impl.dart';
 import 'package:tech_haven/user/features/favorite/data/repositories/favorite_page_repository_impl.dart';
 import 'package:tech_haven/user/features/favorite/domain/repository/favorite_page_repository.dart';
 import 'package:tech_haven/user/features/favorite/domain/usecase/get_all_favorited_products.dart';
@@ -44,6 +48,8 @@ import 'package:tech_haven/user/features/home/domain/repository/home_page_reposi
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner_home_page.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_sub_categories_home_page.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
+import 'package:tech_haven/user/features/map/domain/usecase/update_location.dart';
+import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source_impl.dart';
 import 'package:tech_haven/user/features/searchcategory/data/repositories/search_category_repository_impl.dart';
@@ -63,7 +69,6 @@ import 'package:tech_haven/vendor/features/registerproduct/domain/repository/reg
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/delete_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_brands.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_category.dart';
-import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_images_for_the_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/register_new_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/update_existing_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
@@ -88,6 +93,14 @@ Future<void> initDependencies() async {
   _initManageProduct();
   _initFavorite();
   _initCart();
+  _initMap();
+}
+
+void _initMap() {
+  serviceLocator.registerLazySingleton(() => MapPageBloc(
+      updateLocation: serviceLocator(),
+      getCurrentLocationDetails: serviceLocator(),
+      getUserData: serviceLocator()));
 }
 
 _initAuth() {
@@ -140,13 +153,21 @@ _initDataCommon() {
     ..registerFactory(() => GetAllProduct(repository: serviceLocator()))
     ..registerFactory(() => GetImagesForProduct(repository: serviceLocator()))
     ..registerFactory(() => GetAllCart(repository: serviceLocator()))
+    ..registerFactory(() => GetUserData(repository: serviceLocator()))
     ..registerFactory(() => GetAllFavorite(repository: serviceLocator()))
     ..registerFactory(() => GetAllCartProduct(repository: serviceLocator()))
+    ..registerFactory(
+        () => GetAllBrandRelatedProduct(repository: serviceLocator()))
+    ..registerFactory(() => UpdateLocation(repository: serviceLocator()))
+    ..registerFactory(
+        () => GetCurrentLocationDetails(repository: serviceLocator()))
     ..registerFactory(
         () => GetAllFavoritedProduct(repository: serviceLocator()))
     ..registerFactory(
         () => UpdateProductToFavorite(repository: serviceLocator()))
-    ..registerFactory(() => UpdateProductToCart(repository: serviceLocator()));
+    ..registerFactory(() => UpdateProductToCart(repository: serviceLocator()))
+    ..registerLazySingleton(
+        () => CommonBloc(getCurrentLocationDetails: serviceLocator()));
 }
 
 void _initHomePage() {
@@ -170,7 +191,13 @@ void _initHomePage() {
 }
 
 _initDetailsPage() {
-  serviceLocator.registerLazySingleton(() => DetailsPageBloc(getImagesForProduct: serviceLocator()));
+  serviceLocator.registerLazySingleton(() => DetailsPageBloc(
+      getImagesForProduct: serviceLocator(),
+      getAllCart: serviceLocator(),
+      getAllFavorite: serviceLocator(),
+      updateProductToFavorite: serviceLocator(),
+      getAllBrandRelatedProduct: serviceLocator(),
+      updateProductToCart: serviceLocator()));
 }
 
 void _initSearchCategory() {

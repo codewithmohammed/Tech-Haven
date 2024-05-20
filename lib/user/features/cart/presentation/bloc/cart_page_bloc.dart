@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
@@ -15,6 +16,7 @@ part 'cart_page_event.dart';
 part 'cart_page_state.dart';
 
 class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
+  final GetAllProduct _getAllProduct;
   final GetAllCartProduct _getAllCartProduct;
   final GetAllCart _getAllCart;
   final UpdateProductToFavorite _updateProductToFavorite;
@@ -27,7 +29,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       required UpdateProductToFavorite updateProductToFavorite,
       required GetAllFavorite getAllFavorite,
       required UpdateProductToCart updateProductToCart})
-      : 
+      : _getAllProduct = getAllProduct,
         _getAllCartProduct = getAllCartProduct,
         _getAllCart = getAllCart,
         _updateProductToFavorite = updateProductToFavorite,
@@ -80,7 +82,6 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
       },
     );
 
-
     allCartedProduct.fold((failure) {
       emit(CartProductsListViewFailed(message: failure.message));
     }, (products) {
@@ -113,11 +114,11 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     );
 
     result.fold(
-        (failure) => emit(ProductUpdatedToFavoriteFailed(
+        (failure) => emit(ProductUpdatedToFavoriteCartFailed(
               message: failure.message,
             )),
         (success) =>
-            emit(ProductUpdatedToFavoriteSuccess(updatedSuccess: success)));
+            emit(ProductUpdatedToFavoriteCartSuccess(updatedSuccess: success)));
   }
 
   FutureOr<void> _onUpdateProductToCartEvent(

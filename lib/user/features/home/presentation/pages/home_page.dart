@@ -18,9 +18,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    context.read<HomePageBloc>().add(GetAllProductsEvent());
-    context.read<HomePageBloc>().add(GetAllBannerEvent());
-    context.read<HomePageBloc>().add(GetAllSubCategoriesEvent());
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      context.read<HomePageBloc>().add(GetAllProductsEvent());
+      context.read<HomePageBloc>().add(GetAllBannerHomeEvent());
+      context.read<HomePageBloc>().add(GetAllSubCategoriesHomeEvent());
+    });
     // print('hskdfsjdhfjs');
     return const Scaffold(
       extendBody: true,

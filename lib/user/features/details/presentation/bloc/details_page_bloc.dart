@@ -1,17 +1,43 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_brand_related_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_images_for_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
+import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
+import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
+import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/usecase/usecase.dart';
+
+import '../../../../../core/common/domain/usecase/get_all_cart.dart';
 
 part 'details_page_event.dart';
 part 'details_page_state.dart';
 
 class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
   final GetImagesForProduct _getImagesForProduct;
-  DetailsPageBloc({required GetImagesForProduct getImagesForProduct})
-      : _getImagesForProduct = getImagesForProduct,
+  final GetAllCart _getAllCart;
+  final GetAllFavorite _getAllFavorite;
+  final UpdateProductToFavorite _updateProductToFavorite;
+  final GetAllBrandRelatedProduct _getAllBrandRelatedProduct;
+  final UpdateProductToCart _updateProductToCart;
+  Map<int, List<model.Image>> mapOfListOfImages = {};
+  DetailsPageBloc({
+    required GetImagesForProduct getImagesForProduct,
+    required GetAllBrandRelatedProduct getAllBrandRelatedProduct,
+    required GetAllCart getAllCart,
+    required UpdateProductToCart updateProductToCart,
+    required GetAllFavorite getAllFavorite,
+    required UpdateProductToFavorite updateProductToFavorite,
+  })  : _getAllCart = getAllCart,
+        _getAllBrandRelatedProduct = getAllBrandRelatedProduct,
+        _getImagesForProduct = getImagesForProduct,
+        _getAllFavorite = getAllFavorite,
+        _updateProductToFavorite = updateProductToFavorite,
+        _updateProductToCart = updateProductToCart,
         super(DetailsPageInitial()) {
     on<DetailsPageEvent>((event, emit) {
       emit(DetailsPageLoadingState());
@@ -21,6 +47,14 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
     on<EmitInitial>((event, emit) {
       emit(DetailsPageInitial());
     });
+    on<ChangeProductColorEvent>(_onChangeProductColorEvent);
+    on<GetProductCartDetailsEvent>(_onGetProductCartDetailsEvent);
+    on<GetProductFavoriteDetailsEvent>(_onGetProductFavoriteDetailsEvent);
+    on<UpdateProductToFavoriteDetailsEvent>(
+        _onUpdateProductToFavoriteDetailsEvent);
+    on<UpdateProductToCartDetailsEvent>(_onUpdateProductToCartDetailsEvent);
+    on<GetAllBrandRelatedProductsDetailsEvent>(
+        _onGetAllBrandRelatedProductsDetailsEvent);
   }
 
   FutureOr<void> _onGetAllImagesForProductEvent(
@@ -30,13 +64,96 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
     final allProductImages = await _getImagesForProduct(
         GetImagesForProductParams(productID: event.productID));
     // print(allProductImages);
-      await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     allProductImages.fold(
         (failure) =>
             emit(GetAllImagesForProductFailed(message: failure.message)),
         (success) {
-      // print('success');
-      return emit(GetAllImagesForProductSuccess(allImages: success));
+      mapOfListOfImages = success;
+      return emit(GetAllImagesForProductSuccess(
+          allImages: mapOfListOfImages, currentSelectedIndex: 0));
     });
+  }
+
+  FutureOr<void> _onChangeProductColorEvent(
+      ChangeProductColorEvent event, Emitter<DetailsPageState> emit) async {
+    // print('object');
+    emit(DetailsPageInitial());
+    await Future.delayed(const Duration(seconds: 1));
+    // print(event.index);
+    emit(GetAllImagesForProductSuccess(
+        allImages: mapOfListOfImages, currentSelectedIndex: event.index));
+  }
+
+  FutureOr<void> _onGetProductCartDetailsEvent(
+      GetProductCartDetailsEvent event, Emitter<DetailsPageState> emit) async {
+    emit(CartLoadingDetailsState());
+    final result = await _getAllCart(NoParams());
+
+    result.fold(
+        (failure) => emit(CartLoadedFailedDetailsState(
+              message: failure.message,
+            )), (success) {
+      // print('hgfghfjhgj');
+      Cart? cart;
+      try {
+        cart = success
+            .firstWhere((element) => element.productID == event.productID);
+      } catch (e) {
+        cart = Cart(cartID: 'null', productID: 'null', productCount: 1);
+      }
+      // print(cart.cartID);
+      emit(CartLoadedSuccessDetailsState(
+        cart: cart,
+      ));
+    });
+  }
+
+  FutureOr<void> _onGetProductFavoriteDetailsEvent(
+      GetProductFavoriteDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    final result = await _getAllFavorite(NoParams());
+    result.fold(
+        (failure) =>
+            emit(GetProductFavoritedDetailsFailed(message: failure.message)),
+        (success) {
+      // print(success);
+      return emit(GetProductFavoritedDetailsSuccess(favorited: success));
+    });
+  }
+
+  FutureOr<void> _onUpdateProductToFavoriteDetailsEvent(
+      UpdateProductToFavoriteDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    // print('object');
+    final result = await _updateProductToFavorite(UpdateProductToFavoriteParams(
+        isFavorited: event.isFavorited, product: event.product));
+
+    result.fold((l) => emit(UpdateProductToFavoriteFailed(message: l.message)),
+        (r) => emit(UpdateProductToFavoriteSuccess()));
+  }
+
+  FutureOr<void> _onGetAllBrandRelatedProductsDetailsEvent(
+      GetAllBrandRelatedProductsDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    final result = await _getAllBrandRelatedProduct(
+        GetAllBrandRelatedProductParams(product: event.product));
+
+    result.fold(
+        (failed) => emit(GetAllBrandRelatedProductsDetailsFailedState(
+            message: failed.message)),
+        (success) => emit(GetAllBrandRelatedProductsDetailsSuccessState(
+            listOfBrandedProducts: success)));
+  }
+
+  FutureOr<void> _onUpdateProductToCartDetailsEvent(
+      UpdateProductToCartDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    final result = await _updateProductToCart(UpdateProductToCartParams(
+        itemCount: event.itemCount, product: event.product, cart: event.cart));
+    result.fold(
+        (failed) =>
+            emit(UpdateProductToCartDetailsFailed(message: failed.message)),
+        (success) => emit(UpdateProductToCartDetailsSuccess()));
   }
 }

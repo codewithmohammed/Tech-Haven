@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/model/image_model.dart';
+import 'package:tech_haven/core/common/data/model/location_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
 import 'package:tech_haven/core/entities/cart.dart';
@@ -120,19 +121,18 @@ class DataSourceImpl implements DataSource {
     try {
       QuerySnapshot productSnapshot =
           await firebaseFirestore.collection('products').get();
-      print(productSnapshot.docs[0].data());
+      // print(productSnapshot.docs[0].data());
       List<ProductModel> products = [];
       for (var doc in productSnapshot.docs) {
         products.add(ProductModel.fromJson(doc.data() as Map<String, dynamic>));
       }
-      print(products[0].oldPrize);
+      // print(products[0].oldPrize);
       return products;
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       throw ServerException(e.toString());
     }
   }
-
 
   @override
   Future<bool> updateProductToFavorite(
@@ -317,13 +317,13 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<List<ProductModel>> getAllFavoriteProduct() async{
-     try {
+  Future<List<ProductModel>> getAllFavoriteProduct() async {
+    try {
       List<ProductModel> allProduct = await getAllProduct();
       List<String> allFavorite = await getAllFavorite();
 
-      List<ProductModel> filteredList =
-          getAllProductsThatIsFavorited(products: allProduct, favoritedModels: allFavorite);
+      List<ProductModel> filteredList = getAllProductsThatIsFavorited(
+          products: allProduct, favoritedModels: allFavorite);
 
       return filteredList;
     } catch (e) {
@@ -332,8 +332,9 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<Map<int, List<Image>>> getImagesForProduct({required String productID})async {
-     try {
+  Future<Map<int, List<Image>>> getImagesForProduct(
+      {required String productID}) async {
+    try {
       Map<int, List<ImageModel>> resultMap = {};
 
       // Retrieve the document containing the image map
@@ -363,6 +364,75 @@ class DataSourceImpl implements DataSource {
       throw ServerException(e.toString());
     }
   }
+
+  @override
+  Future<List<ProductModel>> getAllBrandRelatedProduct(
+      {required Product product}) async {
+    try {
+      final products = await getAllProduct();
+      List<ProductModel> brandedModels = filterAllRelatedBrandProducts(
+          products: products, brandID: product.brandID);
+      return brandedModels;
+    } catch (e) {
+      // print(e.toString());
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> updateLocation(
+      {required String name,
+      required String phoneNumber,
+      required String location,
+      required String apartmentHouseNumber,
+      required String emailAddress,
+      required String addressInstructions}) async {
+    try {
+      final model.UserModel? user = await getUserData();
+      if (user != null) {
+        final String uid = const Uuid().v1();
+        LocationModel locationModel = LocationModel(
+            userID: user.uid!,
+            uid: uid,
+            name: name,
+            phoneNumber: phoneNumber,
+            location: location,
+            apartmentHouseNumber: apartmentHouseNumber,
+            emailAddress: emailAddress,
+            addressInstructions: addressInstructions);
+        await firebaseFirestore
+            .collection('locations')
+            .doc(user.uid)
+            .set(locationModel.toJson());
+      }
+
+      return true;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<LocationModel?> getCurrentLocationDetails() async {
+    LocationModel? locationModel;
+    try {
+      final model.UserModel? user = await getUserData();
+
+      if (user != null) {
+        final snapshot =
+            await firebaseFirestore.collection('locations').doc(user.uid).get();
+
+        locationModel =
+            LocationModel.fromJson(snapshot.data() as Map<String, dynamic>);
+      }
+      return locationModel;
+    } on TypeError catch (_) {
+      throw const ServerException('No Location Added Yet');
+    } catch (e) {
+      print(e.runtimeType);
+      throw ServerException(e.toString());
+    }
+  }
 }
 
 List<ProductModel> getAllProductsThatIsCarted({
@@ -380,7 +450,6 @@ List<ProductModel> getAllProductsThatIsCarted({
   return filteredList;
 }
 
-
 List<ProductModel> getAllProductsThatIsFavorited({
   required List<ProductModel> products,
   required List<String> favoritedModels,
@@ -394,4 +463,15 @@ List<ProductModel> getAllProductsThatIsFavorited({
     }
   }
   return filteredList;
+}
+
+List<ProductModel> filterAllRelatedBrandProducts(
+    {required List<ProductModel> products, required String brandID}) {
+  List<ProductModel> listOfBrandModels = [];
+  for (var product in products) {
+    if (product.brandID == brandID) {
+      listOfBrandModels.add(product);
+    }
+  }
+  return listOfBrandModels;
 }
