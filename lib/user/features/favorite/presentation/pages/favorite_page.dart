@@ -94,7 +94,7 @@ class FavoritePage extends StatelessWidget {
                       ? const Center(
                           child: Text(
                             'Your Favorite Is Empty',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: AppPallete.blackColor),
                           ),
                         )
                       : ListView.separated(

@@ -67,4 +67,5 @@ flutter {
 
 dependencies {
      implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0'
+     implementation 'com.stripe:stripe-android:20.43.0'
      }

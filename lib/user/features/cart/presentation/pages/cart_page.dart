@@ -289,7 +289,10 @@ class CartPage extends StatelessWidget {
                                 title: 'CHECKOUT',
                                 onPressed: () {
                                   GoRouter.of(context).pushNamed(
-                                      AppRouteConstants.checkoutPage);
+                                      AppRouteConstants.checkoutPage,
+                                      pathParameters: {
+                                        'totalAmount': total.toString()
+                                      });
                                   GoRouter.of(context).pushNamed(
                                       AppRouteConstants.googleMapPage);
                                 },

@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/validators/validators.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
@@ -23,7 +24,7 @@ class CustomTextFormField extends StatelessWidget {
     this.isObscureText = false,
     this.inputFormatters,
     required this.textEditingController,
-    this.validator,
+    this.validator = Validator.validateEmptyField,
     this.autovalidateMode,
     this.keyboardType = TextInputType.text,
     this.suffixOnTap,
@@ -35,7 +36,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FadeIn(
-      duration:  Duration(milliseconds: durationMilliseconds),
+      duration: Duration(milliseconds: durationMilliseconds),
       curve: Curves.easeIn,
       child: Stack(
         alignment: Alignment.centerRight,

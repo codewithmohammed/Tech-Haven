@@ -168,19 +168,6 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
               .child(imageID);
 
           final UploadTask uploadTask = imageReference.putFile(image);
-          // uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-            // Update upload progress
-            // _uploadProgress =
-                // (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            // _progressController.add(_uploadProgress);
-          // }, onError: (error) {
-            // Handle upload error
-            // print('Error uploading image: $error');
-          // });
-          // await uploadTask.whenComplete(() {
-            // print('Image uploaded successfully');
-            // _progressController.close();
-          // });
           final String downloadURL =
               await uploadTask.snapshot.ref.getDownloadURL();
           // = await taskSnapshot.ref.getDownloadURL();

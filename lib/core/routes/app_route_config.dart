@@ -134,10 +134,18 @@ class AppRoutes {
         path: '/home_page',
         child: const HomePage(),
       ),
-      _buildPageRoute(
+      // _buildPageRoute(
+      //   name: AppRouteConstants.checkoutPage,
+      //   path: '/checkout_page/:totalAmount',
+      //   child: const CheckoutPage(totalAmount: ,),
+      // ),
+      _buildPageRouteWithParams(
         name: AppRouteConstants.checkoutPage,
-        path: '/checkout_page',
-        child: const CheckoutPage(),
+        path:
+            '/checkout_page/:totalAmount',
+        pageBuilder: (state) => CheckoutPage(
+         totalAmount: state.pathParameters['totalAmount']!,
+        ),
       ),
       _buildPageRoute(
         name: AppRouteConstants.messagePage,

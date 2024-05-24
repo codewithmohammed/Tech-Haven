@@ -115,24 +115,32 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                               ),
                               RoundedRectangularButton(
                                 onPressed: () {
+                                  if (product.quantity >=
+                                      int.parse(controller.text)) {
+                                    productIsCarted
+                                        ? context.read<DetailsPageBloc>().add(
+                                            UpdateProductToCartDetailsEvent(
+                                                cart: state.cart,
+                                                itemCount:
+                                                    int.parse(controller.text),
+                                                product: product))
+                                        : context.read<DetailsPageBloc>().add(
+                                            UpdateProductToCartDetailsEvent(
+                                                cart: null,
+                                                itemCount:
+                                                    int.parse(controller.text),
+                                                product: product));
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            'Insufficient Quantity availble for this product');
+                                  }
                                   // Perform update logic here
-                                  productIsCarted
-                                      ? context.read<DetailsPageBloc>().add(
-                                          UpdateProductToCartDetailsEvent(
-                                              cart: state.cart,
-                                              itemCount:
-                                                  int.parse(controller.text),
-                                              product: product))
-                                      : context.read<DetailsPageBloc>().add(
-                                          UpdateProductToCartDetailsEvent(
-                                              cart: null,
-                                              itemCount:
-                                                  int.parse(controller.text),
-                                              product: product));
+
                                   // String newValue = controller.text;
                                   // print('New value: $newValue');
-                                  Navigator.of(context)
-                                      .pop(); // Close the dialog
+                                  // Close the dialog
                                 },
                                 title: 'Update',
                               ),

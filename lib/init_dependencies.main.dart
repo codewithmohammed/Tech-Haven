@@ -33,6 +33,13 @@ import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
+import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_source.dart';
+import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_source_impl.dart';
+import 'package:tech_haven/user/features/checkout/data/repositories/checkout_repository_impl.dart';
+import 'package:tech_haven/user/features/checkout/domain/repository/checkout_repository.dart';
+import 'package:tech_haven/user/features/checkout/domain/usecase/show_present_payment_sheet.dart';
+import 'package:tech_haven/user/features/checkout/domain/usecase/submit_payment_form.dart';
+import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/favorite/data/datasource/favorite_page_data_source.dart';
 import 'package:tech_haven/user/features/favorite/data/datasource/favorite_page_data_source_impl.dart';
@@ -93,7 +100,22 @@ Future<void> initDependencies() async {
   _initManageProduct();
   _initFavorite();
   _initCart();
+  _intiCheckout();
   _initMap();
+}
+
+void _intiCheckout() {
+  serviceLocator
+    ..registerFactory<CheckoutDataSource>(() => CheckoutDataSourceImpl())
+    ..registerFactory<CheckoutRepository>(
+        () => CheckoutRepositoryImpl(checkoutDataSource: serviceLocator()))
+    ..registerFactory(
+        () => ShowPresentPaymentSheet(checkoutRepository: serviceLocator()))
+    ..registerFactory(
+        () => SubmitPaymentForm(checkoutRepository: serviceLocator()))
+    ..registerLazySingleton(() => CheckoutBloc(
+        submitPaymentForm: serviceLocator(),
+        showPresentPaymentSheet: serviceLocator()));
 }
 
 void _initMap() {
@@ -211,7 +233,8 @@ void _initSearchCategory() {
         () => SearchCategoryBloc(getAllCategory: serviceLocator()))
     ..registerLazySingleton(
       () => SearchCategoryCubit(),
-    );
+    )
+    ..registerLazySingleton(() => SearchCategoryAccordionCubit());
 }
 
 _initRegisterProduct() {

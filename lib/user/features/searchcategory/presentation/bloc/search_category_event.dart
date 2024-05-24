@@ -9,5 +9,5 @@ sealed class SearchCategoryEvent extends Equatable {
 
 final class GetAllSearchCategoryEvent extends SearchCategoryEvent {
   final bool refreshPage;
-  GetAllSearchCategoryEvent({required this.refreshPage});
+  const GetAllSearchCategoryEvent({required this.refreshPage});
 }

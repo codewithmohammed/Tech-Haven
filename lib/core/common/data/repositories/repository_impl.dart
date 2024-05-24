@@ -8,7 +8,6 @@ import 'package:tech_haven/core/common/domain/repository/repository.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';

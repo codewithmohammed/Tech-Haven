@@ -2,11 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_current_location_details.dart';
 import 'package:tech_haven/core/entities/location.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
-import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
 
 part 'common_event.dart';
 part 'common_state.dart';

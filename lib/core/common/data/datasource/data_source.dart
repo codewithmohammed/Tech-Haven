@@ -1,5 +1,4 @@
 import 'package:tech_haven/core/common/data/model/category_model.dart';
-import 'package:tech_haven/core/common/data/model/image_model.dart';
 import 'package:tech_haven/core/common/data/model/location_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
