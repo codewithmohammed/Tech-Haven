@@ -20,6 +20,8 @@ class SearchCategoryAccordionCubit extends Cubit<int> {
   void changeAccordionIndex(int newIndex) {
     if (newIndex != state) {
       emit(newIndex);
+    } else {
+      emit(-1);
     }
   }
 }

@@ -6,9 +6,7 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class ProfileWelcomeText extends StatelessWidget {
   const ProfileWelcomeText({
-    super.key,
-    this.name = 'Nice to meet you',
-    this.subText = 'You are currently not signed in',
+    super.key, required this.name, required this.subText,
   });
   final String name;
   final String subText;

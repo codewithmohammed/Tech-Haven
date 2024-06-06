@@ -20,3 +20,14 @@ final class LocationFailedState extends LocationState {
   final String message;
   LocationFailedState({required this.message});
 }
+
+final class FavoriteButtonState extends CommonState {}
+
+final class UpdateFavoriteSuccess extends FavoriteButtonState {
+  
+}
+
+final class UpdateFavoriteFailed extends FavoriteButtonState {
+  final String message;
+  UpdateFavoriteFailed({required this.message});
+}

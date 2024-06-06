@@ -1,6 +1,7 @@
 class Product {
   final String productID;
   final String vendorName;
+  final String vendorID;
   final String brandName;
   final String brandID;
   final String displayImageURL;
@@ -25,6 +26,7 @@ class Product {
   Product({
     required this.productID,
     required this.vendorName,
+    required this.vendorID,
     required this.brandName,
     required this.brandID,
     required this.displayImageURL,

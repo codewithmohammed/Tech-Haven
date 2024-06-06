@@ -12,6 +12,7 @@ abstract class RegisterProductDataSource {
     required double prize,
     required double oldPrize,
     required int quantity,
+    // required String vendorID,
     required String mainCategory,
     required String mainCategoryID,
     required String subCategory,

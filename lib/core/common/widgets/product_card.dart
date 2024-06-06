@@ -24,7 +24,7 @@ class ProductCard extends StatelessWidget {
     // required this.cartState,
     required this.shoppingCartWidget,
   });
-
+//first we need to send the product model and also the cart model . 
   // final int index;
   final bool isHorizontal;
   final Product? product;
@@ -154,7 +154,10 @@ class ProductCard extends StatelessWidget {
                             ),
                             //favorite
                             Positioned(
-                                bottom: 5, right: 5, child: shoppingCartWidget),
+                              bottom: 5,
+                              right: 5,
+                              child: shoppingCartWidget,
+                            ),
                           ],
                         ),
                       ),

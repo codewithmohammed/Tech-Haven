@@ -34,12 +34,12 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
   final focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
 
-  @override
-  void dispose() {
-    pinController.dispose();
-    focusNode.dispose();
-    super.dispose();
-  }
+  // @override
+  // void deactivate() {
+  //   pinController.dispose();
+  //   focusNode.dispose();
+  //   super.deactivate();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -30,11 +30,15 @@ final class VerifyPhoneAndSignUpUserEvent extends AuthEvent {
 
 final class CreateUserEvent extends AuthEvent {
   final String username;
+  final String currency;
+  final String currencySymbol;
   final File? image;
   final int color;
 
   CreateUserEvent({
     required this.username,
+    required this.currency,
+    required this.currencySymbol,
     required this.image,
     required this.color,
   });

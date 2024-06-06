@@ -70,15 +70,19 @@ class CartPage extends StatelessWidget {
                       current is CartProductListViewState,
                   builder: (context, listState) {
                     if (listState is CartProductsListViewSuccess) {
-                      return TitleWithCountBar(
-                        title: 'Cart',
-                        itemsCount:
-                            '${calculateTotalQuantity(listOfCarts: listState.listOfCarts)} Items',
-                        totalPrize: calculateTotalPrize(
-                          products: listState.listOfProducts,
-                          carts: listState.listOfCarts,
-                        ).toString(),
-                      );
+                      return listState.listOfCarts.isNotEmpty
+                          ? TitleWithCountBar(
+                              title: 'Cart',
+                              itemsCount:
+                                  '${calculateTotalQuantity(listOfCarts: listState.listOfCarts)} Items',
+                              totalPrize: calculateTotalPrize(
+                                products: listState.listOfProducts,
+                                carts: listState.listOfCarts,
+                              ).toString(),
+                            )
+                          : const Center(
+                              child: Text('Your Cart is Empty'),
+                            );
                     }
                     return const TitleWithCountBar(
                       title: 'Cart',
@@ -235,75 +239,77 @@ class CartPage extends StatelessWidget {
             );
 
             final double total = subTotal + totalShpping;
-            return Container(
-              height: 300,
-              decoration: const BoxDecoration(
-                boxShadow: [Constants.globalBoxBlur],
-                color: AppPallete.whiteColor,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  topLeft: Radius.circular(20),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GlobalTitleText(
-                      title:
-                          '${calculateTotalQuantity(listOfCarts: listState.listOfCarts)} Items',
+            return total > 0
+                ? Container(
+                    height: 300,
+                    decoration: const BoxDecoration(
+                      boxShadow: [Constants.globalBoxBlur],
+                      color: AppPallete.whiteColor,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20),
+                        topLeft: Radius.circular(20),
+                      ),
                     ),
-                    BottomSheetRowText(
-                      title: 'Sub Total',
-                      value: subTotal.toString(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GlobalTitleText(
+                            title:
+                                '${calculateTotalQuantity(listOfCarts: listState.listOfCarts)} Items',
+                          ),
+                          BottomSheetRowText(
+                            title: 'Sub Total',
+                            value: subTotal.toString(),
+                          ),
+                          const Divider(),
+                          BottomSheetRowText(
+                            title: 'Total Shipping',
+                            value: totalShpping.toString(),
+                          ),
+                          const Divider(),
+                          BottomSheetRowText(
+                            title: 'Total',
+                            value: total.toString(),
+                          ),
+                          const Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Total'),
+                                  GlobalTitleText(title: total.toString())
+                                ],
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Expanded(
+                                child: SizedBox(
+                                    height: 50,
+                                    child: RoundedRectangularButton(
+                                      title: 'CHECKOUT',
+                                      onPressed: () {
+                                        GoRouter.of(context).pushNamed(
+                                            AppRouteConstants.checkoutPage,
+                                            pathParameters: {
+                                              'totalAmount': total.toString()
+                                            });
+                                        GoRouter.of(context).pushNamed(
+                                            AppRouteConstants.googleMapPage);
+                                      },
+                                    )),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                    const Divider(),
-                    BottomSheetRowText(
-                      title: 'Total Shipping',
-                      value: totalShpping.toString(),
-                    ),
-                    const Divider(),
-                    BottomSheetRowText(
-                      title: 'Total',
-                      value: total.toString(),
-                    ),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Total'),
-                            GlobalTitleText(title: total.toString())
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: SizedBox(
-                              height: 50,
-                              child: RoundedRectangularButton(
-                                title: 'CHECKOUT',
-                                onPressed: () {
-                                  GoRouter.of(context).pushNamed(
-                                      AppRouteConstants.checkoutPage,
-                                      pathParameters: {
-                                        'totalAmount': total.toString()
-                                      });
-                                  GoRouter.of(context).pushNamed(
-                                      AppRouteConstants.googleMapPage);
-                                },
-                              )),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-            );
+                  )
+                : const SizedBox();
           }
           return Container(
             height: 300,

@@ -6,9 +6,12 @@ import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
+import 'package:tech_haven/vendor/features/registervendor/data/models/vendor_model.dart';
 
 abstract class DataSource {
   Future<UserModel?> getUserData();
+  Future<VendorModel?> getVendorData({required String vendorID});
+  Future<Product> getAProduct({required String productID});
   Future<List<CategoryModel>> getAllCategory(bool refresh);
   Future<List<ProductModel>> getAllProduct();
   Future<List<ProductModel>> getAllCartProduct();
@@ -26,8 +29,7 @@ abstract class DataSource {
   Future<List<ProductModel>> getAllBrandRelatedProduct(
       {required Product product});
   Future<bool> updateLocation(
-      {
-      required String name,
+      {required String name,
       required String phoneNumber,
       required String location,
       required String apartmentHouseNumber,
@@ -35,4 +37,7 @@ abstract class DataSource {
       required String addressInstructions});
 
   Future<LocationModel?> getCurrentLocationDetails();
+
+  Future<String> updateProductFields(
+      String productID, Map<String, dynamic> updates);
 }

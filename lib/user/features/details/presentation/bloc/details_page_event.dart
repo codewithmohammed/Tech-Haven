@@ -12,11 +12,6 @@ final class GetAllImagesForProductEvent extends DetailsPageEvent {
   const GetAllImagesForProductEvent({required this.productID});
 }
 
-final class GetAllBrandRelatedProductsDetailsEvent extends DetailsPageEvent {
-  final Product product;
-  const GetAllBrandRelatedProductsDetailsEvent({required this.product});
-}
-
 final class EmitInitial extends DetailsPageEvent {}
 
 final class ChangeProductColorEvent extends DetailsPageEvent {
@@ -47,3 +42,33 @@ final class UpdateProductToCartDetailsEvent extends DetailsPageEvent {
       {required this.itemCount, required this.product, required this.cart});
 }
 
+//for the loading of related products
+
+final class GetAllBrandRelatedProductsDetailsEvent extends DetailsPageEvent {
+  final Product product;
+  const GetAllBrandRelatedProductsDetailsEvent({required this.product});
+}
+
+final class GetAllBrandRelatedCartDetailsEvent extends DetailsPageEvent {
+  // final Product product;
+
+  const GetAllBrandRelatedCartDetailsEvent();
+}
+
+final class UpdateProductToFavoriteBrandRelatedDetailsEvent
+    extends DetailsPageEvent {
+  final bool isFavorited;
+  final Product product;
+  const UpdateProductToFavoriteBrandRelatedDetailsEvent(
+      {required this.isFavorited, required this.product});
+}
+
+final class UpdateProductToCartBrandRelatedDetailsEvent
+    extends DetailsPageEvent {
+  final int itemCount;
+  final Product product;
+  final Cart? cart;
+
+  const UpdateProductToCartBrandRelatedDetailsEvent(
+      {required this.itemCount, required this.product, required this.cart});
+}

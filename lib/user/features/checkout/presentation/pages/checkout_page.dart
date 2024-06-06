@@ -2,7 +2,6 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
@@ -198,10 +197,23 @@ class SubmitPage extends StatelessWidget {
               title: 'Success',
               content: 'The Payment has successfully completed',
               contentType: ContentType.success);
+          //we have to update the product quantity then we have to remove the product from the cart
+          context.read<CheckoutBloc>().add(RemoveAllProductsFromTheCartEvent());
+        }
+        if (state is AllCartsClearedSuccessState) {
           GoRouter.of(context).pop();
+        }
+        if (state is AllCartClearedFailedState) {
+          context.read<CheckoutBloc>().add(RemoveAllProductsFromTheCartEvent());
+          Fluttertoast.showToast(msg: '${state.message}please wait');
         }
       },
       builder: (context, state) {
+        if (state is CheckoutLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
         return const CartPage();
       },
     );
@@ -271,7 +283,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
             }
           },
           builder: (context, state) {
-            print(state is CheckoutLoading);
+            // print(state is CheckoutLoading);
             return SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

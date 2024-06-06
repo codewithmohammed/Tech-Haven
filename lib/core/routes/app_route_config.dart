@@ -1,11 +1,11 @@
-// import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
+import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/new_password_page.dart';
@@ -20,10 +20,11 @@ import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_pa
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
-import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';
+import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
 import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
 import 'package:tech_haven/vendor/features/message/presentation/pages/vendor_chat_page.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/pages/register_product_page.dart';
+import 'package:tech_haven/vendor/features/registervendor/presentation/pages/register_vendor_page.dart';
 
 class AppRoutes {
   // static GoRouter returnRouter(bool isAuth) {
@@ -134,17 +135,18 @@ class AppRoutes {
         path: '/home_page',
         child: const HomePage(),
       ),
-      // _buildPageRoute(
-      //   name: AppRouteConstants.checkoutPage,
-      //   path: '/checkout_page/:totalAmount',
-      //   child: const CheckoutPage(totalAmount: ,),
-      // ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.productsPage,
+        path: '/products_page/:searchQuery',
+        pageBuilder: (state) => ProductsPage(
+          searchQuery: state.pathParameters['searchQuery']!,
+        ),
+      ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.checkoutPage,
-        path:
-            '/checkout_page/:totalAmount',
+        path: '/checkout_page/:totalAmount',
         pageBuilder: (state) => CheckoutPage(
-         totalAmount: state.pathParameters['totalAmount']!,
+          totalAmount: state.pathParameters['totalAmount']!,
         ),
       ),
       _buildPageRoute(
@@ -227,6 +229,29 @@ class AppRoutes {
         pageBuilder: (state) {
           Product? product = state.extra as Product?;
           return RegisterProductPage(product: product);
+        },
+        transitionsBuilder: (animation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, 1), // Slide from bottom to top
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
+      ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.registerVendorPage,
+        path: '/register_vendor_page',
+        pageBuilder: (state) {
+          User? user = state.extra as User?;
+          return RegisterVendorPage(
+            // initialUsername: 'slk',
+            user: user!
+          );
         },
         transitionsBuilder: (animation, child) {
           return SlideTransition(

@@ -75,6 +75,7 @@ class RegisterProductBloc
     final result = await _registerNewProduct(RegisterNewProductParams(
       brandName: event.brandName,
       brandID: event.brandID,
+      // vendorID: event.vendorID,
       productName: event.productName,
       productPrize: event.productPrize,
       oldPrize: event.productOldPrize,

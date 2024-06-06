@@ -60,11 +60,13 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, bool>> createUser({
     required File? image,
     required String username,
+  required String currency,
+  required String currencySymbol,
     required int color,
   }) async {
     try {
       final bool result = await remoteDataSource.createUser(
-          image: image, username: username, color: color);
+          image: image, username: username,currency: currency,currencySymbol: currencySymbol, color: color);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

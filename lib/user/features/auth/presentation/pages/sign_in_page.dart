@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -33,12 +32,6 @@ final signinFormKey = GlobalKey<FormState>();
 bool passwordIsObscure = true;
 
 class _SignInPageState extends State<SignInPage> {
-  @override
-  void dispose() {
-    phoneNumberController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +71,10 @@ class _SignInPageState extends State<SignInPage> {
               );
             }
           },
-          builder: (context, state) {          if (state is AuthLoading) {
-            return const Loader();
-          }
+          builder: (context, state) {
+            if (state is AuthLoading) {
+              return const Loader();
+            }
             return Stack(
               alignment: Alignment.bottomCenter,
               children: [

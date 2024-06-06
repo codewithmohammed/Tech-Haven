@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
@@ -32,7 +31,7 @@ class PhoneNumberTextField extends StatelessWidget {
               enabled: textFormFieldEnabled,
               countryCode: countryCode.value,
               onTap: () {
-                changeCountryCode(context,countryCode);
+                AuthUtils.changeCountryCode(context, countryCode);
               },
             );
           },

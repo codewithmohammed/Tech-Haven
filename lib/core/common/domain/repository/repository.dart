@@ -5,12 +5,15 @@ import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/location.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/user.dart';
+import 'package:tech_haven/core/entities/vendor.dart';
 import 'package:tech_haven/core/error/failures.dart';
 
 abstract class Repository {
   Future<Either<Failure, List<Product>>> getAllProduct();
   Future<Either<Failure, List<Product>>> getAllCartProduct();
   Future<Either<Failure, List<Product>>> getAllFavoriteProduct();
+  
+  Future<Either<Failure,Product>> getAProduct({required String productID});
   // Future<Either<Failure, List<Category>>> getAllSubCategory();
   Future<Either<Failure, bool>> updateProductToFavorite({
     required bool isFavorited,
@@ -29,14 +32,16 @@ abstract class Repository {
   Future<Either<Failure, List<Product>>> getAllBrandRelatedProduct(
       {required Product product});
   Future<Either<Failure, bool>> updateLocation(
-      {
-      required String name,
+      {required String name,
       required String phoneNumber,
       required String location,
       required String apartmentHouseNumber,
       required String emailAddress,
       required String addressInstructions});
 
+  Future<Either<Failure, String>> updateProductFields({required String productID, required Map<String,dynamic> updates});
+
   Future<Either<Failure, Location?>> getCurrentLocationDetails();
   Future<Either<Failure, User?>> getUserData();
+  Future<Either<Failure, Vendor?>> getVendorData({required String vendorID});
 }

@@ -1,7 +1,11 @@
 import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+// import 'package:country_picker/country_picker.dart';
+import 'package:currency_picker/currency_picker.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
@@ -23,8 +27,16 @@ class SignUpWelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ValueNotifier<Currency?> currentCurrency = ValueNotifier(null);
     ValueNotifier<String> username = ValueNotifier(initialUsername);
     ValueNotifier<File?> image = ValueNotifier(null);
+    final List<String> items = [
+      'Item1',
+      'Item2',
+      'Item3',
+      'Item4',
+    ];
+    // String? selectedValue;
 
     // File? image;
     void selectImage() async {
@@ -33,6 +45,9 @@ class SignUpWelcomePage extends StatelessWidget {
         image.value = pickedImage;
       }
     }
+
+    // TextEditingController countryTextEditingController =
+    //     TextEditingController();
 
     final Color userColor = getRandomColor();
     return Scaffold(
@@ -93,7 +108,10 @@ class SignUpWelcomePage extends StatelessWidget {
                     );
                   },
                 ),
-                const Text('upload your image and enter your name below.'),
+                const Text(
+                  'upload your image and enter your name below.',
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(
                   height: 50,
                 ),
@@ -144,7 +162,6 @@ class SignUpWelcomePage extends StatelessWidget {
                                 : const SizedBox(),
                           );
                         },
-                        // child:
                       ),
                       Positioned(
                         right: 0,
@@ -183,19 +200,94 @@ class SignUpWelcomePage extends StatelessWidget {
                     hintText: 'Enter your UserName',
                   ),
                 ),
+                //select you country of residence.
+                InkWell(
+                  onTap: () {
+                    showCurrencyPicker(
+                      context: context,
+                      onSelect: (Currency currency) {
+                        currentCurrency.value = currency;
+                      },
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      top: 5,
+                    ),
+                    child: ValueListenableBuilder(
+                      valueListenable: currentCurrency,
+                      builder: (context, value, child) {
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              currentCurrency.value != null
+                                  ? '${currentCurrency.value!.name} ${currentCurrency.value!.symbol}'
+                                  : 'Select You Base Currency',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            // value: currentCurrency.value,
+                            items: items
+                                .map(
+                                  (String item) => DropdownMenuItem<String>(
+                                    value: item,
+                                    child: Text(
+                                      item,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              height: 40,
+                              width: 140,
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                // InkWell(
+                //     onTap: () {
+                //       print('hello');
+                //     },
+                //     child: Container(
+                //       // width: 20,
+                //       height: 20,
+                //       decoration: const BoxDecoration(
+                //         color: Colors.red,
+                //       ),
+                //     )),
                 const SizedBox(
                   height: 50,
                 ),
                 PrimaryAppButton(
                   buttonText: 'Save',
                   onPressed: () {
-                    context.read<AuthBloc>().add(
-                          CreateUserEvent(
-                            username: username.value,
-                            image: image.value,
-                            color: userColor.value,
-                          ),
-                        );
+                    if (currentCurrency.value != null) {
+                      context.read<AuthBloc>().add(
+                            CreateUserEvent(
+                              username: username.value,
+                              currency: currentCurrency.value!.name,
+                              currencySymbol: currentCurrency.value!.symbol,
+                              image: image.value,
+                              color: userColor.value,
+                            ),
+                          );
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: 'Please Select Your Currency');
+                    }
                   },
                 ),
               ],

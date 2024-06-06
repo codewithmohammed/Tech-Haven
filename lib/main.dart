@@ -15,12 +15,15 @@ import 'package:tech_haven/user/features/details/presentation/bloc/details_page_
 import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
+import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
+import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,12 +74,24 @@ void main() async {
       ),
       BlocProvider(
         create: (_) => serviceLocator<CommonBloc>(),
-      ),BlocProvider(
+      ),
+      BlocProvider(
         create: (_) => serviceLocator<CheckoutBloc>(),
-      ),BlocProvider(
+      ),
+       BlocProvider(
+        create: (_) => serviceLocator<ProfileBloc>(),
+      ),
+      BlocProvider(
         create: (_) => serviceLocator<SearchCategoryCubit>(),
-      ),BlocProvider(
+      ),
+      BlocProvider(
         create: (_) => serviceLocator<SearchCategoryAccordionCubit>(),
+      ),
+      BlocProvider(
+        create: (_) => serviceLocator<ProductsPageBloc>(),
+      ),
+        BlocProvider(
+        create: (_) => serviceLocator<RegisterVendorBloc>(),
       ),
     ],
     child: const MyApp(),

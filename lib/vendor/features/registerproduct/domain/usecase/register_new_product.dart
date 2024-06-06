@@ -19,6 +19,7 @@ class RegisterNewProduct implements UseCase<bool, RegisterNewProductParams> {
       name: params.productName,
       prize: params.productPrize,
       quantity: params.productQuantity,
+      // vendorID: params.vendorID,
       mainCategory: params.mainCategory,
       mainCategoryID: params.mainCategoryID,
       subCategory: params.subCategory,
@@ -43,6 +44,7 @@ class RegisterNewProductParams {
   final int productQuantity;
   final String mainCategory;
   final String mainCategoryID;
+  // final String vendorID;
   final String subCategory;
   final String subCategoryID;
   final String variantCategory;
@@ -57,8 +59,10 @@ class RegisterNewProductParams {
     required this.brandName,
     required this.brandID,
     required this.productName,
+    // required this.vendorID,
     required this.productPrize,
     required this.oldPrize,
+  
     required this.productQuantity,
     required this.mainCategory,
     required this.mainCategoryID,

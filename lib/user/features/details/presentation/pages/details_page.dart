@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_page_divider.dart';
@@ -10,12 +9,12 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/available_color_horizontal_list_view.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/bottom_cart_quantity_and_button.dart';
+import 'package:tech_haven/user/features/details/presentation/widgets/details_grid_view_list_widget.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/overview_and_sprecification_tab_bar.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/product_brand_and_title.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/product_images_display_widget.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/user_review_container_widget.dart';
-import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
 
 class DetailsPage extends StatelessWidget {
   const DetailsPage({super.key, required this.product});
@@ -25,19 +24,21 @@ class DetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //for the main products logic this is
       context
           .read<DetailsPageBloc>()
           .add(GetAllImagesForProductEvent(productID: product.productID));
       context
           .read<DetailsPageBloc>()
           .add(GetProductCartDetailsEvent(productID: product.productID));
-
-      context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
+      // for the related products
       context
           .read<DetailsPageBloc>()
           .add(GetAllBrandRelatedProductsDetailsEvent(product: product));
+      // // print('next is getting all brand related cart details');
+      // print('all the brand related product is gotten');
     });
-
+      context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
     return Scaffold(
       appBar: const AppBarSearchBar(
         backButton: true,
@@ -53,7 +54,9 @@ class DetailsPage extends StatelessWidget {
               const SizedBox(
                 height: 25,
               ),
-              ProductImagesDisplayWidget(product: product),
+              ProductImagesDisplayWidget(
+                product: product,
+              ),
 
               //for the indicator
 
@@ -153,83 +156,17 @@ class DetailsPage extends StatelessWidget {
               Container(
                 // height: 600,
                 padding: const EdgeInsets.all(10),
-                child: const GlobalTitleText(
-                  title: 'More From Brand Name',
+                child: GlobalTitleText(
+                  title: 'More From ${product.brandName}',
                   fontSize: 16,
                   color: AppPallete.primaryAppColor,
                 ),
               ),
               const SizedBox(
-                height: 20,
+                height: 10,
               ),
-              BlocConsumer<DetailsPageBloc, DetailsPageState>(
-                listener: (context, state) {
-                  // TODO: implement listener
-                },
-                buildWhen: (previous, current) =>
-                    current is GetAllBrandRelatedProductsDetailsState,
-                builder: (context, state) {
-                  if (state is GetAllBrandRelatedProductsDetailsSuccessState) {
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 300,
-                        mainAxisExtent: 300,
-                      ),
-                      itemCount: state.listOfBrandedProducts.length,
-                      itemBuilder: (context, index) {
-                        // if (state.listOfBrandedProducts[index].productID ==
-                        //     product.productID) {
-                        //   return null;
-                        // }
-                        return ProductCard(
-                          isHorizontal: false,
-                          product: state.listOfBrandedProducts[index],
-                          onTapFavouriteButton: (bool) async {
-                            return null;
-                          },
-                          isFavorited: false,
-                          shoppingCartWidget: ShoppingCartButton(
-                            onTapPlusButton: () {},
-                            onTapMinusButton: () {},
-                            onTapCartButton: () {},
-                            currentCount: 0,
-                            isLoading: false,
-                          ),
-                        );
-                      },
-                    );
-                  }
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 300,
-                      mainAxisExtent: 300,
-                    ),
-                    itemCount: 10,
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        isHorizontal: false,
-                        product: null,
-                        onTapFavouriteButton: (bool) async {
-                          return null;
-                        },
-                        isFavorited: false,
-                        shoppingCartWidget: ShoppingCartButton(
-                          onTapPlusButton: () {},
-                          onTapMinusButton: () {},
-                          onTapCartButton: () {},
-                          currentCount: 0,
-                          isLoading: false,
-                        ),
-                      );
-                    },
-                  );
-                },
+              DetailsGridViewListWidget(
+                product: product,
               ),
               const SizedBox(
                 height: 70,

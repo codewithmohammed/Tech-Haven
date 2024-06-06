@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/forgot_password_send_email.dart';
-import 'package:tech_haven/user/features/auth/domain/usecases/current_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/create_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/google_sign_up.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
@@ -118,6 +117,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final res = await _createUser(CreateUserParams(
       image: event.image,
       username: event.username,
+      currency: event.currency,
+      currencySymbol: event.currencySymbol,
       color: event.color,
     ));
 

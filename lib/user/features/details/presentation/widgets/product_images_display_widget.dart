@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,6 @@ import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
-
 import '../../../../../core/constants/constants.dart';
 
 class ProductImagesDisplayWidget extends StatelessWidget {
@@ -26,7 +24,7 @@ class ProductImagesDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     void updateProductToFavorite(
         {required bool isFavorited, required Product product}) {
-      print('hello how are you');
+      // print('hello how are you');
       context.read<DetailsPageBloc>().add(UpdateProductToFavoriteDetailsEvent(
           product: product, isFavorited: isFavorited));
     }
@@ -78,6 +76,7 @@ class ProductImagesDisplayWidget extends StatelessWidget {
                       buildWhen: (previous, current) =>
                           current is GetProductFavoritedDetailsState,
                       builder: (context, state) {
+                        print(state);
                         if (state is GetProductFavoritedDetailsSuccess) {
                           // print('hello');
                           return CustomLikeButton(

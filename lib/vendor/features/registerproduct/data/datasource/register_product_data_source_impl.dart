@@ -46,6 +46,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required String brandID,
     required String name,
     required double prize,
+    // required String vendorID,
     required double oldPrize,
     required int quantity,
     required String mainCategory,
@@ -61,15 +62,17 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required bool isPublished,
   }) async {
     try {
-      print(brandID);
+      // print(brandID);
       final userdata = await dataSource.getUserData();
       if (userdata != null) {
+        print('hello');
         final productID = const Uuid().v1();
         final Map<int, List<ImageModel>> mapOfImageModels =
             await saveImagesInStorage(
           productID: productID,
           productImages: productImages,
         );
+        print('hi');
 
         ProductInfoModel productInfoModel = ProductInfoModel(
           brandID: brandID,
@@ -94,13 +97,14 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             .collection('products')
             .doc(productID)
             .set(productInfoModel.toJson());
-        print(oldPrize);
+        // print(oldPrize);
         ProductModel productModel = ProductModel(
             productID: productID,
             vendorName: userdata.username!,
             brandName: brandName,
             displayImageURL: mapOfImageModels.values.first.first.imageURL,
             name: name,
+            vendorID: userdata.vendorID!,
             prize: prize,
             oldPrize: oldPrize,
             quantity: quantity,
@@ -147,19 +151,20 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     }
   }
 
-  Future<Map<int, List<ImageModel>>> saveImagesInStorage({
-    required String productID,
-    required Map<int, List<File>> productImages,
-  }) async {
-    try {
-      final reference = firebaseStorage.ref('products');
-      final Map<int, List<ImageModel>> mapOfImageModels = {};
 
-      for (final entry in productImages.entries) {
-        // final int index = entry.key;
-        final List<File> images = entry.value;
+Future<Map<int, List<ImageModel>>> saveImagesInStorage({
+  required String productID,
+  required Map<int, List<File>> productImages,
+}) async {
+  try {
+    final reference = FirebaseStorage.instance.ref('products');
+    final Map<int, List<ImageModel>> mapOfImageModels = {};
 
-        for (final image in images) {
+    for (final entry in productImages.entries) {
+      final List<File> images = entry.value;
+
+      for (final image in images) {
+        try {
           final String imageID = const Uuid().v4();
           final Reference imageReference = reference
               .child(productID)
@@ -167,25 +172,33 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
               .child('${entry.key}')
               .child(imageID);
 
-          final UploadTask uploadTask = imageReference.putFile(image);
-          final String downloadURL =
-              await uploadTask.snapshot.ref.getDownloadURL();
-          // = await taskSnapshot.ref.getDownloadURL();
+          print('Uploading to: ${imageReference.fullPath}'); // Debugging line
 
+          final UploadTask uploadTask = imageReference.putFile(image);
+          final TaskSnapshot taskSnapshot = await uploadTask;
+
+          final String downloadURL = await taskSnapshot.ref.getDownloadURL();
           final ImageModel imageModel =
               ImageModel(imageID: imageID, imageURL: downloadURL);
+
           if (mapOfImageModels.containsKey(entry.key)) {
             mapOfImageModels[entry.key]!.add(imageModel);
           } else {
             mapOfImageModels[entry.key] = [imageModel];
           }
+        } catch (e) {
+          print('Failed to upload image for key ${entry.key}: $e');
+          // Optionally handle the error (e.g., retry logic, logging, etc.)
         }
       }
-      return mapOfImageModels;
-    } catch (e) {
-      rethrow;
     }
+    return mapOfImageModels;
+  } catch (e) {
+    print('An error occurred: $e');
+    rethrow;
   }
+}
+
 
   // @override
   // Future<Map<int, List<Image>>> getImagesForTheProduct(
@@ -331,6 +344,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
           displayImageURL: newDisplayImageURL,
           name: name,
           prize: prize,
+          vendorID: userdata.vendorID!,
           quantity: quantity,
           mainCategory: mainCategory,
           mainCategoryID: mainCategoryID,

@@ -8,6 +8,7 @@ import 'package:tech_haven/core/common/domain/repository/repository.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/vendor.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
@@ -144,8 +145,7 @@ class RepositoryImpl implements Repository {
 
   @override
   Future<Either<Failure, bool>> updateLocation(
-      {
-      required String name,
+      {required String name,
       required String phoneNumber,
       required String location,
       required String apartmentHouseNumber,
@@ -153,7 +153,6 @@ class RepositoryImpl implements Repository {
       required String addressInstructions}) async {
     try {
       final result = await dataSource.updateLocation(
-        
           name: name,
           phoneNumber: phoneNumber,
           location: location,
@@ -177,9 +176,43 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, UserModel?>> getUserData()async {
-     try {
+  Future<Either<Failure, UserModel?>> getUserData() async {
+    try {
       final result = await dataSource.getUserData();
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Vendor?>> getVendorData(
+      {required String vendorID}) async {
+    try {
+      final result = await dataSource.getVendorData(vendorID: vendorID);
+      // print(result);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, String>> updateProductFields({required String productID, required Map<String,dynamic> updates})async {
+    try {
+      final result = await dataSource.updateProductFields(productID, updates);
+      // print(result);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure, Product>> getAProduct({required String productID})async {
+ try {
+      final result = await dataSource.getAProduct(productID : productID);
+      // print(result);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

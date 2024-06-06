@@ -25,6 +25,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<bool> createUser({
     required File? image,
     required String username,
+    
+  required String currency,
+  required String currencySymbol,
     required int color,
   }) async {
     User? user = firebaseAuth.currentUser;
@@ -55,6 +58,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           phoneNumber: user.phoneNumber!,
           uid: user.uid,
           username: username,
+          currency: currency,
+          vendorID: null,
+          currencySymbol: currencySymbol,
           isProfilePhotoUploaded: image != (null),
           color: color,
           profilePhoto: downloadURL ?? '',
@@ -159,7 +165,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (user != null) {
         await user.linkWithCredential(phoneAuthCredential);
         //sending username to
-        return user.displayName ?? extractNameFromEmail(user.email!);
+        return user.displayName ?? AuthUtils.extractNameFromEmail(user.email!);
       } else {
         throw const ServerException(
           'Exception Cauth While Linking Phone Number',

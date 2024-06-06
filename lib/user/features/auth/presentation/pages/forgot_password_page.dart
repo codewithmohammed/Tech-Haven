@@ -21,11 +21,11 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   TextEditingController phoneNumberController = TextEditingController();
-  @override
-  void dispose() {
-    phoneNumberController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void deactivate() {
+  //   phoneNumberController.dispose();
+  //   super.deactivate();
+  // }
 
   final countryCode = AuthUtils.forgotPasswordCountryCode;
   @override

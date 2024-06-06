@@ -12,6 +12,8 @@ class CreateUser implements UseCase<bool, CreateUserParams> {
     return await authRepository.createUser(
         image: params.image,
         username: params.username,
+        currency: params.currency,
+        currencySymbol: params.currencySymbol,
         color: params.color);
   }
 }
@@ -19,9 +21,13 @@ class CreateUser implements UseCase<bool, CreateUserParams> {
 class CreateUserParams {
   final File? image;
   final String username;
+  final String currency;
+  final String currencySymbol;
   final int color;
 
   CreateUserParams({
+    required this.currency,
+    required this.currencySymbol,
     required this.image,
     required this.username,
     required this.color,

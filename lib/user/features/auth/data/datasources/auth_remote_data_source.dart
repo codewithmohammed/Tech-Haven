@@ -22,6 +22,9 @@ abstract interface class AuthRemoteDataSource {
   Future<bool> createUser({
     required File? image,
     required String username,
+    
+  required String currency,
+  required String currencySymbol,
     required int color,
   });
 

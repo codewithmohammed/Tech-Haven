@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
-import 'package:tech_haven/core/common/data/model/category_model.dart';
-import 'package:tech_haven/core/common/widgets/custom_drop_down.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
@@ -18,8 +16,6 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
-import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
-import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source_impl.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/add_images_widget.dart';
@@ -540,7 +536,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   }
 
   void updateTheProduct() {
-    print(productImages.length);
+    // print(productImages.length);
     Product product = widget.product!;
     context.read<RegisterProductBloc>().add(UpdateExistingProductEvent(
           product: product,
@@ -576,7 +572,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   }
 
   void registerNewProduct({required bool isPublished}) {
-    print(allBrands[selectedBrandIndex[0]!].id);
+    // print(allBrands[selectedBrandIndex[0]!].id);
     context.read<RegisterProductBloc>().add(
           RegisterNewProductEvent(
             brandName: allBrands[selectedBrandIndex[0]!].categoryName,

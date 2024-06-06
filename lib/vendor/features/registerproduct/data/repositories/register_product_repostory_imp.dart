@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/entities/category.dart';
-import 'package:tech_haven/core/entities/image.dart';
+// import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
@@ -33,6 +33,7 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
     required double oldPrize,
     required int quantity,
     required String mainCategory,
+    // required String vendorID,
     required String mainCategoryID,
     required String subCategory,
     required String subCategoryID,

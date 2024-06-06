@@ -31,3 +31,7 @@ final class SubmitPaymentFormEvent extends CheckoutEvent {
 }
 
 final class ShowPresentPaymentSheetEvent extends CheckoutEvent{}
+
+// final class UpdateProductQuantityEvent extends CheckoutEvent{}
+
+final class RemoveAllProductsFromTheCartEvent extends CheckoutEvent{}

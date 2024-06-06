@@ -16,7 +16,8 @@ class ManageProductPage extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!ManageProductBloc.isDataLoaded) {
         // If data is not loaded and not loading, fetch the data
-        BlocProvider.of<ManageProductBloc>(context).add(GetAllProductsEvent());
+        BlocProvider.of<ManageProductBloc>(context)
+            .add(const GetAllProductsEvent());
       }
     });
     return SafeArea(

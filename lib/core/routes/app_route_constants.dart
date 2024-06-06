@@ -18,4 +18,6 @@ class AppRouteConstants {
   static const String registerProductPage = 'register_product_page';
   static const String favoritePage = 'favorite_page';
   static const String checkoutPage = 'checkout_page';
+  static const String productsPage = 'products_page';
+  static const String registerVendorPage = 'register_vendor_page';
 }

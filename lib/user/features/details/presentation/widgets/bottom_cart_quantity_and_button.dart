@@ -7,7 +7,6 @@ import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
-import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
 
 class BottomCartQuantityAndButton extends StatelessWidget {
   const BottomCartQuantityAndButton({
@@ -22,6 +21,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
     return BlocConsumer<DetailsPageBloc, DetailsPageState>(
       listener: (context, state) {
         if (state is UpdateProductToCartDetailsSuccess) {
+          print('hello how are you hope you are doing good');
           Fluttertoast.showToast(
               msg: 'The Product Is Updated To Cart SuccessFully');
           context
@@ -32,8 +32,9 @@ class BottomCartQuantityAndButton extends StatelessWidget {
           Fluttertoast.showToast(msg: state.message);
         }
       },
-      buildWhen: (previous, current) => current is CartLoadingDetailsState,
+      buildWhen: (previous, current) => current is CartDetailsState,
       builder: (context, state) {
+        print(state);
         if (state is CartLoadedSuccessDetailsState) {
           bool productIsCarted = false;
           if (state.cart.cartID != 'null') {
@@ -117,6 +118,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                                 onPressed: () {
                                   if (product.quantity >=
                                       int.parse(controller.text)) {
+                                    print('hello');
                                     productIsCarted
                                         ? context.read<DetailsPageBloc>().add(
                                             UpdateProductToCartDetailsEvent(
@@ -130,6 +132,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                                                 itemCount:
                                                     int.parse(controller.text),
                                                 product: product));
+                                    print('hello');
                                     Navigator.of(context).pop();
                                   } else {
                                     Fluttertoast.showToast(

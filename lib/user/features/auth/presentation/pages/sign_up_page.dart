@@ -34,15 +34,19 @@ class _SignUpPageState extends State<SignUpPage> {
   bool passwordIsObscure = true;
   bool rePasswordIsObscure = true;
 
+  // @override
+  // void deactivate() {
+  //   phoneNumberController.dispose();
+  //   emailController.dispose();
+  //   passwordController.dispose();
+  //   rePasswordController.dispose();
+  //   super.deactivate();
+  // }
 // disposing the controllers
-  @override
-  void dispose() {
-    phoneNumberController.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    rePasswordController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

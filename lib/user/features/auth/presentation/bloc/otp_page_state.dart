@@ -1,4 +1,3 @@
-import 'package:tech_haven/core/entities/user.dart';
 
 import 'auth_bloc.dart';
 //for the otp page

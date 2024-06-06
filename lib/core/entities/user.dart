@@ -2,6 +2,9 @@ class User {
   final String? uid;
   final String? phoneNumber;
   final String? username;
+  final String? currency;
+  final String? vendorID;
+  final String? currencySymbol;
   final String? email;
   final String? profilePhoto;
   final bool isVendor;
@@ -14,10 +17,11 @@ class User {
     required this.uid,
     required this.phoneNumber,
     required this.username,
+    required this.currency,
+    required this.vendorID,
+    required this.currencySymbol,
     required this.email,
     required this.profilePhoto,
     required this.color,
   });
-
-
 }

@@ -13,7 +13,6 @@ final class GetAllCategoryEvent extends RegisterProductEvent {
 final class RegisterNewProductEvent extends RegisterProductEvent {
   final String brandName;
   final String brandID;
-
   final String productName;
   final double productPrize;
   final double productOldPrize;
@@ -60,7 +59,6 @@ final class DeleteTheProductEvent extends RegisterProductEvent {
 
 final class UpdateExistingProductEvent extends RegisterProductEvent {
   final Product product;
-
   final String brandName;
   final String brandID;
   final String productName;

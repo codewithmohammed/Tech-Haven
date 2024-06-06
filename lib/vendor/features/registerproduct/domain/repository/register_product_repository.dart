@@ -19,6 +19,7 @@ abstract class RegisterProductRepository {
     required String mainCategoryID,
     required String subCategory,
     required String subCategoryID,
+    // required String vendorID,
     required String variantCategory,
     required String variantCategoryID,
     required String overview,

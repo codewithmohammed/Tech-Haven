@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
-import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 
 class PublishedPage extends StatelessWidget {
   const PublishedPage({super.key, required this.listOfPublishedProduct});
@@ -14,9 +12,6 @@ class PublishedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-// void _handleOpen() {
-//   controller.close();
-// }
     return Scaffold(
       extendBody: true,
       body: NestedScrollView(
@@ -63,7 +58,7 @@ class PublishedPage extends StatelessWidget {
                 title: Text(listOfPublishedProduct[index].name),
                 subtitle: Text(listOfPublishedProduct[index].prize.toString()),
                 // trailing:
-                onTap: () { 
+                onTap: () {
                   GoRouter.of(context).pushNamed(
                       AppRouteConstants.registerProductPage,
                       extra: listOfPublishedProduct[index]);

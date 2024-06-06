@@ -26,6 +26,16 @@ final class PaymentFailed extends CheckoutState {
   PaymentFailed({required this.message});
 }
 
-final class PaymentSuccess extends CheckoutState{
-  
+final class PaymentSuccess extends CheckoutState {}
+
+final class AllCartsClearedState extends CheckoutState {}
+
+final class AllCartsClearedSuccessState extends AllCartsClearedState {
+  final String success;
+  AllCartsClearedSuccessState({required this.success});
+}
+
+final class AllCartClearedFailedState extends AllCartsClearedState {
+  final String message;
+  AllCartClearedFailedState({required this.message});
 }

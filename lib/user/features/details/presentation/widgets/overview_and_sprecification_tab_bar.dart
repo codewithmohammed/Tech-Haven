@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/specification_list_view.dart';
 
 class OverviewAndSpecificationTabBar extends StatefulWidget {

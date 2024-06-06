@@ -10,10 +10,8 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/utils/check_product_is_carted.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
-import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.dart';
-import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
-import 'package:tech_haven/user/features/home/presentation/widgets/product_card.dart';
+import 'package:tech_haven/core/common/widgets/product_card.dart';
 // import 'package:shimmer/shimmer.dart';
 
 class HorizontalProductListView extends StatelessWidget {

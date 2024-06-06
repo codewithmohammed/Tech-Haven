@@ -11,6 +11,7 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
+import 'package:tech_haven/vendor/features/registervendor/data/models/vendor_model.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:tech_haven/user/features/auth/data/models/user_model.dart';
 // import 'package:tech_haven/core/models/category.dart';
@@ -24,6 +25,21 @@ class DataSourceImpl implements DataSource {
   });
 
   List<CategoryModel> mainCategories = [];
+
+  @override
+  Future<String> updateProductFields(
+      String productID, Map<String, dynamic> updates) async {
+    try {
+      final DocumentReference productDocRef =
+          FirebaseFirestore.instance.collection('products').doc(productID);
+
+      await productDocRef.update(updates);
+
+      return 'Success';
+    } catch (e) {
+      throw ServerException('Failed to update product: $e');
+    }
+  }
 
 // Fetch sub-subcollection data
   Future<List<DocumentSnapshot>> fetchSubsubcollectionData(
@@ -431,6 +447,51 @@ class DataSourceImpl implements DataSource {
     } catch (e) {
       print(e.runtimeType);
       throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<VendorModel?> getVendorData({required String vendorID}) async {
+    try {
+      // print('object');
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('vendors')
+          .doc(vendorID)
+          .get();
+      // print('helllo');
+      print(docSnapshot.exists);
+      if (docSnapshot.exists) {
+        final VendorModel vendorModel =
+            VendorModel.fromJson(docSnapshot.data() as Map<String, dynamic>);
+        // print(vendorModel.accountNumber);
+        print(vendorModel.email);
+        return vendorModel;
+      } else {
+        return null; // Vendor with the given ID does not exist
+      }
+    } catch (e) {
+      // print(e.toString());
+      throw ServerException(e.toString());
+    }
+    // return null;
+  }
+
+  @override
+  Future<Product> getAProduct({required String productID}) async {
+    try {
+      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
+          .collection('products')
+          .doc(productID)
+          .get();
+
+      if (docSnapshot.exists) {
+        return ProductModel.fromJson(
+            docSnapshot.data() as Map<String, dynamic>);
+      } else {
+        throw const ServerException('No Prducts Exists');
+      }
+    } catch (e) {
+      throw ServerException('Error getting product: $e');
     }
   }
 }

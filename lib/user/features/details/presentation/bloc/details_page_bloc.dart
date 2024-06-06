@@ -8,12 +8,9 @@ import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dar
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
-import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
-
 import '../../../../../core/common/domain/usecase/get_all_cart.dart';
-
 part 'details_page_event.dart';
 part 'details_page_state.dart';
 
@@ -55,6 +52,15 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
     on<UpdateProductToCartDetailsEvent>(_onUpdateProductToCartDetailsEvent);
     on<GetAllBrandRelatedProductsDetailsEvent>(
         _onGetAllBrandRelatedProductsDetailsEvent);
+
+    on<GetAllBrandRelatedCartDetailsEvent>(
+        _onGetAllBrandRelatedCartDetailsEvent);
+
+    on<UpdateProductToFavoriteBrandRelatedDetailsEvent>(
+        _onUpdateProductToFavoriteBrandRelatedDetailsEvent);
+
+    on<UpdateProductToCartBrandRelatedDetailsEvent>(
+        _onUpdateProductToCartBrandRelatedDetailsEvent);
   }
 
   FutureOr<void> _onGetAllImagesForProductEvent(
@@ -87,7 +93,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
 
   FutureOr<void> _onGetProductCartDetailsEvent(
       GetProductCartDetailsEvent event, Emitter<DetailsPageState> emit) async {
-    emit(CartLoadingDetailsState());
+    // emit(CartDetailsState());
     final result = await _getAllCart(NoParams());
 
     result.fold(
@@ -102,11 +108,21 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
       } catch (e) {
         cart = Cart(cartID: 'null', productID: 'null', productCount: 1);
       }
-      // print(cart.cartID);
+      print(cart.cartID);
       emit(CartLoadedSuccessDetailsState(
         cart: cart,
       ));
     });
+  }
+
+  FutureOr<void> _onUpdateProductToCartDetailsEvent(
+      UpdateProductToCartDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    final result = await _updateProductToCart(UpdateProductToCartParams(
+        itemCount: event.itemCount, product: event.product, cart: event.cart));
+    result.fold(
+        (l) => emit(UpdateProductToCartDetailsFailed(message: l.message)),
+        (r) => emit(UpdateProductToCartDetailsSuccess()));
   }
 
   FutureOr<void> _onGetProductFavoriteDetailsEvent(
@@ -133,27 +149,91 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
         (r) => emit(UpdateProductToFavoriteSuccess()));
   }
 
+//for all the rest of the related products to be loaded and the rest is same as with the home page logics
+
   FutureOr<void> _onGetAllBrandRelatedProductsDetailsEvent(
       GetAllBrandRelatedProductsDetailsEvent event,
       Emitter<DetailsPageState> emit) async {
+    List<String> listOfAllFavorited = [];
+    String messageOfFavoriteError = 'error';
+    final allFavorited = await _getAllFavorite(NoParams());
+    allFavorited.fold((failure) {
+      messageOfFavoriteError = failure.message;
+    }, (success) {
+      listOfAllFavorited = success; // Assigning value here
+    });
+
+    //   print(messageOfFavoriteError);
+
     final result = await _getAllBrandRelatedProduct(
         GetAllBrandRelatedProductParams(product: event.product));
 
     result.fold(
         (failed) => emit(GetAllBrandRelatedProductsDetailsFailedState(
-            message: failed.message)),
-        (success) => emit(GetAllBrandRelatedProductsDetailsSuccessState(
-            listOfBrandedProducts: success)));
+            message: failed.message)), (success) {
+      success.removeWhere(
+          (element) => element.productID == event.product.productID);
+      return emit(GetAllBrandRelatedProductsDetailsSuccessState(
+          listOfFavoritedProducts: listOfAllFavorited,
+          listOfBrandedProducts: success));
+    });
+
+    // final allCarted = await _getAllCart(NoParams());
+    // allCarted.fold(
+    //     (failure) => emit(CartLoadedDetailsFailedState(
+    //           message: failure.message,
+    //         )), (success) {
+    //   return emit(CartLoadedDetailsSuccessState(
+    //     listOfCart: success,
+    //   ));
+    // });
   }
 
-  FutureOr<void> _onUpdateProductToCartDetailsEvent(
-      UpdateProductToCartDetailsEvent event,
+  FutureOr<void> _onGetAllBrandRelatedCartDetailsEvent(
+      GetAllBrandRelatedCartDetailsEvent event,
       Emitter<DetailsPageState> emit) async {
+    // emit(CartDetailsState());
+    final result = await _getAllCart(NoParams());
+    result.fold(
+        (failure) => emit(CartLoadedFailedDetailsPageRelatedState(
+              message: failure.message,
+            )), (success) {
+      return emit(CartLoadedSuccessDetailsPageRelatedState(
+        listOfCart: success,
+      ));
+    });
+  }
+
+  FutureOr<void> _onUpdateProductToFavoriteBrandRelatedDetailsEvent(
+      UpdateProductToFavoriteBrandRelatedDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    final result = await _updateProductToFavorite(
+      UpdateProductToFavoriteParams(
+        isFavorited: event.isFavorited,
+        product: event.product,
+      ),
+    );
+
+    result.fold(
+        (failure) => emit(ProductUpdatedToFavoriteDetailsPageRelatedFailed(
+              message: failure.message,
+            )),
+        (success) => emit(ProductUpdatedToFavoriteDetailsPageRelatedSuccess(
+            updatedSuccess: success)));
+  }
+
+  FutureOr<void> _onUpdateProductToCartBrandRelatedDetailsEvent(
+      UpdateProductToCartBrandRelatedDetailsEvent event,
+      Emitter<DetailsPageState> emit) async {
+    emit(CartDetailsState());
     final result = await _updateProductToCart(UpdateProductToCartParams(
         itemCount: event.itemCount, product: event.product, cart: event.cart));
+
     result.fold(
-        (failed) =>
-            emit(UpdateProductToCartDetailsFailed(message: failed.message)),
-        (success) => emit(UpdateProductToCartDetailsSuccess()));
+        (failed) => emit(ProductUpdatedToCartDetailsPageRelatedFailed(
+            message: failed.message)),
+        (success) => emit(ProductUpdatedToCartDetailsPageRelatedSuccess(
+              updatedSuccess: success,
+            )));
   }
 }

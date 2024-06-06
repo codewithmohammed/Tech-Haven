@@ -34,6 +34,9 @@ abstract interface class AuthRepository {
   Future<Either<Failure, bool>> createUser({
     required File? image,
     required String username,
+    
+  required String currency,
+  required String currencySymbol,
     required int color,
   });
 

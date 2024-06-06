@@ -80,21 +80,6 @@ final class ProductUpdatedToFavoriteHomeFailed
   ProductUpdatedToFavoriteHomeFailed({required this.message});
 }
 
-// final class ProductCartState extends HomePageState {}
-
-
-
-// final class ProductUpdatedToCartLoading extends UpdateProductToCartState {}
-
-// final class CartLoadedFailedState extends UpdateProductToCartState {
-//   final String message;
-//   CartLoadedFailedState({required this.message});
-// }
-
-
-
-
-
 
 
 
