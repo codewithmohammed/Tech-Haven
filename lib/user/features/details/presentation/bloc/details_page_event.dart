@@ -42,6 +42,10 @@ final class UpdateProductToCartDetailsEvent extends DetailsPageEvent {
       {required this.itemCount, required this.product, required this.cart});
 }
 
+final class GetAllReviewOfProductEvent extends DetailsPageEvent {
+  final String productID;
+  const GetAllReviewOfProductEvent({required this.productID});
+}
 //for the loading of related products
 
 final class GetAllBrandRelatedProductsDetailsEvent extends DetailsPageEvent {
@@ -54,6 +58,8 @@ final class GetAllBrandRelatedCartDetailsEvent extends DetailsPageEvent {
 
   const GetAllBrandRelatedCartDetailsEvent();
 }
+
+final class EmitInitialFavoriteButtonState extends DetailsPageEvent {}
 
 final class UpdateProductToFavoriteBrandRelatedDetailsEvent
     extends DetailsPageEvent {
@@ -71,4 +77,22 @@ final class UpdateProductToCartBrandRelatedDetailsEvent
 
   const UpdateProductToCartBrandRelatedDetailsEvent(
       {required this.itemCount, required this.product, required this.cart});
+}
+
+//
+
+final class GetUserOwnedProductsEvent extends DetailsPageEvent {}
+
+class FetchReviewsEvent extends DetailsPageEvent {
+  final String productId;
+
+  const FetchReviewsEvent(this.productId);
+
+  // @override
+  // List<Object> get props => [productId];
+}
+
+final class GetProductReviewEvent extends DetailsPageEvent {
+  final String productID;
+  const GetProductReviewEvent({required this.productID});
 }

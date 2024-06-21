@@ -7,7 +7,7 @@ sealed class CheckoutEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class CheckoutInitialEmit extends CheckoutEvent{}
+final class CheckoutInitialEmit extends CheckoutEvent {}
 
 final class SubmitPaymentFormEvent extends CheckoutEvent {
   final String name;
@@ -18,6 +18,7 @@ final class SubmitPaymentFormEvent extends CheckoutEvent {
   final String country;
   final String currency;
   final String amount;
+  // final String pin;
 
   const SubmitPaymentFormEvent(
       {required this.name,
@@ -30,8 +31,43 @@ final class SubmitPaymentFormEvent extends CheckoutEvent {
       required this.amount});
 }
 
-final class ShowPresentPaymentSheetEvent extends CheckoutEvent{}
+final class SaveOrderEvent extends CheckoutEvent {
+  final PaymentIntentModel paymentIntentModel;
+  const SaveOrderEvent({required this.paymentIntentModel});
+}
+
+final class ShowPresentPaymentSheetEvent extends CheckoutEvent {
+  final PaymentIntentModel paymentIntentModel;
+  // final String paymentID;
+  // final String amount;
+  // final String currency;
+  // final String description;
+  // final String name;
+  // final String address;
+  // final String city;
+  // final String country;
+  // final String postalCode;
+  // final String state;
+
+  const ShowPresentPaymentSheetEvent({required this.paymentIntentModel}
+      // {required this.paymentID,
+      // required this.amount,
+      // required this.currency,
+      // required this.description,
+      // required this.name,
+      // required this.address,
+      // required this.city,
+      // required this.country,
+      // required this.postalCode,
+      // required this.state}
+      );
+}
 
 // final class UpdateProductQuantityEvent extends CheckoutEvent{}
 
-final class RemoveAllProductsFromTheCartEvent extends CheckoutEvent{}
+final class RemoveAllProductsFromTheCartAndSendOrderEvent
+    extends CheckoutEvent {
+
+}
+
+final class RemoveTheOrderEvent extends CheckoutEvent {}

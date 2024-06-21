@@ -6,6 +6,8 @@ final class ProfileInitial extends ProfileState {}
 
 final class GetProfileDataState extends ProfileState {}
 
+final class ProfileLoading extends ProfileState{}
+
 final class GetProfileDataSuccessState extends GetProfileDataState {
   final User user;
   GetProfileDataSuccessState({required this.user});

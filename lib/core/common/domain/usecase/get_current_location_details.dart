@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/common/data/model/location_model.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
 import 'package:tech_haven/core/entities/location.dart';
 import 'package:tech_haven/core/error/failures.dart';

@@ -15,15 +15,21 @@ import 'package:tech_haven/user/features/details/presentation/bloc/details_page_
 import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
+import 'package:tech_haven/user/features/order/presentation/bloc/user_order_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:tech_haven/user/features/review%20enter/presentation/bloc/review_enter_page_bloc.dart';
+import 'package:tech_haven/user/features/search/presentation/bloc/search_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
+import 'package:tech_haven/vendor/features/order/presentation/bloc/vendor_order_page_bloc.dart';
+import 'package:tech_haven/vendor/features/orderdetails/presentation/bloc/vendor_order_details_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
+import 'package:tech_haven/vendor/features/revenue/presentation/bloc/revenue_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -92,6 +98,23 @@ void main() async {
       ),
         BlocProvider(
         create: (_) => serviceLocator<RegisterVendorBloc>(),
+      ),  BlocProvider(
+        create: (_) => serviceLocator<VendorOrderPageBloc>(),
+      ),
+       BlocProvider(
+        create: (_) => serviceLocator<VendorOrderDetailsBloc>(),
+      ),
+         BlocProvider(
+        create: (_) => serviceLocator<RevenueBloc>(),
+      ),
+        BlocProvider(
+        create: (_) => serviceLocator<UserOrderBloc>(),
+      ),
+        BlocProvider(
+        create: (_) => serviceLocator<SearchPageBloc>(),
+      ),
+        BlocProvider(
+        create: (_) => serviceLocator<ReviewEnterPageBloc>(),
       ),
     ],
     child: const MyApp(),

@@ -28,39 +28,39 @@ class VendorAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       centerTitle: true,
       title: Text(title),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          child: messageIcon && trailingIcon == null
-              ? CircularButton(
-                  onPressed: () {
-                    GoRouter.of(context)
-                        .pushNamed(AppRouteConstants.vendorChatPage);
-                  },
-                  circularButtonChild: const SvgIcon(
-                    icon: CustomIcons.messagesSvg,
-                    radius: 25,
-                  ),
-                  diameter: 50,
-                  color: AppPallete.whiteColor,
-                  shadow: false,
-                )
-              : trailingIcon != null
-                  ? CircularButton(
-                      onPressed: onPressedTrailingIcon,
-                      circularButtonChild: SvgIcon(
-                        icon: trailingIcon!,
-                        radius: 25,
-                      ),
-                      diameter: 50,
-                      color: AppPallete.whiteColor,
-                      shadow: false,
-                    )
-                  : null,
-        )
-      ],
+      // actions: [
+      //   Padding(
+      //     padding: const EdgeInsets.symmetric(
+      //       horizontal: 10,
+      //     ),
+      //     child: messageIcon && trailingIcon == null
+      //         ? CircularButton(
+      //             onPressed: () {
+      //               GoRouter.of(context)
+      //                   .pushNamed(AppRouteConstants.vendorChatPage);
+      //             },
+      //             circularButtonChild: const SvgIcon(
+      //               icon: CustomIcons.messagesSvg,
+      //               radius: 25,
+      //             ),
+      //             diameter: 50,
+      //             color: AppPallete.whiteColor,
+      //             shadow: false,
+      //           )
+      //         : trailingIcon != null
+      //             ? CircularButton(
+      //                 onPressed: onPressedTrailingIcon,
+      //                 circularButtonChild: SvgIcon(
+      //                   icon: trailingIcon!,
+      //                   radius: 25,
+      //                 ),
+      //                 diameter: 50,
+      //                 color: AppPallete.whiteColor,
+      //                 shadow: false,
+      //               )
+      //             : null,
+      //   )
+      // ],
       bottom: bottom,
     );
   }

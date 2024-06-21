@@ -24,6 +24,9 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      context.read<CartPageBloc>().add(GetAllProductsEvent());
+    });
     Future<bool> removeProductFromCart(
         {required Product product, required Cart cart}) async {
       final boolean = await showConfirmationDialog(context, 'Remove From Carts',
@@ -39,9 +42,6 @@ class CartPage extends StatelessWidget {
       return boolean!;
     }
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<CartPageBloc>().add(GetAllProductsEvent());
-    });
     // context.read<CartPageBloc>().add(GetAllCartEvent());
     List<TextEditingController> controllers = [];
     void generateTextEditingController(int length) {

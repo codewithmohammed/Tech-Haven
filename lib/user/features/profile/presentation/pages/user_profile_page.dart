@@ -42,9 +42,13 @@ class UserProfilePage extends StatelessWidget {
                         : 'You are currently not signed in',
                   ),
                   //your orders
-                  const TileBarButton(
+                  TileBarButton(
                     title: 'Your Orders',
                     icon: CustomIcons.orderListSvg,
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.userOrderPage);
+                    },
                   ),
                   TileBarButton(
                     title: state is GetProfileDataSuccessState
@@ -71,17 +75,17 @@ class UserProfilePage extends StatelessWidget {
                               : null;
                     },
                   ),
-                  const ProfileHeaderTile(
-                    title: 'SETTINGS',
-                  ),
-                  const TileBarButton(
-                    title: 'Country',
-                    icon: CustomIcons.globeSvg,
-                  ),
-                  const TileBarButton(
-                    title: 'Language',
-                    icon: CustomIcons.languageSvg,
-                  ),
+                  // const ProfileHeaderTile(
+                  //   title: 'SETTINGS',
+                  // ),
+                  // const TileBarButton(
+                  //   title: 'Country',
+                  //   icon: CustomIcons.globeSvg,
+                  // ),
+                  // const TileBarButton(
+                  //   title: 'Language',
+                  //   icon: CustomIcons.languageSvg,
+                  // ),
                   const ProfileHeaderTile(
                     title: 'REACH OUT TO US',
                   ),

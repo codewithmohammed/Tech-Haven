@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/cart.dart';
@@ -146,21 +147,30 @@ class HorizontalProductListView extends StatelessWidget {
                       final currentProduct = listState.listOfProducts[index];
                       //column since the container is divided into two
                       return ProductCard(
+                        likeButton: CustomLikeButton(
+                          isFavorited: listState.listOfFavoritedProducts
+                              .contains(currentProduct.productID),
+                          onTapFavouriteButton: (bool isLiked) async {
+                            updateProductToFavorite(
+                                listState.listOfProducts[index], isLiked);
+                            return isLiked ? false : true;
+                          },
+                        ),
                         onTapCard: () {
                           // context.read<DetailsPageBloc>().add(EmitInitial());
                           GoRouter.of(context).pushNamed(
                               AppRouteConstants.detailsPage,
                               extra: currentProduct);
                         },
-                        isFavorited: listState.listOfFavoritedProducts
-                            .contains(currentProduct.productID),
+                        // isFavorited: listState.listOfFavoritedProducts
+                        //     .contains(currentProduct.productID),
                         // index: index,
                         isHorizontal: true,
                         product: currentProduct,
-                        onTapFavouriteButton: (bool isLiked) async {
-                          updateProductToFavorite(currentProduct, isLiked);
-                          return isLiked ? false : true;
-                        },
+                        // onTapFavouriteButton: (bool isLiked) async {
+                        //   updateProductToFavorite(currentProduct, isLiked);
+                        //   return isLiked ? false : true;
+                        // },
                         shoppingCartWidget:
                             BlocBuilder<HomePageBloc, HomePageState>(
                           buildWhen: (previous, current) =>
@@ -259,13 +269,16 @@ class HorizontalProductListView extends StatelessWidget {
                     //column since the container is divided into two
                     return ProductCard(
                       // index: index,
-                      isFavorited: false,
+                      likeButton: CustomLikeButton(
+                        isFavorited: false,
+                        onTapFavouriteButton: (bool isLiked) async {
+                          return isLiked ? false : true;
+                        },
+                      ),
                       // index: index,
                       isHorizontal: true,
                       product: null,
-                      onTapFavouriteButton: (bool isLiked) async {
-                        return false;
-                      },
+
                       shoppingCartWidget: ShoppingCartButton(
                         onTapPlusButton: () {},
                         onTapMinusButton: () {},

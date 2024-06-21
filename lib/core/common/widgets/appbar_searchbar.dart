@@ -17,6 +17,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   final bool backButton;
   final bool enabled;
   final bool autoFocus;
+  final void Function(String)? onChanged;
   const AppBarSearchBar({
     super.key,
     this.hintText = 'What are you looking for ?',
@@ -24,7 +25,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
     this.deliveryPlaceNeeded = true,
     this.backButton = false,
     this.enabled = false,
-    this.autoFocus = false,
+    this.autoFocus = false, this.onChanged,
   });
 
   @override
@@ -59,6 +60,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                         .pushNamed(AppRouteConstants.searchPage);
                   },
                   child: TextField(
+                    onChanged:onChanged ,
                     enabled: enabled,
                     decoration:
                         AppTheme.inputDecoration.copyWith(hintText: hintText),

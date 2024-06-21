@@ -8,8 +8,11 @@ import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/common/data/model/image_model.dart';
 import 'package:tech_haven/core/common/data/model/product_info_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/product_review_model.dart';
+import 'package:tech_haven/core/common/data/model/review_model.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/product_review.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
 import 'package:uuid/uuid.dart';
@@ -65,14 +68,14 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
       // print(brandID);
       final userdata = await dataSource.getUserData();
       if (userdata != null) {
-        print('hello');
+        // print('hello');
         final productID = const Uuid().v1();
         final Map<int, List<ImageModel>> mapOfImageModels =
             await saveImagesInStorage(
           productID: productID,
           productImages: productImages,
         );
-        print('hi');
+        // print('hi');
 
         ProductInfoModel productInfoModel = ProductInfoModel(
           brandID: brandID,
@@ -125,7 +128,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             .doc(productID)
             .set(productModel.toJson());
 
-        print(productModel.toJson());
+        // print(productModel.toJson());
 
         for (final entry in mapOfImageModels.entries) {
           final List<ImageModel> imageModels = entry.value;
@@ -142,6 +145,17 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
               .doc('${entry.key}') // or any suitable document name
               .set(imageMap);
         }
+        final ProductReviewModel productReviewModel = ProductReviewModel(
+          productID: productID,
+          productName: name,
+          vendorID: userdata.vendorID!,
+          vendorName: userdata.username!,
+          // totalRating: 0.0, totalReviews: 0,
+        );
+        await firebaseFirestore
+            .collection('reviews')
+            .doc(productID)
+            .set(productReviewModel.toJson());
       }
       return true;
     } on FirebaseAuthException catch (e) {
@@ -151,54 +165,52 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     }
   }
 
+  Future<Map<int, List<ImageModel>>> saveImagesInStorage({
+    required String productID,
+    required Map<int, List<File>> productImages,
+  }) async {
+    try {
+      final reference = FirebaseStorage.instance.ref('products');
+      final Map<int, List<ImageModel>> mapOfImageModels = {};
 
-Future<Map<int, List<ImageModel>>> saveImagesInStorage({
-  required String productID,
-  required Map<int, List<File>> productImages,
-}) async {
-  try {
-    final reference = FirebaseStorage.instance.ref('products');
-    final Map<int, List<ImageModel>> mapOfImageModels = {};
+      for (final entry in productImages.entries) {
+        final List<File> images = entry.value;
 
-    for (final entry in productImages.entries) {
-      final List<File> images = entry.value;
+        for (final image in images) {
+          try {
+            final String imageID = const Uuid().v4();
+            final Reference imageReference = reference
+                .child(productID)
+                .child('images')
+                .child('${entry.key}')
+                .child(imageID);
 
-      for (final image in images) {
-        try {
-          final String imageID = const Uuid().v4();
-          final Reference imageReference = reference
-              .child(productID)
-              .child('images')
-              .child('${entry.key}')
-              .child(imageID);
+            print('Uploading to: ${imageReference.fullPath}'); // Debugging line
 
-          print('Uploading to: ${imageReference.fullPath}'); // Debugging line
+            final UploadTask uploadTask = imageReference.putFile(image);
+            final TaskSnapshot taskSnapshot = await uploadTask;
 
-          final UploadTask uploadTask = imageReference.putFile(image);
-          final TaskSnapshot taskSnapshot = await uploadTask;
+            final String downloadURL = await taskSnapshot.ref.getDownloadURL();
+            final ImageModel imageModel =
+                ImageModel(imageID: imageID, imageURL: downloadURL);
 
-          final String downloadURL = await taskSnapshot.ref.getDownloadURL();
-          final ImageModel imageModel =
-              ImageModel(imageID: imageID, imageURL: downloadURL);
-
-          if (mapOfImageModels.containsKey(entry.key)) {
-            mapOfImageModels[entry.key]!.add(imageModel);
-          } else {
-            mapOfImageModels[entry.key] = [imageModel];
+            if (mapOfImageModels.containsKey(entry.key)) {
+              mapOfImageModels[entry.key]!.add(imageModel);
+            } else {
+              mapOfImageModels[entry.key] = [imageModel];
+            }
+          } catch (e) {
+            print('Failed to upload image for key ${entry.key}: $e');
+            // Optionally handle the error (e.g., retry logic, logging, etc.)
           }
-        } catch (e) {
-          print('Failed to upload image for key ${entry.key}: $e');
-          // Optionally handle the error (e.g., retry logic, logging, etc.)
         }
       }
+      return mapOfImageModels;
+    } catch (e) {
+      print('An error occurred: $e');
+      rethrow;
     }
-    return mapOfImageModels;
-  } catch (e) {
-    print('An error occurred: $e');
-    rethrow;
   }
-}
-
 
   // @override
   // Future<Map<int, List<Image>>> getImagesForTheProduct(

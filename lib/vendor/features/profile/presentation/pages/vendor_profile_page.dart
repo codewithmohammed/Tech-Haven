@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
-import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_header_tile.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_welcome_text.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/tile_bar_button.dart';
@@ -28,9 +25,10 @@ class VendorProfilePage extends StatelessWidget {
                   subText: 'Enjoy Selling withTexh Heaven',
                 ),
                 //your orders
-                const TileBarButton(
+                TileBarButton(
                   title: 'Your Orders',
                   icon: CustomIcons.orderListSvg,
+                  onTap: () {},
                 ),
                 // TileBarButton(
                 //   title: 'Switch To Customer Mode',
@@ -43,17 +41,17 @@ class VendorProfilePage extends StatelessWidget {
                 //     );
                 //   },
                 // ),
-                const ProfileHeaderTile(
-                  title: 'SETTINGS',
-                ),
-                const TileBarButton(
-                  title: 'Country',
-                  icon: CustomIcons.globeSvg,
-                ),
-                const TileBarButton(
-                  title: 'Language',
-                  icon: CustomIcons.languageSvg,
-                ),
+                // const ProfileHeaderTile(
+                //   title: 'SETTINGS',
+                // ),
+                // const TileBarButton(
+                //   title: 'Country',
+                //   icon: CustomIcons.globeSvg,
+                // ),
+                // const TileBarButton(
+                //   title: 'Language',
+                //   icon: CustomIcons.languageSvg,
+                // ),
                 const ProfileHeaderTile(
                   title: 'REACH OUT TO US',
                 ),
@@ -61,10 +59,10 @@ class VendorProfilePage extends StatelessWidget {
                   title: 'Help Center',
                   icon: CustomIcons.questionMarkSvg,
                 ),
-                const TileBarButton(
-                  title: 'About App',
-                  icon: CustomIcons.exclamationSvg,
-                ),
+                // const TileBarButton(
+                //   title: 'About App',
+                //   icon: CustomIcons.exclamationSvg,
+                // ),
                 TileBarButton(
                   title: 'Sign Out',
                   icon: CustomIcons.rightArrowExitSvg,

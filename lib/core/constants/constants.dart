@@ -7,7 +7,7 @@ import 'package:tech_haven/user/features/notification/presentation/pages/main_no
 import 'package:tech_haven/user/features/profile/presentation/pages/user_profile_page.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/pages/search_category_page.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/manage_product_page.dart';
-import 'package:tech_haven/vendor/features/moneywithdraw/presentation/pages/money_withdraw_page.dart';
+import 'package:tech_haven/vendor/features/revenue/presentation/pages/revenue_page.dart';
 import 'package:tech_haven/vendor/features/order/presentation/pages/vendor_order_page.dart';
 import 'package:tech_haven/vendor/features/profile/presentation/pages/vendor_profile_page.dart';
 
@@ -26,7 +26,7 @@ class Constants {
   static List<Widget> listOFMainPages = [
     const HomePage(),
     const SearchCategoryPage(),
-    const MainNotificationPage(),
+    // const MainNotificationPage(),
     const UserProfilePage(),
     const CartPage(),
   ];

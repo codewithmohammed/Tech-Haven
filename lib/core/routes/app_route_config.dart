@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/data/model/product_order_model.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';
+import 'package:tech_haven/core/entities/order.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
@@ -15,14 +18,20 @@ import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_page.da
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_welcome_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/welcome_page.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/checkout_page.dart';
+import 'package:tech_haven/user/features/details/data/models/review_route_model.dart';
 import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
 import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
+import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
+import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
+import 'package:tech_haven/user/features/review%20enter/presentation/pages/review_enter_page.dart';
+import 'package:tech_haven/user/features/reviews/presentation/pages/review_page.dart';
 import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
 import 'package:tech_haven/vendor/features/message/presentation/pages/vendor_chat_page.dart';
+import 'package:tech_haven/vendor/features/orderdetails/presentation/pages/vendor_order_details_page.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/pages/register_product_page.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/pages/register_vendor_page.dart';
 
@@ -41,6 +50,10 @@ class AppRoutes {
         path: '/welcome_page',
         child: const WelcomePage(),
       ),
+      _buildPageRoute(
+          name: AppRouteConstants.userOrderPage,
+          path: '/user_order_page',
+          child: const UserOrderPage()),
       _buildPageRoute(
         name: AppRouteConstants.signupPage,
         path: '/signup_page',
@@ -143,6 +156,14 @@ class AppRoutes {
         ),
       ),
       _buildPageRouteWithParams(
+          name: AppRouteConstants.fullReviewPage,
+          path: '/full_review_page',
+          pageBuilder: (state) {
+            // ReviewRouteModel reviewRouteModel = state as ReviewRouteModel;
+            return ReviewPage(reviewRouteModel: state.extra as ReviewRouteModel);
+
+          }),
+      _buildPageRouteWithParams(
         name: AppRouteConstants.checkoutPage,
         path: '/checkout_page/:totalAmount',
         pageBuilder: (state) => CheckoutPage(
@@ -153,6 +174,29 @@ class AppRoutes {
         name: AppRouteConstants.messagePage,
         path: '/message_page',
         child: const MessagePage(),
+        transitionsBuilder: (animation, child) {
+          final tween = Tween(
+            begin: const Offset(1, 0),
+            end: Offset.zero,
+          ).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+          );
+          return SlideTransition(
+            position: tween,
+            child: child,
+          );
+        },
+      ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.reviewEnterPage,
+        path: '/review_enter_page',
+        pageBuilder: (state) {
+          ReviewEnterRouteModel reviewEnterRouteModel =
+              state.extra as ReviewEnterRouteModel;
+          return ReviewEnterPage(
+            reviewRouteModel: reviewEnterRouteModel,
+          );
+        },
         transitionsBuilder: (animation, child) {
           final tween = Tween(
             begin: const Offset(1, 0),
@@ -180,10 +224,23 @@ class AppRoutes {
           );
         },
       ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.vendorOrderDetailsPage,
+        path: '/vendor_order_details_page',
+        pageBuilder: (state) {
+          model.Order order = state.extra as model.Order;
+          return VendorOrderDetailsPage(
+            order: order,
+            // cartID:cartID ,
+            // favoriteID: favoriteID,
+          );
+        },
+      ),
       _buildPageRoute(
           name: AppRouteConstants.vendorMainPage,
           path: '/vendor_main_page',
           child: const VendorBottomNavigationBar()),
+
       _buildPageRoute(
         name: AppRouteConstants.vendorChatPage,
         path: '/vendor_chat_page',
@@ -249,9 +306,8 @@ class AppRoutes {
         pageBuilder: (state) {
           User? user = state.extra as User?;
           return RegisterVendorPage(
-            // initialUsername: 'slk',
-            user: user!
-          );
+              // initialUsername: 'slk',
+              user: user!);
         },
         transitionsBuilder: (animation, child) {
           return SlideTransition(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/product_card.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/cart.dart';
@@ -13,9 +14,10 @@ import 'package:tech_haven/core/utils/check_product_is_carted.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
 
 class ProductsPage extends StatelessWidget {
-  const ProductsPage({super.key, required this.searchQuery});
+  const ProductsPage({super.key, required this.searchQuery,this.isForSearch = false});
 
   final String searchQuery;
+  final bool isForSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +53,7 @@ class ProductsPage extends StatelessWidget {
       ));
     });
     return Scaffold(
-      appBar: const AppBarSearchBar(
+      appBar: isForSearch? null: const AppBarSearchBar(
         backButton: true,
       ),
       body: SizedBox(
@@ -83,15 +85,19 @@ class ProductsPage extends StatelessWidget {
                                       AppRouteConstants.detailsPage,
                                       extra: currentProduct);
                                 },
+                                likeButton: CustomLikeButton(
+                                  isFavorited: listState.listOfFavoritedProducts
+                                      .contains(currentProduct.productID),
+                                  onTapFavouriteButton: (bool isLiked) async {
+                                    updateProductToFavorite(
+                                        currentProduct, isLiked);
+                                    return isLiked ? false : true;
+                                  },
+                                ),
                                 isHorizontal: false,
                                 product: listState.listOfProducts[index],
-                                onTapFavouriteButton: (bool isLiked) async {
-                                  updateProductToFavorite(
-                                      currentProduct, isLiked);
-                                  return isLiked ? false : true;
-                                },
-                                isFavorited: listState.listOfFavoritedProducts
-                                    .contains(currentProduct.productID),
+                                // onTapFavouriteButton:
+                                // isFavorited:
                                 shoppingCartWidget: BlocBuilder<
                                     ProductsPageBloc, ProductsPageState>(
                                   buildWhen: (previous, current) =>
@@ -208,10 +214,12 @@ class ProductsPage extends StatelessWidget {
                 return ProductCard(
                     isHorizontal: true,
                     product: null,
-                    onTapFavouriteButton: (p0) async {
-                      return null;
-                    },
-                    isFavorited: false,
+                    likeButton: CustomLikeButton(
+                      isFavorited: false,
+                      onTapFavouriteButton: (bool isLiked) async {
+                        return isLiked ? false : true;
+                      },
+                    ),
                     shoppingCartWidget: Container());
               },
             );

@@ -9,6 +9,7 @@ import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source_impl.dart';
 import 'package:tech_haven/core/common/data/repositories/repository_impl.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
+import 'package:tech_haven/core/common/domain/usecase/add_review.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_a_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_brand_related_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
@@ -16,11 +17,16 @@ import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart'
 import 'package:tech_haven/core/common/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_orders.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_reviews_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_current_location_details.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_images_for_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_product_review.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_user_owned_products.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_vendor_data.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_vendor_orders.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_fields.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
@@ -40,6 +46,7 @@ import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_
 import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_source_impl.dart';
 import 'package:tech_haven/user/features/checkout/data/repositories/checkout_repository_impl.dart';
 import 'package:tech_haven/user/features/checkout/domain/repository/checkout_repository.dart';
+import 'package:tech_haven/user/features/checkout/domain/usecase/send_order.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/show_present_payment_sheet.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/submit_payment_form.dart';
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
@@ -60,8 +67,16 @@ import 'package:tech_haven/user/features/home/domain/usecase/get_all_sub_categor
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/map/domain/usecase/update_location.dart';
 import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
+import 'package:tech_haven/user/features/order/presentation/bloc/user_order_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:tech_haven/user/features/review%20enter/presentation/bloc/review_enter_page_bloc.dart';
+import 'package:tech_haven/user/features/search/data/datasource/search_page_data_source.dart';
+import 'package:tech_haven/user/features/search/data/datasource/search_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/search/data/repositories/search_page_repository_impl.dart';
+import 'package:tech_haven/user/features/search/domain/repository/search_page_repository.dart';
+import 'package:tech_haven/user/features/search/domain/usecase/search_products.dart';
+import 'package:tech_haven/user/features/search/presentation/bloc/search_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source.dart';
 import 'package:tech_haven/user/features/searchcategory/data/datasource/search_category_data_source_impl.dart';
 import 'package:tech_haven/user/features/searchcategory/data/repositories/search_category_repository_impl.dart';
@@ -74,6 +89,13 @@ import 'package:tech_haven/vendor/features/manageproduct/data/repositories/manag
 import 'package:tech_haven/vendor/features/manageproduct/domain/repository/manage_product_repository.dart';
 import 'package:tech_haven/vendor/features/manageproduct/domain/usecase/get_all_products.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
+import 'package:tech_haven/vendor/features/order/data/datasource/order_data_source.dart';
+import 'package:tech_haven/vendor/features/order/data/datasource/order_data_source_impl.dart';
+import 'package:tech_haven/vendor/features/order/data/repositories/order_repository_impl.dart';
+import 'package:tech_haven/vendor/features/order/domain/repository/order_repository.dart';
+import 'package:tech_haven/vendor/features/order/domain/usecase/delete_order.dart';
+import 'package:tech_haven/vendor/features/order/presentation/bloc/vendor_order_page_bloc.dart';
+import 'package:tech_haven/vendor/features/orderdetails/presentation/bloc/vendor_order_details_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source_impl.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/repositories/register_product_repostory_imp.dart';
@@ -91,6 +113,13 @@ import 'package:tech_haven/vendor/features/registervendor/data/repositories/regi
 import 'package:tech_haven/vendor/features/registervendor/domain/repository/register_vendor_repository.dart';
 import 'package:tech_haven/vendor/features/registervendor/domain/usecase/send_request_for_vendor.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
+import 'package:tech_haven/vendor/features/revenue/data/datasource/revenue_data_source.dart';
+import 'package:tech_haven/vendor/features/revenue/data/datasource/revenue_data_source_impl.dart';
+import 'package:tech_haven/vendor/features/revenue/data/repositories/revenue_repository_impl.dart';
+import 'package:tech_haven/vendor/features/revenue/domain/repository/revenue_repository.dart';
+import 'package:tech_haven/vendor/features/revenue/domain/usecase/get_list_of_revenue_date.dart';
+import 'package:tech_haven/vendor/features/revenue/domain/usecase/get_revenue.dart';
+import 'package:tech_haven/vendor/features/revenue/presentation/bloc/revenue_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -116,9 +145,78 @@ Future<void> initDependencies() async {
   _initMap();
   _initRegisterVendor();
   _initProductsPage();
+  _initVendorOrderPage();
+  _initVendorOrderDetailsPage();
+  _initRevenue();
+  _initSearchpage();
+  _initUserOrderPage();
+  _initReviewEnterPage();
+}
+
+void _initReviewEnterPage() {
+  serviceLocator.registerLazySingleton(
+      () => ReviewEnterPageBloc(addReview: serviceLocator()));
+}
+
+void _initSearchpage() {
+  serviceLocator
+    ..registerFactory<SearchPageDataSource>(
+        () => SearchPageDataSourceImpl(serviceLocator()))
+    ..registerFactory<SearchPageRepository>(
+        () => SearchPageRepositoryImpl(serviceLocator()))
+    ..registerFactory(() => SearchProducts(serviceLocator()))
+    ..registerLazySingleton(() => SearchPageBloc(
+          getAllProduct: serviceLocator(),
+          getAllFavorite: serviceLocator(),
+          updateProductToFavorite: serviceLocator(),
+          updateProductToCart: serviceLocator(),
+          getAllCart: serviceLocator(),
+        ));
+}
+
+void _initUserOrderPage() {
+  serviceLocator.registerLazySingleton(
+      () => UserOrderBloc(getAllOrders: serviceLocator()));
+}
+
+void _initRevenue() {
+  serviceLocator
+    ..registerFactory<RevenueDataSource>(
+        () => RevenueDataSourceImpl(firebaseFirestore: serviceLocator()))
+    ..registerFactory<RevenueRepository>(
+        () => RevenueRepositoryImpl(revenueDataSource: serviceLocator()))
+    ..registerFactory(() => GetRevenue(revenueRepository: serviceLocator()))..registerFactory(() => GetListOfRevenueData(revenueRepository: serviceLocator()))
+    ..registerLazySingleton(() => RevenueBloc(
+        getUserData: serviceLocator(), getRevenue: serviceLocator(), getListOfRevenueData: serviceLocator()));
+}
+
+void _initVendorOrderDetailsPage() {
+  serviceLocator.registerLazySingleton(
+    () => VendorOrderDetailsBloc(
+      getAProduct: serviceLocator(),
+      getAllProduct: serviceLocator(),
+    ),
+  );
+}
+
+void _initVendorOrderPage() {
+  serviceLocator
+    ..registerFactory<OrderDataSource>(
+        () => OrderDataSourceImpl(firebaseFirestore: serviceLocator()))
+    ..registerFactory<OrderRepository>(
+        () => OrderRepositoryImpl(orderDataSource: serviceLocator()))
+    ..registerFactory(
+        () => DeliverOrderToAdmin(orderRepository: serviceLocator()))
+    ..registerLazySingleton(() => VendorOrderPageBloc(
+        getVendorOrders: serviceLocator(),
+        getAllOrders: serviceLocator(),
+        getAProduct: serviceLocator(),
+        deliverOrderToAdmin: serviceLocator()));
 }
 
 void _initRegisterVendor() {
+  List<String> hello = ['s', 'sdf'];
+  hello.reversed;
   serviceLocator
     ..registerFactory<RegisterVendorDataSource>(() =>
         RegisterVendorDataSourceImpl(
@@ -151,16 +249,26 @@ void _initProductsPage() {
 
 void _intiCheckout() {
   serviceLocator
-    ..registerFactory<CheckoutDataSource>(() => CheckoutDataSourceImpl())
+    ..registerFactory<CheckoutDataSource>(
+        () => CheckoutDataSourceImpl(firebaseFirestore: serviceLocator()))
     ..registerFactory<CheckoutRepository>(
         () => CheckoutRepositoryImpl(checkoutDataSource: serviceLocator()))
     ..registerFactory(
         () => ShowPresentPaymentSheet(checkoutRepository: serviceLocator()))
+    ..registerFactory(() => SendOrder(checkoutRepository: serviceLocator()))
     ..registerFactory(
         () => SubmitPaymentForm(checkoutRepository: serviceLocator()))
     ..registerLazySingleton(() => CheckoutBloc(
         submitPaymentForm: serviceLocator(),
-        showPresentPaymentSheet: serviceLocator(), getAllCart: serviceLocator(), updateProductFields: serviceLocator(), updateProductToCart: serviceLocator(), getAProduct: serviceLocator()));
+        showPresentPaymentSheet: serviceLocator(),
+        getAllCart: serviceLocator(),
+        updateProductFields: serviceLocator(),
+        updateProductToCart: serviceLocator(),
+        getAProduct: serviceLocator(),
+        sendOrder: serviceLocator(),
+        getAllCartProduct: serviceLocator(),
+        getAllProduct: serviceLocator(),
+        getUserData: serviceLocator()));
 }
 
 void _initMap() {
@@ -218,19 +326,26 @@ _initDataCommon() {
         () => RepositoryImpl(dataSource: serviceLocator()))
     ..registerFactory(() => GetAllCategory(repository: serviceLocator()))
     ..registerFactory(() => GetAllProduct(repository: serviceLocator()))
+    ..registerFactory(() => AddReview(serviceLocator()))
+    ..registerFactory(() => GetProductReview(repository: serviceLocator()))
     ..registerFactory(() => GetImagesForProduct(repository: serviceLocator()))
     ..registerFactory(() => GetAllCart(repository: serviceLocator()))
     ..registerFactory(() => GetUserData(repository: serviceLocator()))
+    ..registerFactory(() => GetAllReviewsProduct(repository: serviceLocator()))
     ..registerFactory(() => GetAProduct(repository: serviceLocator()))
     ..registerFactory(() => GetAllFavorite(repository: serviceLocator()))
+    ..registerFactory(() => GetUserOwnedProducts(repository: serviceLocator()))
     ..registerFactory(() => GetAllCartProduct(repository: serviceLocator()))
     ..registerFactory(
         () => GetAllBrandRelatedProduct(repository: serviceLocator()))
     ..registerFactory(() => UpdateLocation(repository: serviceLocator()))
     ..registerFactory(
         () => GetCurrentLocationDetails(repository: serviceLocator()))
+    ..registerFactory(() => GetAllOrders(repository: serviceLocator()))
+    ..registerFactory(() => GetVendorOrders(repository: serviceLocator()))
     ..registerFactory(
-        () => GetAllFavoritedProduct(repository: serviceLocator()))..registerFactory(() => UpdateProductFields(repository: serviceLocator()))
+        () => GetAllFavoritedProduct(repository: serviceLocator()))
+    ..registerFactory(() => UpdateProductFields(repository: serviceLocator()))
     ..registerFactory(
         () => UpdateProductToFavorite(repository: serviceLocator()))
     ..registerFactory(() => UpdateProductToCart(repository: serviceLocator()))
@@ -251,23 +366,28 @@ void _initHomePage() {
     ..registerFactory(
         () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
     ..registerLazySingleton(() => HomePageBloc(
+        getAProduct: serviceLocator(),
         getAllProduct: serviceLocator(),
         getAllBannerHomePage: serviceLocator(),
         updateProductToFavorite: serviceLocator(),
         updateProductToCart: serviceLocator(),
         getAllCart: serviceLocator(),
         getAllSubCategoriesHomePage: serviceLocator(),
-        getAllFavorite: serviceLocator()));
+        getAllFavorite: serviceLocator(),
+        getUserOwnedProducts: serviceLocator()));
 }
 
 _initDetailsPage() {
   serviceLocator.registerLazySingleton(() => DetailsPageBloc(
       getImagesForProduct: serviceLocator(),
+      getUserOwnedProducts: serviceLocator(),
+      getAllReviewsProduct: serviceLocator(),
       getAllCart: serviceLocator(),
       getAllFavorite: serviceLocator(),
       updateProductToFavorite: serviceLocator(),
       getAllBrandRelatedProduct: serviceLocator(),
-      updateProductToCart: serviceLocator()));
+      updateProductToCart: serviceLocator(),
+      getProductReview: serviceLocator()));
 }
 
 void _initSearchCategory() {

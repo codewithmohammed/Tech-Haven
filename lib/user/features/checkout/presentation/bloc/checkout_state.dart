@@ -12,8 +12,8 @@ final class CheckoutInitial extends CheckoutState {}
 final class CheckoutLoading extends CheckoutState {}
 
 final class SubmitPaymentFormSuccess extends CheckoutState {
-  final dynamic jsonData;
-  const SubmitPaymentFormSuccess({required this.jsonData});
+  final PaymentIntentModel paymentIntentModel;
+  const SubmitPaymentFormSuccess({required this.paymentIntentModel});
 }
 
 final class SubmitPaymentFormFailed extends CheckoutState {
@@ -23,10 +23,20 @@ final class SubmitPaymentFormFailed extends CheckoutState {
 
 final class PaymentFailed extends CheckoutState {
   final String message;
-  PaymentFailed({required this.message});
+  const PaymentFailed({required this.message});
 }
 
-final class PaymentSuccess extends CheckoutState {}
+final class PaymentSuccess extends CheckoutState {
+  final PaymentIntentModel paymentIntentModel;
+  const PaymentSuccess({required this.paymentIntentModel});
+}
+
+final class SaveOrderSuccess extends CheckoutState {}
+
+final class SaveOrderFailed extends CheckoutState {
+  final String message;
+  const SaveOrderFailed({required this.message});
+}
 
 final class AllCartsClearedState extends CheckoutState {}
 

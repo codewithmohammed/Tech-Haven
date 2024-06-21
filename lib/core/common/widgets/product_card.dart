@@ -12,9 +12,11 @@ class ProductCard extends StatelessWidget {
     super.key,
     // required this.index,
     required this.isHorizontal,
+    this.heroTransition = true,
+    required this.likeButton,
     required this.product,
-    required this.onTapFavouriteButton,
-    required this.isFavorited,
+    // required this.onTapFavouriteButton,
+    // required this.isFavorited,
     this.onTapCard,
 
     // required this.currentCartedCount,
@@ -24,12 +26,14 @@ class ProductCard extends StatelessWidget {
     // required this.cartState,
     required this.shoppingCartWidget,
   });
-//first we need to send the product model and also the cart model . 
+//first we need to send the product model and also the cart model .
   // final int index;
   final bool isHorizontal;
   final Product? product;
-  final bool isFavorited;
-  final Future<bool?> Function(bool)? onTapFavouriteButton;
+  final Widget likeButton;
+  final bool heroTransition;
+  // final bool isFavorited;
+  // final Future<bool?> Function(bool)? onTapFavouriteButton;
   final void Function()? onTapCard;
   // final int currentCartedCount;
   // final void Function()? onTapCartButton;
@@ -87,10 +91,14 @@ class ProductCard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              child: Hero(
-                                  tag: product!.productID,
-                                  child:
-                                      Image.network(product!.displayImageURL)),
+                              child: heroTransition
+                                  ? Hero(
+                                      tag: product!.productID,
+                                      child: Image.network(
+                                          product!.displayImageURL))
+                                  : Image.network(
+                                      product!.displayImageURL,
+                                    ),
                             ),
                             //rating
                             Positioned(
@@ -144,14 +152,7 @@ class ProductCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Positioned(
-                              top: 5,
-                              right: 5,
-                              child: CustomLikeButton(
-                                isFavorited: isFavorited,
-                                onTapFavouriteButton: onTapFavouriteButton,
-                              ),
-                            ),
+                            Positioned(top: 5, right: 5, child: likeButton),
                             //favorite
                             Positioned(
                               bottom: 5,

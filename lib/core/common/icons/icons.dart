@@ -22,6 +22,7 @@ class CustomIcons {
   static const String publishSvg = 'assets/icons/publish.svg';
   static const String shareSvg = 'assets/icons/share.svg';
   static const String starSvg = 'assets/icons/star.svg';
+  static const String outlinedStarSvg = 'assets/icons/outlined_star.svg';
   static const String starHalfSvg = 'assets/icons/star_half.svg';
   static const String thumbUpSvg = 'assets/icons/thumb_up.svg';
   static const String trashBinSvg = 'assets/icons/trash_bin.svg';

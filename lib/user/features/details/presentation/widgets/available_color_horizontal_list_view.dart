@@ -27,7 +27,7 @@ class AvailableColorHorizontalListView extends StatelessWidget {
               current is GetAllImagesForProductState,
           builder: (context, state) {
             if (state is GetAllImagesForProductSuccess) {
-              print('success');
+              // print('success');
               return GridView.builder(
                 // shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
@@ -61,7 +61,7 @@ class AvailableColorHorizontalListView extends StatelessWidget {
                     ),
                     child: InkWell(
                       onTap: () {
-                        print(index);
+                        // print(index);
                         context.read<DetailsPageBloc>().add(
                             ChangeProductColorEvent(
                                 index: index));

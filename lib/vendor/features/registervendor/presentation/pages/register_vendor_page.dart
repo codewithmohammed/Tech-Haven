@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -36,7 +35,8 @@ class _RegisterVendorPageState extends State<RegisterVendorPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.user.vendorID != null) {
-      print('object');
+      // print('object');
+
       context
           .read<RegisterVendorBloc>()
           .add(CheckForVendorStatusEvent(vendorID: widget.user.vendorID!));

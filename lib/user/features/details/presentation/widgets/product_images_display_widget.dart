@@ -22,9 +22,11 @@ class ProductImagesDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
     void updateProductToFavorite(
         {required bool isFavorited, required Product product}) {
       // print('hello how are you');
+
       context.read<DetailsPageBloc>().add(UpdateProductToFavoriteDetailsEvent(
           product: product, isFavorited: isFavorited));
     }
@@ -32,6 +34,7 @@ class ProductImagesDisplayWidget extends StatelessWidget {
     CarouselController carouselController = CarouselController();
     return BlocConsumer<DetailsPageBloc, DetailsPageState>(
       listener: (context, state) {
+        print(state);
         if (state is GetAllImagesForProductFailed) {
           Fluttertoast.showToast(msg: state.message);
         }
@@ -76,7 +79,7 @@ class ProductImagesDisplayWidget extends StatelessWidget {
                       buildWhen: (previous, current) =>
                           current is GetProductFavoritedDetailsState,
                       builder: (context, state) {
-                        print(state);
+                        // print(state);
                         if (state is GetProductFavoritedDetailsSuccess) {
                           // print('hello');
                           return CustomLikeButton(
@@ -89,12 +92,15 @@ class ProductImagesDisplayWidget extends StatelessWidget {
                             },
                           );
                         }
-                        return CustomLikeButton(
-                          isFavorited: false,
-                          onTapFavouriteButton: (p1) async {
-                            return null;
-                          },
-                        );
+                        return Container();
+                        // CustomLikeButton(
+                        //   isFavorited: true,
+                        //   onTapFavouriteButton: (bool isLiked) async {
+                        //     updateProductToFavorite(
+                        //         isFavorited: !isLiked, product: product);
+                        //     return !isLiked;
+                        //   },
+                        // );
                       },
                     ),
                     Constants.kHeight,

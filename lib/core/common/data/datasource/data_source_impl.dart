@@ -3,11 +3,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/model/image_model.dart';
 import 'package:tech_haven/core/common/data/model/location_model.dart';
+import 'package:tech_haven/core/common/data/model/order_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/product_review_model.dart';
+import 'package:tech_haven/core/common/data/model/review_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
+import 'package:tech_haven/core/common/data/model/user_model.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/product_review.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
@@ -38,6 +44,52 @@ class DataSourceImpl implements DataSource {
       return 'Success';
     } catch (e) {
       throw ServerException('Failed to update product: $e');
+    }
+  }
+
+  @override
+  Future<void> addReview(
+      {required Product product,
+      required String userReview,
+      required double userRating}) async {
+    try {
+      final model.UserModel? user = await getUserData();
+
+      if (user != null) {
+        final String reviewID = const Uuid().v1();
+        final DateTime dateTime = DateTime.now();
+        print('change the productreviws count here');
+        final ProductReviewModel productReviewModel = ProductReviewModel(
+            productID: product.productID,
+            productName: product.name,
+            // totalReviews: 0,
+            vendorID: product.vendorID,
+            vendorName: product.vendorName,
+            // totalRating: 0
+            );
+        final ReviewModel reviewModel = ReviewModel(
+            reviewID: reviewID,
+            userProfile:
+                user.isProfilePhotoUploaded ? user.profilePhoto! : null,
+            userReview: userReview,
+            listOfHelpFulUsers: [],
+            userName: user.username!,
+            dateTime: dateTime,
+            userID: user.uid!,
+            userRating: userRating);
+        await firebaseFirestore
+            .collection('reviews')
+            .doc(product.productID)
+            .set(productReviewModel.toJson());
+        await firebaseFirestore
+            .collection('reviews')
+            .doc(product.productID)
+            .collection('reviewDetails')
+            .doc(reviewID)
+            .set(reviewModel.toJson());
+      }
+    } catch (e) {
+      throw Exception('Failed to add review: $e');
     }
   }
 
@@ -454,21 +506,21 @@ class DataSourceImpl implements DataSource {
   Future<VendorModel?> getVendorData({required String vendorID}) async {
     try {
       // print('object');
-      DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
-          .collection('vendors')
-          .doc(vendorID)
-          .get();
-      // print('helllo');
-      print(docSnapshot.exists);
+      print('hello how are you');
+      DocumentSnapshot docSnapshot =
+          await firebaseFirestore.collection('vendors').doc(vendorID).get();
+      print('hello how are you');
       if (docSnapshot.exists) {
         final VendorModel vendorModel =
             VendorModel.fromJson(docSnapshot.data() as Map<String, dynamic>);
         // print(vendorModel.accountNumber);
-        print(vendorModel.email);
+        // print(vendorModel.email);
         return vendorModel;
       } else {
-        return null; // Vendor with the given ID does not exist
+        throw const ServerException('Request for Vendor Mode');
       }
+    } on ServerException catch (e) {
+      throw ServerException(e.toString());
     } catch (e) {
       // print(e.toString());
       throw ServerException(e.toString());
@@ -477,7 +529,7 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<Product> getAProduct({required String productID}) async {
+  Future<ProductModel> getAProduct({required String productID}) async {
     try {
       DocumentSnapshot docSnapshot = await FirebaseFirestore.instance
           .collection('products')
@@ -494,45 +546,236 @@ class DataSourceImpl implements DataSource {
       throw ServerException('Error getting product: $e');
     }
   }
-}
 
-List<ProductModel> getAllProductsThatIsCarted({
-  required List<ProductModel> products,
-  required List<CartModel> cartModels,
-}) {
-  List<ProductModel> filteredList = [];
-  for (var product in products) {
-    for (var cart in cartModels) {
-      if (product.productID == cart.productID) {
-        filteredList.add(product);
+  @override
+  Future<List<OrderModel>> getAllOrders() async {
+    try {
+      final UserModel? user = await getUserData();
+      List<OrderModel> listOfOrderModel = [];
+      if (user != null) {
+        print('Fetching user orders...');
+        // Fetching snapshots of the order details collection for the user
+        QuerySnapshot<Map<String, dynamic>> snapshots = await FirebaseFirestore
+            .instance
+            .collection('userOrders')
+            .doc(user.uid)
+            .collection('orderDetails')
+            .get();
+        print('Fetched user orders, processing...');
+        // Mapping each document to an OrderModel instance
+        for (var doc in snapshots.docs) {
+          print(doc.data());
+          listOfOrderModel.add(OrderModel.fromJson(doc.data()));
+        }
+        print('User orders processing completed.');
+      }
+      return listOfOrderModel;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<OrderModel>> getVendorOrders() async {
+    try {
+      final UserModel? user = await getUserData();
+      if (user == null) {
+        throw const ServerException("User or vendor ID is null");
+      }
+
+      List<OrderModel> listOfVendorOrderModel = [];
+
+      print('Fetching vendor orders...');
+      // Fetching snapshots of the order details collection for the given vendor
+      QuerySnapshot<Map<String, dynamic>> orderDetailsSnapshot =
+          await FirebaseFirestore.instance
+              .collection('vendorOrders')
+              .doc(user.vendorID)
+              .collection('orderDetails')
+              .get();
+      print('Fetched vendor orders, processing...');
+      // Mapping each document to an OrderModel instance
+      for (var doc in orderDetailsSnapshot.docs) {
+        print(doc.data());
+        listOfVendorOrderModel.add(OrderModel.fromJson(doc.data()));
+      }
+      print('Vendor orders processing completed.');
+
+      return listOfVendorOrderModel;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<String>> getUserOwnedProducts() async {
+    // FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      model.UserModel? user = await getUserData();
+      if (user != null) {
+        DocumentSnapshot docSnapshot =
+            await firebaseFirestore.collection('userOwnedProducts').doc(user.uid).get();
+
+        if (docSnapshot.exists && docSnapshot.data() != null) {
+          var data = docSnapshot.data() as Map<String, dynamic>;
+          if (data['listOfProducts'] != null) {
+            return List<String>.from(data['listOfProducts']);
+          }
+        }
+      } else {
+        throw const ServerException('User Not Found,Please try again later');
+      }
+      return [];
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+  // @override
+  // Future<List<OrderModel>> getPaymentModels() async {
+  //   try {
+  //     final UserModel? user = await getUserData();
+  //     if (user == null) {
+  //       throw const ServerException("User or user ID is null");
+  //     }
+
+  //     List<OrderModel> listOfuserOrderModel = [];
+
+  //     print('Fetching user orders...');
+  //     // Fetching snapshots of the order details collection for the given user
+  //     QuerySnapshot<Map<String, dynamic>> orderDetailsSnapshot =
+  //         await FirebaseFirestore.instance
+  //             .collection('userOrders')
+  //             .doc(user.uid)
+  //             .collection('orderDetails')
+  //             .get();
+  //     print('Fetched user orders, processing...');
+  //     // Mapping each document to an OrderModel instance
+  //     for (var doc in orderDetailsSnapshot.docs) {
+  //       print(doc.data());
+  //       listOfuserOrderModel.add(OrderModel.fromJson(doc.data()));
+  //     }
+  //     print('user orders processing completed.');
+
+  //     return listOfuserOrderModel;
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
+
+  // @override
+  // Future<List<OrderModel>> getUserOrders() async {
+  //   try {
+  //     final UserModel? user = await getUserData();
+  //     if (user == null ) {
+  //       throw const ServerException("User or user ID is null");
+  //     }
+
+  //     List<OrderModel> listOfuserOrderModel = [];
+
+  //     print('Fetching user orders...');
+  //     // Fetching snapshots of the order details collection for the given user
+  //     QuerySnapshot<Map<String, dynamic>> orderDetailsSnapshot =
+  //         await FirebaseFirestore.instance
+  //             .collection('userOrders')
+  //             .doc(user.uid)
+  //             .collection('orderDetails')
+  //             .get();
+  //     print('Fetched user orders, processing...');
+  //     // Mapping each document to an OrderModel instance
+  //     for (var doc in orderDetailsSnapshot.docs) {
+  //       print(doc.data());
+  //       listOfuserOrderModel.add(OrderModel.fromJson(doc.data()));
+  //     }
+  //     print('user orders processing completed.');
+
+  //     return listOfuserOrderModel;
+  //   } catch (e) {
+  //     throw ServerException(e.toString());
+  //   }
+  // }
+
+  List<ProductModel> getAllProductsThatIsCarted({
+    required List<ProductModel> products,
+    required List<CartModel> cartModels,
+  }) {
+    List<ProductModel> filteredList = [];
+    for (var product in products) {
+      for (var cart in cartModels) {
+        if (product.productID == cart.productID) {
+          filteredList.add(product);
+        }
       }
     }
+    return filteredList;
   }
-  return filteredList;
-}
 
-List<ProductModel> getAllProductsThatIsFavorited({
-  required List<ProductModel> products,
-  required List<String> favoritedModels,
-}) {
-  List<ProductModel> filteredList = [];
-  for (var product in products) {
-    for (var favorited in favoritedModels) {
-      if (product.productID == favorited) {
-        filteredList.add(product);
+  List<ProductModel> getAllProductsThatIsFavorited({
+    required List<ProductModel> products,
+    required List<String> favoritedModels,
+  }) {
+    List<ProductModel> filteredList = [];
+    for (var product in products) {
+      for (var favorited in favoritedModels) {
+        if (product.productID == favorited) {
+          filteredList.add(product);
+        }
       }
     }
+    return filteredList;
   }
-  return filteredList;
-}
 
-List<ProductModel> filterAllRelatedBrandProducts(
-    {required List<ProductModel> products, required String brandID}) {
-  List<ProductModel> listOfBrandModels = [];
-  for (var product in products) {
-    if (product.brandID == brandID) {
-      listOfBrandModels.add(product);
+  List<ProductModel> filterAllRelatedBrandProducts(
+      {required List<ProductModel> products, required String brandID}) {
+    List<ProductModel> listOfBrandModels = [];
+    for (var product in products) {
+      if (product.brandID == brandID) {
+        listOfBrandModels.add(product);
+      }
+    }
+    return listOfBrandModels;
+  }
+
+  @override
+  Future<ProductReviewModel> getProductReviewModel(
+      {required String productID}) async {
+    try {
+      ProductReviewModel? productReviewModel;
+      final snapshot =
+          await firebaseFirestore.collection('reviews').doc(productID).get();
+      if (snapshot.exists) {
+        productReviewModel = ProductReviewModel.fromJson(
+            snapshot.data() as Map<String, dynamic>);
+      } else {
+        throw Exception("The Review for this product Doesn't Exist");
+      }
+      return productReviewModel;
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
-  return listOfBrandModels;
+
+  @override
+  Future<List<ReviewModel>> getAllReviewsProduct(
+      {required String productID}) async {
+    try {
+      final querySnapshot = await firebaseFirestore
+          .collection('reviews')
+          .doc(productID)
+          .collection('reviewDetails')
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        return [];
+      }
+
+      final reviews = querySnapshot.docs.map((doc) {
+        return ReviewModel.fromJson(doc.data());
+      }).toList();
+
+      return reviews;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
 }

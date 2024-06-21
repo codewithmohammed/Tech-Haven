@@ -14,11 +14,9 @@ class ManageProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!ManageProductBloc.isDataLoaded) {
-        // If data is not loaded and not loading, fetch the data
-        BlocProvider.of<ManageProductBloc>(context)
-            .add(const GetAllProductsEvent());
-      }
+      BlocProvider.of<ManageProductBloc>(context)
+          .add(const GetAllProductsEvent());
+
     });
     return SafeArea(
       child: DefaultTabController(
@@ -30,6 +28,7 @@ class ManageProductPage extends StatelessWidget {
               return const Loader();
             }
             if (state is GetAllProductsSuccess) {
+              print(state.listOfProductModel.length);
               return Scaffold(
                 appBar: const VendorAppBar(
                   title: 'Manage Products',

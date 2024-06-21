@@ -11,7 +11,10 @@ class AppRouteConstants {
   static const String homePage = 'home_page';
   static const String mainPage = 'main_page';
   static const String messagePage = 'message_page';
+  static const String reviewPage = 'review_page';
+  static const String reviewEnterPage = 'review_enter_page';
   static const String detailsPage = 'details_page';
+  static const String vendorOrderDetailsPage = 'vendor_order_details_page';
   static const String vendorMainPage = 'vendor_main_page';
   static const String vendorChatPage = 'vendor_chat_page';
   static const String searchPage = 'search_page';
@@ -20,4 +23,6 @@ class AppRouteConstants {
   static const String checkoutPage = 'checkout_page';
   static const String productsPage = 'products_page';
   static const String registerVendorPage = 'register_vendor_page';
+  static const String userOrderPage = 'user_order_page';
+  static const String fullReviewPage = 'full_review_page';
 }

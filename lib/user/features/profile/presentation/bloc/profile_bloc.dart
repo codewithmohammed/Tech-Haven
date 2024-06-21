@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
-import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -15,7 +14,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       : _getUserData = getUserData,
         super(ProfileInitial()) {
     on<ProfileEvent>((event, emit) {
-      // TODO: implement event handler
+      emit(ProfileLoading());
     });
     on<GetUserProfileDataEvent>(_onGetUserProfileDataEvent);
 
@@ -28,7 +27,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   FutureOr<void> _onGetUserProfileDataEvent(
       GetUserProfileDataEvent event, Emitter<ProfileState> emit) async {
     final result = await _getUserData(NoParams());
-    result.fold((failure) => emit(GetProfileDataFailedState(message: failure.message)),
+    result.fold(
+        (failure) => emit(GetProfileDataFailedState(message: failure.message)),
         (success) => emit(GetProfileDataSuccessState(user: success!)));
   }
 }

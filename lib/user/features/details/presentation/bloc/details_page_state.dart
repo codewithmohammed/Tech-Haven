@@ -11,9 +11,8 @@ final class DetailsPageInitial extends DetailsPageState {}
 
 final class DetailsPageLoadingState extends DetailsPageState {}
 
+//for loading images
 final class GetAllImagesForProductState extends DetailsPageState {}
-
-
 
 final class GetAllImagesForProductLoading extends GetAllImagesForProductState {}
 
@@ -29,6 +28,7 @@ final class GetAllImagesForProductFailed extends GetAllImagesForProductState {
   GetAllImagesForProductFailed({required this.message});
 }
 
+//for loading cart
 final class CartDetailsState extends DetailsPageState {}
 
 final class CartLoadedSuccessDetailsState extends CartDetailsState {
@@ -41,19 +41,19 @@ final class CartLoadedFailedDetailsState extends CartDetailsState {
   CartLoadedFailedDetailsState({required this.message});
 }
 
-final class UpdateProductToCartDetailsSuccess
-    extends CartDetailsState {}
+final class UpdateProductToCartDetailsSuccess extends CartDetailsState {}
 
-final class UpdateProductToCartDetailsFailed
-    extends CartDetailsState {
+final class UpdateProductToCartDetailsFailed extends CartDetailsState {
   final String message;
   UpdateProductToCartDetailsFailed({required this.message});
 }
 
-
 //for getting and updating whether the the product is favorited or not
 
 final class GetProductFavoritedDetailsState extends DetailsPageState {}
+
+final class GetProductFavoritedDetailsInitialState
+    extends GetProductFavoritedDetailsState {}
 
 final class UpdateProductToFavoriteSuccess
     extends GetProductFavoritedDetailsState {}
@@ -88,10 +88,11 @@ final class GetAllBrandRelatedProductsDetailsState
 final class GetAllBrandRelatedProductsDetailsSuccessState
     extends GetAllBrandRelatedProductsDetailsState {
   final List<Product> listOfBrandedProducts;
-  final List<String> listOfFavoritedProducts;
-  GetAllBrandRelatedProductsDetailsSuccessState(
-      {required this.listOfBrandedProducts,
-      required this.listOfFavoritedProducts});
+  // final List<String> listOfFavoritedProducts;
+  GetAllBrandRelatedProductsDetailsSuccessState({
+    required this.listOfBrandedProducts,
+    // required this.listOfFavoritedProducts
+  });
 }
 
 final class GetAllBrandRelatedProductsDetailsLoading
@@ -139,20 +140,57 @@ final class ProductUpdatedToCartDetailsPageRelatedFailed
   ProductUpdatedToCartDetailsPageRelatedFailed({required this.message});
 }
 
-//for related products favorites
+final class ReviewState extends DetailsPageState {}
 
-final class UpdateProductToFavoriteState
-    extends DetailsPageRelatedProductsState {}
+final class GetUserOwnedProductsState extends ReviewState {}
 
-final class ProductUpdatedToFavoriteDetailsPageRelatedSuccess
-    extends UpdateProductToFavoriteState {
-  final bool updatedSuccess;
-  ProductUpdatedToFavoriteDetailsPageRelatedSuccess(
-      {required this.updatedSuccess});
+final class GetUserOwnedProductsSuccessState extends GetUserOwnedProductsState {
+  final List<String> listOfOwnedProducts;
+  GetUserOwnedProductsSuccessState({required this.listOfOwnedProducts});
 }
 
-final class ProductUpdatedToFavoriteDetailsPageRelatedFailed
-    extends UpdateProductToFavoriteState {
+final class GetUserOwnedProdutsFailedState extends GetUserOwnedProductsState {
   final String message;
-  ProductUpdatedToFavoriteDetailsPageRelatedFailed({required this.message});
+  GetUserOwnedProdutsFailedState({required this.message});
+}
+
+final class LoadReviewsState extends ReviewState {}
+
+final class LoadReviewLoadingState extends LoadReviewsState{}
+
+final class LoadReviewSuccessState extends LoadReviewsState {
+  final List<Review> listOfReviews;
+  // final ProductReview productReview;
+  final List<String> allUserOwnedProducts;
+  LoadReviewSuccessState(
+      {required this.listOfReviews, required this.allUserOwnedProducts,
+      // required this.productReview
+      });
+}
+
+final class LoadReviewFailedState extends LoadReviewsState {
+  final String message;
+  LoadReviewFailedState({required this.message});
+}
+
+
+final class LoadReviewModelState extends ReviewState {}
+
+// final class LoadReviewModelLoadingState extends R
+
+final class LoadReviewModelSuccessState extends LoadReviewModelState {
+  // final List<Review> listOfReviews;
+  final ProductReview productReview;
+  // final List<String> allUserOwnedProducts;
+  LoadReviewModelSuccessState(
+      {
+      //   required this.listOfReviews, 
+      // required this.allUserOwnedProducts,
+      required this.productReview
+      });
+}
+
+final class LoadReviewModelFailedState extends LoadReviewModelState {
+  final String message;
+  LoadReviewModelFailedState({required this.message});
 }

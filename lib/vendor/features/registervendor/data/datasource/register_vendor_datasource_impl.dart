@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tech_haven/core/common/data/model/revenue_model.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/vendor/features/registervendor/data/datasource/register_vendor_datasource.dart';
 import 'package:tech_haven/core/entities/user.dart' as model;
@@ -39,9 +40,18 @@ class RegisterVendorDataSourceImpl implements RegisterVendorDataSource {
 
         UploadTask uploadTask = reference.putFile(businessPicture);
         TaskSnapshot taskSnapshot = await uploadTask;
-
         downloadURL = await taskSnapshot.ref.getDownloadURL();
       }
+      RevenueModel revenueModel = RevenueModel(
+          currentBalance: 0,
+          vendorID: vendorID,
+          withdrewAmount: 0);
+      await firebaseFirestore
+          .collection('revenues')
+          .doc(vendorID)
+          .set(revenueModel.toJson());
+
+
       await firebaseFirestore
           .collection('users')
           .doc(user.uid)

@@ -1,13 +1,18 @@
-import 'package:fpdart/src/either.dart';
+import 'dart:ffi';
+
+import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/common/data/model/location_model.dart';
+import 'package:tech_haven/core/common/data/model/order_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/product_review_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/entities/vendor.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
@@ -117,6 +122,18 @@ class RepositoryImpl implements Repository {
   }
 
   @override
+  Future<Either<Failure, List<String>>> getUserOwnedProducts() async {
+    try {
+      // print('updating the favorite');
+      final result = await dataSource.getAllFavorite();
+      // print('hello how are you');
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
   Future<Either<Failure, Map<int, List<Image>>>> getImagesForProduct(
       {required String productID}) async {
     try {
@@ -190,15 +207,16 @@ class RepositoryImpl implements Repository {
       {required String vendorID}) async {
     try {
       final result = await dataSource.getVendorData(vendorID: vendorID);
-      // print(result);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, String>> updateProductFields({required String productID, required Map<String,dynamic> updates})async {
+  Future<Either<Failure, String>> updateProductFields(
+      {required String productID,
+      required Map<String, dynamic> updates}) async {
     try {
       final result = await dataSource.updateProductFields(productID, updates);
       // print(result);
@@ -207,15 +225,80 @@ class RepositoryImpl implements Repository {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure, Product>> getAProduct({required String productID})async {
- try {
-      final result = await dataSource.getAProduct(productID : productID);
+  Future<Either<Failure, ProductModel>> getAProduct(
+      {required String productID}) async {
+    try {
+      final result = await dataSource.getAProduct(productID: productID);
       // print(result);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, List<OrderModel>>> getAllOrders() async {
+    try {
+      final result = await dataSource.getAllOrders();
+      // print(result);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<OrderModel>>> getVendorOrders() async {
+    try {
+      final result = await dataSource.getVendorOrders();
+      // print(result);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Review>>> getAllReviewsProduct({required String productID}) async{
+   try {
+      final result = await dataSource.getAllReviewsProduct(productID: productID);
+      // print(result);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+  
+  @override
+  Future<Either<Failure,void>> addReview({required Product product, required String userReview, required double userRating}) async {
+  try {
+    final result =  await dataSource.addReview(product: product, userReview: userReview, userRating: userRating);
+     return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ProductReviewModel>> getProductReviewModel({required String productID})async {
+   try {
+    final result =  await dataSource.getProductReviewModel(productID: productID);
+     return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  //   @override
+  // Future<Either<Failure, List<OrderModel>>> getUserOrders() async {
+  //   try {
+  //     final result = await dataSource.getAllOrders();
+  //     // print(result);
+  //     return right(result);
+  //   } on ServerException catch (e) {
+  //     return left(Failure(e.message));
+  //   }
+  // }
 }

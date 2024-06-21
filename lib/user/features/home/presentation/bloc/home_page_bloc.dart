@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_a_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_user_owned_products.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/core/entities/banner.dart';
@@ -23,25 +25,31 @@ EventTransformer<Event> debounceSequential<Event>(Duration duration) {
 
 class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   final GetAllProduct _getAllProduct;
+  // final GetUserOwnedProducts _getUserOwnedProducts;
   final GetAllBannerHomePage _getAllBannerHomePage;
   final GetAllCart _getAllCart;
   final UpdateProductToFavorite _updateProductToFavorite;
   final GetAllFavorite _getAllFavorite;
+  final GetAProduct _getAProduct;
   final UpdateProductToCart _updateProductToCart;
   final GetAllSubCategoriesHomePage _getAllSubCategoriesHomePage;
   HomePageBloc({
     required GetAllProduct getAllProduct,
+    required GetAProduct getAProduct,
     required GetAllBannerHomePage getAllBannerHomePage,
     required GetAllCart getAllCart,
     required UpdateProductToFavorite updateProductToFavorite,
     required GetAllFavorite getAllFavorite,
     required UpdateProductToCart updateProductToCart,
+    required GetUserOwnedProducts getUserOwnedProducts,
     required GetAllSubCategoriesHomePage getAllSubCategoriesHomePage,
   })  : _getAllProduct = getAllProduct,
+        // _getUserOwnedProducts = getUserOwnedProducts,
         _getAllBannerHomePage = getAllBannerHomePage,
         _getAllCart = getAllCart,
         _updateProductToFavorite = updateProductToFavorite,
         _getAllFavorite = getAllFavorite,
+        _getAProduct = getAProduct,
         _updateProductToCart = updateProductToCart,
         _getAllSubCategoriesHomePage = getAllSubCategoriesHomePage,
         super(HomePageInitial()) {
@@ -51,6 +59,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<GetAllProductsEvent>(_onGetAllProductsEvent);
     on<GetAllBannerHomeEvent>(_onGetAllBannerEvent);
     on<GetAllCartHomeEvent>(_onGetAllCartEvent);
+    on<BannerProductNavigateEvent>(_onBannerProductNavigateEvent);
     on<UpdateProductToFavoriteHomeEvent>(
       _onUpdateProductToFavoriteEvent,
     );
@@ -106,7 +115,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   }
 
   FutureOr<void> _onUpdateProductToFavoriteEvent(
-      UpdateProductToFavoriteHomeEvent event, Emitter<HomePageState> emit) async {
+      UpdateProductToFavoriteHomeEvent event,
+      Emitter<HomePageState> emit) async {
     final result = await _updateProductToFavorite(
       UpdateProductToFavoriteParams(
         isFavorited: event.isFavorited,
@@ -129,7 +139,8 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         itemCount: event.itemCount, product: event.product, cart: event.cart));
 
     result.fold(
-        (failed) => emit(ProductUpdatedToCartHomeFailed(message: failed.message)),
+        (failed) =>
+            emit(ProductUpdatedToCartHomeFailed(message: failed.message)),
         (success) => emit(ProductUpdatedToCartHomeSuccess(
               updatedSuccess: success,
             )));
@@ -162,5 +173,15 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         listOfSubCategories: success,
       ));
     });
+  }
+
+  FutureOr<void> _onBannerProductNavigateEvent(
+      BannerProductNavigateEvent event, Emitter<HomePageState> emit) async {
+    final result =
+        await _getAProduct(GetAProductParams(productID: event.productID));
+    result.fold(
+        (failure) =>
+            emit(NavigateToDetailsPageFailed(message: failure.message)),
+        (success) => emit(NavigateToDetailsPageSuccess(product: success)));
   }
 }

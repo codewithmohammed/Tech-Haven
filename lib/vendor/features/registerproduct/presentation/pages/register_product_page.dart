@@ -95,10 +95,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
         // If data is not loaded and not loading, fetch the data
         BlocProvider.of<RegisterProductBloc>(context)
             .add(GetAllCategoryEvent(refreshPage: false));
+        // }
+        // if (!RegisterProductBloc.isBrandLoaded) {
+        //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
       }
-      // if (!RegisterProductBloc.isBrandLoaded) {
-      //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
-      // }
     });
 
     Map<int, List<model.Image>>? listOfImagesLinks;
@@ -154,6 +154,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           allCategories = state.allCategoryModel;
           allBrands = state.allBrandModel;
           if (widget.product != null) {
+            productOldPrizeTextEditingController.text =
+                widget.product!.oldPrize.toString();
             selectedBrandIndex[0] = allBrands
                 .indexWhere((element) => element.id == widget.product!.brandID);
             productNameTextEditingController.text = widget.product!.name;

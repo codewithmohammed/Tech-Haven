@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+import 'package:tech_haven/core/common/data/model/product_order_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/utils/check_product_is_carted.dart';
@@ -29,3 +31,20 @@ calculateTotalQuantity({required List<Cart> listOfCarts}) {
   }
   return quantity;
 }
+
+String formatDateTime(DateTime dateTime) {
+  return DateFormat('dd/MM/yyyy').format(dateTime);
+}
+
+String changeAmountDecimal({required int amount}) {
+  return (amount / 100).toString();
+}
+ calculateTotalPrizeForVendorOrdrer(
+      {required List<ProductOrderModel> productOrderModel}) {
+    double sum = 0;
+    for (var element in productOrderModel) {
+      sum += (element.quantity * element.price) + element.shippingCharge;
+      // sum = sum + element.shippingCharge;
+    }
+    return sum;
+  }

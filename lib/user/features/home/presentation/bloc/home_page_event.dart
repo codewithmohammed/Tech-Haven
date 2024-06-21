@@ -21,13 +21,19 @@ final class UpdateProductToFavoriteHomeEvent extends HomePageEvent {
       {required this.product, required this.isFavorited});
 }
 
+final class GetUserOwnedProductsEvent extends HomePageEvent {}
+
 final class UpdateProductToCartHomeEvent extends HomePageEvent {
   final int itemCount;
-  final Product product;  final Cart? cart;
+  final Product product;
+  final Cart? cart;
   const UpdateProductToCartHomeEvent(
-      {required this.itemCount, required this.product,required this.cart});
+      {required this.itemCount, required this.product, required this.cart});
 }
 
+final class GetAllSubCategoriesHomeEvent extends HomePageEvent {}
 
-final class GetAllSubCategoriesHomeEvent extends HomePageEvent{
+final class BannerProductNavigateEvent extends HomePageEvent {
+  final String productID;
+  BannerProductNavigateEvent({required this.productID});
 }

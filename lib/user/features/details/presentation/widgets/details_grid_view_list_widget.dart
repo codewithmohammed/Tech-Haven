@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+// import 'package:tech_haven/core/common/bloc/common_bloc.dart';
+// import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
+import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/product_card.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
 import 'package:tech_haven/core/entities/cart.dart';
@@ -20,17 +23,19 @@ class DetailsGridViewListWidget extends StatelessWidget {
     void updateProductToFavorite(Product product, bool isLiked) {
       // print('updating the favorite');
       context.read<DetailsPageBloc>().add(
-            UpdateProductToFavoriteBrandRelatedDetailsEvent(
+            UpdateProductToFavoriteDetailsEvent(
               product: product,
               isFavorited: !isLiked,
             ),
           );
     }
 
-    void updateProductToCart(
-        {required Product product,
-        required Cart? cart,
-        required int itemCount}) {
+    void updateProductToCart({
+      required Product product,
+      required Cart? cart,
+      required int itemCount,
+    }) {
+      print('called ');
       context.read<DetailsPageBloc>().add(
             UpdateProductToCartBrandRelatedDetailsEvent(
               product: product,
@@ -57,6 +62,7 @@ class DetailsGridViewListWidget extends StatelessWidget {
           current is GetAllBrandRelatedProductsDetailsState,
       builder: (context, productState) {
         if (productState is GetAllBrandRelatedProductsDetailsSuccessState) {
+          // productState.
           return GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
@@ -68,19 +74,39 @@ class DetailsGridViewListWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final currentProduct = productState.listOfBrandedProducts[index];
               return ProductCard(
+                heroTransition: false,
+                likeButton: BlocBuilder<DetailsPageBloc, DetailsPageState>(
+                  buildWhen: (previous, current) =>
+                      current is GetProductFavoritedDetailsState,
+                  builder: (context, favoriteState) {
+                    if (favoriteState is GetProductFavoritedDetailsSuccess) {
+                      return CustomLikeButton(
+                        isFavorited: favoriteState.favorited
+                            .contains(currentProduct.productID),
+                        onTapFavouriteButton: (bool isLiked) async {
+                          updateProductToFavorite(
+                              productState.listOfBrandedProducts[index],
+                              isLiked);
+                          return isLiked ? false : true;
+                        },
+                      );
+                    }
+                    return CustomLikeButton(
+                      isFavorited: false,
+                      onTapFavouriteButton: (bool isLiked) async {
+                        updateProductToFavorite(
+                            productState.listOfBrandedProducts[index], isLiked);
+                        return isLiked ? false : true;
+                      },
+                    );
+                  },
+                ),
                 onTapCard: () {
                   GoRouter.of(context).pushNamed(AppRouteConstants.detailsPage,
                       extra: currentProduct);
                 },
                 isHorizontal: false,
                 product: productState.listOfBrandedProducts[index],
-                onTapFavouriteButton: (bool isLiked) async {
-                  updateProductToFavorite(
-                      productState.listOfBrandedProducts[index], isLiked);
-                  return isLiked ? false : true;
-                },
-                isFavorited: productState.listOfFavoritedProducts.contains(
-                    productState.listOfBrandedProducts[index].productID),
                 shoppingCartWidget:
                     BlocBuilder<DetailsPageBloc, DetailsPageState>(
                   buildWhen: (previous, current) =>
@@ -170,12 +196,15 @@ class DetailsGridViewListWidget extends StatelessWidget {
           itemCount: 10,
           itemBuilder: (context, index) {
             return ProductCard(
+              heroTransition: false,
               isHorizontal: false,
               product: null,
-              onTapFavouriteButton: (bool) async {
-                return null;
-              },
-              isFavorited: false,
+              likeButton: CustomLikeButton(
+                isFavorited: false,
+                onTapFavouriteButton: (p1) async {
+                  return null;
+                },
+              ),
               shoppingCartWidget: ShoppingCartButton(
                 onTapPlusButton: () {},
                 onTapMinusButton: () {},

@@ -2,15 +2,16 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
+import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 
 import '../repository/checkout_repository.dart';
 
-class SubmitPaymentForm implements UseCase<dynamic, SubmitPaymentFormParams> {
+class SubmitPaymentForm implements UseCase<PaymentIntentModel, SubmitPaymentFormParams> {
   final CheckoutRepository checkoutRepository;
   SubmitPaymentForm({required this.checkoutRepository});
 
   @override
-  Future<Either<Failure, dynamic>> call(SubmitPaymentFormParams params) async {
+  Future<Either<Failure, PaymentIntentModel>> call(SubmitPaymentFormParams params) async {
     return await checkoutRepository.submitPaymentForm(
         name: params.name,
         address: params.address,

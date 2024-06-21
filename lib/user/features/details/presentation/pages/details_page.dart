@@ -4,7 +4,6 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_page_divider.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
-import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/available_color_horizontal_list_view.dart';
@@ -13,7 +12,6 @@ import 'package:tech_haven/user/features/details/presentation/widgets/details_gr
 import 'package:tech_haven/user/features/details/presentation/widgets/overview_and_sprecification_tab_bar.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/product_brand_and_title.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/product_images_display_widget.dart';
-import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/user_review_container_widget.dart';
 
 class DetailsPage extends StatelessWidget {
@@ -23,22 +21,30 @@ class DetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //for the main products logic this is
-      context
-          .read<DetailsPageBloc>()
-          .add(GetAllImagesForProductEvent(productID: product.productID));
-      context
-          .read<DetailsPageBloc>()
-          .add(GetProductCartDetailsEvent(productID: product.productID));
-      // for the related products
-      context
-          .read<DetailsPageBloc>()
-          .add(GetAllBrandRelatedProductsDetailsEvent(product: product));
-      // // print('next is getting all brand related cart details');
-      // print('all the brand related product is gotten');
-    });
-      context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //for the main products logic this is
+  
+    // context.read<DetailsPageBloc>().add(EmitInitialFavoriteButtonState());
+    context
+        .read<DetailsPageBloc>()
+        .add(GetAllImagesForProductEvent(productID: product.productID));
+    context
+        .read<DetailsPageBloc>()
+        .add(GetProductCartDetailsEvent(productID: product.productID));
+    // for the related products
+
+    context
+        .read<DetailsPageBloc>()
+        .add(GetAllBrandRelatedProductsDetailsEvent(product: product));
+    // print('hello');
+    // print('hi');
+    context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
+    // print('ho');
+    // // print('next is getting all brand related cart details');
+    // print('all the brand related product is gotten');
+    // });
+
+      context.read<DetailsPageBloc>().add(GetAllReviewOfProductEvent(productID: product.productID));
     return Scaffold(
       appBar: const AppBarSearchBar(
         backButton: true,
@@ -92,67 +98,9 @@ class DetailsPage extends StatelessWidget {
                 ),
               ),
               const GlobalPageDivider(),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                height: 100,
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GlobalTitleText(
-                      title: 'User Reviews',
-                    ),
-                    Expanded(
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //for the rating
-                          Text(
-                            '4.5',
-                            style: TextStyle(
-                                fontSize: 40, fontWeight: FontWeight.w700),
-                          ),
-                          //column for the star and subtext
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              StarsWidget(),
-                              Text(
-                                'Based on 8K rating and 1.4K reviews',
-                                style: TextStyle(
-                                  color: AppPallete.greyTextColor,
-                                  fontSize: 12,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Divider()
-                  ],
-                ),
-              ),
-              const UserReviewContainerWidget(),
-              Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  height: 50,
-                  width: double.infinity,
-                  child: const RoundedRectangularButton(
-                    title: 'VIEW MORE',
-                    outlined: true,
-                  )),
-
-              const Divider(),
+             
+               UserReviewContainerWidget(product: product,),
+             
               Container(
                 // height: 600,
                 padding: const EdgeInsets.all(10),
@@ -163,7 +111,7 @@ class DetailsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 5,
               ),
               DetailsGridViewListWidget(
                 product: product,

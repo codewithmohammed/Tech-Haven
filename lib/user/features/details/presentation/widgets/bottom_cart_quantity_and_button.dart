@@ -21,7 +21,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
     return BlocConsumer<DetailsPageBloc, DetailsPageState>(
       listener: (context, state) {
         if (state is UpdateProductToCartDetailsSuccess) {
-          print('hello how are you hope you are doing good');
+          // print('hello how are you hope you are doing good');
           Fluttertoast.showToast(
               msg: 'The Product Is Updated To Cart SuccessFully');
           context
@@ -34,7 +34,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
       },
       buildWhen: (previous, current) => current is CartDetailsState,
       builder: (context, state) {
-        print(state);
+        // print(state);
         if (state is CartLoadedSuccessDetailsState) {
           bool productIsCarted = false;
           if (state.cart.cartID != 'null') {
@@ -118,7 +118,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                                 onPressed: () {
                                   if (product.quantity >=
                                       int.parse(controller.text)) {
-                                    print('hello');
+                                    // print('hello');
                                     productIsCarted
                                         ? context.read<DetailsPageBloc>().add(
                                             UpdateProductToCartDetailsEvent(
@@ -132,7 +132,7 @@ class BottomCartQuantityAndButton extends StatelessWidget {
                                                 itemCount:
                                                     int.parse(controller.text),
                                                 product: product));
-                                    print('hello');
+                                    // print('hello');
                                     Navigator.of(context).pop();
                                   } else {
                                     Fluttertoast.showToast(

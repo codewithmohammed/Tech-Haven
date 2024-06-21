@@ -1,17 +1,21 @@
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/common/data/model/location_model.dart';
+import 'package:tech_haven/core/common/data/model/payment_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
+import 'package:tech_haven/core/common/data/model/product_review_model.dart';
+import 'package:tech_haven/core/common/data/model/review_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
 import 'package:tech_haven/vendor/features/registervendor/data/models/vendor_model.dart';
+import 'package:tech_haven/core/common/data/model/order_model.dart';
 
 abstract class DataSource {
   Future<UserModel?> getUserData();
   Future<VendorModel?> getVendorData({required String vendorID});
-  Future<Product> getAProduct({required String productID});
+  Future<ProductModel> getAProduct({required String productID});
   Future<List<CategoryModel>> getAllCategory(bool refresh);
   Future<List<ProductModel>> getAllProduct();
   Future<List<ProductModel>> getAllCartProduct();
@@ -40,4 +44,16 @@ abstract class DataSource {
 
   Future<String> updateProductFields(
       String productID, Map<String, dynamic> updates);
+
+  Future<List<OrderModel>> getAllOrders();
+  Future<List<OrderModel>> getVendorOrders();
+  Future<List<String>> getUserOwnedProducts();
+  Future<List<ReviewModel>> getAllReviewsProduct({required String productID});
+  Future<void> addReview(
+      {required Product product,
+      required String userReview,
+      required double userRating});
+  Future<ProductReviewModel> getProductReviewModel({required String productID});
+  // Future<List<OrderModel>> getUserOrders();
+  // Future<List<PaymentModel>> getPaymentModels();
 }

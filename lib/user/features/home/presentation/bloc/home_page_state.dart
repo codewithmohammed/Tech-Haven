@@ -42,9 +42,23 @@ final class GetAllBannerHomeFailed extends BannerCarouselState {
   GetAllBannerHomeFailed({required this.message});
 }
 
+final class BannerCarouselNavigateState extends BannerCarouselState{}
+
+
+
+final class NavigateToDetailsPageSuccess extends BannerCarouselNavigateState {
+  final Product product;
+  NavigateToDetailsPageSuccess({required this.product});
+}
+
+final class NavigateToDetailsPageFailed extends BannerCarouselNavigateState {
+  final String message;
+  NavigateToDetailsPageFailed({required this.message});
+}
+
 final class ProductCartHomeState extends HomePageState {}
 
-final class CartLoadingHomeState extends ProductCartHomeState{}
+final class CartLoadingHomeState extends ProductCartHomeState {}
 
 final class CartLoadedSuccessHomeState extends ProductCartHomeState {
   final List<Cart> listOfCart;
@@ -80,14 +94,6 @@ final class ProductUpdatedToFavoriteHomeFailed
   ProductUpdatedToFavoriteHomeFailed({required this.message});
 }
 
-
-
-
-
-
-
-
-
 final class GetAllSubCategoriesState extends HomePageState {}
 
 final class GetAllSubCategoriesSuccessState extends GetAllSubCategoriesState {
@@ -100,6 +106,7 @@ final class GetAllSubCategoriesFailedState extends GetAllSubCategoriesState {
   GetAllSubCategoriesFailedState({required this.message});
 }
 
-final class GetAllSubCategoriesLoadingState extends GetAllSubCategoriesState {
-}
+final class GetAllSubCategoriesLoadingState extends GetAllSubCategoriesState {}
+
+///statew of the review
 
