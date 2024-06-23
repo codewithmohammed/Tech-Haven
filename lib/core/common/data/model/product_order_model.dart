@@ -1,3 +1,4 @@
+import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/product_order.dart';
 
 class ProductOrderModel extends ProductOrder {
@@ -10,6 +11,7 @@ class ProductOrderModel extends ProductOrder {
     required super.vendorID,
     required super.productID,
     required super.shippingCharge,
+    required super.productName,
     required super.quantity,
     required super.price,
   });
@@ -17,6 +19,7 @@ class ProductOrderModel extends ProductOrder {
   factory ProductOrderModel.fromJson(Map<String, dynamic> json) {
     return ProductOrderModel(
       // paymentID: json['payment_id'],
+      productName: json['productName'],
       vendorID: json['vendorID'],
       shippingCharge: json['shippingCharge'],
       productID: json['productID'],
@@ -27,11 +30,12 @@ class ProductOrderModel extends ProductOrder {
 
   Map<String, dynamic> toJson() {
     return {
-      'vendorID' : vendorID,
-      'shippingCharge' : shippingCharge,
+      'vendorID': vendorID,
+      'shippingCharge': shippingCharge,
       'productID': productID,
       'quantity': quantity,
+      'productName': productName,
       'price': price,
     };
-  }
+  } 
 }

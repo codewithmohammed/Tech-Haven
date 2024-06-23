@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:tech_haven/core/entities/address_details.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
@@ -64,6 +65,16 @@ class CheckoutRepositoryImpl extends CheckoutRepository {
           products: products,
           carts: carts,
           user: user);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AddressDetails>>> getAllUserAddress({required String userID})async {
+       try {
+      final result = await checkoutDataSource.getAllUserAddress(userID: userID);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

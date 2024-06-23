@@ -1,18 +1,22 @@
-
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
-import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/entities/review.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
+import 'package:tech_haven/user/features/reviews/presentation/bloc/review_page_bloc.dart';
+
+import 'helpful_button_widget.dart';
 
 class ReveiwDisplayWidget extends StatelessWidget {
   const ReveiwDisplayWidget(
       {super.key,
-      required this.reviewModel});
+      required this.reviewModel,
+      required this.userID,
+      this.onPressed});
 
   final Review reviewModel;
+  final String userID;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -64,24 +68,20 @@ class ReveiwDisplayWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: 30,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                //add the product to the list of userhelpful
-              },
-              icon: const SvgIcon(
-                icon: CustomIcons.thumbUpSvg,
-                radius: 20,
-                color: AppPallete.greyTextColor,
-              ),
-              label: Text(
-                reviewModel.listOfHelpFulUsers.length.toString(),
-                style: const TextStyle(
-                  color: AppPallete.greyTextColor,
-                ),
-              ),
-            ),
-          ),
+              height: 30,
+              child: HelpfulButtonWidget(
+                initialCount: reviewModel.listOfHelpFulUsers.length,
+                onPressed: (bool isLiked) {
+                  print(isLiked);
+                  context.read<ReviewPageBloc>().add(AddUserToHelpfulEvent(
+                      userID: userID,
+                      isLiked: isLiked,
+                      productID: reviewModel.productID,
+                      reviewID: reviewModel.reviewID));
+                },
+                isInitiallyLiked:
+                    reviewModel.listOfHelpFulUsers.contains(userID),
+              )),
           const Divider()
         ],
       ),

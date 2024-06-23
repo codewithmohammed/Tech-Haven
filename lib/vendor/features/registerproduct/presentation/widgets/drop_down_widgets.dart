@@ -71,7 +71,7 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
     }
     return Column(
       children: [
-        CustomDropDown(
+        CustomDropDown<String>(
           hintText: 'Select Main Category',
           currentItem: mainCategoryValue,
           items: widget.allCategories.map((e) => e.categoryName).toList(),
@@ -99,7 +99,7 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
         ),
         Constants.kHeight,
         // droopdown for product main category
-        CustomDropDown(
+        CustomDropDown<String>(
           hintText: 'Select Sub Category',
           currentItem: subCategoryValue,
           items: widget.categoryIndexes[0] != null
@@ -117,7 +117,7 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
             });
           },
         ),
-        CustomDropDown(
+        CustomDropDown<String>(
           hintText: 'Select Variant Cateogry',
           currentItem: variantCategoryValue,
           items: widget.categoryIndexes[1] != null

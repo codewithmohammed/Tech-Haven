@@ -16,17 +16,18 @@ class ManageProductPage extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       BlocProvider.of<ManageProductBloc>(context)
           .add(const GetAllProductsEvent());
-
     });
     return SafeArea(
       child: DefaultTabController(
         length: 2,
         child: BlocConsumer<ManageProductBloc, ManageProductState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            if (state is ManageProductLoadingState) {
-              return const Loader();
+          listener: (context, state) {
+            if (state is UpdateTheProductPublishSuccessState) {
+              BlocProvider.of<ManageProductBloc>(context)
+                  .add(const GetAllProductsEvent());
             }
+          },
+          builder: (context, state) {
             if (state is GetAllProductsSuccess) {
               print(state.listOfProductModel.length);
               return Scaffold(

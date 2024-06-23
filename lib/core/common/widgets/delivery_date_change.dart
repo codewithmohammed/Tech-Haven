@@ -3,7 +3,7 @@ import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 
-import '../../../../../core/entities/order.dart'  as model;
+import '../../entities/order.dart'  as model;
 
 class DeliveryDateChange extends StatefulWidget {
   const DeliveryDateChange({

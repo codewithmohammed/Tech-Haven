@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
@@ -158,6 +159,12 @@ class _SignUpPageState extends State<SignUpPage> {
                   //   color: Colors.red
                   // ),
                   ),
+              Positioned(
+                top: 25,
+                child: ConstrainedBox(
+                    constraints: BoxConstraints.tight(const Size(415, 415)),
+                    child: Lottie.asset('assets/lotties/sign_up_lottie.json')),
+              ),
               //for aligning the container in the stack ,used the align widget instead of positioned.
               // MediaQuery.of(context).size.width > 650 ?
               //if the screen width is greater than the value we will build a new align else for the mobile phones

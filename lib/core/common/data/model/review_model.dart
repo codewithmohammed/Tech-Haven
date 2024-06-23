@@ -6,6 +6,7 @@ class ReviewModel extends Review {
     required super.userReview,
     required super.listOfHelpFulUsers,
     required super.userName,
+    required super.productID,
     required super.dateTime,
     required super.userID,
     required super.userProfile,
@@ -16,6 +17,7 @@ class ReviewModel extends Review {
     return ReviewModel(
       reviewID: json['reviewID'],
       userID: json['userID'],
+      productID: json['productID'],
       dateTime: DateTime.parse(json['DateTime']),
       userProfile: json['userProfile'],
       userReview: json['userReview'],
@@ -31,6 +33,7 @@ class ReviewModel extends Review {
       'DateTime': dateTime.toIso8601String(),
       'userID': userID,
       'userProfile' : userProfile,
+      'productID' : productID,
       'userReview': userReview,
       'listOfHelpFulUsers': listOfHelpFulUsers,
       'userName': userName,

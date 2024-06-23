@@ -49,3 +49,28 @@ final class AllCartClearedFailedState extends AllCartsClearedState {
   final String message;
   AllCartClearedFailedState({required this.message});
 }
+
+final class GetAllUserAddressState extends CheckoutState {}
+
+final class AddressInitial extends GetAllUserAddressState {}
+
+final class AddressLoading extends GetAllUserAddressState {}
+
+final class AddressFailed extends GetAllUserAddressState {
+  final String message;
+  AddressFailed({required this.message});
+}
+
+final class AddressLoaded extends GetAllUserAddressState {
+  final List<AddressDetails> addresses;
+  AddressLoaded({required this.addresses});
+}
+
+final class AddressSelectState extends CheckoutState{}
+
+final class AddressSelected extends AddressSelectState {
+  final AddressDetails address;
+  AddressSelected(this.address);
+}
+
+final class AddressUnselected extends AddressSelectState {}

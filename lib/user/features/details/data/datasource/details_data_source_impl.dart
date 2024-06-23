@@ -18,7 +18,7 @@ class DetailsDataSourceImpl implements DetailsDataSource {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => ReviewModel.fromJson(doc.data() as Map<String, dynamic>))
+          .map((doc) => ReviewModel.fromJson(doc.data()))
           .toList();
     } catch (e) {
       throw ServerException('Failed to fetch reviews: $e');

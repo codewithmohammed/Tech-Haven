@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/common/widgets/star_rating_widget.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
@@ -17,8 +17,9 @@ class ReviewEnterPage extends StatefulWidget {
   _ReviewEnterPageState createState() => _ReviewEnterPageState();
 }
 
+double _rating = 0;
+
 class _ReviewEnterPageState extends State<ReviewEnterPage> {
-  final double _rating = 0;
   final _controller = TextEditingController();
 
   @override
@@ -62,7 +63,12 @@ class _ReviewEnterPageState extends State<ReviewEnterPage> {
             const SizedBox(height: 8.0),
             Expanded(
               child: SingleChildScrollView(
-                child: BlocBuilder<ReviewEnterPageBloc, ReviewEnterPageState>(
+                child: BlocConsumer<ReviewEnterPageBloc, ReviewEnterPageState>(
+                  listener: (context, state) {
+                    if (state is ReviewEnterPageSuccess) {
+                      GoRouter.of(context).pop();
+                    }
+                  },
                   builder: (context, state) {
                     return TextField(
                       enabled: state is! ReviewEnterPageLoading,
@@ -89,10 +95,9 @@ class _ReviewEnterPageState extends State<ReviewEnterPage> {
                         (starValueNotifier.value > 0 ||
                             starValueNotifierForReviewPage.value > 0)) {
                       context.read<ReviewEnterPageBloc>().add(AddReviewEvent(
-                            userRating: _rating,
+                            userRating: starValueNotifier.value,
                             userReview: _controller.text,
-                            product:
-                                widget.reviewRouteModel.product,
+                            product: widget.reviewRouteModel.product,
                           ));
                     } else {
                       Fluttertoast.showToast(

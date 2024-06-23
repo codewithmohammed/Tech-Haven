@@ -1,6 +1,5 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/model/review_model.dart';
-import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/error/failures.dart';
 
 abstract class DetailsRepository {

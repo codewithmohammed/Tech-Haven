@@ -89,8 +89,12 @@ class UserProfilePage extends StatelessWidget {
                   const ProfileHeaderTile(
                     title: 'REACH OUT TO US',
                   ),
-                  const TileBarButton(
+                  TileBarButton(
                     title: 'Help Center',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.helpCenterPage);
+                    },
                     icon: CustomIcons.questionMarkSvg,
                   ),
                   const TileBarButton(

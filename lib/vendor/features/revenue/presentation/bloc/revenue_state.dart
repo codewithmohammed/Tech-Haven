@@ -11,14 +11,16 @@ final class RevenueInitial extends RevenueState {}
 
 final class RevenueLoading extends RevenueState {}
 
-final class GetRevenueSuccess extends RevenueState {
+final class RevenueWholeDataState extends RevenueState {}
+
+final class GetRevenueSuccess extends RevenueWholeDataState {
   final Revenue revenue;
-  const GetRevenueSuccess({required this.revenue});
+  GetRevenueSuccess({required this.revenue});
 }
 
-final class GetRevenueFailed extends RevenueState {
+final class GetRevenueFailed extends RevenueWholeDataState {
   final String message;
-  const GetRevenueFailed({required this.message});
+  GetRevenueFailed({required this.message});
 }
 
 final class GetListOfRevenueDataState extends RevenueState {}
@@ -28,7 +30,8 @@ final class GetListOfRevenueDataLoadingState
 
 final class GetListOfRevenueDataSuccessState extends GetListOfRevenueDataState {
   final List<VendorPayment> listOfVendorPayment;
-  GetListOfRevenueDataSuccessState({required this.listOfVendorPayment});
+  final DateFilter dateFilter;
+  GetListOfRevenueDataSuccessState({required this.listOfVendorPayment,required this.dateFilter});
 }
 
 final class GetListOfRevenueDataFailedState extends GetListOfRevenueDataState {

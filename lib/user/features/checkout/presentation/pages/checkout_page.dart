@@ -24,7 +24,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     late PaymentIntentModel paymentIntentModel;
-    context.read<CheckoutBloc>().add(CheckoutInitialEmit());
+    // context.read<CheckoutBloc>().add(CheckoutInitialEmit());
+
+    context
+        .read<CheckoutBloc>()
+        .add(LoadAddresses()); // Replace 'USER_ID' with actual user ID
     return Scaffold(
       // Appbar
       appBar: const AppBarSearchBar(
@@ -38,10 +42,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
           if (state is SubmitPaymentFormFailed) {
             Fluttertoast.showToast(msg: state.message);
             GoRouter.of(context).pop();
-            // print(state.message);
           }
           if (state is SubmitPaymentFormSuccess) {
-            print(state);
+            // print(state);
             paymentIntentModel = state.paymentIntentModel;
             context.read<CheckoutBloc>().add(ShowPresentPaymentSheetEvent(
                 paymentIntentModel: state.paymentIntentModel));
@@ -68,7 +71,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             // GoRouter.of(context).pop();
           }
           if (state is SaveOrderSuccess) {
-            print(state);
+            // print(state);
             context
                 .read<CheckoutBloc>()
                 .add(RemoveAllProductsFromTheCartAndSendOrderEvent());
@@ -87,7 +90,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             pageController.nextPage(
                 duration: const Duration(milliseconds: 500),
                 curve: Curves.bounceInOut);
-            print('showing the payment sheet');
+            // print('showing the payment sheet');
           }
         },
         builder: (context, state) {

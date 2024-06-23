@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
-import 'package:like_button/like_button.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/review_display_widget.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/common/widgets/star_rating_widget.dart';
-import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
@@ -18,7 +14,6 @@ import 'package:tech_haven/user/features/details/data/models/review_route_model.
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
-
 import '../../../../../core/common/widgets/global_title_text.dart';
 
 class UserReviewContainerWidget extends StatelessWidget {
@@ -39,11 +34,12 @@ class UserReviewContainerWidget extends StatelessWidget {
       },
       buildWhen: (previous, current) => current is LoadReviewsState,
       builder: (context, reviewState) {
-        if (reviewState is LoadReviewSuccessState) {
+        if (reviewState is LoadReviewSuccessState) {   
+          // print(reviewState.allUserOwnedProducts.length);
           if (reviewState.listOfReviews.isNotEmpty) {
-            print(reviewState.allUserOwnedProducts.length);
-            print(
-                (reviewState.allUserOwnedProducts.contains(product.productID)));
+         
+            // print(
+            //     (reviewState.allUserOwnedProducts.contains(product.productID)));
             context
                 .read<DetailsPageBloc>()
                 .add(GetProductReviewEvent(productID: product.productID));
@@ -130,11 +126,11 @@ class UserReviewContainerWidget extends StatelessWidget {
                   ),
                 ),
                 ReveiwDisplayWidget(
-                  reviewModel: reviewState.listOfReviews[0],
+                  reviewModel: reviewState.listOfReviews[0], userID: reviewState.userID,
                 ),
                 if (reviewState.listOfReviews.length > 1)
                   ReveiwDisplayWidget(
-                    reviewModel: reviewState.listOfReviews[1],
+                    reviewModel: reviewState.listOfReviews[1], userID:  reviewState.userID,
                   ),
                 Container(
                     padding: const EdgeInsets.symmetric(
@@ -147,7 +143,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                         GoRouter.of(context).pushNamed(
                             AppRouteConstants.fullReviewPage,
                             extra: ReviewRouteModel(
-                                listOfReview: reviewState.listOfReviews));
+                                listOfReview: reviewState.listOfReviews, userID: reviewState.userID ));
                       },
                       title: 'VIEW MORE',
                       outlined: true,
@@ -200,6 +196,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                 ReveiwDisplayWidget(
                   reviewModel: Review(
                     reviewID: 'reviewID',
+                    productID: '',
                     userReview: 'userReview',
                     dateTime: DateTime.now(),
                     userProfile: null,
@@ -207,7 +204,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                     listOfHelpFulUsers: [],
                     userName: 'userName',
                     userRating: 5,
-                  ),
+                  ), userID: '',
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -262,6 +259,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                 ReveiwDisplayWidget(
                   reviewModel: Review(
                     reviewID: 'reviewID',
+                    productID: '',
                     userReview: 'userReview',
                     dateTime: DateTime.now(),
                     userProfile: null,
@@ -269,7 +267,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                     listOfHelpFulUsers: [],
                     userName: 'userName',
                     userRating: 5,
-                  ),
+                  ), userID: '',
                 ),
                 ReveiwDisplayWidget(
                   reviewModel: Review(
@@ -279,9 +277,10 @@ class UserReviewContainerWidget extends StatelessWidget {
                     userProfile: null,
                     userID: 'userID',
                     listOfHelpFulUsers: [],
+                    productID: '',
                     userName: 'userName',
                     userRating: 5,
-                  ),
+                  ), userID: '',
                 ),
                 Container(
                     padding: const EdgeInsets.symmetric(

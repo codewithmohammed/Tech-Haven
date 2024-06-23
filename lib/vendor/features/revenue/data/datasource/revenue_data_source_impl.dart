@@ -35,7 +35,7 @@ class RevenueDataSourceImpl implements RevenueDataSource {
       {required String vendorID}) async {
     try {
       final QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('revenue')
+          .collection('revenues')
           .doc(vendorID)
           .collection('paymentHistory')
           .get();

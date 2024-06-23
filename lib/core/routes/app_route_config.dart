@@ -21,9 +21,11 @@ import 'package:tech_haven/user/features/checkout/presentation/pages/checkout_pa
 import 'package:tech_haven/user/features/details/data/models/review_route_model.dart';
 import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
 import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_page.dart';
+import 'package:tech_haven/user/features/help%20center/presentation/pages/help_center_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
+import 'package:tech_haven/user/features/order%20history/presentation/pages/user_order_history_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
@@ -54,6 +56,10 @@ class AppRoutes {
           name: AppRouteConstants.userOrderPage,
           path: '/user_order_page',
           child: const UserOrderPage()),
+      _buildPageRoute(
+          name: AppRouteConstants.userOrderHistoryPage,
+          path: '/user_order_history_page',
+          child: const UserOrderHistoryPage()),
       _buildPageRoute(
         name: AppRouteConstants.signupPage,
         path: '/signup_page',
@@ -160,8 +166,8 @@ class AppRoutes {
           path: '/full_review_page',
           pageBuilder: (state) {
             // ReviewRouteModel reviewRouteModel = state as ReviewRouteModel;
-            return ReviewPage(reviewRouteModel: state.extra as ReviewRouteModel);
-
+            return ReviewPage(
+                reviewRouteModel: state.extra as ReviewRouteModel);
           }),
       _buildPageRouteWithParams(
         name: AppRouteConstants.checkoutPage,
@@ -236,6 +242,18 @@ class AppRoutes {
           );
         },
       ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.userOrderDetailsPage,
+        path: '/user_order_details_page',
+        pageBuilder: (state) {
+          model.Order order = state.extra as model.Order;
+          return VendorOrderDetailsPage(
+            order: order,
+            // cartID:cartID ,
+            // favoriteID: favoriteID,
+          );
+        },
+      ),
       _buildPageRoute(
           name: AppRouteConstants.vendorMainPage,
           path: '/vendor_main_page',
@@ -245,6 +263,11 @@ class AppRoutes {
         name: AppRouteConstants.vendorChatPage,
         path: '/vendor_chat_page',
         child: const VendorChatPage(),
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.helpCenterPage,
+        path: '/help_center_page',
+        child:  HelpCenterPage(),
       ),
       _buildPageRoute(
         name: AppRouteConstants.searchPage,

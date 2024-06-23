@@ -7,9 +7,9 @@ sealed class RevenueEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class GetRevenueEvent extends RevenueEvent {}
 
-final class GetRevenueEvent extends RevenueEvent{
-  
+final class GetListOfRevenueDataEvent extends RevenueEvent {
+final DateFilter dateFilter;
+  const GetListOfRevenueDataEvent({required this.dateFilter});
 }
-
-final class GetListOfRevenueDataEvent extends RevenueEvent{}

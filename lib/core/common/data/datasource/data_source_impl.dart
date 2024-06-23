@@ -60,14 +60,15 @@ class DataSourceImpl implements DataSource {
         final DateTime dateTime = DateTime.now();
         print('change the productreviws count here');
         final ProductReviewModel productReviewModel = ProductReviewModel(
-            productID: product.productID,
-            productName: product.name,
-            // totalReviews: 0,
-            vendorID: product.vendorID,
-            vendorName: product.vendorName,
-            // totalRating: 0
-            );
+          productID: product.productID,
+          productName: product.name,
+          // totalReviews: 0,f
+          vendorID: product.vendorID,
+          vendorName: product.vendorName,
+          // totalRating: 0
+        );
         final ReviewModel reviewModel = ReviewModel(
+          productID: product.productID,
             reviewID: reviewID,
             userProfile:
                 user.isProfilePhotoUploaded ? user.profilePhoto! : null,
@@ -609,22 +610,23 @@ class DataSourceImpl implements DataSource {
 
   @override
   Future<List<String>> getUserOwnedProducts() async {
-    // FirebaseFirestore firestore = FirebaseFirestore.instance;
-
     try {
-      model.UserModel? user = await getUserData();
-      if (user != null) {
-        DocumentSnapshot docSnapshot =
-            await firebaseFirestore.collection('userOwnedProducts').doc(user.uid).get();
+      UserModel? user = await getUserData();
+      if (user != null) { print('hey how are you');
+        DocumentSnapshot docSnapshot = await firebaseFirestore
+            .collection('userOwnedProducts')
+            .doc(user.uid)
+            .get();
 
         if (docSnapshot.exists && docSnapshot.data() != null) {
           var data = docSnapshot.data() as Map<String, dynamic>;
           if (data['listOfProducts'] != null) {
+            print('hey how are you');
             return List<String>.from(data['listOfProducts']);
           }
         }
       } else {
-        throw const ServerException('User Not Found,Please try again later');
+        throw const ServerException('User Not Found, Please try again later');
       }
       return [];
     } catch (e) {

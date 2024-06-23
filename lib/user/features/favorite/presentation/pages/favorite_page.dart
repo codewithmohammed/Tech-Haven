@@ -12,6 +12,7 @@ import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/title_with_count_bar.dart';
 import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
 import '../../../../../core/common/widgets/rectangular_product_card.dart';
+import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});
@@ -79,6 +80,7 @@ class FavoritePage extends StatelessWidget {
                   context
                       .read<FavoritePageBloc>()
                       .add(GetAllFavoritedProducts());
+                  context.read<HomePageBloc>().add(GetAllProductsEvent());
                 }
                 if (state is FavoritePageLoadedFailed) {
                   showSnackBar(

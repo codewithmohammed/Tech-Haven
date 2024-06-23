@@ -11,3 +11,10 @@ final class GetAllProductsEvent extends ManageProductEvent {
   // final String vendorID;
   const GetAllProductsEvent();
 }
+
+final class UpdateTheProductPublishEvent extends ManageProductEvent {
+  final bool publish;
+  final Product product;
+  const UpdateTheProductPublishEvent(
+      {required this.product, required this.publish});
+}

@@ -1,22 +1,24 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-class CustomDropDown extends StatelessWidget {
-  const CustomDropDown(
-      {super.key,
-      required this.items,
-      required this.currentItem,
-      this.onChanged,
-      this.hintText = 'Select Item'});
-  final List<String> items;
-  final String? currentItem;
-  final void Function(String?)? onChanged;
+class CustomDropDown<T> extends StatelessWidget {
+  const CustomDropDown({
+    super.key,
+    required this.items,
+    required this.currentItem,
+    this.onChanged,
+    this.hintText = 'Select Item',
+  });
+
+  final List<T> items;
+  final T? currentItem;
+  final void Function(T?)? onChanged;
   final String hintText;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
+      child: DropdownButton2<T>(
         isExpanded: true,
         hint: Text(
           hintText,
@@ -29,7 +31,7 @@ class CustomDropDown extends StatelessWidget {
             .map((item) => DropdownMenuItem(
                   value: item,
                   child: Text(
-                    item,
+                    item.toString().split('.').last, // Display only enum value name
                     style: const TextStyle(
                       fontSize: 14,
                     ),
@@ -40,16 +42,15 @@ class CustomDropDown extends StatelessWidget {
         onChanged: onChanged,
         buttonStyleData: const ButtonStyleData(
           decoration: BoxDecoration(
-              // color: Color,
-              borderRadius: BorderRadius.all(Radius.circular(
-            5,
-          ))),
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
           padding: EdgeInsets.symmetric(horizontal: 16),
           overlayColor: MaterialStatePropertyAll(
             Color(0xFF2F353E),
           ),
           height: 45,
-          // width: 200,
         ),
         dropdownStyleData: const DropdownStyleData(
           maxHeight: 200,
@@ -58,7 +59,6 @@ class CustomDropDown extends StatelessWidget {
           height: 40,
         ),
         dropdownSearchData: DropdownSearchData(
-          // searchController: textEditingController,
           searchInnerWidgetHeight: 50,
           searchInnerWidget: Container(
             height: 50,
@@ -71,7 +71,6 @@ class CustomDropDown extends StatelessWidget {
             child: TextFormField(
               expands: true,
               maxLines: null,
-              // controller: textEditingController,
               decoration: InputDecoration(
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(

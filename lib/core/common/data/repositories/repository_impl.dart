@@ -125,8 +125,8 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, List<String>>> getUserOwnedProducts() async {
     try {
       // print('updating the favorite');
-      final result = await dataSource.getAllFavorite();
-      // print('hello how are you');
+      final result = await dataSource.getUserOwnedProducts();
+      print('hello how are you');
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
@@ -261,31 +261,39 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<Either<Failure, List<Review>>> getAllReviewsProduct({required String productID}) async{
-   try {
-      final result = await dataSource.getAllReviewsProduct(productID: productID);
+  Future<Either<Failure, List<Review>>> getAllReviewsProduct(
+      {required String productID}) async {
+    try {
+      final result =
+          await dataSource.getAllReviewsProduct(productID: productID);
       // print(result);
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
-  
+
   @override
-  Future<Either<Failure,void>> addReview({required Product product, required String userReview, required double userRating}) async {
-  try {
-    final result =  await dataSource.addReview(product: product, userReview: userReview, userRating: userRating);
-     return right(result);
+  Future<Either<Failure, void>> addReview(
+      {required Product product,
+      required String userReview,
+      required double userRating}) async {
+    try {
+      final result = await dataSource.addReview(
+          product: product, userReview: userReview, userRating: userRating);
+      return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
 
   @override
-  Future<Either<Failure, ProductReviewModel>> getProductReviewModel({required String productID})async {
-   try {
-    final result =  await dataSource.getProductReviewModel(productID: productID);
-     return right(result);
+  Future<Either<Failure, ProductReviewModel>> getProductReviewModel(
+      {required String productID}) async {
+    try {
+      final result =
+          await dataSource.getProductReviewModel(productID: productID);
+      return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

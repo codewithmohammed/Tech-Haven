@@ -36,7 +36,7 @@ String formatDateTime(DateTime dateTime) {
   return DateFormat('dd/MM/yyyy').format(dateTime);
 }
 
-String changeAmountDecimal({required int amount}) {
+String changeAmountDecimal( {required int amount}) {
   return (amount / 100).toString();
 }
  calculateTotalPrizeForVendorOrdrer(

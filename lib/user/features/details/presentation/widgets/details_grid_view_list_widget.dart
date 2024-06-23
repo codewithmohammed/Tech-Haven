@@ -62,27 +62,38 @@ class DetailsGridViewListWidget extends StatelessWidget {
           current is GetAllBrandRelatedProductsDetailsState,
       builder: (context, productState) {
         if (productState is GetAllBrandRelatedProductsDetailsSuccessState) {
-          // productState.
-          return GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300,
-              mainAxisExtent: 300,
-            ),
-            itemCount: productState.listOfBrandedProducts.length,
-            itemBuilder: (context, index) {
-              final currentProduct = productState.listOfBrandedProducts[index];
-              return ProductCard(
-                heroTransition: false,
-                likeButton: BlocBuilder<DetailsPageBloc, DetailsPageState>(
-                  buildWhen: (previous, current) =>
-                      current is GetProductFavoritedDetailsState,
-                  builder: (context, favoriteState) {
-                    if (favoriteState is GetProductFavoritedDetailsSuccess) {
+          if (productState.listOfBrandedProducts.isNotEmpty) {
+            return GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 300,
+                mainAxisExtent: 300,
+              ),
+              itemCount: productState.listOfBrandedProducts.length,
+              itemBuilder: (context, index) {
+                final currentProduct =
+                    productState.listOfBrandedProducts[index];
+                return ProductCard(
+                  heroTransition: false,
+                  likeButton: BlocBuilder<DetailsPageBloc, DetailsPageState>(
+                    buildWhen: (previous, current) =>
+                        current is GetProductFavoritedDetailsState,
+                    builder: (context, favoriteState) {
+                      if (favoriteState is GetProductFavoritedDetailsSuccess) {
+                        return CustomLikeButton(
+                          isFavorited: favoriteState.favorited
+                              .contains(currentProduct.productID),
+                          onTapFavouriteButton: (bool isLiked) async {
+                            updateProductToFavorite(
+                                productState.listOfBrandedProducts[index],
+                                isLiked);
+                            return isLiked ? false : true;
+                          },
+                        );
+                      }
                       return CustomLikeButton(
-                        isFavorited: favoriteState.favorited
-                            .contains(currentProduct.productID),
+                        isFavorited: false,
                         onTapFavouriteButton: (bool isLiked) async {
                           updateProductToFavorite(
                               productState.listOfBrandedProducts[index],
@@ -90,100 +101,99 @@ class DetailsGridViewListWidget extends StatelessWidget {
                           return isLiked ? false : true;
                         },
                       );
-                    }
-                    return CustomLikeButton(
-                      isFavorited: false,
-                      onTapFavouriteButton: (bool isLiked) async {
-                        updateProductToFavorite(
-                            productState.listOfBrandedProducts[index], isLiked);
-                        return isLiked ? false : true;
-                      },
-                    );
+                    },
+                  ),
+                  onTapCard: () {
+                    GoRouter.of(context).pushNamed(
+                        AppRouteConstants.detailsPage,
+                        extra: currentProduct);
                   },
-                ),
-                onTapCard: () {
-                  GoRouter.of(context).pushNamed(AppRouteConstants.detailsPage,
-                      extra: currentProduct);
-                },
-                isHorizontal: false,
-                product: productState.listOfBrandedProducts[index],
-                shoppingCartWidget:
-                    BlocBuilder<DetailsPageBloc, DetailsPageState>(
-                  buildWhen: (previous, current) =>
-                      current is ProductCartDetailsPageRelatedState,
-                  builder: (context, cartState) {
-                    // print(cartState);
-                    if (cartState is CartLoadedSuccessDetailsPageRelatedState) {
-                      bool productIsCarted = false;
-                      final cartIndex = checkCurrentProductIsCarted(
-                          product: productState.listOfBrandedProducts[index],
-                          carts: cartState.listOfCart);
+                  isHorizontal: false,
+                  product: productState.listOfBrandedProducts[index],
+                  shoppingCartWidget:
+                      BlocBuilder<DetailsPageBloc, DetailsPageState>(
+                    buildWhen: (previous, current) =>
+                        current is ProductCartDetailsPageRelatedState,
+                    builder: (context, cartState) {
+                      // print(cartState);
+                      if (cartState
+                          is CartLoadedSuccessDetailsPageRelatedState) {
+                        bool productIsCarted = false;
+                        final cartIndex = checkCurrentProductIsCarted(
+                            product: productState.listOfBrandedProducts[index],
+                            carts: cartState.listOfCart);
 
-                      if (cartIndex > -1) {
-                        productIsCarted = true;
+                        if (cartIndex > -1) {
+                          productIsCarted = true;
+                        }
+
+                        // print(productIsCarted);
+
+                        return ShoppingCartButton(
+                          onTapPlusButton: () {
+                            // print((productIsCarted &&
+                            //     cartState.listOfCart[index].productCount <=
+                            //         currentProduct.quantity));
+                            if (productIsCarted &&
+                                cartState.listOfCart[index].productCount <=
+                                    currentProduct.quantity) {
+                              updateProductToCart(
+                                product: currentProduct,
+                                cart: cartState.listOfCart[cartIndex],
+                                itemCount: cartState
+                                        .listOfCart[cartIndex].productCount +
+                                    1,
+                              );
+                              //if the product is not carted yet . then we increase it by one
+                            } else if (!productIsCarted) {
+                              updateProductToCart(
+                                product: currentProduct,
+                                cart: null,
+                                itemCount: 1,
+                              );
+                            }
+                          },
+                          onTapMinusButton: () {
+                            if (productIsCarted &&
+                                cartState.listOfCart[cartIndex].productCount -
+                                        1 >=
+                                    0) {
+                              updateProductToCart(
+                                product: currentProduct,
+                                cart: cartState.listOfCart[cartIndex],
+                                itemCount: cartState
+                                        .listOfCart[cartIndex].productCount -
+                                    1,
+                              );
+                            }
+                            //if there is no product carted and the user clicks '-' then we show a
+                            if (!productIsCarted) {
+                              Fluttertoast.showToast(
+                                msg: 'Add Product To Cart First',
+                              );
+                            }
+                          },
+                          onTapCartButton: () {},
+                          currentCount: productIsCarted
+                              ? cartState.listOfCart[cartIndex].productCount
+                              : 0,
+                          isLoading: false,
+                        );
                       }
-
-                      // print(productIsCarted);
-
-                      return ShoppingCartButton(
-                        onTapPlusButton: () {
-                          // print((productIsCarted &&
-                          //     cartState.listOfCart[index].productCount <=
-                          //         currentProduct.quantity));
-                          if (productIsCarted &&
-                              cartState.listOfCart[index].productCount <=
-                                  currentProduct.quantity) {
-                            updateProductToCart(
-                              product: currentProduct,
-                              cart: cartState.listOfCart[cartIndex],
-                              itemCount:
-                                  cartState.listOfCart[cartIndex].productCount +
-                                      1,
-                            );
-                            //if the product is not carted yet . then we increase it by one
-                          } else if (!productIsCarted) {
-                            updateProductToCart(
-                              product: currentProduct,
-                              cart: null,
-                              itemCount: 1,
-                            );
-                          }
-                        },
-                        onTapMinusButton: () {
-                          if (productIsCarted &&
-                              cartState.listOfCart[cartIndex].productCount -
-                                      1 >=
-                                  0) {
-                            updateProductToCart(
-                              product: currentProduct,
-                              cart: cartState.listOfCart[cartIndex],
-                              itemCount:
-                                  cartState.listOfCart[cartIndex].productCount -
-                                      1,
-                            );
-                          }
-                          //if there is no product carted and the user clicks '-' then we show a
-                          if (!productIsCarted) {
-                            Fluttertoast.showToast(
-                              msg: 'Add Product To Cart First',
-                            );
-                          }
-                        },
-                        onTapCartButton: () {},
-                        currentCount: productIsCarted
-                            ? cartState.listOfCart[cartIndex].productCount
-                            : 0,
-                        isLoading: false,
+                      return const ShoppingCartButton(
+                        currentCount: 0,
+                        isLoading: true,
                       );
-                    }
-                    return const ShoppingCartButton(
-                      currentCount: 0,
-                      isLoading: true,
-                    );
-                  },
-                ),
-              );
-            },
+                    },
+                  ),
+                );
+              },
+            );
+          }
+          return const SizedBox(
+            child: Center(
+              child: Text('No Products from this brand anymore'),
+            ),
           );
         }
         return GridView.builder(

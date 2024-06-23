@@ -10,7 +10,7 @@ sealed class CheckoutEvent extends Equatable {
 final class CheckoutInitialEmit extends CheckoutEvent {}
 
 final class SubmitPaymentFormEvent extends CheckoutEvent {
-  final String name;
+  // final String name;
   final String address;
   final String pin;
   final String city;
@@ -21,7 +21,8 @@ final class SubmitPaymentFormEvent extends CheckoutEvent {
   // final String pin;
 
   const SubmitPaymentFormEvent(
-      {required this.name,
+      {
+      // required this.name,
       required this.address,
       required this.pin,
       required this.city,
@@ -66,8 +67,19 @@ final class ShowPresentPaymentSheetEvent extends CheckoutEvent {
 // final class UpdateProductQuantityEvent extends CheckoutEvent{}
 
 final class RemoveAllProductsFromTheCartAndSendOrderEvent
-    extends CheckoutEvent {
+    extends CheckoutEvent {}
+
+final class RemoveTheOrderEvent extends CheckoutEvent {}
+
+class LoadAddresses extends CheckoutEvent {
 
 }
 
-final class RemoveTheOrderEvent extends CheckoutEvent {}
+final class SelectAddressState extends CheckoutEvent{}
+
+final class SelectAddress extends SelectAddressState {
+  final AddressDetails address;
+   SelectAddress(this.address);
+}
+
+final class UnselectAddress extends SelectAddressState {}

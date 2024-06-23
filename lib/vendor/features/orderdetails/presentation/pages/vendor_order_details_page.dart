@@ -103,7 +103,7 @@ class VendorOrderDetailsPage extends StatelessWidget {
                             //text for the amount
                             const Text('Not Delivered'),
                             Text(
-                              ' Your Amount ${products[listIndex].price}',
+                              'Total Price ${calculateTotalProductsPrize(amount: products[listIndex].price, quantity: products[listIndex].quantity) + products[listIndex].shippingCharge}',
                               style: const TextStyle(
                                 color: Colors.green,
                               ),
@@ -271,8 +271,8 @@ class VendorOrderDetailsPage extends StatelessWidget {
     );
   }
 
-  String calculateTotalProductsPrize(
+  double calculateTotalProductsPrize(
       {required double amount, required int quantity}) {
-    return (quantity * amount).toString();
+    return (quantity * amount);
   }
 }

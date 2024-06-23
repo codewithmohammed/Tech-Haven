@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -51,11 +52,11 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
         ),
       ),
       child: InkWell(
-        onTap: () { widget.onTapCartButton;
+        onTap: () {
+          widget.onTapCartButton;
           setState(() {
             isExpanded = isExpanded ? false : true;
           });
-         
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -82,7 +83,11 @@ class _ShoppingCartButtonState extends State<ShoppingCartButton> {
                     ),
                   )
                 : isExpanded && widget.isLoading
-                    ? const CircularProgressIndicator()
+                    ? Lottie.asset(
+                        'assets/lotties/loading_lottie.json',
+                        height: 15,
+                        width: 15,
+                      )
                     : const SvgIcon(
                         icon: CustomIcons.cartSvg,
                         radius: 20,

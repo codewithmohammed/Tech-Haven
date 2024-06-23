@@ -6,6 +6,7 @@ import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_reviews_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_images_for_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_product_review.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_user_owned_products.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
@@ -28,6 +29,8 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
   final GetProductReview _getProductReview;
   final UpdateProductToFavorite _updateProductToFavorite;
   final GetAllBrandRelatedProduct _getAllBrandRelatedProduct;
+
+  final GetUserData _getUserData;
   final UpdateProductToCart _updateProductToCart;
   Map<int, List<model.Image>> mapOfListOfImages = {};
   DetailsPageBloc({
@@ -36,6 +39,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
     required GetProductReview getProductReview,
     required GetAllBrandRelatedProduct getAllBrandRelatedProduct,
     required GetAllReviewsProduct getAllReviewsProduct,
+    required GetUserData getUserData,
     required GetAllCart getAllCart,
     required UpdateProductToCart updateProductToCart,
     required GetAllFavorite getAllFavorite,
@@ -44,6 +48,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
         _getAllBrandRelatedProduct = getAllBrandRelatedProduct,
         _getImagesForProduct = getImagesForProduct,
         _getProductReview = getProductReview,
+        _getUserData = getUserData,
         _getUserOwnedProducts = getUserOwnedProducts,
         _getAllReviewsProduct = getAllReviewsProduct,
         _getAllFavorite = getAllFavorite,
@@ -152,7 +157,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
             emit(GetProductFavoritedDetailsFailed(message: failure.message)),
         (success) {
       // emit(GetProductFavoritedDetailsInitialState());
-      print(success[0]);
+      // print(success[0]);
       return emit(GetProductFavoritedDetailsSuccess(favorited: success));
     });
   }
@@ -248,27 +253,38 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
       GetAllReviewOfProductEvent event, Emitter<DetailsPageState> emit) async {
     // print('hello sdlfs');
     emit(LoadReviewLoadingState());
+    String? userID;
+    final user = await _getUserData(NoParams());
+
+    user.fold(
+        (failed) =>
+            emit(GetUserOwnedProdutsFailedState(message: failed.message)),
+        (user) => userID = user!.uid!);
     final allProductReviews = await _getAllReviewsProduct(
         GetAllReviewsProductParams(productID: event.productID));
     List<String> listOfUserOwnedProducts = [];
+    if (userID != null) {
+      final userOwnedProducts = await _getUserOwnedProducts(NoParams());
 
-    final userOwnedProducts = await _getUserOwnedProducts(NoParams());
-
-    // if (productReview != null) {
-    userOwnedProducts.fold(
-        (failure) =>
-            emit(GetUserOwnedProdutsFailedState(message: failure.message)),
-        (success) => listOfUserOwnedProducts = success);
-    allProductReviews.fold(
-      (failure) => emit(LoadReviewFailedState(message: failure.message)),
-      (success) => emit(
-        LoadReviewSuccessState(
-          // productReview: productReview!,
-          listOfReviews: success,
-          allUserOwnedProducts: listOfUserOwnedProducts,
+      // if (productReview != null) {
+      userOwnedProducts.fold(
+          (failure) =>
+              emit(GetUserOwnedProdutsFailedState(message: failure.message)),
+          (success) => listOfUserOwnedProducts = success);
+      // print(listOfUserOwnedProducts);
+      allProductReviews.fold(
+        (failure) => emit(LoadReviewFailedState(message: failure.message)),
+        (success) => emit(
+          LoadReviewSuccessState(
+            userID: userID!,
+            listOfReviews: success,
+            allUserOwnedProducts: listOfUserOwnedProducts,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      emit(GetUserOwnedProdutsFailedState(message: 'No User ID Exists'));
+    }
   }
 
   FutureOr<void> _onGetProductReviewEvent(
@@ -281,4 +297,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
         (failure) => emit(LoadReviewModelFailedState(message: failure.message)),
         (success) => emit(LoadReviewModelSuccessState(productReview: success)));
   }
+
+  // FutureOr<void> _onGetUserOwnedProductsEvent(GetUserOwnedProductsEvent event, Emitter<DetailsPageState> emit) {
+  // }
 }

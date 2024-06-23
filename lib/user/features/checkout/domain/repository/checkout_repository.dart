@@ -1,4 +1,5 @@
 import 'package:fpdart/fpdart.dart';
+import 'package:tech_haven/core/entities/address_details.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/user.dart';
@@ -16,11 +17,15 @@ abstract class CheckoutRepository {
     required String currency,
     required String amount,
   });
-  Future<Either<Failure,  PaymentIntentModel>> showPresentPaymentSheet({    required PaymentIntentModel paymentIntentModel,});
+  Future<Either<Failure, PaymentIntentModel>> showPresentPaymentSheet({
+    required PaymentIntentModel paymentIntentModel,
+  });
   Future<Either<Failure, String>> sendOrder({
     required PaymentIntentModel paymentIntentModel,
     required List<Product> products,
     required List<Cart> carts,
     required User user,
   });
+  Future<Either<Failure, List<AddressDetails>>> getAllUserAddress(
+      {required String userID});
 }

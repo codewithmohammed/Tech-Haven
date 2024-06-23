@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/user/features/search/data/datasource/search_page_data_source.dart';

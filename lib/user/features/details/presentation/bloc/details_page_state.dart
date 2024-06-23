@@ -156,23 +156,25 @@ final class GetUserOwnedProdutsFailedState extends GetUserOwnedProductsState {
 
 final class LoadReviewsState extends ReviewState {}
 
-final class LoadReviewLoadingState extends LoadReviewsState{}
+final class LoadReviewLoadingState extends LoadReviewsState {}
 
 final class LoadReviewSuccessState extends LoadReviewsState {
   final List<Review> listOfReviews;
   // final ProductReview productReview;
+  final String userID;
   final List<String> allUserOwnedProducts;
-  LoadReviewSuccessState(
-      {required this.listOfReviews, required this.allUserOwnedProducts,
-      // required this.productReview
-      });
+  LoadReviewSuccessState({
+    required this.userID,
+    required this.listOfReviews,
+    required this.allUserOwnedProducts,
+    // required this.productReview
+  });
 }
 
 final class LoadReviewFailedState extends LoadReviewsState {
   final String message;
   LoadReviewFailedState({required this.message});
 }
-
 
 final class LoadReviewModelState extends ReviewState {}
 
@@ -181,13 +183,14 @@ final class LoadReviewModelState extends ReviewState {}
 final class LoadReviewModelSuccessState extends LoadReviewModelState {
   // final List<Review> listOfReviews;
   final ProductReview productReview;
+  // final String userID;
   // final List<String> allUserOwnedProducts;
   LoadReviewModelSuccessState(
       {
-      //   required this.listOfReviews, 
+        // required this.userID,
+      //   required this.listOfReviews,
       // required this.allUserOwnedProducts,
-      required this.productReview
-      });
+      required this.productReview});
 }
 
 final class LoadReviewModelFailedState extends LoadReviewModelState {

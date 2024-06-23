@@ -15,6 +15,7 @@ class CustomIcons {
   static const String globeSvg = 'assets/icons/globe.svg';
   static const String heartSvg = 'assets/icons/heart.svg';
   static const String mapPinSvg = 'assets/icons/map_pin.svg';
+  static const String thumbUpFilledSvg = 'assets/icons/thumb_up_filled.svg';
   static const String mapPinAltSvg = 'assets/icons/map_pin_alt.svg';
   static const String messagesSvg = 'assets/icons/messages.svg';
   static const String microphoneSvg = 'assets/icons/microphone.svg';

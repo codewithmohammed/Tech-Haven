@@ -13,12 +13,15 @@ import 'package:tech_haven/user/features/cart/presentation/bloc/cart_page_bloc.d
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
 import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
+import 'package:tech_haven/user/features/help%20center/presentation/bloc/help_center_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
-import 'package:tech_haven/user/features/order/presentation/bloc/user_order_bloc.dart';
+import 'package:tech_haven/user/features/order%20history/presentation/bloc/user_order_history_page_bloc.dart';
+import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/review%20enter/presentation/bloc/review_enter_page_bloc.dart';
+import 'package:tech_haven/user/features/reviews/presentation/bloc/review_page_bloc.dart';
 import 'package:tech_haven/user/features/search/presentation/bloc/search_page_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/bloc/search_category_bloc.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/cubit/search_category_cubit.dart';
@@ -48,14 +51,23 @@ void main() async {
       BlocProvider(
         create: (context) => serviceLocator<AuthBloc>(),
       ),
+       BlocProvider(
+        create: (context) => serviceLocator<ReviewPageBloc>(),
+      ),
       BlocProvider(
         create: (_) => serviceLocator<HomePageBloc>(),
+      ),
+      BlocProvider(
+        create: (_) => serviceLocator<HelpCenterBloc>(),
       ),
       BlocProvider(
         create: (context) => serviceLocator<SearchCategoryBloc>(),
       ),
       BlocProvider(
         create: (_) => serviceLocator<SearchCategoryCubit>(),
+      ),
+       BlocProvider(
+        create: (_) => serviceLocator<UserOrderHistoryPageBloc>(),
       ),
       BlocProvider(
         create: (_) => serviceLocator<DetailsPageBloc>(),
@@ -108,7 +120,7 @@ void main() async {
         create: (_) => serviceLocator<RevenueBloc>(),
       ),
         BlocProvider(
-        create: (_) => serviceLocator<UserOrderBloc>(),
+        create: (_) => serviceLocator<UserOrderPageBloc>(),
       ),
         BlocProvider(
         create: (_) => serviceLocator<SearchPageBloc>(),

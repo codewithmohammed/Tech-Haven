@@ -24,3 +24,14 @@ final class GetAllProductFailed extends ManageProductPageState {
   final String message;
   GetAllProductFailed({required this.message});
 }
+
+final class UpdateTheProductPublishState extends ManageProductState {}
+
+final class UpdateTheProductPublishSuccessState
+    extends UpdateTheProductPublishState {}
+
+final class UpdateTheProductPublishFailedState
+    extends UpdateTheProductPublishState {
+  final String message;
+  UpdateTheProductPublishFailedState({required this.message});
+}

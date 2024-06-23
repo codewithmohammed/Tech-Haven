@@ -70,18 +70,7 @@ class VendorOrderPageBloc
 
   FutureOr<void> _onDeliverOrderToAdminEvent(DeliverOrderToAdminEvent event,
       Emitter<VendorOrderPageState> emit) async {
-    // List<Product> listOfMain = [];
-    // print('hi');
-    // print('how are you');
-    // for (var element in event.order.products) {
-    //   final productResult =
-    //       await _getAProduct(GetAProductParams(productID: element.productID));
-    //   productResult.fold((failure) {
-    //     // Handle the failure if needed
-    //   }, (product) {
-    //     listOfMain.add(product);
-    //   });
-    // }
+
     final result = await _deliverOrderToAdmin(DeliverOrderToAdminParams(
       order: event.order,
     ));

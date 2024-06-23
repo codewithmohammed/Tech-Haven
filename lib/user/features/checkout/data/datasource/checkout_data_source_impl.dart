@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+import 'package:tech_haven/core/common/data/model/address_details_model.dart';
 import 'package:tech_haven/core/common/data/model/order_model.dart';
 import 'package:tech_haven/core/common/data/model/payment_model.dart';
 import 'package:tech_haven/core/common/data/model/product_order_model.dart';
+import 'package:tech_haven/core/common/data/model/user_ordered_product_model.dart';
 import 'package:tech_haven/core/common/data/model/vendor_payment_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
@@ -131,7 +132,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
   }) async {
     try {
       String orderID = const Uuid().v4();
-      print(1);
+
       DateTime orderDateWithTime = DateTime.now();
 
       List<ProductOrderModel> listOfProductOrderModel = [];
@@ -140,10 +141,60 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       // print('start');
       // Populate mapOfvendorProducts and listOfProductOrderModel
 
+      AddressDetailsModel addressDetailsModel = AddressDetailsModel(
+          addressID: orderID,
+          city: paymentIntentModel.shippingModel.addressModel.city,
+          country: paymentIntentModel.shippingModel.addressModel.country,
+          line1: paymentIntentModel.shippingModel.addressModel.line1,
+          postalCode: paymentIntentModel.shippingModel.addressModel.postalCode,
+          state: paymentIntentModel.shippingModel.addressModel.state);
+
+      await firebaseFirestore
+          .collection('userAddresses')
+          .doc(user.uid)
+          .collection('addresses')
+          .doc(orderID)
+          .set(addressDetailsModel.toJson());
       for (int i = 0; i < carts.length; i++) {
         // print(carts[i].productID);
         Product product = products
             .firstWhere((element) => element.productID == carts[i].productID);
+        await firebaseFirestore
+            .collection('userOrderedProducts')
+            .doc(user.uid)
+            .collection('products')
+            .doc(
+              orderID,
+            )
+            .set(UserOrderedProductModel(
+              shippingCharge: product.shippingCharge ?? 0,
+              brandID: product.brandID,
+              productID: product.productID,
+              // locationDetails: ,
+              orderID: orderID,
+              vendorName: product.vendorName,
+              brandName: product.brandName,
+              dateTime: orderDateWithTime,
+              quantity: carts[i].productCount,
+              displayImageURL: product.displayImageURL,
+              name: product.name,
+              prize: product.prize,
+              oldPrize: product.oldPrize,
+              vendorID: product.vendorID,
+              specifications: product.specifications ?? {},
+              mainCategory: product.mainCategory,
+              mainCategoryID: product.mainCategoryID,
+              subCategory: product.subCategory,
+              subCategoryID: product.subCategoryID,
+              variantCategory: product.variantCategory,
+              variantCategoryID: product.variantCategoryID,
+              overview: product.overview,
+              // specifications: product.specifications,
+              // shippingCharge: product.shippingCharge,
+              // rating: product.rating,
+              // isPublished: product.isPublished
+            ).toJson());
+
         if (mapOfvendorProducts[product.vendorID] != null) {
           mapOfvendorProducts[product.vendorID]!.add(ProductOrderModel(
             vendorID: product.vendorID,
@@ -151,10 +202,12 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
             productID: carts[i].productID,
             quantity: carts[i].productCount,
             price: product.prize,
+            productName: product.name,
           ));
         } else {
           mapOfvendorProducts[product.vendorID] = [
             ProductOrderModel(
+              productName: product.name,
               shippingCharge: product.shippingCharge ?? 0,
               vendorID: product.vendorID,
               productID: carts[i].productID,
@@ -166,6 +219,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         // print(product.vendorID);
         listOfProductOrderModel.add(ProductOrderModel(
           vendorID: product.vendorID,
+          productName: product.name,
           productID: carts[i].productID,
           shippingCharge: product.shippingCharge ?? 0,
           quantity: carts[i].productCount,
@@ -182,8 +236,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           totalAmount: paymentIntentModel.amount,
           orderID: orderID,
         );
-// RevenueModel(currentBalance: currentBalance, vendorID: vendorID, withdrewAmount: withdrewAmount)
-        print(2);
+        // RevenueModel(currentBalance: currentBalance, vendorID: vendorID, withdrewAmount: withdrewAmount)
+        // print(2);
         await firebaseFirestore.collection('revenues').doc(vendorID).set({
           'currentBalance': FieldValue.increment(
             calculateTotalPrizeForVendorOrdrer(
@@ -198,7 +252,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
             .collection('paymentHistory')
             .doc(orderID)
             .set(vendorPaymentModel.toJson());
-        print(3);
+        // print(3);
         // await firebaseFirestore
         //     .collection('revenues')
         //     .doc(vendorID)
@@ -257,16 +311,16 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         // shippingCharge: ,
         totalAmount: paymentIntentModel.amount,
       );
-      // final PaymentModel paymentModel = PaymentModel(
-      //   userID: user.uid!,
-      //   userName: user.username!,
-      //   paymentID: paymentIntentModel.id,
-      // );
-      // print(6);
-      // await firebaseFirestore
-      //     .collection('userOrders')
-      //     .doc(user.uid!)
-      //     .set(paymentModel.toJson());
+      final PaymentModel paymentModel = PaymentModel(
+        userID: user.uid!,
+        userName: user.username!,
+        paymentID: paymentIntentModel.id,
+      );
+      print(6);
+      await firebaseFirestore
+          .collection('userOrders')
+          .doc(user.uid!)
+          .set(paymentModel.toJson());
       print(7);
       await firebaseFirestore
           .collection('userOrders')
@@ -278,6 +332,26 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       print('ok');
 
       return 'success';
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<List<AddressDetailsModel>> getAllUserAddress(
+      {required String userID}) async{
+    try {
+  @override
+
+    final snapshot = await firebaseFirestore
+        .collection('userAddresses')
+        .doc(userID)
+        .collection('addresses')
+        .get();
+
+    return snapshot.docs
+        .map((doc) => AddressDetailsModel.fromJson(doc.data()))
+        .toList();
     } catch (e) {
       throw ServerException(e.toString());
     }
