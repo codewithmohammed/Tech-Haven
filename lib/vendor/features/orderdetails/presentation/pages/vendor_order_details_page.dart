@@ -203,7 +203,7 @@ class VendorOrderDetailsPage extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
-                                          '${state.listOfProducts[listIndex].prize}'
+                                          'AED ${state.listOfProducts[listIndex].prize}'
                                           "x"
                                           '${products[listIndex].quantity}'
                                           '='

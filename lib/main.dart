@@ -19,6 +19,7 @@ import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dar
 import 'package:tech_haven/user/features/order%20history/presentation/bloc/user_order_history_page_bloc.dart';
 import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
+import 'package:tech_haven/user/features/profile%20edit/presentation/bloc/profile_edit_page_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/review%20enter/presentation/bloc/review_enter_page_bloc.dart';
 import 'package:tech_haven/user/features/reviews/presentation/bloc/review_page_bloc.dart';
@@ -127,6 +128,9 @@ void main() async {
       ),
         BlocProvider(
         create: (_) => serviceLocator<ReviewEnterPageBloc>(),
+      ),
+       BlocProvider(
+        create: (_) => serviceLocator<ProfileEditPageBloc>(),
       ),
     ],
     child: const MyApp(),

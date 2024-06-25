@@ -1,5 +1,6 @@
 class User {
   final String? uid;
+  final String? userImageID;
   final String? phoneNumber;
   final String? username;
   final String? currency;
@@ -13,6 +14,7 @@ class User {
 
   User({
     required this.isVendor,
+    required this.userImageID,
     required this.isProfilePhotoUploaded,
     required this.uid,
     required this.phoneNumber,

@@ -63,7 +63,25 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   GlobalKey<FormState> globalFormKey = GlobalKey();
 
-  Map<int, Map<String, String>> specificationTextFormFields = {};
+  Map<String, String> specifications = {};
+  // bool isValid = false;
+  void handleFormData(Map<String, String> data) {
+    setState(() {
+      specifications = data;
+      // validateFormData(data);
+    });
+  }
+
+  // bool validateFormData() {
+  //   for (var entry in specifications.entries) {
+  //     print(specifications.entries.first.key);
+  //     if (entry.key.isEmpty || entry.value.isEmpty) {
+  //       return false;
+  //     }
+  //   }
+  //   print('ok da');
+  //   return true;
+  // }
 
   Map<int, List<File>> productImages = {};
 
@@ -303,63 +321,22 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       ),
                       Constants.kHeight,
                       const SubText(subText: 'Specifications'),
-                      ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: specificationTextFormFields.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            children: [
-                              const Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: CustomTextFormField(
-                                    labelText: 'Name',
-                                    hintText: 'Name',
-                                    durationMilliseconds: 150,
-                                    textEditingController: null,
-                                  ),
-                                ),
-                              ),
-                              const Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: CustomTextFormField(
-                                    labelText: 'Spec.',
-                                    hintText: 'Spec.',
-                                    textEditingController: null,
-                                    durationMilliseconds: 150,
-                                  ),
-                                ),
-                              ),
-                              index < specificationTextFormFields.length - 1
-                                  ? IconButton(
-                                      icon: const Icon(Icons.remove),
-                                      onPressed: () {
-                                        setState(() {
-                                          specificationTextFormFields
-                                              .remove(index);
-                                        });
-                                      },
-                                    )
-                                  : IconButton(
-                                      icon: const Icon(Icons.add),
-                                      onPressed: () {
-                                        // final Map<String, String> newEntry =
-                                        final Map<String, String> myMap = {};
-
-                                        myMap[index.toString()] = '';
-
-                                        setState(() {
-                                          specificationTextFormFields[index] =
-                                              myMap;
-                                        });
-                                      },
-                                    ),
-                            ],
-                          );
-                        },
+                      const Text(
+                        "Every name and It's specification should be filled else the corresponding fields will not be saved",
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 10,
+                        ),
                       ),
+                      DynamicForm(
+                        onFormChanged: handleFormData,
+                        productSpecifications: widget.product != null
+                            ? widget.product!.specifications ?? {}
+                            : {},
+                      ),
+                      // SpecificationPage(
+                      //     specificationTextFormFields:
+                      //         specificationTextFormFields),
                       Constants.kHeight,
                       const GlobalTitleText(
                         title: 'Shipping',
@@ -485,12 +462,19 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                               title:
                                   widget.product != null ? 'Update' : 'Publish',
                               onPressed: () {
+                                // if () {
+                                //   print(specifications.length);
+                                // } else {
+                                //   Fluttertoast.showToast(
+                                //       msg: 'shdfsdfhsjdlfhlsd');
+                                // }
                                 if (widget.product != null &&
                                     globalFormKey.currentState!.validate() &&
                                     categoryIndexes[0] != null &&
                                     categoryIndexes[1] != null &&
                                     categoryIndexes[2] != null &&
-                                    selectedBrandIndex[0] != null) {
+                                    selectedBrandIndex[0] != null &&
+                                    specifications.isNotEmpty) {
                                   if (listOfImagesLinks!.length.compareTo(
                                               deletedImagesIndex.length) >
                                           0 ||
@@ -511,16 +495,38 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                     categoryIndexes[1] != null &&
                                     categoryIndexes[2] != null &&
                                     selectedBrandIndex[0] != null &&
-                                    productImages.isNotEmpty) {
+                                    productImages.isNotEmpty &&
+                                    specifications.isNotEmpty) {
                                   // print(allBrands[selectedBrandIndex[0]!].id);
                                   registerNewProduct(isPublished: true);
-                                } else if (productImages.isEmpty) {
-                                  showSnackBar(
-                                    context: context,
-                                    title: 'Images',
-                                    content: 'Please Upload Product Images',
-                                    contentType: ContentType.warning,
-                                  );
+                                } else {
+                                  if (productImages.isEmpty) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Images',
+                                      content: 'Please Upload Product Images',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                  if (categoryIndexes[0] == null &&
+                                      categoryIndexes[1] == null &&
+                                      categoryIndexes[2] == null) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Categories',
+                                      content: 'Please Select the Categories',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
+                                  if (specifications.isEmpty) {
+                                    showSnackBar(
+                                      context: context,
+                                      title: 'Specifications',
+                                      content:
+                                          'Give the Specifications to Products',
+                                      contentType: ContentType.warning,
+                                    );
+                                  }
                                 }
                               },
                             ),
@@ -569,7 +575,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           shippingCharge: double.parse(shippingChargeController.text),
           productImages: productImages,
           deleteImagesIndexes: deletedImagesIndex,
-          isPublished: true,
+          isPublished: widget.product!.isPublished,
         ));
   }
 
@@ -585,6 +591,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 double.parse(productOldPrizeTextEditingController.text),
             productQuantity:
                 int.parse(productQuantityTextEditingController.text),
+            specifications: specifications,
             mainCategory: allCategories[categoryIndexes[0]!].categoryName,
             mainCategoryID: allCategories[categoryIndexes[0]!].id,
             subCategory: allCategories[categoryIndexes[0]!]
@@ -609,5 +616,318 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             isPublished: isPublished,
           ),
         );
+  }
+}
+
+class DynamicForm extends StatefulWidget {
+  const DynamicForm({
+    super.key,
+    required this.onFormChanged,
+    required this.productSpecifications,
+  });
+  final Function(Map<String, String>) onFormChanged;
+  final Map<String, String> productSpecifications;
+  @override
+  _DynamicFormState createState() => _DynamicFormState();
+}
+
+class _DynamicFormState extends State<DynamicForm> {
+  List<MapEntry<TextEditingController, TextEditingController>> fields = [
+    MapEntry(TextEditingController(), TextEditingController()),
+  ];
+
+  @override
+  void initState() {
+    if (widget.productSpecifications.isNotEmpty) {
+      fields = widget.productSpecifications.entries.map((entry) {
+        return MapEntry(
+          TextEditingController(text: entry.key),
+          TextEditingController(text: entry.value),
+        );
+      }).toList();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    for (var entry in fields) {
+      entry.key.dispose();
+      entry.value.dispose();
+    }
+    super.dispose();
+  }
+
+  void _addField() {
+    setState(() {
+      fields.add(MapEntry(TextEditingController(), TextEditingController()));
+    });
+    _updateFormData();
+  }
+
+  void _removeField(int index) {
+    setState(() {
+      fields.removeAt(index);
+    });
+    _updateFormData();
+  }
+
+  void _updateFormData() {
+    Map<String, String> result = {};
+    for (var entry in fields) {
+      if (entry.key.text.isNotEmpty && entry.value.text.isNotEmpty) {
+        result[entry.key.text] = entry.value.text;
+      }
+    }
+    widget.onFormChanged(result);
+  }
+
+  //whent the fields length - 1 == index then we will show the plusbuttonnnnnn
+  //if the
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: fields.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomTextFormField(
+                  labelText: 'Name',
+                  hintText: 'Name',
+                  durationMilliseconds: 150,
+                  textEditingController: fields[index].key,
+                  onChanged: (value) => _updateFormData(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: CustomTextFormField(
+                  labelText: 'Spec.',
+                  hintText: 'Spec.',
+                  textEditingController: fields[index].value,
+                  durationMilliseconds: 150,
+                  onChanged: (value) => _updateFormData(),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: Icon(fields.length - 1 == index ? Icons.add : Icons.remove),
+              onPressed: () {
+                if (fields.length - 1 == index) {
+                  // if (fields.length > 1) {
+                  _addField();
+                  // }
+                } else {
+                  _removeField(index);
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+//  ElevatedButton(
+//       onPressed: () {
+//         var fieldValues = _getFieldValues();
+//         if (fieldValues.length == fields.length) {
+//           print(fieldValues);
+//         } else {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             const SnackBar(
+//               content: Text('Please fill all fields'),
+//             ),
+//           );
+//         }
+//       },
+//       child: const Text('Submit'),
+//     ),
+// class SpecificationPage extends StatefulWidget {
+//   final Map<int, Map<String, String>> specificationTextFormFields;
+//   const SpecificationPage(
+//       {super.key, required this.specificationTextFormFields});
+
+//   @override
+//   State<SpecificationPage> createState() => _SpecificationPageState();
+// }
+
+// class _SpecificationPageState extends State<SpecificationPage> {
+//   final List<Map<String, TextEditingController>> _controllers = [];
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     widget.specificationTextFormFields.forEach((key, value) {
+//       _controllers.add({
+//         'Name': TextEditingController(text: value['Name']),
+//         'Spec': TextEditingController(text: value['Spec']),
+//       });
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     for (var controller in _controllers) {
+//       controller['Name']?.dispose();
+//       controller['Spec']?.dispose();
+//     }
+//     super.dispose();
+//   }
+
+//   void _addNewSpecification() {
+//     setState(() {
+//       _controllers.add({
+//         'Name': TextEditingController(),
+//         'Spec': TextEditingController(),
+//       });
+//       widget.specificationTextFormFields[_controllers.length - 1] = {
+//         'Name': '',
+//         'Spec': '',
+//       };
+//     });
+//   }
+
+//   void _removeSpecification(int index) {
+//     setState(() {
+//       _controllers[index]['Name']?.dispose();
+//       _controllers[index]['Spec']?.dispose();
+//       _controllers.removeAt(index);
+//       widget.specificationTextFormFields.remove(index);
+//     });
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//       itemCount: _controllers.length + 1,
+//       itemBuilder: (context, index) {
+//         if (index < _controllers.length) {
+//           return Row(
+//             children: [
+//               Expanded(
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: CustomTextFormField(
+//                     labelText: 'Name',
+//                     hintText: 'Name',
+//                     durationMilliseconds: 150,
+//                     textEditingController: _controllers[index]['Name'],
+//                     onChanged: (value) {
+//                       widget.specificationTextFormFields[index]?['Name'] =
+//                           value;
+//                     },
+//                   ),
+//                 ),
+//               ),
+//               Expanded(
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(8.0),
+//                   child: CustomTextFormField(
+//                     labelText: 'Spec.',
+//                     hintText: 'Spec.',
+//                     durationMilliseconds: 150,
+//                     textEditingController: _controllers[index]['Spec'],
+//                     onChanged: (value) {
+//                       widget.specificationTextFormFields[index]?['Spec'] =
+//                           value;
+//                     },
+//                   ),
+//                 ),
+//               ),
+//               IconButton(
+//                 icon: const Icon(Icons.remove),
+//                 onPressed: () {
+//                   _removeSpecification(index);
+//                 },
+//               ),
+//             ],
+//           );
+//         } else {
+//           return IconButton(
+//             icon: const Icon(Icons.add),
+//             onPressed: _addNewSpecification,
+//           );
+//         }
+//       },
+//     );
+//   }
+// }
+class SpecificationPage extends StatefulWidget {
+  final Map<int, Map<String, String>> specificationTextFormFields;
+  const SpecificationPage(
+      {super.key, required this.specificationTextFormFields});
+
+  @override
+  State<SpecificationPage> createState() => _SpecificationPageState();
+}
+
+class _SpecificationPageState extends State<SpecificationPage> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: widget.specificationTextFormFields.length + 1,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CustomTextFormField(
+                  labelText: 'Name',
+                  hintText: 'Name',
+                  durationMilliseconds: 150,
+                  textEditingController: null,
+                ),
+              ),
+            ),
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CustomTextFormField(
+                  labelText: 'Spec.',
+                  hintText: 'Spec.',
+                  textEditingController: null,
+                  durationMilliseconds: 150,
+                ),
+              ),
+            ),
+            index < widget.specificationTextFormFields.length - 1
+                ? IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      setState(() {
+                        widget.specificationTextFormFields.remove(index);
+                      });
+                    },
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.add),
+                    onPressed: () {
+                      // final Map<String, String> newEntry =
+                      final Map<String, String> myMap = {};
+
+                      // myMap[index.toString()] = '';
+
+                      setState(() {
+                        widget.specificationTextFormFields[index] = myMap;
+                      });
+                    },
+                  ),
+          ],
+        );
+      },
+    );
   }
 }

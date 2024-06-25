@@ -1,7 +1,17 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
+import 'package:tech_haven/core/entities/cart.dart';
+import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
+import 'package:tech_haven/core/utils/check_product_is_carted.dart';
+import 'package:tech_haven/core/utils/show_snackbar.dart';
+import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
+import 'package:tech_haven/user/features/home/presentation/widgets/deals_product_card.dart';
 
 import '../../../../../core/theme/app_pallete.dart';
 
@@ -10,10 +20,30 @@ class DealsGridView extends StatelessWidget {
     super.key,
   });
 
+  void updateProductToFavorite(
+      BuildContext context, Product product, bool isLiked) {
+    context.read<HomePageBloc>().add(
+          UpdateProductToFavoriteHomeEvent(
+            product: product,
+            isFavorited: !isLiked,
+          ),
+        );
+  }
+
+  void updateProductToCart(BuildContext context,
+      {required Product product, required Cart? cart, required int itemCount}) {
+    context.read<HomePageBloc>().add(
+          UpdateProductToCartHomeEvent(
+            product: product,
+            itemCount: itemCount,
+            cart: cart,
+          ),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: const Color.fromARGB(255, 54, 95, 46),
       height: 670,
       margin: const EdgeInsets.only(
         top: 20,
@@ -79,201 +109,216 @@ class DealsGridView extends StatelessWidget {
               )
             ],
           ),
-          //container for the product card
+          // Container for the product card
           Container(
             height: 600,
             margin: const EdgeInsets.only(top: 20),
-            child: GridView.builder(
-              itemCount: 6,
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                // crossAxisCount: 2,
-                childAspectRatio: 1 / 1,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10, maxCrossAxisExtent: 300,
-              ),
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Container(
-                  // width: 200,
+            child: BlocConsumer<HomePageBloc, HomePageState>(
+              buildWhen: (previous, current) =>
+                  current is HorizontalProductListViewState,
+              listener: (context, state) {
+                if (state is HorizontalProductsListViewHomeFailed) {
+                  return showSnackBar(
+                      context: context,
+                      title: 'Oh',
+                      content: state.message,
+                      contentType: ContentType.failure);
+                }
 
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppPallete.appShadowColor,
-                        blurStyle: BlurStyle.normal,
-                        blurRadius: 5,
-                      ),
-                    ],
-                    color: AppPallete.whiteColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        10,
-                      ),
+                if (state is CartLoadedFailedHomeState) {
+                  showSnackBar(
+                      context: context,
+                      title: 'Oh',
+                      content: state.message,
+                      contentType: ContentType.failure);
+
+                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
+                }
+                if (state is ProductUpdatedToCartHomeSuccess) {
+                  Fluttertoast.showToast(
+                      msg: "The Cart is Updated Successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+
+                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
+                }
+                if (state is ProductUpdatedToCartHomeFailed) {
+                  Fluttertoast.showToast(
+                      msg: state.message,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+
+                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
+                }
+                if (state is ProductUpdatedToFavoriteHomeSuccess) {
+                  Fluttertoast.showToast(
+                      msg: "The Favorites is Updated Successfully",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+                if (state is ProductUpdatedToFavoriteHomeFailed) {
+                  Fluttertoast.showToast(
+                      msg: state.message,
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0);
+                }
+              },
+              builder: (context, listState) {
+                if (listState is HorizontalProductsListViewHomeSuccess) {
+                  return GridView.builder(
+                    itemCount: listState.listOfProducts.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      childAspectRatio: 1 / 1,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                      maxCrossAxisExtent: 300,
                     ),
-                  ),
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final currentProduct = listState.listOfProducts[index];
+                      return DealsProductCard(
+                        likeButton: CustomLikeButton(
+                          isFavorited: listState.listOfFavoritedProducts
+                              .contains(currentProduct.productID),
+                          onTapFavouriteButton: (bool isLiked) async {
+                            updateProductToFavorite(context,
+                                listState.listOfProducts[index], isLiked);
+                            return isLiked ? false : true;
+                          },
+                        ),
+                        onTapCard: () {
+                          GoRouter.of(context).pushNamed(
+                              AppRouteConstants.detailsPage,
+                              extra: currentProduct);
+                        },
+                        isHorizontal: true,
+                        product: currentProduct,
+                        shoppingCartWidget:
+                            BlocBuilder<HomePageBloc, HomePageState>(
+                          buildWhen: (previous, current) =>
+                              current is ProductCartHomeState,
+                          builder: (context, cartState) {
+                            if (cartState is CartLoadedSuccessHomeState) {
+                              bool productIsCarted = false;
+                              final cartIndex = checkCurrentProductIsCarted(
+                                  product: listState.listOfProducts[index],
+                                  carts: cartState.listOfCart);
 
-                  child: InkWell(
-                    onTap: () {
-                      GoRouter.of(context)
-                          .pushNamed(AppRouteConstants.detailsPage);
+                              if (cartIndex > -1) {
+                                productIsCarted = true;
+                              }
+
+                              return ShoppingCartButton(
+                                onTapPlusButton: () {
+                                  if (productIsCarted &&
+                                      cartState.listOfCart[cartIndex]
+                                              .productCount <=
+                                          currentProduct.quantity) {
+                                    updateProductToCart(
+                                      context,
+                                      product: currentProduct,
+                                      cart: cartState.listOfCart[cartIndex],
+                                      itemCount: cartState.listOfCart[cartIndex]
+                                              .productCount +
+                                          1,
+                                    );
+                                  } else if (!productIsCarted) {
+                                    updateProductToCart(
+                                      context,
+                                      product: currentProduct,
+                                      cart: null,
+                                      itemCount: 1,
+                                    );
+                                  }
+                                },
+                                onTapMinusButton: () {
+                                  if (productIsCarted &&
+                                      cartState.listOfCart[cartIndex]
+                                                  .productCount -
+                                              1 >=
+                                          0) {
+                                    updateProductToCart(
+                                      context,
+                                      product: currentProduct,
+                                      cart: cartState.listOfCart[cartIndex],
+                                      itemCount: cartState.listOfCart[cartIndex]
+                                              .productCount -
+                                          1,
+                                    );
+                                  }
+                                  if (!productIsCarted) {
+                                    Fluttertoast.showToast(
+                                      msg: 'Add Product To Cart First',
+                                    );
+                                  }
+                                },
+                                onTapCartButton: () {},
+                                currentCount: productIsCarted
+                                    ? cartState
+                                        .listOfCart[cartIndex].productCount
+                                    : 0,
+                                isLoading: false,
+                              );
+                            }
+                            return const ShoppingCartButton(
+                              currentCount: 0,
+                              isLoading: true,
+                            );
+                          },
+                        ),
+                      );
                     },
-                    child: Column(
-                      children: [
-                        //sized box for the image and the cart/favorite button
-                        Expanded(
-                          child: Stack(
-                            children: [
-                              //image
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: AppPallete.whiteColor,
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/dev/iphone-png.png',
-                                    ),
-                                  ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      10,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              //smartphone deals
-                              Positioned(
-                                top: 0,
-                                right: 0,
-                                child: Container(
-                                  // alignment: Alignment.center,
-                                  width: 120,
-                                  height: 15,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                  ),
-                                  decoration: const BoxDecoration(
-                                    color: AppPallete.primaryAppColor,
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(
-                                        10,
-                                      ),
-                                      bottomLeft: Radius.circular(
-                                        10,
-                                      ),
-                                    ),
-                                  ),
-                                  child: const Text(
-                                    'SmartPhones Deals',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppPallete.whiteColor,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    softWrap: false,
-                                  ),
-                                ),
-                              ),
-
-                              //cart
-                              const Positioned(
-                                  bottom: 5,
-                                  right: 5,
-                                  child: ShoppingCartButton(
-                                    currentCount: 0,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        //this is for the whole height of onw of the listview
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            color: AppPallete.lightgreyColor,
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                //product title
-                                Text(
-                                  'Sony Playstation 5 Digital Edition',
-                                  softWrap: true,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                //product price
-                                SizedBox(
-                                  // width: 150,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            'AED',
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          Text(
-                                            '1,693',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '3,299',
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w700,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              decorationThickness: 2.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            'AED',
-                                            style: TextStyle(
-                                              color: Colors.red,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w500,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              decorationThickness: 2.0,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  );
+                }
+                return GridView.builder(
+                  itemCount: 6,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    childAspectRatio: 1 / 1,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    maxCrossAxisExtent: 300,
                   ),
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return DealsProductCard(
+                      likeButton: CustomLikeButton(
+                        isFavorited: false,
+                        onTapFavouriteButton: (bool isLiked) async {
+                          return isLiked ? false : true;
+                        },
+                      ),
+                      isHorizontal: true,
+                      product: null,
+                      shoppingCartWidget: ShoppingCartButton(
+                        onTapPlusButton: () {},
+                        onTapMinusButton: () {},
+                        onTapCartButton: () {},
+                        currentCount: 10,
+                        isLoading: false,
+                      ),
+                    );
+                  },
                 );
               },
             ),
           ),
-          //container for the whole
         ],
       ),
     );

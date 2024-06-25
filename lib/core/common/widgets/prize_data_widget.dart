@@ -31,7 +31,7 @@ class PrizeDataWidget extends StatelessWidget {
               ),
             ),
             Text(
-              prize,
+              'AED $prize',
               style: TextStyle(
                 fontSize: 16 * ratio,
                 fontWeight: FontWeight.w600,

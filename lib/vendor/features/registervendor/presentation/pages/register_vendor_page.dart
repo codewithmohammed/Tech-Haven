@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
+import 'package:tech_haven/core/common/widgets/profile_image_widget.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -124,74 +126,80 @@ class _RegisterVendorPageState extends State<RegisterVendorPage> {
                   height: 50,
                 ),
                 Center(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 200,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              spreadRadius:
-                                  Constants.globalBoxBlur.spreadRadius,
-                              blurRadius: Constants.globalBoxBlur.blurRadius,
-                              color: AppPallete.primaryAppColor,
-                            ),
-                          ],
-                        ),
-                      ),
-                      ValueListenableBuilder(
-                        valueListenable: image,
-                        builder: (context, value, child) {
-                          return Container(
-                            alignment: Alignment.center,
-                            height: 200,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color(widget.user.color),
-                              image: image.value == null
-                                  ? null
-                                  : DecorationImage(
-                                      image: FileImage(
-                                        image.value!,
-                                      ),
-                                    ),
-                            ),
-                            child: image.value == null
-                                ? ValueListenableBuilder(
-                                    valueListenable: businnessName,
-                                    builder: (context, value, child) {
-                                      return Text(
-                                        businnessName.value.split('').first,
-                                        style: const TextStyle(
-                                          fontSize: 100,
-                                        ),
-                                      );
-                                    })
-                                : const SizedBox(),
-                          );
-                        },
-                        // child:
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: CircularButton(
-                          onPressed: () async {
-                            //select an image from the gallery and show
-                            selectImage();
-                          },
-                          circularButtonChild: const Icon(
-                            Icons.camera_alt,
-                            color: AppPallete.whiteColor,
-                          ),
-                          diameter: 50,
-                        ),
-                      ),
-                    ],
+                  child: ProfileImageWidget(
+                    image: image,
+                    userColor: Color(widget.user.color),
+                    username: businnessName,
+                    onPressed: () async => selectImage(),
                   ),
+                  //  Stack(
+                  //   children: [
+                  //     Container(
+                  //       height: 200,
+                  //       width: 200,
+                  //       decoration: BoxDecoration(
+                  //         shape: BoxShape.circle,
+                  //         boxShadow: [
+                  //           BoxShadow(
+                  //             spreadRadius:
+                  //                 Constants.globalBoxBlur.spreadRadius,
+                  //             blurRadius: Constants.globalBoxBlur.blurRadius,
+                  //             color: AppPallete.primaryAppColor,
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //     ValueListenableBuilder(
+                  //       valueListenable: image,
+                  //       builder: (context, value, child) {
+                  //         return Container(
+                  //           alignment: Alignment.center,
+                  //           height: 200,
+                  //           width: 200,
+                  //           decoration: BoxDecoration(
+                  //             shape: BoxShape.circle,
+                  //             color: Color(widget.user.color),
+                  //             image: image.value == null
+                  //                 ? null
+                  //                 : DecorationImage(
+                  //                     image: FileImage(
+                  //                       image.value!,
+                  //                     ),
+                  //                   ),
+                  //           ),
+                  //           child: image.value == null
+                  //               ? ValueListenableBuilder(
+                  //                   valueListenable: businnessName,
+                  //                   builder: (context, value, child) {
+                  //                     return Text(
+                  //                       businnessName.value.split('').first,
+                  //                       style: const TextStyle(
+                  //                         fontSize: 100,
+                  //                       ),
+                  //                     );
+                  //                   })
+                  //               : const SizedBox(),
+                  //         );
+                  //       },
+                  //       // child:
+                  //     ),
+                  //     Positioned(
+                  //       right: 0,
+                  //       bottom: 0,
+                  //       child: CircularButton(
+                  //         onPressed: () async {
+                  //           //select an image from the gallery and show
+                  //           selectImage();
+                  //         },
+                  //         circularButtonChild: const Icon(
+                  //           Icons.camera_alt,
+                  //           color: AppPallete.whiteColor,
+                  //         ),
+                  //         diameter: 50,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ),
 
                 // const Spacer(),
@@ -232,6 +240,10 @@ class _RegisterVendorPageState extends State<RegisterVendorPage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         labelText: 'Account Number',
                         hintText: 'Enter Your Account Number',
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
                         textEditingController: accountNumberController,
                       ),
                     ],

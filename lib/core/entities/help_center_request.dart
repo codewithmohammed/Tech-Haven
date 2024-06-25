@@ -9,6 +9,4 @@ class HelpCenterRequest {
     required this.dateTime,
     required this.userName,
   });
-
-
 }

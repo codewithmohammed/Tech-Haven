@@ -31,6 +31,12 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   TextEditingController nameTextEditingController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    super.initState();
+    // context.read<MapPageBloc>().add(GetCurrentUserDataEvent());
+    context.read<MapPageBloc>().add(GetCurrentLocationDetailsEvent());
+  }
 
   @override
   void dispose() {
@@ -45,8 +51,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<MapPageBloc>().add(GetCurrentLocationDetailsEvent());
-    context.read<MapPageBloc>().add(GetCurrentUserDataEvent());
     return Scaffold(
       appBar: widget.isForCheckout
           ? null
@@ -74,23 +78,37 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
             GoRouter.of(context).pop();
           }
           if (state is GetLocationDetailsFailed) {
-            Fluttertoast.showToast(msg: state.message);
-          }
-          if (state is GetCurrentUserDataFailed) {
-            Fluttertoast.showToast(msg: state.message);
-          }
-          if (state is GetCurrentUserDataSuccess) {
-            print('hjgjh');
-            if (state.user != null) {
-              phoneNumberTextEditingController.text = state.user!.phoneNumber!;
-
+            if (state.user == null) {
+              Fluttertoast.showToast(msg: 'You Are Not Yet Signed In');
+              GoRouter.of(context).pop();
+            } else {
+              if (state.user!.phoneNumber != null) {
+                phoneNumberTextEditingController.text =
+                    state.user!.phoneNumber!;
+              }
               nameTextEditingController.text = state.user!.username!;
-              emailAdressTextEditingController.text = state.user!.email!;
+              Fluttertoast.showToast(msg: state.message);
             }
           }
+          // if (state is GetCurrentUserDataFailed) {
+          //   Fluttertoast.showToast(msg: state.message);
+          // }
+          // if (state is GetCurrentUserDataSuccess) {
+          //   print('hjgjh');
+          //   if (state.user != null) {
+          //     phoneNumberTextEditingController.text = state.user!.phoneNumber!;
+
+          //     nameTextEditingController.text = state.user!.username!;
+          //     emailAdressTextEditingController.text = state.user!.email!;
+          //   }
+          // }
           if (state is GetLocationDetailsSuccess) {
             print('object');
             if (state.location != null) {
+              if (state.user.phoneNumber != null) {
+                phoneNumberTextEditingController.text = state.user.phoneNumber!;
+              }
+              nameTextEditingController.text = state.user.username!;
               locationTextEditingController.text = state.location!.location;
               apartmentHouseNumberTextEditingController.text =
                   state.location!.apartmentHouseNumber;
@@ -116,8 +134,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       if (!widget.isForCheckout)
-                         GlobalTitleText(
-                            title:widget.isForCheckout? 'Confirm Your Location' : 'Enter Your Location Details'),
+                        GlobalTitleText(
+                            title: widget.isForCheckout
+                                ? 'Confirm Your Location'
+                                : 'Enter Your Location Details'),
                       CustomTextFormField(
                           enabled: false,
                           durationMilliseconds: 500,

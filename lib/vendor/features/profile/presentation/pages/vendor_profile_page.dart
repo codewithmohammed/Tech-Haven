@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_header_tile.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_welcome_text.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/tile_bar_button.dart';
@@ -20,16 +22,17 @@ class VendorProfilePage extends StatelessWidget {
             child: Column(
               children: [
                 //hello nice to meet you
-                const ProfileWelcomeText(
+                ProfileWelcomeText(
                   name: 'Rayid',
                   subText: 'Enjoy Selling withTexh Heaven',
+                  onTapSettingIcon: () {},
                 ),
                 //your orders
-                TileBarButton(
-                  title: 'Your Orders',
-                  icon: CustomIcons.orderListSvg,
-                  onTap: () {},
-                ),
+                // TileBarButton(
+                //   title: 'Your Orders',
+                //   icon: CustomIcons.orderListSvg,
+                //   onTap: () {},
+                // ),
                 // TileBarButton(
                 //   title: 'Switch To Customer Mode',
                 //   subtitle:
@@ -52,24 +55,24 @@ class VendorProfilePage extends StatelessWidget {
                 //   title: 'Language',
                 //   icon: CustomIcons.languageSvg,
                 // ),
-                const ProfileHeaderTile(
-                  title: 'REACH OUT TO US',
-                ),
-                const TileBarButton(
-                  title: 'Help Center',
-                  icon: CustomIcons.questionMarkSvg,
-                ),
+                // const ProfileHeaderTile(
+                //   title: 'REACH OUT TO US',
+                // ),
+                // const TileBarButton(
+                //   title: 'Help Center',
+                //   icon: CustomIcons.questionMarkSvg,
+                // ),
                 // const TileBarButton(
                 //   title: 'About App',
                 //   icon: CustomIcons.exclamationSvg,
                 // ),
                 TileBarButton(
-                  title: 'Sign Out',
-                  icon: CustomIcons.rightArrowExitSvg,
+                  title: 'Help Center',
                   onTap: () {
-                    // FirebaseAuth.instance.signOut();
-                    // context.read<AuthBloc>().add(SignOutUserEvent());
+                    GoRouter.of(context)
+                        .pushNamed(AppRouteConstants.helpCenterPage);
                   },
+                  icon: CustomIcons.questionMarkSvg,
                 ),
                 // Row(
                 //   children: [

@@ -16,10 +16,12 @@ class CustomTextFormField extends StatelessWidget {
   final void Function()? suffixOnTap;
   final bool isPasswordField;
   final bool enabled;
+  final void Function(String)? onChanged;
   final int durationMilliseconds;
   const CustomTextFormField({
     super.key,
     required this.labelText,
+     this.onChanged,
     required this.hintText,
     this.isObscureText = false,
     this.inputFormatters,
@@ -42,6 +44,7 @@ class CustomTextFormField extends StatelessWidget {
         alignment: Alignment.centerRight,
         children: [
           TextFormField(
+            onChanged:onChanged ,
             enabled: enabled,
             controller: textEditingController,
             autovalidateMode: autovalidateMode,

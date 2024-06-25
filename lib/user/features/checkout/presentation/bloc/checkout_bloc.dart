@@ -3,8 +3,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-// import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:tech_haven/core/common/data/model/address_details_model.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_a_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart_product.dart';

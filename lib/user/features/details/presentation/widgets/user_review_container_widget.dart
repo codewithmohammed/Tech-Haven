@@ -35,6 +35,7 @@ class UserReviewContainerWidget extends StatelessWidget {
       buildWhen: (previous, current) => current is LoadReviewsState,
       builder: (context, reviewState) {
         if (reviewState is LoadReviewSuccessState) {   
+        
           // print(reviewState.allUserOwnedProducts.length);
           if (reviewState.listOfReviews.isNotEmpty) {
          
@@ -55,6 +56,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                       GoRouter.of(context).pushNamed(
                         AppRouteConstants.reviewEnterPage,
                         extra: ReviewEnterRouteModel(
+                          listOfReview:reviewState.listOfReviews,
                             product: product, userRating: newValue),
                       );
                       starValueNotifier.value = newValue;
@@ -170,6 +172,7 @@ class UserReviewContainerWidget extends StatelessWidget {
                         GoRouter.of(context).pushNamed(
                           AppRouteConstants.reviewEnterPage,
                           extra: ReviewEnterRouteModel(
+                            listOfReview: reviewState.listOfReviews,
                               product: product, userRating: newValue),
                         );
                         starValueNotifier.value = newValue;

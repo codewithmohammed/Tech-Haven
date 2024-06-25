@@ -8,6 +8,7 @@ import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
 import 'package:tech_haven/vendor/features/registervendor/data/models/vendor_model.dart';
 import 'package:tech_haven/core/common/data/model/order_model.dart';
@@ -52,6 +53,7 @@ abstract class DataSource {
   Future<void> addReview(
       {required Product product,
       required String userReview,
+      required List<Review> listOfReview,
       required double userRating});
   Future<ProductReviewModel> getProductReviewModel({required String productID});
   // Future<List<OrderModel>> getUserOrders();

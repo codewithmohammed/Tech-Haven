@@ -13,12 +13,13 @@ class DeleteProduct implements UseCase<bool, DeleteProductParams> {
 
   @override
   Future<Either<Failure, bool>> call(DeleteProductParams params) async {
-    return await registerProductRepository.deleteProduct(product: params.product, mapOfListOfImages: params.mapOfListOfImages);
+    return await registerProductRepository.deleteProduct(
+        product: params.product, mapOfListOfImages: params.mapOfListOfImages);
   }
 }
 
 class DeleteProductParams {
   final Product product;
   final Map<int, List<model.Image>> mapOfListOfImages;
-  DeleteProductParams({required this.product,required this.mapOfListOfImages});
+  DeleteProductParams({required this.product, required this.mapOfListOfImages});
 }

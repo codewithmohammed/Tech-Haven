@@ -1,4 +1,5 @@
 class HelpRequest {
+  final String userID;
   final String requestID;
   final String email;
   final String name;
@@ -8,6 +9,7 @@ class HelpRequest {
   final String? answer;
 
   HelpRequest({
+    required this.userID,
     required this.email,
     required this.requestID,
     required this.name,

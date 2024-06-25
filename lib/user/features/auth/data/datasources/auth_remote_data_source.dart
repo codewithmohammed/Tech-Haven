@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:tech_haven/user/features/auth/data/models/sign_up_model.dart';
+
 abstract interface class AuthRemoteDataSource {
   //this is firebase user to get the current user
   User? get currentUser;
@@ -22,9 +23,8 @@ abstract interface class AuthRemoteDataSource {
   Future<bool> createUser({
     required File? image,
     required String username,
-    
-  required String currency,
-  required String currencySymbol,
+    required String currency,
+    required String currencySymbol,
     required int color,
   });
 
@@ -35,4 +35,6 @@ abstract interface class AuthRemoteDataSource {
 
   Future<String> signUpUserWithGoogle();
   Future<String> forgotPasswordSendEmail({required String phoneNumber});
+
+  // Future<String> signInUserWithGoogle();
 }

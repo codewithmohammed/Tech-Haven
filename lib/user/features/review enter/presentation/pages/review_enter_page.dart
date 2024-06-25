@@ -95,6 +95,7 @@ class _ReviewEnterPageState extends State<ReviewEnterPage> {
                         (starValueNotifier.value > 0 ||
                             starValueNotifierForReviewPage.value > 0)) {
                       context.read<ReviewEnterPageBloc>().add(AddReviewEvent(
+                        listOfReviews: widget.reviewRouteModel.listOfReview,
                             userRating: starValueNotifier.value,
                             userReview: _controller.text,
                             product: widget.reviewRouteModel.product,

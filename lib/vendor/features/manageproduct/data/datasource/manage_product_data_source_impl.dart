@@ -21,12 +21,13 @@ class ManageProductDataSourceImpl extends ManageProductDataSource {
   }
 
   @override
-  Future<void> updateTheProductPublish({required Product product, required bool publish}) async {
+  Future<void> updateTheProductPublish(
+      {required Product product, required bool publish}) async {
     try {
       await firebaseFirestore
           .collection('products')
           .doc(product.productID)
-          .update({'published': publish});
+          .update({'isPublished': publish});
     } catch (e) {
       throw ServerException(e.toString());
     }

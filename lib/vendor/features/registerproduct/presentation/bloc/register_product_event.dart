@@ -15,6 +15,7 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
   final String brandID;
   final String productName;
   final double productPrize;
+  final Map<String, String> specifications;
   final double productOldPrize;
   final int productQuantity;
   final String mainCategory;
@@ -34,7 +35,7 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
     required this.productName,
     required this.productPrize,
     required this.productOldPrize,
-    required this.productQuantity,
+    required this.productQuantity,required this.specifications,
     required this.mainCategory,
     required this.mainCategoryID,
     required this.subCategory,

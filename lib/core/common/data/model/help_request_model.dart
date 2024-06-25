@@ -2,6 +2,7 @@ import 'package:tech_haven/core/entities/help_request.dart';
 
 class HelpRequestModel extends HelpRequest {
   HelpRequestModel({
+    required super.userID,
     required super.email,
     required super.dateTime,
     required super.requestID,
@@ -14,6 +15,7 @@ class HelpRequestModel extends HelpRequest {
   factory HelpRequestModel.fromJson(Map<String, dynamic> json) {
     return HelpRequestModel(
       requestID: json['requestID'],
+      userID: json['userID'],
       email: json['email'],
       dateTime: DateTime.parse(json['dateTime']),
       name: json['name'],
@@ -25,6 +27,7 @@ class HelpRequestModel extends HelpRequest {
 
   Map<String, dynamic> toJson() {
     return {
+      'userID':userID,
       'email': email,
       'name': name,
       'subject': subject,

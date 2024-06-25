@@ -270,6 +270,7 @@ class HorizontalProductListView extends StatelessWidget {
                     //column since the container is divided into two
                     return ProductCard(
                       // index: index,
+                      
                       likeButton: CustomLikeButton(
                         isFavorited: false,
                         onTapFavouriteButton: (bool isLiked) async {

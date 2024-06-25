@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
@@ -23,7 +24,9 @@ class UserProfilePage extends StatelessWidget {
         body: SingleChildScrollView(
           child: BlocConsumer<ProfileBloc, ProfileState>(
             listener: (context, state) {
-              // TODO: implement listener
+              if (state is GetProfileDataFailedState) {
+                Fluttertoast.showToast(msg: state.message);
+              }
             },
             buildWhen: (previous, current) => current is GetProfileDataState,
             builder: (context, state) {
@@ -40,6 +43,10 @@ class UserProfilePage extends StatelessWidget {
                     subText: state is GetProfileDataSuccessState
                         ? 'Enjoy your Tech Journey with Tech Haven'
                         : 'You are currently not signed in',
+                    onTapSettingIcon: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.profileEditPage);
+                    },
                   ),
                   //your orders
                   TileBarButton(
@@ -63,6 +70,11 @@ class UserProfilePage extends StatelessWidget {
                         : 'Please Wait',
                     icon: CustomIcons.cartSvg,
                     onTap: () {
+                      if (state is GetProfileDataSuccessState &&
+                          state.user.phoneNumber == null) {
+                        //go to verify phoneNumber page
+                        return;
+                      }
                       //if the user is vendor we will direct them to vendor else wilill direct him to register page where they will see the status of the vendor status.
                       state is GetProfileDataSuccessState && state.user.isVendor
                           ? GoRouter.of(context)
@@ -97,10 +109,10 @@ class UserProfilePage extends StatelessWidget {
                     },
                     icon: CustomIcons.questionMarkSvg,
                   ),
-                  const TileBarButton(
-                    title: 'About App',
-                    icon: CustomIcons.exclamationSvg,
-                  ),
+                  // const TileBarButton(
+                  //   title: 'About App',
+                  //   icon: CustomIcons.exclamationSvg,
+                  // ),
                   TileBarButton(
                     title: 'Sign Out',
                     icon: CustomIcons.rightArrowExitSvg,

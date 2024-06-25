@@ -11,9 +11,14 @@ class AddReviewEvent extends ReviewEnterPageEvent {
   final Product product;
   final String userReview;
   final double userRating;
+  final List<Review> listOfReviews;
 
-  const AddReviewEvent({required this.userRating, required this.userReview,required this.product});
+  const AddReviewEvent(
+      {required this.userRating,
+      required this.userReview,
+      required this.listOfReviews,
+      required this.product});
 
   @override
-  List<Object> get props => [userRating, userReview,product];
+  List<Object> get props => [userRating, userReview, product];
 }

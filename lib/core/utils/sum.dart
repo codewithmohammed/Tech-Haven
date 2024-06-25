@@ -48,3 +48,18 @@ String changeAmountDecimal( {required int amount}) {
     }
     return sum;
   }
+
+
+  double calculateDiscountPercentage(double oldPrice, double offerPrice) {
+  if (oldPrice <= 0 || offerPrice <= 0 || offerPrice >= oldPrice) {
+    throw ArgumentError('Invalid input values');
+  }
+  
+  double discount = oldPrice - offerPrice;
+  double discountPercentage = (discount / oldPrice) * 100;
+  
+  // Round discountPercentage to two decimal places
+  discountPercentage = double.parse(discountPercentage.toStringAsFixed(2));
+  
+  return discountPercentage;
+}

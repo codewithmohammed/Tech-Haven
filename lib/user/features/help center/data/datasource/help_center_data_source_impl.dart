@@ -3,6 +3,7 @@ import 'package:tech_haven/core/common/data/model/help_center_request_model.dart
 import 'package:tech_haven/core/common/data/model/help_request_model.dart';
 import 'package:tech_haven/core/entities/help_request.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
+import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/help%20center/data/datasource/help_center_data_source.dart';
 import 'package:tech_haven/user/features/help%20center/domain/usecase/get_all_user_requests.dart';
 import 'package:tech_haven/user/features/help%20center/domain/usecase/send_help_request_use_case.dart';
@@ -24,14 +25,13 @@ class HelpCenterDataSourceImpl implements HelpCenterDataSource {
       final DateTime dateTime = DateTime.now();
       final requestID = const Uuid().v4();
       final userDoc = firestore.collection('helpCenter').doc(userID);
-      await userDoc.set({
-        'userID': userID,
-        'dateTime': dateTime,
-        'userName': userName,
-      });
+      await userDoc.set(HelpCenterRequestModel(
+              userID: userID, dateTime: dateTime, userName: userName)
+          .toJson());
 
       final requestDoc = userDoc.collection('requests').doc(requestID);
       final HelpRequestModel helpRequestModel = HelpRequestModel(
+        userID: userID,
           email: helpRequest.email,
           dateTime: helpRequest.dateTime,
           requestID: requestID,

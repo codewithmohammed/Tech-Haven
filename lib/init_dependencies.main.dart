@@ -83,6 +83,13 @@ import 'package:tech_haven/user/features/order%20history/domain/usecase/get_all_
 import 'package:tech_haven/user/features/order%20history/presentation/bloc/user_order_history_page_bloc.dart';
 import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
+import 'package:tech_haven/user/features/profile%20edit/data/datasource/profile_edit_page_data_source.dart';
+import 'package:tech_haven/user/features/profile%20edit/data/datasource/profile_edit_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/profile%20edit/data/repositories/profile_edit_page_repository_impl.dart';
+import 'package:tech_haven/user/features/profile%20edit/domain/repository/profile_edit_page_repository.dart';
+import 'package:tech_haven/user/features/profile%20edit/domain/usecase/update_user_data.dart';
+import 'package:tech_haven/user/features/profile%20edit/presentation/bloc/profile_edit_page_bloc.dart';
+import 'package:tech_haven/user/features/profile%20edit/presentation/pages/profile_edit_page.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/review%20enter/presentation/bloc/review_enter_page_bloc.dart';
 import 'package:tech_haven/user/features/reviews/data/datasource/review_page_data_source.dart';
@@ -175,6 +182,21 @@ Future<void> initDependencies() async {
   _initReviewEnterPage();
   _initUserOrderHistoryPage();
   _initReviewPage();
+  _initProfileEditPage();
+}
+
+void _initProfileEditPage() {
+  serviceLocator
+    ..registerFactory<ProfileEditPageDataSource>(() =>
+        ProfileEditPageDataSourceImpl(
+            firebaseFirestore: serviceLocator(),
+            firebaseStorage: serviceLocator()))
+    ..registerFactory<ProfileEditPageRepository>(() =>
+        ProfileEditPageRepositoryImpl(
+            profileEditPageDataSource: serviceLocator()))
+    ..registerFactory(() => UpdateUserData(serviceLocator()))
+    ..registerLazySingleton(() => ProfileEditPageBloc(
+        getUserData: serviceLocator(), updateUserData: serviceLocator()));
 }
 
 void _initReviewPage() {
@@ -437,6 +459,7 @@ void _initHomePage() {
     ..registerFactory(
         () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
     ..registerLazySingleton(() => HomePageBloc(
+        // getAllReviewsProduct: ,
         getAProduct: serviceLocator(),
         getAllProduct: serviceLocator(),
         getAllBannerHomePage: serviceLocator(),
@@ -525,8 +548,9 @@ _initManageProduct() {
     ..registerFactory(() =>
         UpdateTheProductPublish(manageProductRepository: serviceLocator()))
     ..registerLazySingleton(() => ManageProductBloc(
-      updateTheProductPublish: serviceLocator(),
-        getAllProducts: serviceLocator(), getUserData: serviceLocator()));
+        updateTheProductPublish: serviceLocator(),
+        getAllProducts: serviceLocator(),
+        getUserData: serviceLocator()));
 }
 
 _initFavorite() {

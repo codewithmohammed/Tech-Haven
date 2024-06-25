@@ -277,9 +277,11 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, void>> addReview(
       {required Product product,
       required String userReview,
+      required List<Review> listOfReviews,
       required double userRating}) async {
     try {
       final result = await dataSource.addReview(
+        listOfReview: listOfReviews,
           product: product, userReview: userReview, userRating: userRating);
       return right(result);
     } on ServerException catch (e) {

@@ -5,6 +5,7 @@ class UserModel extends User {
     required super.isVendor,
     required super.isProfilePhotoUploaded,
     required super.uid,
+    required super.userImageID,
     required super.phoneNumber,
     required super.username,
     required super.currency,
@@ -17,6 +18,7 @@ class UserModel extends User {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
       uid: json['uid'],
+      userImageID: json['userImageID'],
       phoneNumber: json['phoneNumber'],
       username: json['username'],
       currency: json['currency'],
@@ -36,6 +38,7 @@ class UserModel extends User {
       'phoneNumber': phoneNumber,
       'username': username,
       'currency': currency,
+      'userImageID' : userImageID,
       'vendorID': vendorID,
       'currencySymbol': currencySymbol,
       'email': email,

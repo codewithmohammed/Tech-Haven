@@ -8,6 +8,7 @@ class GetCurrentLocationDetails implements UseCase<Location?, NoParams> {
   final Repository repository;
   GetCurrentLocationDetails({required this.repository});
 
+  @override
   Future<Either<Failure, Location?>> call(NoParams params) async {
     return await repository.getCurrentLocationDetails();
   }

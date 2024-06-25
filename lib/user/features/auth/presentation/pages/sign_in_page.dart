@@ -33,7 +33,6 @@ final signinFormKey = GlobalKey<FormState>();
 bool passwordIsObscure = true;
 
 class _SignInPageState extends State<SignInPage> {
-
   @override
   Widget build(BuildContext context) {
     final countryCode = AuthUtils.signInCountryCode;
@@ -84,12 +83,13 @@ class _SignInPageState extends State<SignInPage> {
                     //   color: AppPallete.primaryAppColor,
                     // ),
                     ),
-                     Positioned(
-              top: 25,
-              child: ConstrainedBox(
-                  constraints: BoxConstraints.tight(const Size(415, 415)),
-                  child: Lottie.asset('assets/lotties/sign_in_lottie.json')),
-            ),
+                Positioned(
+                  top: 25,
+                  child: ConstrainedBox(
+                      constraints: BoxConstraints.tight(const Size(415, 415)),
+                      child:
+                          Lottie.asset('assets/lotties/sign_in_lottie.json')),
+                ),
                 //for aligning the container in the stack ,used the align widget instead of positioned.
                 // MediaQuery.of(context).size.width > 650 ?
                 //if the screen width is greater than the value we will build a new align else for the mobile phones
@@ -158,7 +158,8 @@ class _SignInPageState extends State<SignInPage> {
                               ),
                               InkWell(
                                 onTap: () {
-                                  GoRouter.of(context).pop();
+                                  GoRouter.of(context).pushReplacementNamed(
+                                      AppRouteConstants.signupPage);
                                 },
                                 child: const Text(
                                   'Sign up',
@@ -184,7 +185,7 @@ class _SignInPageState extends State<SignInPage> {
                         // print('object');
                         if (signinFormKey.currentState!.validate() &&
                             countryCode.value != '000') {
-                          print('object');
+                          // print('object');
                           fullPhoneNumber =
                               '+${countryCode.value}${phoneNumberController.text}';
                           context.read<AuthBloc>().add(UserSignInEvent(

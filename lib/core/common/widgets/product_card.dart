@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/prize_data_widget.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
+import 'package:tech_haven/core/utils/sum.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
@@ -18,7 +18,7 @@ class ProductCard extends StatelessWidget {
     // required this.onTapFavouriteButton,
     // required this.isFavorited,
     this.onTapCard,
-
+    // required this.rating,
     // required this.currentCartedCount,
     // this.onTapCartButton,
     // this.onTapPlusButton,
@@ -32,6 +32,7 @@ class ProductCard extends StatelessWidget {
   final Product? product;
   final Widget likeButton;
   final bool heroTransition;
+  // final double rating;
   // final bool isFavorited;
   // final Future<bool?> Function(bool)? onTapFavouriteButton;
   final void Function()? onTapCard;
@@ -140,9 +141,9 @@ class ProductCard extends StatelessWidget {
                                       color: Colors.green,
                                       fit: BoxFit.scaleDown,
                                     ),
-                                    const Text(
-                                      '(8K)',
-                                      style: TextStyle(
+                                    Text(
+                                      product!.rating.toString(),
+                                      style: const TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w700,
                                         color: AppPallete.greyTextColor,
@@ -183,25 +184,28 @@ class ProductCard extends StatelessWidget {
                             SizedBox(
                               width: 150,
                               child: PrizeDataWidget(
-                                totalHeight: 190,
-                                prize: product!.prize.toString(),
-                                offPercentage: '48%',
-                                previousPrize: '3299',
+                                totalHeight: 170,
+                                prize: 'AED ${product!.prize}',
+                                offPercentage:
+                                    '${calculateDiscountPercentage(product!.oldPrize, product!.prize)}%',
+                                previousPrize: product!.oldPrize.toString(),
                               ),
                             ),
                             Container(
                               height: 8,
                               width: 40,
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                boxShadow: [
+                              decoration: BoxDecoration(
+                                color: product!.quantity == 0
+                                    ? Colors.red
+                                    : Colors.green,
+                                boxShadow: const [
                                   BoxShadow(
                                     color: AppPallete.appShadowColor,
                                     blurStyle: BlurStyle.normal,
                                     blurRadius: 2,
                                   )
                                 ],
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(
                                     5,
                                   ),

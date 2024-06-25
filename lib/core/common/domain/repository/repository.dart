@@ -56,6 +56,6 @@ abstract class Repository {
   Future<Either<Failure,List<OrderModel>>> getAllOrders();
     Future<Either<Failure,List<OrderModel>>> getVendorOrders();
         Future<Either<Failure,List<Review>>> getAllReviewsProduct({required String productID});
-        Future<Either<Failure,void>>  addReview({required Product product,required String userReview,required double userRating});
+        Future<Either<Failure,void>>  addReview({required Product product,required String userReview,required double userRating,required List<Review> listOfReviews});
           Future<Either<Failure,ProductReview>> getProductReviewModel({required String productID});
 }

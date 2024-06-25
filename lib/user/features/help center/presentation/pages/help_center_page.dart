@@ -56,7 +56,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                   nameController.clear();
                   subjectController.clear();
                   bodyController.clear();
-                  Fluttertoast.showToast(msg: 'Request sent successfully');
+                  Fluttertoast.showToast(msg: 'Request sent successfully');   context.read<HelpCenterBloc>().add(GetUserDataEvent());
                   context.read<HelpCenterBloc>().add(GetAllUserRequestEvent());
                 } else if (state is RequestSendHelpCenterError) {
                   Fluttertoast.showToast(msg: state.message);
@@ -93,6 +93,7 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                       PrimaryAppButton(
                         onPressed: () {
                           final helpRequest = HelpRequestModel(
+                            userID: '',
                             email: emailController.text,
                             dateTime: DateTime.now(),
                             name: nameController.text,

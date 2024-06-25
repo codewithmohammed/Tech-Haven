@@ -30,13 +30,12 @@ class MapPageBloc extends Bloc<MapPageEvent, MapPageState> {
     });
     on<GetCurrentLocationDetailsEvent>(_onGetCurrentLocationDetailsEvent);
     on<UpdateLocationDetailsEvent>(_onUpdateLocationDetailsEvent);
-    on<GetCurrentUserDataEvent>(_onGetCurrentUserDataEvent);
+    // on<GetCurrentUserDataEvent>(_onGetCurrentUserDataEvent);
   }
 
   FutureOr<void> _onUpdateLocationDetailsEvent(
       UpdateLocationDetailsEvent event, Emitter<MapPageState> emit) async {
     final result = await _updateLocation(UpdateLocationParams(
-      
       name: event.name,
       phoneNumber: event.phoneNumber,
       location: event.location,
@@ -52,16 +51,27 @@ class MapPageBloc extends Bloc<MapPageEvent, MapPageState> {
 
   FutureOr<void> _onGetCurrentLocationDetailsEvent(
       GetCurrentLocationDetailsEvent event, Emitter<MapPageState> emit) async {
-    final result = await _getCurrentLocationDetails(NoParams());
-    result.fold(
-        (failure) => emit(GetLocationDetailsFailed(message: failure.message)),
-        (success) => emit(GetLocationDetailsSuccess(location: success)));
+    User? userData;
+    final user = await _getUserData(NoParams());
+    user.fold(
+        (failure) => emit(GetLocationDetailsFailed(message: failure.message,user: userData)),
+        (success) => userData = success);
+    if (userData != null) {
+      final result = await _getCurrentLocationDetails(NoParams());
+
+      result.fold(
+          (failure) {
+            return emit(GetLocationDetailsFailed(message: failure.message,user: userData));
+          },
+          (success) => emit(
+              GetLocationDetailsSuccess(location: success, user: userData!)));
+    }
   }
 
-  FutureOr<void> _onGetCurrentUserDataEvent(
-      GetCurrentUserDataEvent event, Emitter<MapPageState> emit) async {
-    final result = await _getUserData(NoParams());
+  // FutureOr<void> _onGetCurrentUserDataEvent(
+  //     GetCurrentUserDataEvent event, Emitter<MapPageState> emit) async {
+  //   final result = await _getUserData(NoParams());
 
-    result.fold((failed) => emit(GetCurrentUserDataFailed(message: failed.message )), (userdata) => emit(GetCurrentUserDataSuccess(user: userdata)));
-  }
+  //   result.fold((failed) => emit(GetCurrentUserDataFailed(message: failed.message )), (userdata) => emit(GetCurrentUserDataSuccess(user: userdata)));
+  // }
 }

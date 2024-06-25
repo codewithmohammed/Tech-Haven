@@ -28,6 +28,7 @@ import 'package:tech_haven/user/features/message/presentation/pages/message_page
 import 'package:tech_haven/user/features/order%20history/presentation/pages/user_order_history_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
+import 'package:tech_haven/user/features/profile%20edit/presentation/pages/profile_edit_page.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
 import 'package:tech_haven/user/features/review%20enter/presentation/pages/review_enter_page.dart';
 import 'package:tech_haven/user/features/reviews/presentation/pages/review_page.dart';
@@ -154,6 +155,11 @@ class AppRoutes {
         path: '/home_page',
         child: const HomePage(),
       ),
+      _buildPageRoute(
+        name: AppRouteConstants.profileEditPage,
+        path: '/profile_edit_page',
+        child: const ProfileEditPage(),
+      ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.productsPage,
         path: '/products_page/:searchQuery',
@@ -267,7 +273,7 @@ class AppRoutes {
       _buildPageRoute(
         name: AppRouteConstants.helpCenterPage,
         path: '/help_center_page',
-        child:  HelpCenterPage(),
+        child: const HelpCenterPage(),
       ),
       _buildPageRoute(
         name: AppRouteConstants.searchPage,

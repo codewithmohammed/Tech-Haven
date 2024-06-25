@@ -60,6 +60,7 @@ class ManageProductBloc extends Bloc<ManageProductEvent, ManageProductState> {
   FutureOr<void> _onUpdateTheProductPublishEvent(
       UpdateTheProductPublishEvent event,
       Emitter<ManageProductState> emit) async {
+    print('hello how are you');
     final result = await _updateTheProductPublish(UpdateTheProductPublishParams(
         product: event.product, publish: event.publish));
     result.fold(

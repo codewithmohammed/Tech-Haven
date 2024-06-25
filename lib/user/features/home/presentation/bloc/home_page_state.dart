@@ -42,9 +42,7 @@ final class GetAllBannerHomeFailed extends BannerCarouselState {
   GetAllBannerHomeFailed({required this.message});
 }
 
-final class BannerCarouselNavigateState extends BannerCarouselState{}
-
-
+final class BannerCarouselNavigateState extends BannerCarouselState {}
 
 final class NavigateToDetailsPageSuccess extends BannerCarouselNavigateState {
   final Product product;
@@ -110,3 +108,10 @@ final class GetAllSubCategoriesLoadingState extends GetAllSubCategoriesState {}
 
 ///statew of the review
 
+final class GetReviewsOfTheProductState extends HomePageState {}
+
+final class GetReviewsOfTheProductSuccessState
+    extends GetReviewsOfTheProductState {
+  final List<Review> listOfReview;
+  GetReviewsOfTheProductSuccessState({required this.listOfReview});
+}

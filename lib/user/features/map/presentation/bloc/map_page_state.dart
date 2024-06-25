@@ -10,13 +10,15 @@ sealed class MapPageState extends Equatable {
 final class MapPageInitial extends MapPageState {}
 
 final class GetLocationDetailsSuccess extends MapPageState {
+  final User user;
   final Location? location;
-  GetLocationDetailsSuccess({required this.location});
+  GetLocationDetailsSuccess({required this.location, required this.user});
 }
 
 final class GetLocationDetailsFailed extends MapPageState {
+  final User? user;
   final String message;
-  GetLocationDetailsFailed({required this.message});
+  GetLocationDetailsFailed({required this.message,required this.user});
 }
 
 final class UpdateLocationDetailsSuccess extends MapPageState {}

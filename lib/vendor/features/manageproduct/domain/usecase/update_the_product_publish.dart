@@ -12,6 +12,7 @@ class UpdateTheProductPublish
   @override
   Future<Either<Failure, void>> call(
       UpdateTheProductPublishParams params) async {
+    print('ok da mone');
     return manageProductRepository.updateTheProductPublish(
       product: params.product,
       publish: params.publish,

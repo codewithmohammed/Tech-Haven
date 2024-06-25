@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tech_haven/core/common/domain/usecase/add_review.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/review.dart';
 
 part 'review_enter_page_event.dart';
 part 'review_enter_page_state.dart';
@@ -24,6 +25,7 @@ class ReviewEnterPageBloc
       AddReviewEvent event, Emitter<ReviewEnterPageState> emit) async {
     final result = await _addReview(AddReviewParams(
         userRating: event.userRating,
+        listOfReviews: event.listOfReviews,
         userReivew: event.userReview,
         product: event.product));
     result.fold(

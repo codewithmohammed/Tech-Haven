@@ -14,6 +14,7 @@ import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/product_review.dart';
+import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
@@ -50,6 +51,7 @@ class DataSourceImpl implements DataSource {
   @override
   Future<void> addReview(
       {required Product product,
+      required List<Review> listOfReview,
       required String userReview,
       required double userRating}) async {
     try {
@@ -59,6 +61,20 @@ class DataSourceImpl implements DataSource {
         final String reviewID = const Uuid().v1();
         final DateTime dateTime = DateTime.now();
         print('change the productreviws count here');
+
+        final currentRating = product.rating ?? 0;
+        final totalReviews = listOfReview.length;
+
+        // Calculate new average rating
+        final newTotalReviews = totalReviews + 1;
+        final newRating =
+            ((currentRating * totalReviews) + userRating) / newTotalReviews;
+
+        // Update product review count and rating
+        // product.totalReviews = newTotalReviews;
+        // product.rating = newRating;
+        // Calculate new average rating
+
         final ProductReviewModel productReviewModel = ProductReviewModel(
           productID: product.productID,
           productName: product.name,
@@ -68,7 +84,7 @@ class DataSourceImpl implements DataSource {
           // totalRating: 0
         );
         final ReviewModel reviewModel = ReviewModel(
-          productID: product.productID,
+            productID: product.productID,
             reviewID: reviewID,
             userProfile:
                 user.isProfilePhotoUploaded ? user.profilePhoto! : null,
@@ -78,6 +94,10 @@ class DataSourceImpl implements DataSource {
             dateTime: dateTime,
             userID: user.uid!,
             userRating: userRating);
+        await firebaseFirestore
+            .collection('products')
+            .doc(product.productID)
+            .update({'rating': newRating});
         await firebaseFirestore
             .collection('reviews')
             .doc(product.productID)
@@ -488,17 +508,24 @@ class DataSourceImpl implements DataSource {
       final model.UserModel? user = await getUserData();
 
       if (user != null) {
+        // print(user.username);
         final snapshot =
             await firebaseFirestore.collection('locations').doc(user.uid).get();
-
-        locationModel =
-            LocationModel.fromJson(snapshot.data() as Map<String, dynamic>);
+        // print(user.username);
+        // print(snapshot.exists);
+        if (snapshot.exists) {
+          locationModel =
+              LocationModel.fromJson(snapshot.data() as Map<String, dynamic>);
+        } else {
+          // print(user.username);
+          throw Exception('Please Enter The Neccesary Details');
+        }
       }
       return locationModel;
     } on TypeError catch (_) {
       throw const ServerException('No Location Added Yet');
     } catch (e) {
-      print(e.runtimeType);
+      // print(e.toString());
       throw ServerException(e.toString());
     }
   }
@@ -612,7 +639,8 @@ class DataSourceImpl implements DataSource {
   Future<List<String>> getUserOwnedProducts() async {
     try {
       UserModel? user = await getUserData();
-      if (user != null) { print('hey how are you');
+      if (user != null) {
+        print('hey how are you');
         DocumentSnapshot docSnapshot = await firebaseFirestore
             .collection('userOwnedProducts')
             .doc(user.uid)

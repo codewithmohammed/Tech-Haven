@@ -87,7 +87,7 @@ class RegisterProductBloc
       variantCategory: event.variantCategory,
       variantCategoryID: event.variantCategoryID,
       productOverview: event.productOverview,
-      specifications: {},
+      specifications: event.specifications,
       shippingCharge: event.shippingCharge,
       productImages: event.productImages,
       isPublished: event.isPublished,

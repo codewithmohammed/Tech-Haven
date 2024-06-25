@@ -28,7 +28,7 @@ class UserOrderPage extends StatelessWidget {
         centerTitle: true,
         actions: [
           Padding(
-            padding: EdgeInsets.only(
+            padding: const EdgeInsets.only(
               right: 5,
             ),
             child: InkWell(
@@ -36,7 +36,7 @@ class UserOrderPage extends StatelessWidget {
                   GoRouter.of(context)
                       .pushNamed(AppRouteConstants.userOrderHistoryPage);
                 },
-                child: SvgIcon(icon: CustomIcons.clockSvg, radius: 25)),
+                child: const SvgIcon(icon: CustomIcons.clockSvg, radius: 25)),
           )
         ],
       ),
@@ -57,7 +57,8 @@ class UserOrderPage extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          return state is GetAllOrderListSuccess
+          return state is GetAllOrderListSuccess &&
+                  state.listOfOrderDetails.isNotEmpty
               ? ListView.separated(
                   itemCount: state.listOfOrderDetails.length,
                   itemBuilder: (context, index) {
@@ -78,11 +79,16 @@ class UserOrderPage extends StatelessWidget {
                     );
                   },
                 )
-              : Shimmer.fromColors(
-                  baseColor: Colors.grey.shade100,
-                  highlightColor: Colors.grey.shade300,
-                  child: Container(),
-                );
+              : state is GetAllOrderListSuccess &&
+                      state.listOfOrderDetails.isEmpty
+                  ? const Center(
+                      child: Text('No Orders Left To Deliver'),
+                    )
+                  : Shimmer.fromColors(
+                      baseColor: Colors.grey.shade100,
+                      highlightColor: Colors.grey.shade300,
+                      child: Container(),
+                    );
         },
       ),
     );

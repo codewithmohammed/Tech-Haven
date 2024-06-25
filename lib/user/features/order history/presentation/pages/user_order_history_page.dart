@@ -67,7 +67,7 @@ class ProductDetailsWidget extends StatelessWidget {
             Text('Brand: ${product.brandName}'),
             Text('Category: ${product.mainCategory}'),
             Text('Sub-Category: ${product.subCategory}'),
-            Text('Price: \$${product.prize.toStringAsFixed(2)}'),
+            Text('Price: AED \$${product.prize.toStringAsFixed(2)}'),
             Text('Old Price: \$${product.oldPrize.toStringAsFixed(2)}'),
             Text(
                 'Shipping Charge: \$${product.shippingCharge.toStringAsFixed(2)}'),

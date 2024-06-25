@@ -25,11 +25,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<bool> createUser({
     required File? image,
     required String username,
-    
-  required String currency,
-  required String currencySymbol,
+    required String currency,
+    required String currencySymbol,
     required int color,
   }) async {
+          String imageID = const Uuid().v1();
     User? user = firebaseAuth.currentUser;
     try {
 //if image is not null then we upload the image into storage and get the download url and create a user doc
@@ -37,7 +37,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (user != null) {
         String? downloadURL;
         if (image != null) {
-          String imageID = const Uuid().v1();
 
           Reference reference = firebaseStorage
               .ref('user')
@@ -56,6 +55,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         model.UserModel userModel = model.UserModel(
           email: user.email!,
           phoneNumber: user.phoneNumber!,
+          userImageID: imageID,
           uid: user.uid,
           username: username,
           currency: currency,
@@ -262,22 +262,50 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> signUpUserWithGoogle() async {
+   Future<String> signUpUserWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
-        throw const ServerException('the google user is not initiated');
+        throw const ServerException('The Google user is not initiated');
       }
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      final userCredential =
-          await firebaseAuth.signInWithCredential(credential);
-      return userCredential.user!.email!;
+
+      final userCredential = await firebaseAuth.signInWithCredential(credential);
+      final user = userCredential.user;
+
+      if (user == null) {
+        throw const ServerException('User data is not available');
+      }
+
+      // Check if the user already exists in Firestore
+      final doc = await firebaseFirestore.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        // Create a User object with the necessary details
+        final newUser = model.UserModel(
+          uid: user.uid,
+          userImageID: null,
+          phoneNumber: user.phoneNumber,
+          username: user.displayName,
+          currency: 'USD', // Assign default or fetch from a settings screen
+          vendorID: 'default_vendor_id', // Assign default or generate dynamically
+          currencySymbol: '\$', // Assign default or fetch from a settings screen
+          email: user.email,
+          profilePhoto: user.photoURL,
+          isVendor: false, // Assign default or fetch from a settings screen
+          isProfilePhotoUploaded: user.photoURL != null,
+          color: 0xFF000000, // Assign default or fetch from a settings screen
+        );
+
+        // Save the user data to Firestore
+        await firebaseFirestore.collection('users').doc(user.uid).set(newUser.toJson());
+      }
+
+      return user.email!;
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -320,4 +348,27 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
   }
+
+//   @override
+//   Future<String> signInUserWithGoogle() async {
+//     try {
+//       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+//       if (googleUser == null) {
+//         throw const ServerException('The Google user is not initiated');
+//       }
+//       final GoogleSignInAuthentication googleAuth =
+//           await googleUser.authentication;
+
+//       final credential = GoogleAuthProvider.credential(
+//         accessToken: googleAuth.accessToken,
+//         idToken: googleAuth.idToken,
+//       );
+// // if(credential)
+//       final userCredential =
+//           await firebaseAuth.signInWithCredential(credential);
+//       return userCredential.user!.email!;
+//     } catch (e) {
+
+//     }
+//   }
 }

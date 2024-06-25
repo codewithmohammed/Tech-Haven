@@ -14,6 +14,7 @@ class AppRouteConstants {
   static const String reviewPage = 'review_page';
   static const String reviewEnterPage = 'review_enter_page';
   static const String detailsPage = 'details_page';
+  static const String profileEditPage = 'profile_edit_page';
   static const String vendorOrderDetailsPage = 'vendor_order_details_page';
   static const String userOrderHistoryPage = 'user_order_history_page';
   static const String vendorMainPage = 'vendor_main_page';

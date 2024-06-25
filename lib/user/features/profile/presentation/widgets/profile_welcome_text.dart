@@ -6,10 +6,14 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class ProfileWelcomeText extends StatelessWidget {
   const ProfileWelcomeText({
-    super.key, required this.name, required this.subText,
+    super.key,
+    required this.name,
+    required this.subText,
+    required this.onTapSettingIcon,
   });
   final String name;
   final String subText;
+  final void Function()? onTapSettingIcon;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,7 +45,7 @@ class ProfileWelcomeText extends StatelessWidget {
                 ],
               ),
               InkWell(
-                onTap: () {},
+                onTap: onTapSettingIcon,
                 child: const SvgIcon(
                   icon: CustomIcons.settingSvg,
                   radius: 25,
