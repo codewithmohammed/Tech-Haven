@@ -137,7 +137,7 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
         bool matchesVariantCategory = variantCategory != null
             ? product.variantCategory == variantCategory
             : true;
-        print(brand);
+        // print(brand);
         // Handle combinations of categories and brand
         if (brand != null) {
           if (mainCategory != null &&
@@ -178,7 +178,7 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
         }
       }).toList();
     }
-    print(filteredProducts.length);
+    // print(filteredProducts.length);
     emit(ProductSearchLoaded(filteredProducts, listOfFavorites));
   }
 

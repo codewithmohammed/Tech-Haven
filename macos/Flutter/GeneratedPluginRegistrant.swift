@@ -15,7 +15,6 @@ import firebase_storage
 import google_sign_in_ios
 import path_provider_foundation
 import rive_common
-import smart_auth
 import sqflite
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
@@ -29,6 +28,5 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FLTGoogleSignInPlugin.register(with: registry.registrar(forPlugin: "FLTGoogleSignInPlugin"))
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
   RivePlugin.register(with: registry.registrar(forPlugin: "RivePlugin"))
-  SmartAuthPlugin.register(with: registry.registrar(forPlugin: "SmartAuthPlugin"))
   SqflitePlugin.register(with: registry.registrar(forPlugin: "SqflitePlugin"))
 }

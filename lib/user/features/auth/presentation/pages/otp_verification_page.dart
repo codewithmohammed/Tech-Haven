@@ -143,9 +143,9 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         ],
                         controller: pinController,
                         focusNode: focusNode,
-                        androidSmsAutofillMethod:
-                            AndroidSmsAutofillMethod.smsUserConsentApi,
-                        listenForMultipleSmsOnAndroid: true,
+                        // androidSmsAutofillMethod:
+                        //     AndroidSmsAutofillMethod.smsUserConsentApi,
+                        // listenForMultipleSmsOnAndroid: true,
                         defaultPinTheme: defaultPinTheme,
                         separatorBuilder: (index) => const SizedBox(width: 1),
                         // validator: (value) {
