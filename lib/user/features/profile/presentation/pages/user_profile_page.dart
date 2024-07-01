@@ -148,6 +148,9 @@ class UserProfilePage extends StatelessWidget {
                         GoRouter.of(context)
                             .goNamed(AppRouteConstants.splashScreen);
                       });
+                      FirebaseAuth.instance.signOut();
+                      GoRouter.of(context)
+                          .goNamed(AppRouteConstants.splashScreen);
                       // context.read<AuthBloc>().add(SignOutUserEvent());
                     },
                   ),

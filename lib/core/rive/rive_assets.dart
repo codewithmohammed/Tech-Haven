@@ -44,15 +44,15 @@ List<NavItemModel> bottonNavs = [
       title: 'Search',
     ),
   ),
-  NavItemModel(
-    title: 'Notification',
-    riveAsset: RiveAsset(
-      'assets/rive/animated_icon_set_.riv',
-      artboard: 'BELL',
-      stateMachineName: 'BELL_Interactivity',
-      title: 'Notification',
-    ),
-  ),
+  // NavItemModel(
+  //   title: 'Notification',
+  //   riveAsset: RiveAsset(
+  //     'assets/rive/animated_icon_set_.riv',
+  //     artboard: 'BELL',
+  //     stateMachineName: 'BELL_Interactivity',
+  //     title: 'Notification',
+  //   ),
+  // ),
   NavItemModel(
     title: 'Profile',
     riveAsset: RiveAsset(

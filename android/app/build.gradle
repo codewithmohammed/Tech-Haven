@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
  android {
     namespace "com.mohdrayid.tech_haven"
     compileSdk flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    ndkVersion "25.1.8937393"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -81,4 +81,7 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0'
+     implementation 'com.stripe:stripe-android:20.43.0'
+     }
