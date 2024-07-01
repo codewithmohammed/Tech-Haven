@@ -10,7 +10,7 @@ import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/common/widgets/product_card.dart';
-import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
+// import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/search/presentation/bloc/search_page_bloc.dart';
@@ -218,8 +218,8 @@ void _showFilterBottomSheet(BuildContext context) {
                       ),
                       const SizedBox(height: 16.0),
                       // BlocConsumer<SearchPageBloc, SearchPageState>(
-                      // listener: (context, state) {
-                      // TODO: implement listener
+                      // listener: (context, state) {TODO: implement listener
+                      // 
                       // },
                       // buildWhen: (previous, current) =>
                       // current is FilterBottomSheetState,/
@@ -320,7 +320,6 @@ void _showFilterBottomSheet(BuildContext context) {
                     const SizedBox(height: 16.0),
                     // BlocConsumer<SearchPageBloc, SearchPageState>(
                     // listener: (context, state) {
-                    // TODO: implement listener
                     // },
                     // buildWhen: (previous, current) =>
                     // current is FilterBottomSheetState,/
