@@ -8,6 +8,7 @@ import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
+import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_header_tile.dart';
@@ -141,9 +142,12 @@ class UserProfilePage extends StatelessWidget {
                     title: 'Sign Out',
                     icon: CustomIcons.rightArrowExitSvg,
                     onTap: () {
-                      FirebaseAuth.instance.signOut();
-                      GoRouter.of(context)
-                          .goNamed(AppRouteConstants.splashScreen);
+                      showConfirmationDialog(context, 'Sign Out',
+                          'Are you sure you want to sign out', () {
+                        FirebaseAuth.instance.signOut();
+                        GoRouter.of(context)
+                            .goNamed(AppRouteConstants.splashScreen);
+                      });
                       // context.read<AuthBloc>().add(SignOutUserEvent());
                     },
                   ),
