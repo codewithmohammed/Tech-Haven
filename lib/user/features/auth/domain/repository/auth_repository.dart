@@ -22,6 +22,12 @@ abstract interface class AuthRepository {
     required String verificationId,
     required String otpCode,
   });
+   Future<Either<Failure, void>> updateUserPhoneNumber({
+   required bool updateNumber,
+    required String phoneNumber,
+    required String verificationID,
+    required String otpCode,
+  });
   //for user sign up using email/password
   // Future<Either<Failure, UserDataModel>> signUpWithEmailPasswordAndCreateUser({
   //   required String phoneNumberVerifiedUID,

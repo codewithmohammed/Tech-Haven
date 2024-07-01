@@ -38,7 +38,7 @@ class CategoryIconListView extends StatelessWidget {
                   Axis.horizontal, // Set scroll direction to horizontal
               itemCount: state.listOfSubCategories.length,
               itemBuilder: (BuildContext context, int index) {
-                final currentSubCategory = state.listOfSubCategories[index];
+                // final currentSubCategory = state.listOfSubCategories[index];
                 //this is the main column which will contain the two list parellel listviews
                 return CategoryCircularContainer(
                   category: state.listOfSubCategories[index],

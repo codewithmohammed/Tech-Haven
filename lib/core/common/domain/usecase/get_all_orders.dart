@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import
+
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/model/order_model.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';

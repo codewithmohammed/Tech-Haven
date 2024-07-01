@@ -8,15 +8,15 @@ class ListViewContainer extends StatelessWidget {
   const ListViewContainer({
     super.key,
     required this.containerWidth,
-    required this.centerWidget,
-    required this.onTapCenterWidget,
+     this.centerWidget,
+     this.onTapCenterWidget,
     this.crossIcon = true,
     required this.onPressedCrossIcon,
     this.color = AppPallete.darkgreyColor,
   });
   final bool crossIcon;
   final double containerWidth;
-  final Widget centerWidget;
+  final Widget? centerWidget;
   final void Function()? onTapCenterWidget;
   final void Function()? onPressedCrossIcon;
   final Color color;
@@ -25,26 +25,28 @@ class ListViewContainer extends StatelessWidget {
     // int itemCount = widget.initialItemCount;
     return Stack(
       children: [
-        Container(
-          clipBehavior: Clip.antiAlias,
-          width: containerWidth,
-          // height: 100,
-          margin: const EdgeInsets.all(
-            5,
-          ),
-          decoration:  BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.all(
-              Radius.circular(
-                10,
-              ),
-            ),
-          ),
-          child: InkWell(
-            onTap: onTapCenterWidget,
-            child: Center(child: centerWidget),
-          ),
-        ),
+        centerWidget != null
+            ? Container(
+                clipBehavior: Clip.antiAlias,
+                width: containerWidth,
+                // height: 100,
+                margin: const EdgeInsets.all(
+                  5,
+                ),
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(
+                      10,
+                    ),
+                  ),
+                ),
+                child: InkWell(
+                  onTap: onTapCenterWidget,
+                  child: Center(child: centerWidget),
+                ),
+              )
+            : const SizedBox(),
         crossIcon
             ? Positioned(
                 right: 0,

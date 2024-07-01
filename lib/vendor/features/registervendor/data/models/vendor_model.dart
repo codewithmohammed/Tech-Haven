@@ -1,6 +1,6 @@
 import 'package:tech_haven/core/entities/vendor.dart';
 
-class VendorModel extends Vendor{
+class VendorModel extends Vendor {
   // final String userID;
   // final String vendorID;
   // final String email;
@@ -33,7 +33,7 @@ class VendorModel extends Vendor{
     return VendorModel(
       isVendor: json['isVendor'] as bool,
       vendorID: json['vendorID'] as String,
-      businessPicture: json['businessPicture'] as String,
+      businessPicture: json['businessPicture'],
       color: json['color'] as int,
       email: json['email'] as String,
       businessProfileUploaded: json['businessProfileUploaded'] as bool,
@@ -53,7 +53,7 @@ class VendorModel extends Vendor{
       'vendorID': vendorID,
       'userID': userID,
       'email': email,
-      'color' : color,
+      'color': color,
       'businessProfileUploaded': businessProfileUploaded,
       'phoneNumber': phoneNumber,
       'userName': userName,

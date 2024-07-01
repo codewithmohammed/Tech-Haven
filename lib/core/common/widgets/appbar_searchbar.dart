@@ -16,22 +16,26 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   final bool deliveryPlaceNeeded;
   final bool backButton;
   final bool enabled;
+  final bool isForSliver;
   final bool autoFocus;
   final void Function(String)? onChanged;
   const AppBarSearchBar({
     super.key,
+    this.isForSliver = false,
     this.hintText = 'What are you looking for ?',
     this.favouriteIconNeeded = true,
     this.deliveryPlaceNeeded = true,
     this.backButton = false,
     this.enabled = false,
-    this.autoFocus = false, this.onChanged,
+    this.autoFocus = false,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     context.read<CommonBloc>().add(GetUserLocationDataEvent());
     return Container(
+      color: isForSliver ? Colors.transparent : AppPallete.whiteColor,
       margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -60,7 +64,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
                         .pushNamed(AppRouteConstants.searchPage);
                   },
                   child: TextField(
-                    onChanged:onChanged ,
+                    onChanged: onChanged,
                     enabled: enabled,
                     decoration:
                         AppTheme.inputDecoration.copyWith(hintText: hintText),

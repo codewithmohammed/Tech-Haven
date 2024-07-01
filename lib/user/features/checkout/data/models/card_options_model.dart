@@ -15,7 +15,6 @@ class CardOptionsModel {
   }
 
   Map<String, dynamic> toJson() {
-    print(network! + requestThreeDSecure);
     return {
       'network': network,
       'request_three_d_secure': requestThreeDSecure,

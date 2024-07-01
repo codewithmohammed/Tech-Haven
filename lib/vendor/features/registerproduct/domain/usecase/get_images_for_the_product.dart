@@ -1,8 +1,3 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/entities/image.dart';
-import 'package:tech_haven/core/error/failures.dart';
-import 'package:tech_haven/core/usecase/usecase.dart';
-import 'package:tech_haven/vendor/features/registerproduct/domain/repository/register_product_repository.dart';
 // import 'package:tech_haven/vendor/features/registerproduct/domain/repository/register_product_repository.dart';
 
 // class GetImagesForTheProduct implements UseCase<Map<int,List<Image>>, GetImagesForTheProductParams> {

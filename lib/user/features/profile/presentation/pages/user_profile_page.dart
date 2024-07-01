@@ -5,7 +5,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
+import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
+import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_header_tile.dart';
 import 'package:tech_haven/user/features/profile/presentation/widgets/profile_welcome_text.dart';
@@ -25,6 +28,18 @@ class UserProfilePage extends StatelessWidget {
           child: BlocConsumer<ProfileBloc, ProfileState>(
             listener: (context, state) {
               if (state is GetProfileDataFailedState) {
+                Fluttertoast.showToast(msg: state.message);
+              }
+              if (state is GoToOTPPageState) {
+                GoRouter.of(context)
+                    .pushNamed(AppRouteConstants.otpVerificationPage,
+                        extra: OTPParams(
+                          phoneNumber: '',
+                          verificaionID: state.verificationID,
+                          isForSignUp: false,
+                        ));
+              }
+              if (state is FailedToGetVerificationID) {
                 Fluttertoast.showToast(msg: state.message);
               }
             },
@@ -57,6 +72,16 @@ class UserProfilePage extends StatelessWidget {
                           .pushNamed(AppRouteConstants.userOrderPage);
                     },
                   ),
+                  if (state is GetProfileDataSuccessState &&
+                      state.user.phoneNumber == null)
+                    TileBarButton(
+                        title: 'Verify Phone Number',
+                        subtitle:
+                            'Verify you phone number to get access to more features',
+                        onTap: () {
+                          _showPhoneVerificationDialog(context);
+                        },
+                        icon: CustomIcons.phoneOutlined),
                   TileBarButton(
                     title: state is GetProfileDataSuccessState
                         ? state.user.isVendor
@@ -72,8 +97,7 @@ class UserProfilePage extends StatelessWidget {
                     onTap: () {
                       if (state is GetProfileDataSuccessState &&
                           state.user.phoneNumber == null) {
-                        //go to verify phoneNumber page
-                        return;
+                        return _showPhoneVerificationDialog(context);
                       }
                       //if the user is vendor we will direct them to vendor else wilill direct him to register page where they will see the status of the vendor status.
                       state is GetProfileDataSuccessState && state.user.isVendor
@@ -135,4 +159,54 @@ class UserProfilePage extends StatelessWidget {
           ),
         ));
   }
+}
+
+ValueNotifier<String> countryCode = ValueNotifier('000');
+
+void _showPhoneVerificationDialog(BuildContext context) {
+  final TextEditingController phoneController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text(
+          'Verify Phone Number',
+          style: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Form(
+              key: formKey,
+              child: PhoneNumberTextField(
+                countryCode: countryCode,
+                textFormFieldEnabled: true,
+                phoneNumberController: phoneController,
+              ),
+            )
+          ],
+        ),
+        actions: [
+          RoundedRectangularButton(
+            title: 'Verify',
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                String phoneNumber =
+                    '+${countryCode.value}${phoneController.text}';
+                // Implement verification logic here
+                context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
+                      phoneNumber: phoneNumber,
+                    ));
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

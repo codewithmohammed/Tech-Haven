@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
 import 'package:tech_haven/core/common/widgets/square_button.dart';
@@ -10,7 +12,6 @@ import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
-import '../../../../../core/constants/constants.dart';
 
 class ProductImagesDisplayWidget extends StatelessWidget {
   const ProductImagesDisplayWidget({
@@ -34,7 +35,7 @@ class ProductImagesDisplayWidget extends StatelessWidget {
     CarouselController carouselController = CarouselController();
     return BlocConsumer<DetailsPageBloc, DetailsPageState>(
       listener: (context, state) {
-        print(state);
+        // print(state);
         if (state is GetAllImagesForProductFailed) {
           Fluttertoast.showToast(msg: state.message);
         }
@@ -49,20 +50,33 @@ class ProductImagesDisplayWidget extends StatelessWidget {
       buildWhen: (previous, current) => current is GetAllImagesForProductState,
       builder: (context, state) {
         if (state is GetAllImagesForProductSuccess) {
-          // print('object');
+          context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
           return Stack(
             children: [
               CarouselSlider.builder(
                 carouselController: carouselController,
                 itemCount: state.allImages[state.currentSelectedIndex]!.length,
                 itemBuilder: (context, index, realIndex) {
-                  List<model.Image> images = [];
-                  images = state.allImages[state.currentSelectedIndex]!;
+                  List<model.Image> images =
+                      state.allImages[state.currentSelectedIndex]!;
                   return Hero(
-                      tag: product.productID,
-                      child: Image.network(
-                        images[index].imageURL,
-                      ));
+                    tag: product.productID,
+                    child: CachedNetworkImage(
+                      imageUrl: images[index].imageURL,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: Colors.grey.shade100,
+                        highlightColor: Colors.grey.shade300,
+                        child: Container(
+                          width: double.infinity,
+                          height: 350,
+                          color: Colors.white,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    ),
+                  );
                 },
                 options: CarouselOptions(
                   height: 350,
@@ -80,19 +94,25 @@ class ProductImagesDisplayWidget extends StatelessWidget {
                           current is GetProductFavoritedDetailsState,
                       builder: (context, state) {
                         // print(state);
-                        if (state is GetProductFavoritedDetailsSuccess) {
-                          // print('hello');
-                          return CustomLikeButton(
-                            isFavorited:
-                                state.favorited.contains(product.productID),
-                            onTapFavouriteButton: (bool isLiked) async {
+                        // if (state is GetProductFavoritedDetailsSuccess) {
+                        return CustomLikeButton(
+                          isFavorited:
+                              state is GetProductFavoritedDetailsSuccess &&
+                                  state.favorited.contains(product.productID),
+                          onTapFavouriteButton: (bool isLiked) async {
+                            if (state is GetProductFavoritedDetailsSuccess) {
                               updateProductToFavorite(
                                   isFavorited: !isLiked, product: product);
-                              return !isLiked;
-                            },
-                          );
-                        }
-                        return Container();
+                            } else {
+                              // context
+                              //     .read<DetailsPageBloc>()
+                              //     .add(GetProductFavoriteDetailsEvent());
+                            }
+                            return !isLiked;
+                          },
+                        );
+                        // }
+                        // return Container();
                         // CustomLikeButton(
                         //   isFavorited: true,
                         //   onTapFavouriteButton: (bool isLiked) async {
@@ -103,15 +123,15 @@ class ProductImagesDisplayWidget extends StatelessWidget {
                         // );
                       },
                     ),
-                    Constants.kHeight,
-                    const SquareButton(
-                      icon: SvgIcon(
-                        icon: CustomIcons.shareSvg,
-                        color: AppPallete.greyTextColor,
-                        radius: 5,
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
+                    // Constants.kHeight,
+                    // const SquareButton(
+                    //   icon: SvgIcon(
+                    //     icon: CustomIcons.shareSvg,
+                    //     color: AppPallete.greyTextColor,
+                    //     radius: 5,
+                    //     fit: BoxFit.scaleDown,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -150,15 +170,15 @@ class ProductImagesDisplayWidget extends StatelessWidget {
                       fit: BoxFit.scaleDown,
                     ),
                   ),
-                  Constants.kHeight,
-                  SquareButton(
-                    icon: SvgIcon(
-                      icon: CustomIcons.shareSvg,
-                      color: AppPallete.greyTextColor,
-                      radius: 5,
-                      fit: BoxFit.scaleDown,
-                    ),
-                  ),
+                  // Constants.kHeight,
+                  // SquareButton(
+                  //   icon: SvgIcon(
+                  //     icon: CustomIcons.shareSvg,
+                  //     color: AppPallete.greyTextColor,
+                  //     radius: 5,
+                  //     fit: BoxFit.scaleDown,
+                  //   ),
+                  // ),
                 ],
               ),
             ),

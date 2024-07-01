@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
@@ -25,10 +24,8 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, List<ProductModel>>> getAllCartProduct() async {
     try {
       final result = await dataSource.getAllCartProduct();
-      print(result);
       return right(result);
     } on ServerException catch (e) {
-      print(e);
       return left(Failure(e.message));
     }
   }
@@ -37,10 +34,8 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, List<ProductModel>>> getAllFavoriteProduct() async {
     try {
       final result = await dataSource.getAllFavoriteProduct();
-      print(result);
       return right(result);
     } on ServerException catch (e) {
-      print(e);
       return left(Failure(e.message));
     }
   }
@@ -49,10 +44,8 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, List<ProductModel>>> getAllProduct() async {
     try {
       final result = await dataSource.getAllProduct();
-      print(result);
       return right(result);
     } on ServerException catch (e) {
-      print(e);
       return left(Failure(e.message));
     }
   }
@@ -126,7 +119,6 @@ class RepositoryImpl implements Repository {
     try {
       // print('updating the favorite');
       final result = await dataSource.getUserOwnedProducts();
-      print('hello how are you');
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

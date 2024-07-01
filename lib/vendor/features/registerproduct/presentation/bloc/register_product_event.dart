@@ -16,6 +16,7 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
   final String productName;
   final double productPrize;
   final Map<String, String> specifications;
+  final String color;
   final double productOldPrize;
   final int productQuantity;
   final String mainCategory;
@@ -34,8 +35,10 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
     required this.brandID,
     required this.productName,
     required this.productPrize,
+    required this.color,
     required this.productOldPrize,
-    required this.productQuantity,required this.specifications,
+    required this.productQuantity,
+    required this.specifications,
     required this.mainCategory,
     required this.mainCategoryID,
     required this.subCategory,
@@ -68,6 +71,8 @@ final class UpdateExistingProductEvent extends RegisterProductEvent {
   final int productQuantity;
   final String mainCategory;
   final String mainCategoryID;
+  final String color;
+  final Map<String, String> specifications;
   final String subCategory;
   final String subCategoryID;
   final String variantCategory;
@@ -80,11 +85,13 @@ final class UpdateExistingProductEvent extends RegisterProductEvent {
 
   UpdateExistingProductEvent({
     required this.product,
+    required this.specifications,
     required this.brandName,
     required this.brandID,
     required this.productName,
     required this.productPrize,
     required this.productOldPrize,
+    required this.color,
     required this.productQuantity,
     required this.mainCategory,
     required this.mainCategoryID,
@@ -101,3 +108,9 @@ final class UpdateExistingProductEvent extends RegisterProductEvent {
 }
 
 final class GetAllBrandEvent extends RegisterProductEvent {}
+final class OnChangeDynamicFormEvent extends RegisterProductEvent {
+  final Map<String, String> data;
+  OnChangeDynamicFormEvent({required this.data});
+}
+
+

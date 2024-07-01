@@ -28,4 +28,12 @@ abstract class CheckoutRepository {
   });
   Future<Either<Failure, List<AddressDetails>>> getAllUserAddress(
       {required String userID});
+
+ Future<Either<Failure, void>> saveUserAddress({
+    required String address,
+    required String pin,
+    required String city,
+    required String state,
+    required String country,
+  });
 }

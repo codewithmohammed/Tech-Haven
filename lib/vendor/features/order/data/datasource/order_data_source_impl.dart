@@ -49,7 +49,7 @@ class OrderDataSourceImpl implements OrderDataSource {
           city: order.city,
           state: order.state,
           country: order.country,
-          currency: order.currency);
+          currency: order.currency,);
 
       await firebaseFirestore
           .collection('vendorOrderHistory')

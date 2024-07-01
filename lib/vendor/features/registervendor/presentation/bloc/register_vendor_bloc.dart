@@ -49,13 +49,11 @@ class RegisterVendorBloc
 
   FutureOr<void> _onCheckForVendorStatusEvent(CheckForVendorStatusEvent event,
       Emitter<RegisterVendorState> emit) async {
-    print('${event.vendorID}sdfsdfsdf');
     final result =
         await _getVendorData(GetVendorDataParams(vendorID: event.vendorID));
     result.fold(
         (failure) => emit(CheckForVendorStatusFailed(message: failure.message)),
         (success) {
-      print(success);
       return emit(CheckForVendorStatusSuccess(vendor: success!));
     });
   }

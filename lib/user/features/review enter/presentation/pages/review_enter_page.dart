@@ -14,10 +14,10 @@ class ReviewEnterPage extends StatefulWidget {
   // final Product product;
 
   @override
-  _ReviewEnterPageState createState() => _ReviewEnterPageState();
+  
+  State<ReviewEnterPage> createState() => _ReviewEnterPageState();
 }
 
-double _rating = 0;
 
 class _ReviewEnterPageState extends State<ReviewEnterPage> {
   final _controller = TextEditingController();

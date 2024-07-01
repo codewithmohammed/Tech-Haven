@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
@@ -10,21 +11,24 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/otp_page_state.dart';
+import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
+import 'package:lottie/lottie.dart';
 
 class OTPVerificationPage extends StatefulWidget {
   const OTPVerificationPage({
     super.key,
-    required this.phoneNumber,
-    required this.verificaionID,
-    required this.email,
-    required this.password,
+    // required this.phoneNumber,
+    // required this.verificaionID,
+    // required this.email,
+    // required this.password,
+    required this.otpParams,
   });
-  final String phoneNumber;
-  final String email;
-  final String password;
-  final String verificaionID;
-
+  // final String phoneNumber;
+  // final String email;
+  // final String password;
+  // final String verificaionID;
+  final OTPParams otpParams;
   @override
   State<OTPVerificationPage> createState() => _OTPVerificationPageState();
 }
@@ -70,11 +74,13 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
         listener: (context, state) {
           if (state is UserCreationSuccess) {
             //navigate to signupwelcome page.
-            GoRouter.of(context).pushReplacementNamed(
-                AppRouteConstants.signupWelcomePage,
-                pathParameters: {
-                  'initialUsername': state.username,
-                });
+            if (widget.otpParams.isForSignUp) {
+              GoRouter.of(context).pushReplacementNamed(
+                  AppRouteConstants.signupWelcomePage,
+                  pathParameters: {
+                    'initialUsername': state.username,
+                  });
+            }
           }
           if (state is UserCreationFailed) {
             showSnackBar(
@@ -86,6 +92,15 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             pinController.clear();
             GoRouter.of(context).pop();
           }
+          if (state is UpdateUserPhoneNumberFailed) {
+            Fluttertoast.showToast(msg: state.message);
+            GoRouter.of(context).pop();
+          }
+          if (state is UpdateUserPhoneNumberSuccess) {
+            Fluttertoast.showToast(
+                msg: "Your Phone number is successfully Updated");
+            GoRouter.of(context).pop();
+          }
         },
         builder: (context, state) {
           if (state is AuthLoading) {
@@ -94,6 +109,17 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
+              Container(
+                  // decoration: const BoxDecoration(
+                  //   color: AppPallete.primaryAppColor,
+                  // ),
+                  ),
+              Positioned(
+                top: 25,
+                child: ConstrainedBox(
+                    constraints: BoxConstraints.tight(const Size(415, 415)),
+                    child: Lottie.asset(' assets/lotties/otp-lottie.json')),
+              ),
               Container(),
               Positioned(
                 bottom: -50,
@@ -132,15 +158,28 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                         hapticFeedbackType: HapticFeedbackType.lightImpact,
                         //on completing the entering of the pinCode.
                         onCompleted: (pinCode) {
-                          context.read<AuthBloc>().add(
-                                VerifyPhoneAndSignUpUserEvent(
-                                  phoneNumber: widget.phoneNumber,
-                                  email: widget.email,
-                                  password: widget.password,
-                                  verificationId: widget.verificaionID,
+                          if (widget.otpParams.isForSignUp) {
+                            context.read<AuthBloc>().add(
+                                  VerifyPhoneAndSignUpUserEvent(
+                                    phoneNumber: widget.otpParams.phoneNumber,
+                                    email: widget.otpParams.email!,
+                                    password: widget.otpParams.password!,
+                                    verificationId:
+                                        widget.otpParams.verificaionID,
+                                    otpCode: pinCode,
+                                  ),
+                                );
+                          } else {
+                            context
+                                .read<AuthBloc>()
+                                .add(UpdateThePhoneNumberOfUser(
+                                  updateNumber: false,
+                                  phoneNumber: widget.otpParams.phoneNumber,
+                                  verificationID:
+                                      widget.otpParams.verificaionID,
                                   otpCode: pinCode,
-                                ),
-                              );
+                                ));
+                          }
                         },
                         onChanged: (value) {
                           debugPrint('onChanged: $value');

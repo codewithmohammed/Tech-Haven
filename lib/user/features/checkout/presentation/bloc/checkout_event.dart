@@ -71,15 +71,28 @@ final class RemoveAllProductsFromTheCartAndSendOrderEvent
 
 final class RemoveTheOrderEvent extends CheckoutEvent {}
 
-class LoadAddresses extends CheckoutEvent {
+class LoadAddresses extends CheckoutEvent {}
 
-}
-
-final class SelectAddressState extends CheckoutEvent{}
+final class SelectAddressState extends CheckoutEvent {}
 
 final class SelectAddress extends SelectAddressState {
   final AddressDetails address;
-   SelectAddress(this.address);
+  SelectAddress(this.address);
 }
 
 final class UnselectAddress extends SelectAddressState {}
+
+final class SaveUserAddressEvent extends CheckoutEvent {
+  final String address;
+  final String pin;
+  final String city;
+  final String state;
+  final String country;
+
+  const SaveUserAddressEvent(
+      {required this.address,
+      required this.pin,
+      required this.city,
+      required this.state,
+      required this.country});
+}

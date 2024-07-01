@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/custom_like_button.dart';
+import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/product_card.dart';
-import 'package:tech_haven/core/common/widgets/shopping_cart_button.dart';
-import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
-import 'package:tech_haven/core/utils/check_product_is_carted.dart';
-import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
 import 'package:tech_haven/user/features/search/presentation/bloc/search_page_bloc.dart';
 // import '../bloc/product_search_bloc.dart';
 // import '../bloc/product_search_event.dart';
@@ -27,6 +23,12 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   @override
+  void initState() {
+    context.read<SearchPageBloc>().add(const SearchProductsEvent(''));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void updateProductToFavorite(Product product, bool isLiked) {
       // print('updating the favorite');
@@ -38,18 +40,18 @@ class _SearchPageState extends State<SearchPage> {
           );
     }
 
-    void updateProductToCart(
-        {required Product product,
-        required Cart? cart,
-        required int itemCount}) {
-      context.read<SearchPageBloc>().add(
-            UpdateProductToCartSearchPageEvent(
-              product: product,
-              itemCount: itemCount,
-              cart: cart,
-            ),
-          );
-    }
+    // void updateProductToCart(
+    //     {required Product product,
+    //     required Cart? cart,
+    //     required int itemCount}) {
+    //   context.read<SearchPageBloc>().add(
+    //         UpdateProductToCartSearchPageEvent(
+    //           product: product,
+    //           itemCount: itemCount,
+    //           cart: cart,
+    //         ),
+    //       );
+    // }
 
     // context.read<SearchPageBloc>().add(const SearchProductsEvent(null,));
     return Scaffold(
@@ -100,7 +102,7 @@ class _SearchPageState extends State<SearchPage> {
                           product: state.products[index],
                           // onTapFavouriteButton:
                           // isFavorited:
-                          shoppingCartWidget:Container()
+                          shoppingCartWidget: Container()
                           //     BlocBuilder<SearchPageBloc, SearchPageState>(
                           //   buildWhen: (previous, current) =>
                           //       current is ProductCartProductsState,
@@ -184,7 +186,7 @@ class _SearchPageState extends State<SearchPage> {
                           //     );
                           //   },
                           // ),
-                        )
+                          )
                       : const Center(
                           child: Text(
                             'No Data Found',
@@ -203,7 +205,7 @@ class _SearchPageState extends State<SearchPage> {
               //     },
               //   );
             }
-            return const Center(child: CircularProgressIndicator());
+            return const Loader();
           },
         ),
       ),

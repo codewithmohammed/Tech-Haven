@@ -2,14 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
 import 'package:tech_haven/core/entities/cart.dart';
-import 'package:tech_haven/core/entities/category.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 part 'products_page_event.dart';
@@ -59,11 +57,9 @@ class ProductsPageBloc extends Bloc<ProductsPageEvent, ProductsPageState> {
   FutureOr<void> _onGetAllProductsEvent(GetAllProductsProductsEvent event,
       Emitter<ProductsPageState> emit) async {
     List<String> listOfAllFavorited = [];
-    String messageOfFavoriteError = 'error';
 
     final allFavorited = await _getAllFavorite(NoParams());
     allFavorited.fold((failure) {
-      messageOfFavoriteError = failure.message;
     }, (success) {
       listOfAllFavorited = success; // Assigning value here
     });

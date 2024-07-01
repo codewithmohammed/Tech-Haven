@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tech_haven/core/common/data/model/location_model.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_current_location_details.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/entities/location.dart';

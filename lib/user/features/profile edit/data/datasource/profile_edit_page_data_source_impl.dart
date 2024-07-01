@@ -11,27 +11,55 @@ class ProfileEditPageDataSourceImpl implements ProfileEditPageDataSource {
   final FirebaseStorage firebaseStorage;
   ProfileEditPageDataSourceImpl(
       {required this.firebaseFirestore, required this.firebaseStorage});
+
   @override
   Future<void> updateUserData(UserModel userModel, File? newImage) async {
-    String? imageUrl;
-    String imageID = const Uuid().v1();
-    if (newImage != null) {
-      Reference reference = firebaseStorage
-          .ref('user')
-          .child('usersProfilePicture')
-          .child(userModel.uid!)
-          .child(userModel.userImageID ?? imageID);
-      await reference.putFile(newImage);
-      imageUrl = await reference.getDownloadURL();
+    try {
+      String? imageUrl;
+      String imageID =
+          const Uuid().v1(); // Generate a new unique ID for the image
+
+      if (newImage != null) {
+        // Create a reference to the storage location for the user's profile picture
+        Reference reference = firebaseStorage
+            .ref('user')
+            .child('usersProfilePicture')
+            .child(userModel.uid!);
+
+        // Upload the new image file
+        if (userModel.userImageID != null) {
+          await reference.child(userModel.userImageID!).delete();
+        }
+        await reference.child(imageID).putFile(newImage);
+
+        // Get the download URL of the uploaded image
+        imageUrl = await reference.child(imageID).getDownloadURL();
+      }
+
+      // Prepare updated user data
+      // final Map<String, dynamic> userData = {
+
+      // };
+
+      // // If imageUrl is not null, update profilePicture field
+      // if (imageUrl != null) {
+      //   userData['profilePicture'] = imageUrl;
+      // } else {
+      //   // Use the existing profile photo URL if no new image was uploaded
+      //   userData['profilePicture'] = userModel.profilePhoto;
+      // }
+
+      // Update user document in Firestore
+      await firebaseFirestore.collection('users').doc(userModel.uid).update({
+        'userImageID': imageID,
+        'username': userModel.username,
+        'isProfilePictureUploaded': userModel.isProfilePhotoUploaded,
+        'profilePhoto': imageUrl ?? userModel.profilePhoto
+      });
+
+    } catch (e) {
+      // Handle errors here (logging, UI feedback, etc.)
+      rethrow; // Optionally rethrow the exception for further handling upstream
     }
-    final userData = userModel.toJson();
-    if (imageUrl != null) {
-      userData['profilePicture'] = imageUrl;
-    }
-    await firebaseFirestore.collection('users').doc(userModel.uid).update({
-      'username': userModel.username,
-      'profilePicture': newImage != null ? imageUrl : userModel.profilePhoto,
-      'isProfilePictureUploader': userModel.isProfilePhotoUploaded,
-    });
   }
 }

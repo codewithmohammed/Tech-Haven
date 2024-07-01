@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/common/data/model/vendor_payment_model.dart';
 import 'package:tech_haven/core/entities/revenue.dart';
 import 'package:tech_haven/core/entities/vendor_payment.dart';
 import 'package:tech_haven/core/error/failures.dart';

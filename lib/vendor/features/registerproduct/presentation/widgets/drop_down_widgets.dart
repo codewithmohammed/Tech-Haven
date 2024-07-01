@@ -28,7 +28,9 @@ class DropDownWidgets extends StatefulWidget {
   @override
   State<DropDownWidgets> createState() => _DropDownWidgetsState();
 }
-
+TextEditingController mainSearchEditingController = TextEditingController();
+TextEditingController subSearchEditingController = TextEditingController();
+TextEditingController variantSearchEditingController = TextEditingController();
 // Getter methods to access index values
 // int? get mainCategoryIndex => widget.categoryIndexes[0];
 // int? get subCategoryIndex => widget.categoryIndexes[1];
@@ -72,6 +74,7 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
     return Column(
       children: [
         CustomDropDown<String>(
+          searchEditingController: mainSearchEditingController,
           hintText: 'Select Main Category',
           currentItem: mainCategoryValue,
           items: widget.allCategories.map((e) => e.categoryName).toList(),
@@ -86,7 +89,6 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
             } else {
               setState(() {
                 mainCategoryValue = value;
-                print(mainCategoryValue);
 
                 widget.categoryIndexes[0] = categoryIndex;
                 subCategoryValue = null;
@@ -100,6 +102,7 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
         Constants.kHeight,
         // droopdown for product main category
         CustomDropDown<String>(
+          searchEditingController: subSearchEditingController,
           hintText: 'Select Sub Category',
           currentItem: subCategoryValue,
           items: widget.categoryIndexes[0] != null
@@ -118,6 +121,7 @@ class _DropDownWidgetsState extends State<DropDownWidgets> {
           },
         ),
         CustomDropDown<String>(
+          searchEditingController: variantSearchEditingController,
           hintText: 'Select Variant Cateogry',
           currentItem: variantCategoryValue,
           items: widget.categoryIndexes[1] != null

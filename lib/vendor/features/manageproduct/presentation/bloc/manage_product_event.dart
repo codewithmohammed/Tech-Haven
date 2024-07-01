@@ -7,9 +7,9 @@ sealed class ManageProductEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class GetAllProductsEvent extends ManageProductEvent {
+final class GetAllProductsEventForManage extends ManageProductEvent {
   // final String vendorID;
-  const GetAllProductsEvent();
+  const GetAllProductsEventForManage();
 }
 
 final class UpdateTheProductPublishEvent extends ManageProductEvent {

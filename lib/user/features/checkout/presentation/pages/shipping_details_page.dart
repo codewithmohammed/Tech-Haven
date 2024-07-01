@@ -144,8 +144,10 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
   late TextEditingController countryController;
   late TextEditingController currencyController;
   late TextEditingController amountController;
-
+  TextEditingController addressSearchEditingController =
+      TextEditingController();
   AddressDetails? selectedAddress;
+  List<String> stringAddresses = [];
   @override
   void initState() {
     super.initState();
@@ -156,6 +158,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
     countryController = TextEditingController();
     currencyController = TextEditingController();
     amountController = TextEditingController();
+    currencyController.text = 'aed';
     amountController.text = '${widget.totalAmount}0';
   }
 
@@ -166,6 +169,24 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
     void submitForm() {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
+        //save the address
+        if (selectedAddress == null &&
+            !stringAddresses.contains(addressController.text)) {
+          context.read<CheckoutBloc>().add(SaveUserAddressEvent(
+              address: addressController.text,
+              pin: pinController.text,
+              city: cityController.text,
+              state: stateController.text,
+              country: countryController.text));
+        } else {
+          if (stringAddresses.contains(addressController.text)) {
+            Fluttertoast.showToast(
+              msg:
+                  'This Address will not be saved for future purposes as It Already exists',
+            );
+          }
+        }
+
         context.read<CheckoutBloc>().add(SubmitPaymentFormEvent(
               address: addressController.text,
               pin: pinController.text,
@@ -189,20 +210,16 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
         child: BlocConsumer<CheckoutBloc, CheckoutState>(
           // listenWhen: (previous, current) => current is AddressSelectState,
           listener: (context, state) {
-            // if (state is AddressSelected) {
-            //   addressController.text = state.address.line1;
-            //   pinController.text = state.address.postalCode;
-            //   cityController.text = state.address.city;
-            //   stateController.text = state.address.state;
-            //   countryController.text = state.address.country;
-            // } else if (state is AddressUnselected) {
-
-            // }
+            if (state is SaveUserAddressFailed) {
+              Fluttertoast.showToast(msg: state.message);
+            } else if (state is SaveUserAddressSuccess) {
+              Fluttertoast.showToast(msg: 'New Location is added SuccessFully');
+            }
           },
           buildWhen: (previous, current) => current is GetAllUserAddressState,
           builder: (context, addressLoadState) {
             if (addressLoadState is AddressLoaded) {
-              List<String> stringAddresses =
+              stringAddresses =
                   addressLoadState.addresses.map((e) => e.line1).toList();
               stringAddresses.add('UnSelect Location');
               return SingleChildScrollView(
@@ -218,6 +235,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
                     // }
                     // return
                     CustomDropDown<String>(
+                        searchEditingController: addressSearchEditingController,
                         hintText: 'Select Address',
                         items: stringAddresses,
                         currentItem: selectedAddress?.line1,
@@ -265,7 +283,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
                     ),
                     CustomTextFormField(
                       enabled: selectedAddress == null,
-                      labelText: 'addressLoadState',
+                      labelText: 'State',
                       hintText: 'Enter Your State',
                       textEditingController: stateController,
                     ),
@@ -284,7 +302,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
                       textEditingController: pinController,
                     ),
                     CustomTextFormField(
-                      enabled: true,
+                      enabled: false,
                       labelText: 'Currency',
                       hintText: 'Enter Your Currency',
                       textEditingController: currencyController,

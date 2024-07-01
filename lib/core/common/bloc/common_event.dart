@@ -1,7 +1,6 @@
 part of 'common_bloc.dart';
 
 sealed class CommonEvent extends Equatable {
-  
   const CommonEvent();
 
   @override
@@ -14,6 +13,6 @@ final class UpdateProductToFavoriteEvent extends CommonEvent {
   final bool isFavorited;
   final Product product;
 
-  UpdateProductToFavoriteEvent(
+  const UpdateProductToFavoriteEvent(
       {required this.isFavorited, required this.product});
 }

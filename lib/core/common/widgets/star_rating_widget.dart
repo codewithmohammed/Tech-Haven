@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/routes/app_route_constants.dart';
 
 ValueNotifier<double> starValueNotifier = ValueNotifier(0);
 ValueNotifier<double> starValueNotifierForReviewPage = ValueNotifier(0);

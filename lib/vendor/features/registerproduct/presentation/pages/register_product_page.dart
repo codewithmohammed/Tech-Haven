@@ -16,11 +16,13 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
+import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/add_images_widget.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/brand_drop_down.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/drop_down_widgets.dart';
+import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/dynamic_form.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/sub_text.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -39,7 +41,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   final TextEditingController productNameTextEditingController =
       TextEditingController();
-
+  final TextEditingController colorTextEditingController =
+      TextEditingController();
   final TextEditingController productPrizeTextEditingController =
       TextEditingController();
 
@@ -66,10 +69,15 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   Map<String, String> specifications = {};
   // bool isValid = false;
   void handleFormData(Map<String, String> data) {
-    setState(() {
-      specifications = data;
-      // validateFormData(data);
-    });
+    // setState(() {
+    // context
+    // .read<RegisterProductBloc>()
+    // .add(OnChangeDynamicFormEvent(data: data));
+    // print('hello');
+    specifications = data;
+    // print(specifications);
+    // validateFormData(data);
+    // });
   }
 
   // bool validateFormData() {
@@ -91,6 +99,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    // print('I am here');
     Future<bool> deleteProduct(
         {required Product product,
         required Map<int, List<model.Image>> listOfImagesLinks}) async {
@@ -109,29 +118,35 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!RegisterProductBloc.isCategoryLoaded) {
-        // If data is not loaded and not loading, fetch the data
-        BlocProvider.of<RegisterProductBloc>(context)
-            .add(GetAllCategoryEvent(refreshPage: false));
-        // }
-        // if (!RegisterProductBloc.isBrandLoaded) {
-        //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
-      }
+      // if (!RegisterProductBloc.isCategoryLoaded) {print('I am here');
+      // If data is not loaded and not loading, fetch the data
+      BlocProvider.of<RegisterProductBloc>(context)
+          .add(GetAllCategoryEvent(refreshPage: false));
+      // }
+      // if (!RegisterProductBloc.isBrandLoaded) {
+      //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
+      // }
     });
 
     Map<int, List<model.Image>>? listOfImagesLinks;
 
     return BlocConsumer<RegisterProductBloc, RegisterProductState>(
       listener: (context, state) {
+        // if (state is DynamicFormSuccessState) {
+        //   specifications = state.data;
+        //   print(specifications);
+        // }
         if (state is NewProductRegisteredSuccess) {
           Fluttertoast.showToast(
               msg: "The Product is Registered Successfully",
               toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 16.0);
+          context
+              .read<ManageProductBloc>()
+              .add(const GetAllProductsEventForManage());
           GoRouter.of(context).pop();
         }
         if (state is NewProductRegisteredFailed) {
@@ -147,11 +162,13 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           Fluttertoast.showToast(
               msg: "The Product is Deleted Successfully",
               toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
               timeInSecForIosWeb: 1,
               backgroundColor: Colors.green,
               textColor: Colors.white,
               fontSize: 16.0);
+          BlocProvider.of<ManageProductBloc>(context)
+              .add(const GetAllProductsEventForManage());
+
           GoRouter.of(context).pop();
         }
         if (state is DeleteProductFailed) {
@@ -163,9 +180,13 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           );
         }
       },
+      // buildWhen: ,
       builder: (context, state) {
+        // print(state);
         if (state is RegisterProductLoading) {
-          return const Loader();
+          return Loader(
+            totalImages: productImages[0]?.length,
+          );
         }
         if (state is RegisterProductAllCategoryLoadedSuccess) {
           context.read<GetImagesBloc>().add(EmitInitialEvent());
@@ -174,6 +195,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           if (widget.product != null) {
             productOldPrizeTextEditingController.text =
                 widget.product!.oldPrize.toString();
+            colorTextEditingController.text = widget.product!.color;
             selectedBrandIndex[0] = allBrands
                 .indexWhere((element) => element.id == widget.product!.brandID);
             productNameTextEditingController.text = widget.product!.name;
@@ -192,7 +214,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 .subCategories
                 .indexWhere(
                     (element) => element.id == widget.product!.subCategoryID);
-
+            specifications = widget.product!.specifications ?? {};
             categoryIndexes[2] = allCategories[categoryIndexes[0]!]
                 .subCategories[categoryIndexes[1]!]
                 .subCategories
@@ -201,6 +223,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             context.read<GetImagesBloc>().add(GetImagesForTheProductEvent(
                   productID: widget.product!.productID,
                 ));
+          } else {
+            selectedBrandIndex[0] = null;
           }
           return Scaffold(
               appBar: VendorAppBar(
@@ -330,9 +354,11 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       ),
                       DynamicForm(
                         onFormChanged: handleFormData,
-                        productSpecifications: widget.product != null
-                            ? widget.product!.specifications ?? {}
-                            : {},
+                        productSpecifications: specifications,
+
+                        //  widget.product != null
+                        //     ? widget.product!.specifications ?? {}
+                        //     : {},
                       ),
                       // SpecificationPage(
                       //     specificationTextFormFields:
@@ -370,10 +396,19 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                 ),
                                 if (shippingBool)
                                   CustomTextFormField(
+                                    // onChanged: (p0) {
+                                    //   print(shippingChargeController.text);
+                                    //   print(double.parse(
+                                    //       shippingChargeController.text));
+                                    // },
                                     labelText: 'Shipping Charge.',
                                     hintText: 'Shipping Charge.',
                                     textEditingController:
                                         shippingChargeController,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
                                     validator: shippingBool
                                         ? Validator.validateEmptyField
                                         : null,
@@ -385,6 +420,12 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       Constants.kHeight,
                       const GlobalTitleText(
                         title: 'Attribute',
+                      ),
+                      CustomTextFormField(
+                        labelText: 'Color Name',
+                        hintText: 'Color Name',
+                        textEditingController: colorTextEditingController,
+                        validator: Validator.validateEmptyField,
                       ),
                       BlocConsumer<GetImagesBloc, GetImagesState>(
                         listener: (context, state) {
@@ -443,7 +484,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                                       categoryIndexes[1] != null &&
                                       categoryIndexes[2] != null &&
                                       selectedBrandIndex[0] != null &&
-                                      productImages.isNotEmpty) {
+                                      productImages.isNotEmpty &&
+                                      specifications.isNotEmpty) {
                                     registerNewProduct(isPublished: false);
                                   } else if (productImages.isEmpty) {
                                     showSnackBar(
@@ -550,6 +592,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           product: product,
           brandName: allBrands[selectedBrandIndex[0]!].categoryName,
           brandID: allBrands[selectedBrandIndex[0]!].id,
+          specifications: specifications,
           productName: productNameTextEditingController.text,
           productPrize: double.parse(productPrizeTextEditingController.text),
           productOldPrize:
@@ -574,6 +617,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
           productOverview: productOverviewTextEditingController.text,
           shippingCharge: double.parse(shippingChargeController.text),
           productImages: productImages,
+          color: colorTextEditingController.text,
           deleteImagesIndexes: deletedImagesIndex,
           isPublished: widget.product!.isPublished,
         ));
@@ -583,6 +627,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
     // print(allBrands[selectedBrandIndex[0]!].id);
     context.read<RegisterProductBloc>().add(
           RegisterNewProductEvent(
+            color: colorTextEditingController.text,
             brandName: allBrands[selectedBrandIndex[0]!].categoryName,
             brandID: allBrands[selectedBrandIndex[0]!].id,
             productName: productNameTextEditingController.text,
@@ -610,7 +655,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                 .id,
             productOverview: productOverviewTextEditingController.text,
             shippingCharge: shippingChargeController.text.isEmpty
-                ? 0
+                ? 0.01
                 : double.parse(shippingChargeController.text),
             productImages: productImages,
             isPublished: isPublished,
@@ -619,124 +664,6 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   }
 }
 
-class DynamicForm extends StatefulWidget {
-  const DynamicForm({
-    super.key,
-    required this.onFormChanged,
-    required this.productSpecifications,
-  });
-  final Function(Map<String, String>) onFormChanged;
-  final Map<String, String> productSpecifications;
-  @override
-  _DynamicFormState createState() => _DynamicFormState();
-}
-
-class _DynamicFormState extends State<DynamicForm> {
-  List<MapEntry<TextEditingController, TextEditingController>> fields = [
-    MapEntry(TextEditingController(), TextEditingController()),
-  ];
-
-  @override
-  void initState() {
-    if (widget.productSpecifications.isNotEmpty) {
-      fields = widget.productSpecifications.entries.map((entry) {
-        return MapEntry(
-          TextEditingController(text: entry.key),
-          TextEditingController(text: entry.value),
-        );
-      }).toList();
-    }
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    for (var entry in fields) {
-      entry.key.dispose();
-      entry.value.dispose();
-    }
-    super.dispose();
-  }
-
-  void _addField() {
-    setState(() {
-      fields.add(MapEntry(TextEditingController(), TextEditingController()));
-    });
-    _updateFormData();
-  }
-
-  void _removeField(int index) {
-    setState(() {
-      fields.removeAt(index);
-    });
-    _updateFormData();
-  }
-
-  void _updateFormData() {
-    Map<String, String> result = {};
-    for (var entry in fields) {
-      if (entry.key.text.isNotEmpty && entry.value.text.isNotEmpty) {
-        result[entry.key.text] = entry.value.text;
-      }
-    }
-    widget.onFormChanged(result);
-  }
-
-  //whent the fields length - 1 == index then we will show the plusbuttonnnnnn
-  //if the
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: fields.length,
-      itemBuilder: (context, index) {
-        return Row(
-          children: <Widget>[
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomTextFormField(
-                  labelText: 'Name',
-                  hintText: 'Name',
-                  durationMilliseconds: 150,
-                  textEditingController: fields[index].key,
-                  onChanged: (value) => _updateFormData(),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomTextFormField(
-                  labelText: 'Spec.',
-                  hintText: 'Spec.',
-                  textEditingController: fields[index].value,
-                  durationMilliseconds: 150,
-                  onChanged: (value) => _updateFormData(),
-                ),
-              ),
-            ),
-            IconButton(
-              icon: Icon(fields.length - 1 == index ? Icons.add : Icons.remove),
-              onPressed: () {
-                if (fields.length - 1 == index) {
-                  // if (fields.length > 1) {
-                  _addField();
-                  // }
-                } else {
-                  _removeField(index);
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
 //  ElevatedButton(
 //       onPressed: () {
 //         var fieldValues = _getFieldValues();
@@ -862,72 +789,3 @@ class _DynamicFormState extends State<DynamicForm> {
 //     );
 //   }
 // }
-class SpecificationPage extends StatefulWidget {
-  final Map<int, Map<String, String>> specificationTextFormFields;
-  const SpecificationPage(
-      {super.key, required this.specificationTextFormFields});
-
-  @override
-  State<SpecificationPage> createState() => _SpecificationPageState();
-}
-
-class _SpecificationPageState extends State<SpecificationPage> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: widget.specificationTextFormFields.length + 1,
-      itemBuilder: (context, index) {
-        return Row(
-          children: [
-            const Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CustomTextFormField(
-                  labelText: 'Name',
-                  hintText: 'Name',
-                  durationMilliseconds: 150,
-                  textEditingController: null,
-                ),
-              ),
-            ),
-            const Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CustomTextFormField(
-                  labelText: 'Spec.',
-                  hintText: 'Spec.',
-                  textEditingController: null,
-                  durationMilliseconds: 150,
-                ),
-              ),
-            ),
-            index < widget.specificationTextFormFields.length - 1
-                ? IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        widget.specificationTextFormFields.remove(index);
-                      });
-                    },
-                  )
-                : IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: () {
-                      // final Map<String, String> newEntry =
-                      final Map<String, String> myMap = {};
-
-                      // myMap[index.toString()] = '';
-
-                      setState(() {
-                        widget.specificationTextFormFields[index] = myMap;
-                      });
-                    },
-                  ),
-          ],
-        );
-      },
-    );
-  }
-}

@@ -41,17 +41,16 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
     required String variantCategoryID,
     required String overview,
     required Map<String, String>? specifications,
-    required double? shippingCharge,
+    required double? shippingCharge,required String color,
     required Map<int, List<File>> productImages,
     required bool isPublished,
   }) async {
     try {
-      print(brandID);
       final result = await registerProductDataSource.registerNewProduct(
         brandName: brandName,
         brandID: brandID,
         oldPrize: oldPrize,
-        name: name,
+        name: name,color: color,
         prize: prize,
         quantity: quantity,
         mainCategory: mainCategory,
@@ -111,7 +110,7 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
       required String subCategory,
       required String subCategoryID,
       required String variantCategory,
-      required String variantCategoryID,
+      required String variantCategoryID,required String color,
       required String overview,
       required Map<String, String>? specifications,
       required double? shippingCharge,
@@ -126,7 +125,7 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
         name: name,
         prize: prize,
         oldPrize: oldPrize,
-        quantity: quantity,
+        quantity: quantity,color: color,
         mainCategory: mainCategory,
         mainCategoryID: mainCategoryID,
         subCategory: subCategory,

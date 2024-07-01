@@ -9,11 +9,9 @@ import 'package:tech_haven/core/common/data/model/product_review_model.dart';
 import 'package:tech_haven/core/common/data/model/review_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
 import 'package:tech_haven/core/common/data/model/user_model.dart';
-import 'package:tech_haven/core/common/domain/usecase/get_user_data.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/entities/product_review.dart';
 import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
@@ -60,7 +58,6 @@ class DataSourceImpl implements DataSource {
       if (user != null) {
         final String reviewID = const Uuid().v1();
         final DateTime dateTime = DateTime.now();
-        print('change the productreviws count here');
 
         final currentRating = product.rating ?? 0;
         final totalReviews = listOfReview.length;
@@ -326,7 +323,7 @@ class DataSourceImpl implements DataSource {
           final cartModel = CartModel(
             cartID: cart.cartID,
             productID: product.productID,
-            productCount: itemCount,
+            productCount: itemCount, color: 0,
           );
           await firebaseFirestore
               .collection('carts')
@@ -340,7 +337,7 @@ class DataSourceImpl implements DataSource {
           final cartModel = CartModel(
             cartID: cartID,
             productID: product.productID,
-            productCount: itemCount,
+            productCount: itemCount, color: 0,
           );
           await firebaseFirestore
               .collection('carts')
@@ -534,10 +531,8 @@ class DataSourceImpl implements DataSource {
   Future<VendorModel?> getVendorData({required String vendorID}) async {
     try {
       // print('object');
-      print('hello how are you');
       DocumentSnapshot docSnapshot =
           await firebaseFirestore.collection('vendors').doc(vendorID).get();
-      print('hello how are you');
       if (docSnapshot.exists) {
         final VendorModel vendorModel =
             VendorModel.fromJson(docSnapshot.data() as Map<String, dynamic>);
@@ -581,7 +576,6 @@ class DataSourceImpl implements DataSource {
       final UserModel? user = await getUserData();
       List<OrderModel> listOfOrderModel = [];
       if (user != null) {
-        print('Fetching user orders...');
         // Fetching snapshots of the order details collection for the user
         QuerySnapshot<Map<String, dynamic>> snapshots = await FirebaseFirestore
             .instance
@@ -589,13 +583,10 @@ class DataSourceImpl implements DataSource {
             .doc(user.uid)
             .collection('orderDetails')
             .get();
-        print('Fetched user orders, processing...');
         // Mapping each document to an OrderModel instance
         for (var doc in snapshots.docs) {
-          print(doc.data());
           listOfOrderModel.add(OrderModel.fromJson(doc.data()));
         }
-        print('User orders processing completed.');
       }
       return listOfOrderModel;
     } catch (e) {
@@ -613,7 +604,6 @@ class DataSourceImpl implements DataSource {
 
       List<OrderModel> listOfVendorOrderModel = [];
 
-      print('Fetching vendor orders...');
       // Fetching snapshots of the order details collection for the given vendor
       QuerySnapshot<Map<String, dynamic>> orderDetailsSnapshot =
           await FirebaseFirestore.instance
@@ -621,13 +611,10 @@ class DataSourceImpl implements DataSource {
               .doc(user.vendorID)
               .collection('orderDetails')
               .get();
-      print('Fetched vendor orders, processing...');
       // Mapping each document to an OrderModel instance
       for (var doc in orderDetailsSnapshot.docs) {
-        print(doc.data());
         listOfVendorOrderModel.add(OrderModel.fromJson(doc.data()));
       }
-      print('Vendor orders processing completed.');
 
       return listOfVendorOrderModel;
     } catch (e) {
@@ -640,7 +627,6 @@ class DataSourceImpl implements DataSource {
     try {
       UserModel? user = await getUserData();
       if (user != null) {
-        print('hey how are you');
         DocumentSnapshot docSnapshot = await firebaseFirestore
             .collection('userOwnedProducts')
             .doc(user.uid)
@@ -649,7 +635,6 @@ class DataSourceImpl implements DataSource {
         if (docSnapshot.exists && docSnapshot.data() != null) {
           var data = docSnapshot.data() as Map<String, dynamic>;
           if (data['listOfProducts'] != null) {
-            print('hey how are you');
             return List<String>.from(data['listOfProducts']);
           }
         }

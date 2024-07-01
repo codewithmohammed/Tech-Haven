@@ -21,7 +21,12 @@ class VendorOrderPage extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: const BackButton(),
+        leading:const BackButton(
+          // color: Colors.white,
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
+        ),
         title: const Text('Your Order'),
         centerTitle: true,
       ),
@@ -34,7 +39,6 @@ class VendorOrderPage extends StatelessWidget {
             Fluttertoast.showToast(msg: state.message);
           }
           if (state is DeliverOrderToAdminSuccess) {
-            print('object');
             context
                 .read<VendorOrderPageBloc>()
                 .add(GetAllOrdersForVendorEvent());
@@ -49,10 +53,8 @@ class VendorOrderPage extends StatelessWidget {
                   ? ListView.separated(
                       itemCount: state.listOfOrderDetails.length,
                       itemBuilder: (context, index) {
-                        print(state.listOfOrderDetails.length);
                         return OrderTile(
                           onPressedDeliverButton: () {
-                            print('hi how are you');
                             context.read<VendorOrderPageBloc>().add(
                                   DeliverOrderToAdminEvent(
                                     order: state.listOfOrderDetails[index],

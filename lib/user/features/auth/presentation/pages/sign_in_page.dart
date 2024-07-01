@@ -58,7 +58,6 @@ class _SignInPageState extends State<SignInPage> {
               );
             }
             if (state is AuthSignInSuccess) {
-              print('hello');
               GoRouter.of(context)
                   .pushReplacementNamed(AppRouteConstants.mainPage);
             }

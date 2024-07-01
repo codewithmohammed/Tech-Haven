@@ -6,6 +6,7 @@ class UserOrderedProduct {
   final String mainCategoryID;
   final DateTime dateTime;
   final int quantity;
+  final int color;
   final String name;
   // final String locationDetails;
   final double oldPrize;
@@ -30,6 +31,7 @@ class UserOrderedProduct {
     required this.brandName,
     required this.displayImageURL,
     required this.mainCategory,
+    required this.color,
     required this.mainCategoryID,
     required this.orderID,
     required this.name,

@@ -1,19 +1,16 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/model/order_model.dart';
-import 'package:tech_haven/core/common/data/model/product_review_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/category.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/location.dart';
 import 'package:tech_haven/core/entities/product.dart';
 
-import 'package:tech_haven/core/entities/order.dart' as model;
 import 'package:tech_haven/core/entities/product_review.dart';
 import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/entities/vendor.dart';
 import 'package:tech_haven/core/error/failures.dart';
-import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 
 abstract class Repository {
   Future<Either<Failure, List<Product>>> getAllProduct();

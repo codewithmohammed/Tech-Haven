@@ -6,6 +6,7 @@ class Product {
   final String brandID;
   final String displayImageURL;
   final String name;
+  final String color;
   final double prize;
   final double oldPrize;
   final int quantity;
@@ -25,6 +26,7 @@ class Product {
 
   Product({
     required this.productID,
+    required this.color,
     required this.vendorName,
     required this.vendorID,
     required this.brandName,

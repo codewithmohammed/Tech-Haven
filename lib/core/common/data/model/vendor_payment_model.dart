@@ -9,8 +9,8 @@ class VendorPaymentModel extends VendorPayment {
       required super.vendorID});
 
   factory VendorPaymentModel.fromJson(Map<String, dynamic> json) {
-    print(json['DateTime']);
-    print(DateTime.parse(json['DateTime']));
+    // print(json['DateTime']);
+    // print(DateTime.parse(json['DateTime']));
     return VendorPaymentModel(
       dateTime: DateTime.parse(json['DateTime']),
       vendorID: json['vendorID'],

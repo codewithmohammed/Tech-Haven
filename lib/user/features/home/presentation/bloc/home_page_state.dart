@@ -7,6 +7,42 @@ sealed class HomePageState extends Equatable {
   List<Object> get props => [];
 }
 
+class TrendingProductState extends HomePageState {}
+
+class TrendingProductInitial extends TrendingProductState {}
+
+class TrendingProductLoading extends TrendingProductState {}
+
+class TrendingProductLoaded extends TrendingProductState {
+  final TrendingProduct product;
+
+  TrendingProductLoaded({required this.product});
+
+  @override
+  List<Object> get props => [product];
+}
+
+final class GetTrendingProductState extends HomePageState {}
+
+final class GetProductForAdvertisementSuccess extends GetTrendingProductState {
+  final Product product;
+  GetProductForAdvertisementSuccess({required this.product});
+}
+
+final class GetProductForAdvertisementFailed extends GetTrendingProductState {
+  final String message;
+  GetProductForAdvertisementFailed({required this.message});
+}
+
+class TrendingProductError extends TrendingProductState {
+  final String message;
+
+  TrendingProductError({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}
+
 final class HomePageInitial extends HomePageState {}
 
 final class HomePageLoadingState extends HomePageState {}

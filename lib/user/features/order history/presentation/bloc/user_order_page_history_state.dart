@@ -6,9 +6,9 @@ class UserOrderHistoryInitial extends UserOrderHistoryState {}
 class UserOrderHistoryLoading extends UserOrderHistoryState {}
 
 class UserOrderHistoryLoaded extends UserOrderHistoryState {
-  final List<UserOrderedProduct> products;
+  final List<OrderModel> orders;
 
-  UserOrderHistoryLoaded(this.products);
+  UserOrderHistoryLoaded(this.orders);
 }
 
 class UserOrderHistoryError extends UserOrderHistoryState {

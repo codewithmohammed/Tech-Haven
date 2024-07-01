@@ -52,7 +52,6 @@ class PaymentIntentModel {
   }
 
   Map<String, dynamic> toJson() {
-    print(id + currency + description);
     return {
       'id': id,
       'amount': amount,

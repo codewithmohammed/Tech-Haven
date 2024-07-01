@@ -93,7 +93,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
     final allProductImages = await _getImagesForProduct(
         GetImagesForProductParams(productID: event.productID));
     // print(allProductImages);
-    await Future.delayed(const Duration(seconds: 1));
+    // await Future.delayed(const Duration(seconds: 1));
     allProductImages.fold(
         (failure) =>
             emit(GetAllImagesForProductFailed(message: failure.message)),
@@ -108,7 +108,7 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
       ChangeProductColorEvent event, Emitter<DetailsPageState> emit) async {
     // print('object');
     emit(DetailsPageInitial());
-    await Future.delayed(const Duration(seconds: 1));
+    // await Future.delayed(const Duration(seconds: 1));
     // print(event.index);
     emit(GetAllImagesForProductSuccess(
         allImages: mapOfListOfImages, currentSelectedIndex: event.index));
@@ -129,9 +129,9 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
         cart = success
             .firstWhere((element) => element.productID == event.productID);
       } catch (e) {
-        cart = Cart(cartID: 'null', productID: 'null', productCount: 1);
+        cart =
+            Cart(cartID: 'null', productID: 'null', productCount: 1, color: 0);
       }
-      print(cart.cartID);
       emit(CartLoadedSuccessDetailsState(
         cart: cart,
       ));
@@ -290,7 +290,6 @@ class DetailsPageBloc extends Bloc<DetailsPageEvent, DetailsPageState> {
   FutureOr<void> _onGetProductReviewEvent(
       GetProductReviewEvent event, Emitter<DetailsPageState> emit) async {
     // emit(LoadReviewLoadingState());
-    print('hello how are you hope ');
     final productReviewResult = await _getProductReview(
         GetProductReviewParams(productID: event.productID));
     productReviewResult.fold(

@@ -1,4 +1,3 @@
-import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/product_order.dart';
 
 class ProductOrderModel extends ProductOrder {
@@ -8,7 +7,7 @@ class ProductOrderModel extends ProductOrder {
 
   ProductOrderModel({
     // required super.paymentID,
-    required super.vendorID,
+    required super.vendorID,    required super.color,
     required super.productID,
     required super.shippingCharge,
     required super.productName,
@@ -21,21 +20,25 @@ class ProductOrderModel extends ProductOrder {
       // paymentID: json['payment_id'],
       productName: json['productName'],
       vendorID: json['vendorID'],
-      shippingCharge: json['shippingCharge'],
-      productID: json['productID'],
-      quantity: json['quantity'],
-      price: json['price'],
+      shippingCharge: json['shippingCharge'] is int
+          ? (json['shippingCharge'] as int).toDouble()
+          : json['shippingCharge'] as double,
+      productID: json['productID'],   color: json['color'],
+      quantity: json['quantity'] as int,
+      price: json['price'] is int
+          ? (json['price'] as int).toDouble()
+          : json['price'] as double,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'vendorID': vendorID,
-      'shippingCharge': shippingCharge,
+      'shippingCharge': double.parse('$shippingCharge'),
       'productID': productID,
       'quantity': quantity,
-      'productName': productName,
-      'price': price,
+      'productName': productName,   'color':color,
+      'price': double.parse('$price'),
     };
-  } 
+  }
 }

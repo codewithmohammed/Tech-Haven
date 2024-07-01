@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/user/features/details/data/datasource/details_data_source.dart';
 import 'package:tech_haven/user/features/details/domain/repository/details_repository.dart';

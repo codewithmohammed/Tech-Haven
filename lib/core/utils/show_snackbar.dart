@@ -33,29 +33,30 @@ void showSnackBar({
   //   );
 }
 
-Future<bool?> showConfirmationDialog(BuildContext context, String title, String content, Function onConfirmed) async {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            TextButton(
-              onPressed: () {
-                 onConfirmed();
-                Navigator.of(context).pop(true); // Return true when confirmed
-              },
-              child: Text('Yes'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // Return false when cancelled
-              },
-              child: Text('No'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+Future<bool?> showConfirmationDialog(BuildContext context, String title,
+    String content, Function onConfirmed) async {
+  return showDialog<bool>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () {
+              onConfirmed();
+              Navigator.of(context).pop(true); // Return true when confirmed
+            },
+            child: const Text('Yes'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(false); // Return false when cancelled
+            },
+            child: const Text('No'),
+          ),
+        ],
+      );
+    },
+  );
+}

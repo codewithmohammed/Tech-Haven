@@ -35,7 +35,6 @@ class DetailsGridViewListWidget extends StatelessWidget {
       required Cart? cart,
       required int itemCount,
     }) {
-      print('called ');
       context.read<DetailsPageBloc>().add(
             UpdateProductToCartBrandRelatedDetailsEvent(
               product: product,

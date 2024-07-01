@@ -9,10 +9,8 @@ import 'package:tech_haven/core/common/data/model/image_model.dart';
 import 'package:tech_haven/core/common/data/model/product_info_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/common/data/model/product_review_model.dart';
-import 'package:tech_haven/core/common/data/model/review_model.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/entities/product_review.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
 import 'package:uuid/uuid.dart';
@@ -54,6 +52,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required int quantity,
     required String mainCategory,
     required String mainCategoryID,
+    required String color,
     required String subCategory,
     required String subCategoryID,
     required String variantCategory,
@@ -88,6 +87,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
           variantCategoryID: variantCategoryID,
           productID: productID,
           productName: name,
+          color: 0,
         );
 
         firebaseFirestore
@@ -104,6 +104,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
         ProductModel productModel = ProductModel(
             productID: productID,
             vendorName: userdata.username!,
+            color: color,
             brandName: brandName,
             displayImageURL: mapOfImageModels.values.first.first.imageURL,
             name: name,
@@ -185,7 +186,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
                 .child('${entry.key}')
                 .child(imageID);
 
-            print('Uploading to: ${imageReference.fullPath}'); // Debugging line
+            // Debugging line
 
             final UploadTask uploadTask = imageReference.putFile(image);
             final TaskSnapshot taskSnapshot = await uploadTask;
@@ -200,14 +201,12 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
               mapOfImageModels[entry.key] = [imageModel];
             }
           } catch (e) {
-            print('Failed to upload image for key ${entry.key}: $e');
             // Optionally handle the error (e.g., retry logic, logging, etc.)
           }
         }
       }
       return mapOfImageModels;
     } catch (e) {
-      print('An error occurred: $e');
       rethrow;
     }
   }
@@ -238,18 +237,17 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
         for (var doc in querySnapshot.docs) {
           doc.reference.delete();
         }
-      }).then((value) => print('all the images deleted'));
+      });
 
       await firebaseFirestore
           .collection('products')
           .doc(productModel.productID)
-          .delete()
-          .then((value) => print('images deleted from firebase collection'));
+          .delete();
 
-      await firebaseStorage
-          .ref('products/${productModel.productID}')
-          .delete()
-          .then((value) => print('images deleted from storage'));
+      // await firebaseStorage
+      //     .ref('products/${productModel.productID}')
+      //     .delete()
+      //     .then((value) => print('images deleted from storage'));
 
       return true;
     } catch (e) {
@@ -269,6 +267,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required String mainCategory,
     required String mainCategoryID,
     required String subCategory,
+    required String color,
     required String subCategoryID,
     required String variantCategory,
     required String variantCategoryID,
@@ -292,7 +291,8 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             productID: product.productID,
             productName: name,
             brandName: brandName,
-            brandID: brandID);
+            brandID: brandID,
+            color: 0);
         firebaseFirestore
             .collection('categories')
             .doc(mainCategoryID)
@@ -314,9 +314,8 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
             try {
               // Delete the document with the current ID
               await imagesCollection.doc(docId.toString()).delete();
-              print('Document with ID $docId deleted successfully.');
             } catch (error) {
-              print('Error deleting document with ID $docId: $error');
+              throw Exception(error.toString());
             }
           }
         }
@@ -350,6 +349,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
         ProductModel productModel = ProductModel(
           productID: product.productID,
           vendorName: userdata.username!,
+          color: color,
           brandName: brandName,
           brandID: brandID,
           oldPrize: oldPrize,
@@ -389,8 +389,6 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
       for (var brand in allBrands.docs) {
         listOfBrandModels.add(CategoryModel.fromJson(brand.data()));
       }
-      print(listOfBrandModels[0].categoryName);
-      print('notheing');
       return listOfBrandModels;
     } catch (e) {
       throw ServerException(e.toString());

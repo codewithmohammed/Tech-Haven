@@ -10,13 +10,13 @@ class ProductInfoModel extends ProductInfo {
     required super.subCategoryID,
     required super.variantCategoryName,
     required super.variantCategoryID,
-    required super.productID,
+    required super.productID,    required super.color,
     required super.productName,
   });
 
   factory ProductInfoModel.fromJson(Map<String, dynamic> json) {
     return ProductInfoModel(
-      brandName: json['brandName'],
+      brandName: json['brandName'],   color: json['color'],
       brandID: json['brandID'],
       mainCategoryName: json['mainCategoryName'],
       mainCategoryID: json['mainCategoryID'],
@@ -34,7 +34,7 @@ class ProductInfoModel extends ProductInfo {
       'brandID' : brandID,
       'mainCategoryName': mainCategoryName,
       'mainCategoryID': mainCategoryID,
-      'subCategoryName': subCategoryName,
+      'subCategoryName': subCategoryName,   'color':color,
       'subCategoryID': subCategoryID,
       'variantCategoryName': variantCategoryName,
       'variantCategoryID': variantCategoryID,

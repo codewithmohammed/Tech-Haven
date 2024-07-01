@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -13,17 +14,20 @@ import 'package:tech_haven/core/common/data/model/user_ordered_product_model.dar
 import 'package:tech_haven/core/common/data/model/vendor_payment_model.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/entities/user.dart';
+import 'package:tech_haven/core/entities/user.dart' as model;
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_source.dart';
+import 'package:tech_haven/user/features/checkout/data/models/address_model.dart';
 import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:tech_haven/user/features/checkout/domain/usecase/send_order.dart';
 
 class CheckoutDataSourceImpl implements CheckoutDataSource {
   final FirebaseFirestore firebaseFirestore;
-  CheckoutDataSourceImpl({required this.firebaseFirestore});
+  final FirebaseAuth firebaseAuth;
+  CheckoutDataSourceImpl(
+      {required this.firebaseFirestore, required this.firebaseAuth});
   @override
   Future<PaymentIntentModel> submitPaymentForm(
       {required String name,
@@ -71,23 +75,21 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       } else {
         throw ServerException(response.reasonPhrase.toString());
       }
-      // print(body);
-      // var json;
 
-      // debugPrint(response.body);
-      // if (response.statusCode == 200) {
-      //   json = jsonDecode(response.body);
-      // }
-
-      // OrderDetails orderDetails = OrderDetails.fromJson(jsonDecode(json));
-
-      // print(paymentIntentModel.amount);
       await initPaymentSheet(data: jsonResponse);
       return paymentIntentModel;
-    } catch (e) {
-      throw ServerException(e.toString());
+    } on StripeException catch (e) {
+    if (e.error.code == FailureCode.Canceled) {
+      throw const ServerException('The payment flow has been canceled. Please try again.');
+    } else {
+      throw ServerException('Stripe error: ${e.error.toString()}');
     }
+  } catch (e) {
+    // Handle other errors
+    throw ServerException('Unknown error: ${e.toString()}');
   }
+  }
+// import 'package:stripe/stripe.dart';
 
   Future<void> initPaymentSheet({required dynamic data}) async {
     try {
@@ -101,13 +103,19 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           // Customer keys
           customerEphemeralKeySecret: data['ephemeralKey'],
           customerId: data['id'],
-
           style: ThemeMode.dark,
         ),
       );
-    } catch (e) {
-      throw ServerException(e.toString());
+     } on StripeException catch (e) {
+    if (e.error.code == FailureCode.Canceled) {
+      throw const ServerException('The payment flow has been canceled. Please try again.');
+    } else {
+      throw ServerException('Stripe error: ${ e.error.toString()}');
     }
+  } catch (e) {
+    // Handle other errors
+    throw ServerException('Unknown error: ${e.toString()}');
+  }
   }
 
   @override
@@ -118,9 +126,16 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           .presentPaymentSheet(options: const PaymentSheetPresentOptions());
 
       return paymentIntentModel;
-    } catch (e) {
-      throw ServerException(e.toString());
+    } on StripeException catch (e) {
+    if (e.error.code == FailureCode.Canceled) {
+      throw const ServerException('The payment flow has been canceled. Please try again.');
+    } else {
+      throw ServerException('Stripe error: ${e.error.toString()}');
     }
+  } catch (e) {
+    // Handle other errors
+    throw ServerException('Unknown error: ${e.toString()}');
+  }
   }
 
   @override
@@ -128,7 +143,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
     required PaymentIntentModel paymentIntentModel,
     required List<Product> products,
     required List<Cart> carts,
-    required User user,
+    required model.User user,
   }) async {
     try {
       String orderID = const Uuid().v4();
@@ -141,20 +156,6 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       // print('start');
       // Populate mapOfvendorProducts and listOfProductOrderModel
 
-      AddressDetailsModel addressDetailsModel = AddressDetailsModel(
-          addressID: orderID,
-          city: paymentIntentModel.shippingModel.addressModel.city,
-          country: paymentIntentModel.shippingModel.addressModel.country,
-          line1: paymentIntentModel.shippingModel.addressModel.line1,
-          postalCode: paymentIntentModel.shippingModel.addressModel.postalCode,
-          state: paymentIntentModel.shippingModel.addressModel.state);
-
-      await firebaseFirestore
-          .collection('userAddresses')
-          .doc(user.uid)
-          .collection('addresses')
-          .doc(orderID)
-          .set(addressDetailsModel.toJson());
       for (int i = 0; i < carts.length; i++) {
         // print(carts[i].productID);
         Product product = products
@@ -162,15 +163,16 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         await firebaseFirestore
             .collection('userOrderedProducts')
             .doc(user.uid)
-            .collection('products')
+            .collection('orders')
             .doc(
               orderID,
             )
+            .collection('products')
+            .doc(product.productID)
             .set(UserOrderedProductModel(
               shippingCharge: product.shippingCharge ?? 0,
               brandID: product.brandID,
               productID: product.productID,
-              // locationDetails: ,
               orderID: orderID,
               vendorName: product.vendorName,
               brandName: product.brandName,
@@ -188,11 +190,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
               subCategoryID: product.subCategoryID,
               variantCategory: product.variantCategory,
               variantCategoryID: product.variantCategoryID,
-              overview: product.overview,
-              // specifications: product.specifications,
-              // shippingCharge: product.shippingCharge,
-              // rating: product.rating,
-              // isPublished: product.isPublished
+              overview: product.overview, color: 0,
             ).toJson());
 
         if (mapOfvendorProducts[product.vendorID] != null) {
@@ -202,7 +200,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
             productID: carts[i].productID,
             quantity: carts[i].productCount,
             price: product.prize,
-            productName: product.name,
+            productName: product.name, color: 0,
           ));
         } else {
           mapOfvendorProducts[product.vendorID] = [
@@ -212,7 +210,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
               vendorID: product.vendorID,
               productID: carts[i].productID,
               quantity: carts[i].productCount,
-              price: product.prize,
+              price: product.prize, color: 0,
             )
           ];
         }
@@ -223,7 +221,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           productID: carts[i].productID,
           shippingCharge: product.shippingCharge ?? 0,
           quantity: carts[i].productCount,
-          price: product.prize,
+          price: product.prize, color: 0,
         ));
       }
       // print('iterate finished');
@@ -261,7 +259,6 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         //     .set(paymentIntentModel.toJson());
         //first we create a vendor id with some data
         // print('addding data to vendororder');
-        print(4);
         await firebaseFirestore
             .collection('vendorOrders')
             .doc(vendorID)
@@ -282,9 +279,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           state: paymentIntentModel.shippingModel.addressModel.state,
           country: paymentIntentModel.shippingModel.addressModel.country,
           currency: paymentIntentModel.currency,
-          totalAmount: paymentIntentModel.amount,
+          totalAmount: paymentIntentModel.amount, 
         );
-        print(5);
         await firebaseFirestore
             .collection('vendorOrders')
             .doc(vendorID)
@@ -309,19 +305,17 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         country: paymentIntentModel.shippingModel.addressModel.country,
         currency: paymentIntentModel.currency,
         // shippingCharge: ,
-        totalAmount: paymentIntentModel.amount,
+        totalAmount: paymentIntentModel.amount, 
       );
       final PaymentModel paymentModel = PaymentModel(
         userID: user.uid!,
         userName: user.username!,
         paymentID: paymentIntentModel.id,
       );
-      print(6);
       await firebaseFirestore
           .collection('userOrders')
           .doc(user.uid!)
           .set(paymentModel.toJson());
-      print(7);
       await firebaseFirestore
           .collection('userOrders')
           .doc(user.uid!)
@@ -329,7 +323,6 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           .doc(orderID)
           .set(orderModel.toJson());
 
-      print('ok');
 
       return 'success';
     } catch (e) {
@@ -339,20 +332,52 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
 
   @override
   Future<List<AddressDetailsModel>> getAllUserAddress(
-      {required String userID}) async{
+      {required String userID}) async {
     try {
-  @override
+      @override
+      final snapshot = await firebaseFirestore
+          .collection('userAddresses')
+          .doc(userID)
+          .collection('addresses')
+          .get();
 
-    final snapshot = await firebaseFirestore
-        .collection('userAddresses')
-        .doc(userID)
-        .collection('addresses')
-        .get();
-
-    return snapshot.docs
-        .map((doc) => AddressDetailsModel.fromJson(doc.data()))
-        .toList();
+      return snapshot.docs
+          .map((doc) => AddressDetailsModel.fromJson(doc.data()))
+          .toList();
     } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<void> saveUserAddress(
+      {required String address,
+      required String pin,
+      required String city,
+      required String state,
+      required String country}) async {
+    try {
+      const uuid = Uuid();
+      final addressID = uuid.v4();
+
+      final addressDetailsModel = AddressModel(
+        city: city,
+        country: country,
+        line1: address,
+        postalCode: pin,
+        state: state,
+      );
+
+      final user = firebaseAuth.currentUser;
+      if (user != null) {
+        await firebaseFirestore
+            .collection('userAddresses')
+            .doc(user.uid)
+            .collection('addresses')
+            .doc(addressID)
+            .set(addressDetailsModel.toJson());
+      }
+    } on FirebaseException catch (e) {
       throw ServerException(e.toString());
     }
   }

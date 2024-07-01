@@ -8,7 +8,7 @@ class SearchPageDataSourceImpl implements SearchPageDataSource {
 
   @override
   Future<List<DocumentSnapshot>> searchProducts(String query) async {
-    final lowerCaseQuery = query.toLowerCase();
+    query.toLowerCase();
     final result = await firestore
         .collection('products')
         .where('name', isGreaterThanOrEqualTo: query, )

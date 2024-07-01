@@ -5,7 +5,6 @@ import 'package:tech_haven/core/common/domain/usecase/get_a_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
-import 'package:tech_haven/core/common/domain/usecase/get_all_reviews_product.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_user_owned_products.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/update_product_to_favorite.dart';
@@ -14,7 +13,9 @@ import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/category.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/review.dart';
+import 'package:tech_haven/core/entities/trending_product.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/fetch_trending_product.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner_home_page.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_sub_categories_home_page.dart';
@@ -33,12 +34,14 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
   // final GetAllReviewsProduct _getAllReviewsProduct;
   final UpdateProductToFavorite _updateProductToFavorite;
   final GetAllFavorite _getAllFavorite;
+  final FetchTrendingProduct _fetchTrendingProduct;
   final GetAProduct _getAProduct;
   final UpdateProductToCart _updateProductToCart;
   final GetAllSubCategoriesHomePage _getAllSubCategoriesHomePage;
   HomePageBloc({
     required GetAllProduct getAllProduct,
     required GetAProduct getAProduct,
+    required FetchTrendingProduct fetchTrendingProduct,
     required GetAllBannerHomePage getAllBannerHomePage,
     required GetAllCart getAllCart,
     required UpdateProductToFavorite updateProductToFavorite,
@@ -54,6 +57,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         _getAllFavorite = getAllFavorite,
         _getAProduct = getAProduct,
         _updateProductToCart = updateProductToCart,
+        _fetchTrendingProduct = fetchTrendingProduct,
         _getAllSubCategoriesHomePage = getAllSubCategoriesHomePage,
         super(HomePageInitial()) {
     on<HomePageEvent>((event, emit) {
@@ -66,22 +70,21 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<UpdateProductToFavoriteHomeEvent>(
       _onUpdateProductToFavoriteEvent,
     );
-
+    on<GetProductForAdvertisement>(_onGetProductForAdvertisement);
     on<UpdateProductToCartHomeEvent>(
       _onUpdateProductToCartEvent,
     );
     on<GetAllSubCategoriesHomeEvent>(_onGetAllSubCategoriesEvent);
+    on<GetNowTrendingProductEvent>(_onGetNowTrendingProductEvent);
     // on<UpdateProductToCart>(_onUpdateProductToCart);
   }
 
   FutureOr<void> _onGetAllProductsEvent(
       GetAllProductsEvent event, Emitter<HomePageState> emit) async {
     List<String> listOfAllFavorited = [];
-    String messageOfFavoriteError = 'error';
 
     final allFavorited = await _getAllFavorite(NoParams());
     allFavorited.fold((failure) {
-      messageOfFavoriteError = failure.message;
     }, (success) {
       listOfAllFavorited = success; // Assigning value here
     });
@@ -186,5 +189,24 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         (failure) =>
             emit(NavigateToDetailsPageFailed(message: failure.message)),
         (success) => emit(NavigateToDetailsPageSuccess(product: success)));
+  }
+
+  FutureOr<void> _onGetNowTrendingProductEvent(
+      GetNowTrendingProductEvent event, Emitter<HomePageState> emit) async {
+    final result = await _fetchTrendingProduct(NoParams());
+    result.fold((failed) => emit(TrendingProductError(message: failed.message)),
+        (success) {
+      return emit(TrendingProductLoaded(product: success));
+    });
+  }
+
+  FutureOr<void> _onGetProductForAdvertisement(
+      GetProductForAdvertisement event, Emitter<HomePageState> emit) async {
+    final result =
+        await _getAProduct(GetAProductParams(productID: event.productID));
+    result.fold(
+        (failure) =>
+            emit(GetProductForAdvertisementFailed(message: failure.message)),
+        (success) => emit(GetProductForAdvertisementSuccess(product: success)));
   }
 }

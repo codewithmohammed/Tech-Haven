@@ -6,6 +6,7 @@ class User {
   final String? currency;
   final String? vendorID;
   final String? currencySymbol;
+  final bool userAllowed;
   final String? email;
   final String? profilePhoto;
   final bool isVendor;
@@ -14,6 +15,7 @@ class User {
 
   User({
     required this.isVendor,
+    required this.userAllowed,
     required this.userImageID,
     required this.isProfilePhotoUploaded,
     required this.uid,

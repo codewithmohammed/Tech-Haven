@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/notification/presentation/widgets/tab_text.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
@@ -14,8 +13,9 @@ class ManageProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      // BlocProvider.of<ManageProductBloc>(context).emit(ManageProductInitial());
       BlocProvider.of<ManageProductBloc>(context)
-          .add(const GetAllProductsEvent());
+          .add(const GetAllProductsEventForManage());
     });
     return SafeArea(
       child: DefaultTabController(
@@ -24,12 +24,11 @@ class ManageProductPage extends StatelessWidget {
           listener: (context, state) {
             if (state is UpdateTheProductPublishSuccessState) {
               BlocProvider.of<ManageProductBloc>(context)
-                  .add(const GetAllProductsEvent());
+                  .add(const GetAllProductsEventForManage());
             }
           },
           builder: (context, state) {
             if (state is GetAllProductsSuccess) {
-              print(state.listOfProductModel.length);
               return Scaffold(
                 appBar: const VendorAppBar(
                   title: 'Manage Products',

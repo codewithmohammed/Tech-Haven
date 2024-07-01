@@ -1,8 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/entities/banner.dart';
-import 'package:tech_haven/core/entities/cart.dart';
-import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/entities/trending_product.dart';
 
 import '../../../../../core/error/failures.dart';
 
@@ -19,6 +18,6 @@ abstract class HomePageRepository {
   //   required Product product,
   //   required Cart? cart,
   // });
-  //   Future<Either<Failure, List<Cart>>> getAllCart();
+  Future<Either<Failure, TrendingProduct>> getTrendingProduct();
     Future<Either<Failure, List<CategoryModel>>> getAllSubCategories();
 }

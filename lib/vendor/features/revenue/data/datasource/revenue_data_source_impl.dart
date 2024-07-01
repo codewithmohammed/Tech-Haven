@@ -12,12 +12,9 @@ class RevenueDataSourceImpl implements RevenueDataSource {
     try {
       final DocumentSnapshot<Map<String, dynamic>> revenueSnapshot =
           await firebaseFirestore.collection('revenues').doc(vendorID).get();
-      print('revenue fetched');
       if (revenueSnapshot.exists) {
-        print('revenue exist');
         final data = revenueSnapshot.data() as Map<String, dynamic>;
         if (data.isNotEmpty) {
-          print('reeuenue exists');
           return RevenueModel.fromJson(data);
         } else {
           throw const ServerException("Failed to parse revenue data");

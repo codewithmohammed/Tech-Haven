@@ -80,4 +80,20 @@ class CheckoutRepositoryImpl extends CheckoutRepository {
       return left(Failure(e.message));
     }
   }
+  
+  @override
+  Future<Either<Failure, void>> saveUserAddress({required String address, required String pin, required String city, required String state, required String country})async {
+   try {
+      await checkoutDataSource.saveUserAddress(
+        address: address,
+        pin: pin,
+        city: city,
+        state: state,
+        country: country,
+      );
+      return right((null));
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 }

@@ -16,9 +16,8 @@ final class RegisterProductAllCategoryLoadedSuccess
     extends RegisterProductPageActionState {
   final List<Category> allCategoryModel;
   final List<Category> allBrandModel;
-  RegisterProductAllCategoryLoadedSuccess({
-    required this.allCategoryModel,required this.allBrandModel
-  });
+  RegisterProductAllCategoryLoadedSuccess(
+      {required this.allCategoryModel, required this.allBrandModel});
 }
 
 final class RegisterProductAllCategoryLoadedFailed
@@ -58,3 +57,12 @@ final class GetAllBrandsFailed extends AllBrandsPageState {
   final String message;
   GetAllBrandsFailed({required this.message});
 }
+
+final class DynamicFormState extends RegisterProductPageState {}
+
+final class DynamicFormSuccessState extends DynamicFormState {
+  final Map<String, String> data;
+  DynamicFormSuccessState({required this.data});
+}
+
+final class DynamicFormFailedState extends DynamicFormState {}

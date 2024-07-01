@@ -38,7 +38,7 @@ class VendorOrderDetailsPage extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is GetAllOrderedProductsSuccess) {
-            print(state.listOfProducts.length);
+            // print(state.listOfProducts.length);
             // print(products.length == 2);
             // print(state.listOfProducts.length);
             return ListView.separated(
@@ -181,77 +181,83 @@ class VendorOrderDetailsPage extends StatelessWidget {
                                           'Shipping fees : ${state.listOfProducts[listIndex].shippingCharge}',
                                           overflow: TextOverflow.fade,
                                         ),
+                                        //accept button
+                                        const GlobalTitleText(
+                                          title: 'Amount Details',
+                                          fontSize: 14,
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'AED ${state.listOfProducts[listIndex].prize}'
+                                              "x"
+                                              '${products[listIndex].quantity}'
+                                              '='
+                                              '${calculateTotalProductsPrize(amount: products[listIndex].price, quantity: products[listIndex].quantity)}',
+                                              textAlign: TextAlign.end,
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                            ),
+
+                                            // const Text('+'),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'AED ${state.listOfProducts[listIndex].shippingCharge}',
+                                              textAlign: TextAlign.end,
+                                              style: const TextStyle(
+                                                  fontSize: 13,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                            ),
+                                            // const Text('+'),
+                                          ],
+                                        ),
+                                        Container(
+                                          color: AppPallete.blackColor,
+                                          height: 5,
+                                        ),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.pending_actions,
+                                              size: 16,
+                                            ),
+                                            Text(
+                                              formatDateTime(
+                                                  order.deliveryDate),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
                                 // column for the two buttons
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    //accept button
-                                    const GlobalTitleText(
-                                      title: 'Amount Details',
-                                      fontSize: 14,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          'AED ${state.listOfProducts[listIndex].prize}'
-                                          "x"
-                                          '${products[listIndex].quantity}'
-                                          '='
-                                          '${calculateTotalProductsPrize(amount: products[listIndex].price, quantity: products[listIndex].quantity)}',
-                                          textAlign: TextAlign.end,
-                                          style: const TextStyle(
-                                              fontSize: 13,
-                                              overflow: TextOverflow.ellipsis),
-                                        ),
+                                // Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.end,
+                                //   children: [
 
-                                        // const Text('+'),
-                                      ],
-                                    ),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          '${state.listOfProducts[listIndex].shippingCharge}',
-                                          textAlign: TextAlign.end,
-                                          style: const TextStyle(
-                                              fontSize: 13,
-                                              overflow: TextOverflow.ellipsis),
-                                        ),
-                                        // const Text('+'),
-                                      ],
-                                    ),
-                                    Container(
-                                      color: AppPallete.blackColor,
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.pending_actions,
-                                          size: 16,
-                                        ),
-                                        Text(
-                                          formatDateTime(order.deliveryDate),
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
+                                //   ],
+                                // )
                               ],
                             ),
                           ],

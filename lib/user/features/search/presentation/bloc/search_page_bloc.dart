@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_cart.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_favorite.dart';
 import 'package:tech_haven/core/common/domain/usecase/get_all_product.dart';
@@ -17,25 +18,25 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
   // final SearchProducts searchProducts;
   final GetAllProduct _getAllProduct;
   final UpdateProductToFavorite _updateProductToFavorite;
-  final UpdateProductToCart _updateProductToCart;
-  final GetAllCart _getAllCart;
   final GetAllFavorite _getAllFavorite;
   List<Product> _allProducts = [];
   List<String> listOfFavorite = [];
-  // Timer? _debounce;
   SearchPageBloc(
       {required GetAllProduct getAllProduct,
       required GetAllFavorite getAllFavorite,
-required GetAllCart getAllCart,
+      required GetAllCart getAllCart,
       required UpdateProductToFavorite updateProductToFavorite,
       required UpdateProductToCart updateProductToCart})
       : _getAllProduct = getAllProduct,
         _getAllFavorite = getAllFavorite,
-        _getAllCart = getAllCart,
-        _updateProductToCart = updateProductToCart,
         _updateProductToFavorite = updateProductToFavorite,
         super(ProductSearchInitial()) {
-    on<SearchProductsEvent>(_onSearchProductsEvent);
+    on<SearchProductsEvent>(_onSearchProductsEvent,
+        transformer: (events, mapper) {
+      return events
+          .debounceTime(const Duration(milliseconds: 300))
+          .switchMap(mapper);
+    });
     on<UpdateProductToFavoriteSearchPageEvent>(
         _onUpdateProductToFavoriteSearchPageEvent);
     // on<GetAllCartProductsEvent>(_onGetAllCartProductsEvent);
@@ -51,10 +52,7 @@ required GetAllCart getAllCart,
         (success) {
       listOfFavorite = success; // Assigning value here
     });
-    // Implement debouncing
-    // if (_debounce?.isActive ?? false) _debounce!.cancel();
-    // _debounce = Timer(const Duration(milliseconds: 300),
-    // () async {
+
     if (_allProducts.isEmpty) {
       final result = await _getAllProduct(NoParams());
       result.fold(
@@ -67,14 +65,12 @@ required GetAllCart getAllCart,
     } else {
       _filterProducts(event.query, emit, listOfFavorite);
     }
-    // };
-    // );
   }
 
   void _filterProducts(String? query, Emitter<SearchPageState> emit,
-      List<String> listOfFavorites)async {
+      List<String> listOfFavorites) async {
     if (query == null || query.isEmpty) {
-      emit(ProductSearchLoaded(_allProducts, listOfFavorites));
+      return emit(ProductSearchLoaded(_allProducts, listOfFavorites));
     } else {
       final lowerCaseQuery = query.toLowerCase();
       final listOfFilteredProducts = _allProducts.where((product) {
@@ -86,17 +82,16 @@ required GetAllCart getAllCart,
             product.variantCategory.toLowerCase().contains(lowerCaseQuery) ||
             product.vendorName.toLowerCase().contains(lowerCaseQuery);
       }).toList();
-
       emit(ProductSearchLoaded(listOfFilteredProducts, listOfFavorites));
-    final allCarted = await _getAllCart(NoParams());
-    allCarted.fold(
-        (failure) => emit(CartLoadedFailedProductsState(
-              message: failure.message,
-            )), (success) {
-      return emit(CartLoadedSuccessProductsState(
-        listOfCart: success,
-      ));
-    });
+      // final allCarted = await _getAllCart(NoParams());
+      // allCarted.fold(
+      //     (failure) => emit(CartLoadedFailedProductsState(
+      //           message: failure.message,
+      //         )), (success) {
+      //   return emit(CartLoadedSuccessProductsState(
+      //     listOfCart: success,
+      //   ));
+      // });
     }
   }
 

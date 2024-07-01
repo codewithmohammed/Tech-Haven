@@ -66,7 +66,7 @@ final class AddressLoaded extends GetAllUserAddressState {
   AddressLoaded({required this.addresses});
 }
 
-final class AddressSelectState extends CheckoutState{}
+final class AddressSelectState extends CheckoutState {}
 
 final class AddressSelected extends AddressSelectState {
   final AddressDetails address;
@@ -74,3 +74,10 @@ final class AddressSelected extends AddressSelectState {
 }
 
 final class AddressUnselected extends AddressSelectState {}
+
+final class SaveUserAddressSuccess extends AddressSelectState {}
+
+final class SaveUserAddressFailed extends AddressSelectState {
+  final String message;
+  SaveUserAddressFailed({required this.message});
+}

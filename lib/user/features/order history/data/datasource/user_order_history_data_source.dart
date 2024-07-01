@@ -1,6 +1,6 @@
-import 'package:tech_haven/core/common/data/model/user_ordered_product_model.dart';
-import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/common/data/model/order_model.dart';
+import 'package:tech_haven/core/entities/user.dart';
 
 abstract class UserOrderHistoryDataSource {
-  Future<List<UserOrderedProductModel>> getProducts();
+  Future<List<OrderModel>> getProducts({required User user});
 }

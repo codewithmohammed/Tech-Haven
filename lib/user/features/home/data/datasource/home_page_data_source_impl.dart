@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
 import 'package:tech_haven/core/common/data/model/category_model.dart';
-import 'package:tech_haven/core/common/data/model/product_model.dart';
-import 'package:tech_haven/core/entities/cart.dart';
-import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/common/data/model/trending_product_model.dart';
+import 'package:tech_haven/core/entities/trending_product.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source.dart';
 import 'package:tech_haven/user/features/home/data/models/banner_model.dart';
-import 'package:tech_haven/user/features/home/data/models/cart_model.dart';
 
 class HomePageDataSourceImpl extends HomePageDataSource {
   final DataSource dataSource;
@@ -94,6 +92,23 @@ class HomePageDataSourceImpl extends HomePageDataSource {
   Future<List<CategoryModel>> getAllSubCategories() {
     try {
       return dataSource.getAllSubCategory();
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
+  @override
+  Future<TrendingProduct> fetchTrendingProduct() async {
+    try {
+      final docSnapshot = await firebaseFirestore
+          .collection('trendings')
+          .doc('trendingNow')
+          .get();
+      if (docSnapshot.exists) {
+        return TrendingProductModel.fromJson(docSnapshot.data()!);
+      } else {
+        throw Exception('Document does not exist');
+      }
     } catch (e) {
       throw ServerException(e.toString());
     }

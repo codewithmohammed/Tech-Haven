@@ -26,22 +26,21 @@ class ManageProductBloc extends Bloc<ManageProductEvent, ManageProductState> {
     on<ManageProductEvent>((event, emit) {
       emit(ManageProductLoadingState());
     });
-    on<GetAllProductsEvent>(_onGetAllProductEvent);
+    on<GetAllProductsEventForManage>(_onGetAllProductsEventForManage);
     on<UpdateTheProductPublishEvent>(_onUpdateTheProductPublishEvent);
   }
 
-  FutureOr<void> _onGetAllProductEvent(
-      GetAllProductsEvent event, Emitter<ManageProductState> emit) async {
+  FutureOr<void> _onGetAllProductsEventForManage(
+      GetAllProductsEventForManage event, Emitter<ManageProductState> emit) async {
     final products = await _getAllProducts(NoParams());
     final user = await _getUserData(NoParams());
 
-    List<Product> listOfProducts = [];
 
     String? vendorID;
 
-    String userFailureMessage = 'User is Failed';
+    // String userFailureMessage = 'User is Failed';
 
-    user.fold((failure) => userFailureMessage = failure.message,
+    user.fold((failure) => emit(GetAllProductFailed(message: failure.message)),
         (success) => vendorID = success?.vendorID);
 
     products
@@ -60,7 +59,6 @@ class ManageProductBloc extends Bloc<ManageProductEvent, ManageProductState> {
   FutureOr<void> _onUpdateTheProductPublishEvent(
       UpdateTheProductPublishEvent event,
       Emitter<ManageProductState> emit) async {
-    print('hello how are you');
     final result = await _updateTheProductPublish(UpdateTheProductPublishParams(
         product: event.product, publish: event.publish));
     result.fold(

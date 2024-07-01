@@ -19,7 +19,7 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   PageController pageController = PageController();
-  int current_step = 0;
+  int currentstep = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
       // Body
       body: BlocConsumer<CheckoutBloc, CheckoutState>(
         listener: (context, state) {
-          print(state);
           if (state is SubmitPaymentFormFailed) {
             Fluttertoast.showToast(msg: state.message);
             GoRouter.of(context).pop();
@@ -60,8 +59,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 title: 'Success',
                 content: 'The Payment has successfully completed',
                 contentType: ContentType.success);
-            context.read<CheckoutBloc>().add(
-                SaveOrderEvent(paymentIntentModel: state.paymentIntentModel));
+            context.read<CheckoutBloc>().add(SaveOrderEvent(
+                  paymentIntentModel: state.paymentIntentModel,
+                ));
           }
           if (state is SaveOrderFailed) {
             Fluttertoast.showToast(msg: state.message);
@@ -95,7 +95,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
         },
         builder: (context, state) {
           if (state is SubmitPaymentFormSuccess) {
-            current_step = 1;
+            currentstep = 1;
             return Column(
               children: [
                 SizedBox(
@@ -103,7 +103,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   height: 72,
                   child: Stepper(
                     elevation: 0,
-                    currentStep: current_step,
+                    currentStep: currentstep,
                     steps: const [
                       Step(
                         title: Text('Shipping'),
@@ -127,16 +127,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     },
                     onStepTapped: (step) {
                       // setState(() {
-                      //   current_step = step;
+                      //   currentstep = step;
                       // });
                     },
                     onStepContinue: () {},
                     onStepCancel: () {
                       // setState(() {
-                      //   if (current_step > 0) {
-                      //     current_step = current_step - 1;
+                      //   if (currentstep > 0) {
+                      //     currentstep = currentstep - 1;
                       //   } else {
-                      //     current_step = 0;
+                      //     currentstep = 0;
                       //   }
                       // });
                     },
@@ -164,12 +164,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 height: 72,
                 child: Stepper(
                   elevation: 0,
-                  currentStep: current_step,
+                  currentStep: currentstep,
                   steps: [
                     Step(
                       title: const Text('Shipping'),
                       content: const Text('World!'),
-                      state: current_step == 1
+                      state: currentstep == 1
                           ? StepState.complete
                           : StepState.indexed,
                       isActive: true,
@@ -178,7 +178,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       title: const Text('Submit'),
                       content: const Text('Hello World!'),
                       state: StepState.indexed,
-                      isActive: current_step == 1,
+                      isActive: currentstep == 1,
                     ),
                   ],
                   type: StepperType.horizontal,
@@ -190,16 +190,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   },
                   onStepTapped: (step) {
                     // setState(() {
-                    //   current_step = step;
+                    //   currentstep = step;
                     // });
                   },
                   onStepContinue: () {},
                   onStepCancel: () {
                     // setState(() {
-                    //   if (current_step > 0) {
-                    //     current_step = current_step - 1;
+                    //   if (currentstep > 0) {
+                    //     currentstep = currentstep - 1;
                     //   } else {
-                    //     current_step = 0;
+                    //     currentstep = 0;
                     //   }
                     // });
                   },

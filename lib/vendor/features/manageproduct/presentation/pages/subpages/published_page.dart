@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
-import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -53,7 +52,6 @@ class PublishedPage extends StatelessWidget {
                             children: [
                               SlidableAction(
                                 onPressed: (context) {
-                                  print('object');
                                   context.read<ManageProductBloc>().add(
                                       UpdateTheProductPublishEvent(
                                           product:

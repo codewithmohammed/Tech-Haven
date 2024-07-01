@@ -17,6 +17,7 @@ class BrandDropDown extends StatefulWidget {
 }
 
 String? selectedValue;
+TextEditingController searchEditingController = TextEditingController();
 
 class _BrandDropDownState extends State<BrandDropDown> {
   @override
@@ -26,6 +27,7 @@ class _BrandDropDownState extends State<BrandDropDown> {
           widget.allBrandsModel[widget.selectedBrandIndex[0]!].categoryName;
     }
     return CustomDropDown(
+      searchEditingController: searchEditingController,
       items: widget.allBrandsModel.map((e) => e.categoryName).toList(),
       currentItem: selectedValue,
       hintText: 'Select Brand',

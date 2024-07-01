@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/custom_drop_down.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
-import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/enum/date_filter.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -18,6 +17,7 @@ class MoneyWithdrawalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController dateSearchEditingController = TextEditingController();
     context.read<RevenueBloc>().add(GetRevenueEvent());
     context
         .read<RevenueBloc>()
@@ -28,7 +28,7 @@ class MoneyWithdrawalPage extends StatelessWidget {
         extendBody: true,
         resizeToAvoidBottomInset: false,
         appBar: const VendorAppBar(
-          title: 'Withdraw Money',
+          title: 'Profits',
           bottom: null,
         ),
         body: SingleChildScrollView(
@@ -71,14 +71,14 @@ class MoneyWithdrawalPage extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
                                       const Text(
-                                        'Current Balance',
+                                        'Overall Profit So Far',
                                         style: TextStyle(
                                           color: AppPallete.greyTextColor,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       Text(
-                                        state.revenue.currentBalance.toString(),
+                                        'AED${state.revenue.currentBalance}',
                                         style: const TextStyle(
                                           fontSize: 40,
                                           fontWeight: FontWeight.w700,
@@ -87,26 +87,26 @@ class MoneyWithdrawalPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Container(
-                                  height: 50,
-                                  width: double.infinity,
-                                  margin: const EdgeInsets.all(8),
-                                  child: const RoundedRectangularButton(
-                                    title: 'Withdraw Cash',
-                                  ),
-                                )
+                                // Container(
+                                //   height: 50,
+                                //   width: double.infinity,
+                                //   margin: const EdgeInsets.all(8),
+                                //   child: const RoundedRectangularButton(
+                                //     title: 'Withdraw Cash',
+                                //   ),
+                                // )
                               ],
                             ),
                           ),
                           const SizedBox(
                             height: 30,
                           ),
-                          Text(
-                            'Total Earning So Far : \$${state.revenue.currentBalance + state.revenue.withdrewAmount}',
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                          // Text(
+                          //   'Total Earning So Far : AED \$${state.revenue.currentBalance + state.revenue.withdrewAmount}',
+                          // ),
+                          // const SizedBox(
+                          //   height: 20,
+                          // ),
                         ],
                       ),
                     );
@@ -138,6 +138,7 @@ class MoneyWithdrawalPage extends StatelessWidget {
                               SizedBox(
                                 width: 170,
                                 child: CustomDropDown<DateFilter>(
+                                  searchEditingController: dateSearchEditingController,
                                   hintText: 'Month',
                                   items: DateFilter.values,
                                   currentItem: state.dateFilter,
@@ -173,7 +174,7 @@ class MoneyWithdrawalPage extends StatelessWidget {
                                   fontSize: 15),
                               GlobalTitleText(
                                   title:
-                                      '\$${changeAmountDecimal(amount: totalAmount)}'),
+                                      'AED${changeAmountDecimal(amount: totalAmount)}'),
                             ],
                           ),
                           ListView.separated(
@@ -187,8 +188,7 @@ class MoneyWithdrawalPage extends StatelessWidget {
                                 tileColor:
                                     AppPallete.primaryAppColor.withGreen(170),
                                 title: Text(
-                                    'Date: ${formatDateTime(currentPaymentModel.dateTime)}'
-                                ),
+                                    'Date: ${formatDateTime(currentPaymentModel.dateTime)}'),
                                 subtitle: Text(
                                     'Total Profit: \$${changeAmountDecimal(amount: currentPaymentModel.totalAmount)}'),
                               );
@@ -216,6 +216,7 @@ class MoneyWithdrawalPage extends StatelessWidget {
                             SizedBox(
                               width: 170,
                               child: CustomDropDown<DateFilter>(
+                                searchEditingController: dateSearchEditingController,
                                 hintText: 'Select Date Filter',
                                 items: DateFilter.values,
                                 currentItem: DateFilter.thismonth,

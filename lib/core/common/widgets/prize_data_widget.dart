@@ -31,38 +31,43 @@ class PrizeDataWidget extends StatelessWidget {
               ),
             ),
             Text(
-              'AED $prize',
+              prize,
               style: TextStyle(
-                fontSize: 16 * ratio,
+                fontSize: 18 * ratio,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ],
         ),
-        Row(
-          children: [
-            Text(
-              previousPrize,
-              style: TextStyle(
-                fontSize: 12 * ratio,
-                fontWeight: FontWeight.w700,
-                decoration: TextDecoration.lineThrough,
-                decorationThickness: 2.0,
+        const SizedBox(width: 8), // Adjust spacing between columns
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                previousPrize,
+                style: TextStyle(
+                  fontSize: 12 * ratio,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.lineThrough,
+                  decorationThickness: 2.0,
+                ),
               ),
-            ),
-            const SizedBox(
-              width: 2,
-            ),
-            Text(
-              offPercentage,
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 12 * ratio,
-                fontWeight: FontWeight.w500,
+              const SizedBox(width: 2),
+              Flexible(
+                child: Text(
+                  offPercentage,
+                  style: TextStyle(
+                    color: Colors.green,
+                    fontSize: 12 * ratio,
+                    fontWeight: FontWeight.w500,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
-            ),
-          ],
-        )
+            ],
+          ),
+        ),
       ],
     );
   }

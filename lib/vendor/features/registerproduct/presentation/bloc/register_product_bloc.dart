@@ -47,27 +47,27 @@ class RegisterProductBloc
     on<RegisterNewProductEvent>(_onRegisterNewProductEvent);
     on<DeleteTheProductEvent>(_onDeleteTheProductEvent);
     on<UpdateExistingProductEvent>(_onUpdateExistingProductEvent);
+    on<OnChangeDynamicFormEvent>(_onOnChangeDynamicFormEvent);
   }
 
   FutureOr<void> _onGetAllCategoryEvent(
       GetAllCategoryEvent event, Emitter<RegisterProductState> emit) async {
-    if (isCategoryLoaded == false) {
-      final result = await _getAllCategoryForRegister(
-          GetAllCategoryForRegiseterParams(refresh: event.refreshPage));
-      final allbrands = await _getAllBrands(NoParams());
+    // if (isCategoryLoaded == false) {
+    final result = await _getAllCategoryForRegister(
+        GetAllCategoryForRegiseterParams(refresh: event.refreshPage));
+    final allbrands = await _getAllBrands(NoParams());
 
-      allbrands.fold((l) => null, (r) => allBrandModel = r);
-      result.fold(
-          (failure) => emit(
-              RegisterProductAllCategoryLoadedFailed(message: failure.message)),
-          (success) {
-        isCategoryLoaded = true;
-        allCategoryModel = success;
-        emit(RegisterProductAllCategoryLoadedSuccess(
-            allCategoryModel: allCategoryModel!,
-            allBrandModel: allBrandModel!));
-      });
-    }
+    allbrands.fold((l) => null, (r) => allBrandModel = r);
+    result.fold(
+        (failure) => emit(
+            RegisterProductAllCategoryLoadedFailed(message: failure.message)),
+        (success) {
+      isCategoryLoaded = true;
+      allCategoryModel = success;
+      emit(RegisterProductAllCategoryLoadedSuccess(
+          allCategoryModel: allCategoryModel!, allBrandModel: allBrandModel!));
+    });
+    // }
   }
 
   FutureOr<void> _onRegisterNewProductEvent(
@@ -79,7 +79,7 @@ class RegisterProductBloc
       productName: event.productName,
       productPrize: event.productPrize,
       oldPrize: event.productOldPrize,
-      productQuantity: event.productQuantity,
+      productQuantity: event.productQuantity, color: event.color,
       mainCategory: event.mainCategory,
       mainCategoryID: event.mainCategoryID,
       subCategory: event.subCategory,
@@ -121,6 +121,7 @@ class RegisterProductBloc
       product: event.product,
       brandName: event.brandName,
       brandID: event.brandID,
+      color: event.color,
       productName: event.productName,
       productPrize: event.productPrize,
       oldProductPrize: event.productOldPrize,
@@ -132,7 +133,7 @@ class RegisterProductBloc
       variantCategory: event.variantCategory,
       variantCategoryID: event.variantCategoryID,
       productOverview: event.productOverview,
-      specifications: {},
+      specifications: event.specifications,
       shippingCharge: event.shippingCharge,
       productImages: event.productImages,
       deleteImagesIndexes: event.deleteImagesIndexes,
@@ -157,9 +158,13 @@ class RegisterProductBloc
     allbrands
         .fold((failure) => emit(GetAllBrandsFailed(message: failure.message)),
             (success) {
-      print('slkjfslkd');
       isBrandLoaded = true;
       return emit(GetAllBrandsSuccess(listOfBrands: success));
     });
+  }
+
+  FutureOr<void> _onOnChangeDynamicFormEvent(
+      OnChangeDynamicFormEvent event, Emitter<RegisterProductState> emit) {
+    emit(DynamicFormSuccessState(data: event.data));
   }
 }

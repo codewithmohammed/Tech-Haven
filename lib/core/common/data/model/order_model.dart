@@ -5,7 +5,7 @@ class OrderModel extends Order {
   OrderModel({
     required super.orderID,
     required super.orderDate,
-    required super.deliveryDate,
+    required super.deliveryDate,   
     // required super.shippingCharge,
     required super.products,
     required super.deliveredProducts,
@@ -22,22 +22,22 @@ class OrderModel extends Order {
   });
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
-    // print(json['currency']);
+    // print(json['totalAmount'].runtimeType);
     return OrderModel(
-      orderID: json['orderID'],
+      orderID: json['orderID'],  
       deliveryDate: DateTime.parse(json['deliveryDate']),
       orderDate: DateTime.parse(json['orderDate']),
       products: (json['products'] as List)
           .map((productJson) => ProductOrderModel.fromJson(productJson))
           .toList(),
-      totalAmount: json['totalAmount'],
+      totalAmount: json['totalAmount'] as int,
       deliveredProducts: (json['deliveredProducts'] as List)
           .map((productJson) => ProductOrderModel.fromJson(productJson))
           .toList(),
       userID: json['userID'],
       paymentID: json['paymentID'],
       name: json['name'],
-      // // shippingCharge: json['shippingCharge'],
+      // shippingCharge: json['shippingCharge'],
       address: json['address'],
       pin: json['pin'],
       city: json['city'],
@@ -49,7 +49,7 @@ class OrderModel extends Order {
 
   Map<String, dynamic> toJson() {
     return {
-      'orderID': orderID,
+      'orderID': orderID,   
       'orderDate': orderDate.toIso8601String(),
       'products': products.map((product) => product.toJson()).toList(),
       'deliveredProducts':

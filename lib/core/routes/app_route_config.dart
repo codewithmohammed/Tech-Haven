@@ -1,15 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/common/data/model/product_order_model.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';
 import 'package:tech_haven/core/entities/order.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
+import 'package:tech_haven/user/features/about%20product/presentation/pages/about_product_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/new_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/otp_verification_page.dart';
@@ -17,9 +16,11 @@ import 'package:tech_haven/user/features/auth/presentation/pages/sign_in_page.da
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_welcome_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/welcome_page.dart';
+import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/checkout_page.dart';
 import 'package:tech_haven/user/features/details/data/models/review_route_model.dart';
 import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
+import 'package:tech_haven/user/features/details/presentation/route%20params/to_about_product_page.dart';
 import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_page.dart';
 import 'package:tech_haven/user/features/help%20center/presentation/pages/help_center_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
@@ -27,6 +28,7 @@ import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/pages/user_order_history_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
+import 'package:tech_haven/user/features/ordredProducts/presentation/widgets/ordered_products_page.dart';
 import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
 import 'package:tech_haven/user/features/profile%20edit/presentation/pages/profile_edit_page.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
@@ -78,13 +80,9 @@ class AppRoutes {
       ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.otpVerificationPage,
-        path:
-            '/otp_verification_page/:phoneNumber/:email/:password/:verificationID',
+        path: '/otp_verification_page',
         pageBuilder: (state) => OTPVerificationPage(
-          phoneNumber: state.pathParameters['phoneNumber']!,
-          email: state.pathParameters['email']!,
-          password: state.pathParameters['password']!,
-          verificaionID: state.pathParameters['verificationID']!,
+          otpParams: state.extra as OTPParams,
         ),
       ),
       _buildPageRoute(
@@ -180,6 +178,13 @@ class AppRoutes {
         path: '/checkout_page/:totalAmount',
         pageBuilder: (state) => CheckoutPage(
           totalAmount: state.pathParameters['totalAmount']!,
+        ),
+      ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.orderedProductsPage,
+        path: '/ordered_products_page/:orderID',
+        pageBuilder: (state) => OrderedProductsPage(
+          orderID: state.pathParameters['orderID']!,
         ),
       ),
       _buildPageRoute(
@@ -326,6 +331,26 @@ class AppRoutes {
               opacity: animation,
               child: child,
             ),
+          );
+        },
+      ),
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.aboutProductPage,
+        path: '/about_product_page',
+        pageBuilder: (state) => AboutProductPage(
+          toAboutProductPage: state.extra as ToAboutProductPage,
+        ),
+        transitionDuration: const Duration(milliseconds: 250),
+        transitionsBuilder: (animation, child) {
+          final tween = Tween(
+            begin: const Offset(0, -1),
+            end: Offset.zero,
+          ).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+          );
+          return SlideTransition(
+            position: tween,
+            child: child,
           );
         },
       ),

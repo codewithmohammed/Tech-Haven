@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/entities/product.dart';
@@ -45,20 +46,46 @@ class DealsProductCard extends StatelessWidget {
                     child: Stack(
                       children: [
                         // Image
-                        Container(
-                          decoration: BoxDecoration(
-                            color: AppPallete.whiteColor,
-                            image: DecorationImage(
-                              image: NetworkImage(product!.displayImageURL),
-                              fit: BoxFit.contain,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
+                        CachedNetworkImage(
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              color: AppPallete.whiteColor,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.contain,
+                              ),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
                             ),
                           ),
+                          imageUrl: product!.displayImageURL,
+                          placeholder: (context, url) => Shimmer.fromColors(
+                            baseColor: Colors.grey.shade100,
+                            highlightColor: Colors.grey.shade300,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: AppPallete.whiteColor,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                ),
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            decoration: const BoxDecoration(
+                              color: AppPallete.whiteColor,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                            ),
+                            child: const Icon(Icons.error),
+                          ),
                         ),
-                        // Smartphone deals
+
                         Positioned(
                           top: 0,
                           right: 0,
@@ -128,7 +155,7 @@ class DealsProductCard extends StatelessWidget {
                                       ),
                                     ),
                                     Text(
-                                      'AED${product!.prize}',
+                                      '${product!.prize}',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,

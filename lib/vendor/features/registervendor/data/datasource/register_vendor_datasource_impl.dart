@@ -43,14 +43,11 @@ class RegisterVendorDataSourceImpl implements RegisterVendorDataSource {
         downloadURL = await taskSnapshot.ref.getDownloadURL();
       }
       RevenueModel revenueModel = RevenueModel(
-          currentBalance: 0,
-          vendorID: vendorID,
-          withdrewAmount: 0);
+          currentBalance: 0, vendorID: vendorID, withdrewAmount: 0);
       await firebaseFirestore
           .collection('revenues')
           .doc(vendorID)
           .set(revenueModel.toJson());
-
 
       await firebaseFirestore
           .collection('users')
@@ -71,7 +68,7 @@ class RegisterVendorDataSourceImpl implements RegisterVendorDataSource {
             email: user.email!,
             phoneNumber: user.phoneNumber!,
             userName: user.username!,
-            businessPicture: downloadURL ?? '',
+            businessPicture: downloadURL,
           ).toJson());
       return vendorID;
     } catch (e) {

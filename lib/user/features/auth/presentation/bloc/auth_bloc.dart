@@ -6,6 +6,7 @@ import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/forgot_password_send_email.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/create_user.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/google_sign_up.dart';
+import 'package:tech_haven/user/features/auth/domain/usecases/update_user_phone_number.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/send_otp_to_phone_number.dart';
@@ -19,7 +20,6 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // final UserSignUp _userSignUp;
-  final AppUserCubit _appUserCubit;
   // final CurrentUser _currentUser;
   final SendOTPToPhoneNumber _sendOTPToPhoneNumber;
   final VerifyPhoneAndSignUpUser _verifyPhoneAndSignUpUser;
@@ -27,10 +27,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignIn _userSignIn;
   final GoogleSignUp _googleSignUp;
   final ForgotPasswordSendEmail _forgotPasswordSendEmail;
+  final UpdateUserPhoneNumber _updateUserPhoneNumber;
   AuthBloc({
     // required UserSignUp userSignUp,
     required AppUserCubit appUserCubit,
     // required CurrentUser currentUser,
+    required UpdateUserPhoneNumber updateUserPhoneNumber,
     required SendOTPToPhoneNumber sendOTPToPhoneNumber,
     required VerifyPhoneAndSignUpUser verifyPhoneAndSignUpUser,
     required CreateUser createUser,
@@ -39,8 +41,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required ForgotPasswordSendEmail forgotPasswordSendEmail,
   })  :
         //  _userSignUp = userSignUp,
-        _appUserCubit = appUserCubit,
-        // _currentUser = currentUser,
+        _updateUserPhoneNumber = updateUserPhoneNumber,
         _sendOTPToPhoneNumber = sendOTPToPhoneNumber,
         _verifyPhoneAndSignUpUser = verifyPhoneAndSignUpUser,
         _createUser = createUser,
@@ -67,6 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpWithGoogleAccount>(_onSignUpWithGoogleAccount);
     on<SignInWithGoogleAccount>(_onSignInWithGoogleAccount);
     on<ForgotPasswordSendEmailEvent>(_onForgotPasswordSendEmailEvent);
+    on<UpdateThePhoneNumberOfUser>(_onUpdateThePhoneNumberOfUser);
     // on<ForgotPasswordOTPVerificaion>(_onForgotPasswordOTPVerificaion);
   }
 
@@ -138,7 +140,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         phoneNumber: event.phoneNumber, password: event.password));
     res.fold((failure) => emit(AuthSignInFailed(message: failure.message)),
         (result) {
-      print('auth sign in success');
       emit(AuthSignInSuccess(
         message: result,
       ));
@@ -189,4 +190,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // FutureOr<void> _onForgotPasswordOTPVerificaion(ForgotPasswordOTPVerificaion event, Emitter<AuthState> emit) {
 
   // }
+
+  FutureOr<void> _onUpdateThePhoneNumberOfUser(
+      UpdateThePhoneNumberOfUser event, Emitter<AuthState> emit) async {
+    final res = await _updateUserPhoneNumber(UpdateUserPhoneNumberParams(
+        updateNumber: event.updateNumber,
+        phoneNumber: event.phoneNumber,
+        verificationID: event.verificationID,
+        otpCode: event.otpCode));
+    res.fold((failed) => emit(UpdateUserPhoneNumberFailed(message: failed.message)), (success) => emit(UpdateUserPhoneNumberSuccess()));
+  }
 }

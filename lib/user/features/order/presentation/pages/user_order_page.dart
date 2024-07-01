@@ -23,7 +23,12 @@ class UserOrderPage extends StatelessWidget {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        leading: const BackButton(),
+        leading: const BackButton(
+          // color: Colors.white,
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
+        ),
         title: const Text('Your Order'),
         centerTitle: true,
         actions: [
@@ -49,7 +54,6 @@ class UserOrderPage extends StatelessWidget {
             Fluttertoast.showToast(msg: state.message);
           }
           if (state is DeliverOrderToAdminSuccess) {
-            print('object');
             context.read<UserOrderPageBloc>().add(GetAllOrdersForUserEvent());
           }
           if (state is DeliverOrderToAdminFailed) {
@@ -62,7 +66,6 @@ class UserOrderPage extends StatelessWidget {
               ? ListView.separated(
                   itemCount: state.listOfOrderDetails.length,
                   itemBuilder: (context, index) {
-                    print(state.listOfOrderDetails.length);
                     return OrderTile(
                       isUser: true,
                       onTap: () {

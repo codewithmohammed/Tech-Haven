@@ -12,7 +12,6 @@ class CountryCodeContainer extends StatelessWidget {
   final bool enabled;
   @override
   Widget build(BuildContext context) {
-    print(countryCode);
     return Container(
       margin: const EdgeInsets.only(
         right: 10,

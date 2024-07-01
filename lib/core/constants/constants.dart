@@ -3,7 +3,6 @@ import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/cart/presentation/pages/cart_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
-import 'package:tech_haven/user/features/notification/presentation/pages/main_notification_page.dart';
 import 'package:tech_haven/user/features/profile/presentation/pages/user_profile_page.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/pages/search_category_page.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/manage_product_page.dart';

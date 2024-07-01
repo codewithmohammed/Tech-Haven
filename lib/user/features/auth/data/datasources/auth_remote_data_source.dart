@@ -19,6 +19,12 @@ abstract interface class AuthRemoteDataSource {
     required String verificationId,
     required String otpCode,
   });
+   Future<void> updateUserPhoneNumber({
+    required bool updateNumber,
+    required String phoneNumber,
+    required String verificationID,
+    required String otpCode,
+  });
 
   Future<bool> createUser({
     required File? image,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/delivery_date_change.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
@@ -8,7 +7,6 @@ import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/entities/order.dart' as model;
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/sum.dart';
-import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
 
 class OrderTile extends StatelessWidget {
   const OrderTile(

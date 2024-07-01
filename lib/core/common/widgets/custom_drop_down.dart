@@ -8,8 +8,9 @@ class CustomDropDown<T> extends StatelessWidget {
     required this.currentItem,
     this.onChanged,
     this.hintText = 'Select Item',
+    required this.searchEditingController
   });
-
+final TextEditingController searchEditingController;
   final List<T> items;
   final T? currentItem;
   final void Function(T?)? onChanged;
@@ -59,6 +60,7 @@ class CustomDropDown<T> extends StatelessWidget {
           height: 40,
         ),
         dropdownSearchData: DropdownSearchData(
+          searchController: searchEditingController,
           searchInnerWidgetHeight: 50,
           searchInnerWidget: Container(
             height: 50,

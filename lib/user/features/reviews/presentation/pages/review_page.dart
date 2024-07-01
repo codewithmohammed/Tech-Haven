@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/review_display_widget.dart';
 import 'package:tech_haven/user/features/details/data/models/review_route_model.dart';
-import 'package:tech_haven/user/features/details/presentation/bloc/details_page_bloc.dart';
-import 'package:tech_haven/user/features/details/presentation/pages/details_page.dart';
 import 'package:tech_haven/user/features/reviews/presentation/bloc/review_page_bloc.dart';
 // import '../bloc/product_search_bloc.dart';
 // import '../bloc/product_search_event.dart';

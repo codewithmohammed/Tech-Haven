@@ -1,6 +1,5 @@
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/common/data/model/location_model.dart';
-import 'package:tech_haven/core/common/data/model/payment_model.dart';
 import 'package:tech_haven/core/common/data/model/product_model.dart';
 import 'package:tech_haven/core/common/data/model/product_review_model.dart';
 import 'package:tech_haven/core/common/data/model/review_model.dart';

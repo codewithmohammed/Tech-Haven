@@ -1,4 +1,5 @@
-import 'package:fpdart/src/either.dart';
+
+import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/entities/revenue.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';

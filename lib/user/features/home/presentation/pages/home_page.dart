@@ -16,40 +16,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      context.read<HomePageBloc>().add(GetAllBannerHomeEvent()); 
       context.read<HomePageBloc>().add(GetAllProductsEvent());
-      context.read<HomePageBloc>().add(GetAllBannerHomeEvent());
       context.read<HomePageBloc>().add(GetAllSubCategoriesHomeEvent());
-    });
+      context.read<HomePageBloc>().add(GetNowTrendingProductEvent());
+    }); 
     // print('hskdfsjdhfjs');
-    return const Scaffold(
+    return Scaffold(
       extendBody: true,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
           slivers: [
-            CustomSliverAppBar(),
+            const CustomSliverAppBar(),
             SliverToBoxAdapter(
-              child: AdvertisementContainer(),
+              child: BlocBuilder<HomePageBloc, HomePageState>(
+                buildWhen: (previous, current) =>
+                    current is TrendingProductState,
+                builder: (context, state) {
+                  if (state is TrendingProductLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is TrendingProductLoaded) {
+                    // print(state.product.productName);
+                    return AdvertisementContainer(
+                        trendingProduct: state.product);
+                  } else if (state is TrendingProductError) {
+                    return Center(child: Text('Error: ${state.message}'));
+                  } else {
+                    return const AdvertisementContainer(trendingProduct: null);
+                  }
+                },
+              ),
             ),
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: CarouselBannerContainer(),
             ),
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: CategoryIconListView(),
             ),
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: HorizontalProductListView(
                   // listOfProducts: state.listOfProducts,
                   ),
             ),
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: DealsGridView(),
             ),
-            SliverToBoxAdapter(
+            const SliverToBoxAdapter(
               child: SizedBox(height: 80),
             )
           ],

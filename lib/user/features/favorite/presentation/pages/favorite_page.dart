@@ -62,7 +62,7 @@ class FavoritePage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TitleWithCountBar(
-                      title: 'Favorited',
+                      title: 'Favorites',
                       itemsCount: state is FavoritePageLoadedSuccess
                           ? '${state.listOfFavoritedProduct.length} Items'
                           : '0 Items',

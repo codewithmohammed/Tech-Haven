@@ -93,7 +93,6 @@ class HorizontalProductListView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: "The Cart is Updated Successfully",
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -105,7 +104,6 @@ class HorizontalProductListView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: state.message,
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -117,7 +115,6 @@ class HorizontalProductListView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: "The Favorites is Updated Successfully",
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -127,7 +124,6 @@ class HorizontalProductListView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: state.message,
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -158,7 +154,6 @@ class HorizontalProductListView extends StatelessWidget {
                           },
                         ),
                         onTapCard: () {
-                          // context.read<DetailsPageBloc>().add(EmitInitial());
                           GoRouter.of(context).pushNamed(
                               AppRouteConstants.detailsPage,
                               extra: currentProduct);
@@ -270,7 +265,7 @@ class HorizontalProductListView extends StatelessWidget {
                     //column since the container is divided into two
                     return ProductCard(
                       // index: index,
-                      
+
                       likeButton: CustomLikeButton(
                         isFavorited: false,
                         onTapFavouriteButton: (bool isLiked) async {

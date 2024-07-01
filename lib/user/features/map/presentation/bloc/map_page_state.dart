@@ -12,30 +12,30 @@ final class MapPageInitial extends MapPageState {}
 final class GetLocationDetailsSuccess extends MapPageState {
   final User user;
   final Location? location;
-  GetLocationDetailsSuccess({required this.location, required this.user});
+  const GetLocationDetailsSuccess({required this.location, required this.user});
 }
 
 final class GetLocationDetailsFailed extends MapPageState {
   final User? user;
   final String message;
-  GetLocationDetailsFailed({required this.message,required this.user});
+  const GetLocationDetailsFailed({required this.message, required this.user});
 }
 
 final class UpdateLocationDetailsSuccess extends MapPageState {}
 
 final class UpdateLocationDetailsFailed extends MapPageState {
   final String message;
-  UpdateLocationDetailsFailed({required this.message});
+  const UpdateLocationDetailsFailed({required this.message});
 }
 
 final class UpdateLocationDetailsLoading extends MapPageState {}
 
 final class GetCurrentUserDataSuccess extends MapPageState {
   final User? user;
-  GetCurrentUserDataSuccess({required this.user});
+  const GetCurrentUserDataSuccess({required this.user});
 }
 
 final class GetCurrentUserDataFailed extends MapPageState {
   final String message;
-  GetCurrentUserDataFailed({required this.message});
+  const GetCurrentUserDataFailed({required this.message});
 }

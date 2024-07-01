@@ -1,5 +1,4 @@
 import 'package:tech_haven/core/common/data/model/address_details_model.dart';
-import 'package:tech_haven/core/entities/address_details.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/user.dart';
@@ -26,4 +25,12 @@ abstract class CheckoutDataSource {
   });
 
   Future<List<AddressDetailsModel>> getAllUserAddress({required String userID});
+
+ Future<void> saveUserAddress({
+    required String address,
+    required String pin,
+    required String city,
+    required String state,
+    required String country,
+  });
 }

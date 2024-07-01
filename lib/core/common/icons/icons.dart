@@ -42,6 +42,7 @@ class CustomIcons {
   static const String penSvg = 'assets/icons/pen.svg';
   static const String plusSvg = 'assets/icons/plus.svg';
   static const String clockSvg = 'assets/icons/clock.svg';
+  static const String phoneOutlined = 'assets/icons/phone_outlined.svg';
   static const String heartFilledSvg = 'assets/icons/heart_filled.svg';
   static const String uploadSvg = 'assets/icons/upload.svg';
   static const String closeSvg = 'assets/icons/close.svg';

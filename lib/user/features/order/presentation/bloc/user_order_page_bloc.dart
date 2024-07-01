@@ -13,7 +13,6 @@ part 'user_order_page_state.dart';
 class UserOrderPageBloc extends Bloc<UserOrderPageEvent, UserOrderPageState> {
   final GetAllOrders _getAllOrders;
   // final DeliverOrderToAdmin _deliverOrderToAdmin;
-  final GetAProduct _getAProduct;
   // final GetUserOrders _getUserOrders;
   UserOrderPageBloc(
       {required GetAllOrders getAllOrders,
@@ -22,9 +21,6 @@ class UserOrderPageBloc extends Bloc<UserOrderPageEvent, UserOrderPageState> {
       // required DeliverOrderToAdmin deliverOrderToAdmin
       })
       : _getAllOrders = getAllOrders,
-        // _deliverOrderToAdmin = deliverOrderToAdmin,
-        // _getUserOrders = getUserOrders,
-        _getAProduct = getAProduct,
         super(UserOrderPageInitial()) {
     on<UserOrderPageEvent>((event, emit) {
       emit(UserOrderPageLoading());

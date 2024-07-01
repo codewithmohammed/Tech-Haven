@@ -1,9 +1,9 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/common/data/model/order_model.dart';
+import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/failures.dart';
 
-import '../../../../../core/entities/user_ordered_product.dart';
 
 abstract class UserOrderHistoryRepository {
-  Future<Either<Failure, List<UserOrderedProduct>>> getProducts();
+  Future<Either<Failure, List<OrderModel>>> getProducts({required User user});
 }

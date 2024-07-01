@@ -16,6 +16,7 @@ import 'package:tech_haven/user/features/auth/presentation/bloc/sign_up_page_sta
 import 'package:tech_haven/user/features/auth/presentation/constants/auth_constants.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
+import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import '../../../../../core/theme/app_pallete.dart';
 import '../widgets/authentication_container.dart';
 
@@ -76,21 +77,27 @@ class _SignUpPageState extends State<SignUpPage> {
           if (state is OTPSendSuccess) {
             // print('navigating to otp page');
             GoRouter.of(context).pushNamed(
-                AppRouteConstants.otpVerificationPage,
-                pathParameters: {
-                  'email': state.authSignUpModel.email,
-                  'password': state.authSignUpModel.password,
-                  'phoneNumber': state.authSignUpModel.phoneNumber,
-                  'verificationID': state.authSignUpModel.verificationID,
-                }
-                // AppRouteConstants.otpVerificationPage,
-                // pathParameters: {
-                //   'email': state.authSignUpModel.email,
-                //   'password': state.authSignUpModel.password,
-                //   'phoneNumber': state.authSignUpModel.phoneNumber,
-                //   'verificationID': state.authSignUpModel.verificationID,
-                // }
-                );
+              AppRouteConstants.otpVerificationPage,
+              extra: OTPParams(
+                  email: state.authSignUpModel.email,
+                  password: state.authSignUpModel.password,
+                  phoneNumber: state.authSignUpModel.phoneNumber,
+                  verificaionID: state.authSignUpModel.verificationID,
+                  isForSignUp: true),
+              // pathParameters: {
+              //   'email': state.authSignUpModel.email,
+              //   'password': state.authSignUpModel.password,
+              //   'phoneNumber': state.authSignUpModel.phoneNumber,
+              //   'verificationID': state.authSignUpModel.verificationID,
+              // }
+              // AppRouteConstants.otpVerificationPage,
+              // pathParameters: {
+              //   'email': state.authSignUpModel.email,
+              //   'password': state.authSignUpModel.password,
+              //   'phoneNumber': state.authSignUpModel.phoneNumber,
+              //   'verificationID': state.authSignUpModel.verificationID,
+              // }
+            );
           }
           if (state is AuthGoogleSignUpSuccess) {
             GoRouter.of(context).pushReplacementNamed(

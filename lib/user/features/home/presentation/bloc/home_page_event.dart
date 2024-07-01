@@ -35,5 +35,12 @@ final class GetAllSubCategoriesHomeEvent extends HomePageEvent {}
 
 final class BannerProductNavigateEvent extends HomePageEvent {
   final String productID;
-  BannerProductNavigateEvent({required this.productID});
+  const BannerProductNavigateEvent({required this.productID});
+}
+
+class GetNowTrendingProductEvent extends HomePageEvent {}
+
+final class GetProductForAdvertisement extends HomePageEvent {
+  final String productID;
+  const GetProductForAdvertisement({required this.productID});
 }

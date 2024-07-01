@@ -11,5 +11,5 @@ final class GetAllFavoritedProducts extends FavoritePageEvent {}
 
 final class RemoveProductToFavoriteEvent extends FavoritePageEvent {
   final Product product;
-  RemoveProductToFavoriteEvent({required this.product});
+  const RemoveProductToFavoriteEvent({required this.product});
 }

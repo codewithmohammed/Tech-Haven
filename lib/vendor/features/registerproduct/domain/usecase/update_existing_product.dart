@@ -21,6 +21,7 @@ class UpdateExistingProduct
       brandID: params.brandID,
       name: params.productName,
       prize: params.productPrize,
+      color: params.color,
       oldPrize: params.oldProductPrize,
       quantity: params.productQuantity,
       mainCategory: params.mainCategory,
@@ -34,7 +35,7 @@ class UpdateExistingProduct
       shippingCharge: params.shippingCharge,
       productImages: params.productImages,
       deleteImagesIndexes: params.deleteImagesIndexes,
-      isPublished: params.isPublished, 
+      isPublished: params.isPublished,
     );
   }
 }
@@ -47,6 +48,7 @@ class UpdateExistingProductParams {
   final double productPrize;
   final double oldProductPrize;
   final int productQuantity;
+  final String color;
   final String mainCategory;
   final String mainCategoryID;
   final String subCategory;
@@ -65,7 +67,7 @@ class UpdateExistingProductParams {
     required this.brandName,
     required this.brandID,
     required this.productName,
-    required this.productPrize,
+    required this.productPrize,required this.color,
     required this.oldProductPrize,
     required this.productQuantity,
     required this.mainCategory,

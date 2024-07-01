@@ -13,7 +13,6 @@ class ShippingModel {
   }
 
   Map<String, dynamic> toJson() {
-    print( name);
     return {
       'address': addressModel,
       'name': name,

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/entities/product.dart';
@@ -87,20 +88,53 @@ class ProductCard extends StatelessWidget {
                               decoration: const BoxDecoration(
                                 color: AppPallete.lightgreyColor,
                                 borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    5,
-                                  ),
+                                  Radius.circular(5),
                                 ),
                               ),
                               child: heroTransition
                                   ? Hero(
                                       tag: product!.productID,
-                                      child: Image.network(
-                                          product!.displayImageURL))
-                                  : Image.network(
-                                      product!.displayImageURL,
+                                      child: CachedNetworkImage(
+                                        imageUrl: product!.displayImageURL,
+                                        imageBuilder:
+                                            (context, imageProvider) => Image(
+                                          image: imageProvider,
+                                        ),
+                                        placeholder: (context, url) =>
+                                            Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade100,
+                                          highlightColor: Colors.grey.shade300,
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
+                                      ),
+                                    )
+                                  : CachedNetworkImage(
+                                      imageUrl: product!.displayImageURL,
+                                      imageBuilder: (context, imageProvider) =>
+                                          Image(
+                                        image: imageProvider,
+                                      ),
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade100,
+                                        highlightColor: Colors.grey.shade300,
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
                                     ),
                             ),
+
                             //rating
                             Positioned(
                               bottom: 5,
@@ -185,7 +219,7 @@ class ProductCard extends StatelessWidget {
                               width: 150,
                               child: PrizeDataWidget(
                                 totalHeight: 170,
-                                prize: 'AED ${product!.prize}',
+                                prize: '${product!.prize}',
                                 offPercentage:
                                     '${calculateDiscountPercentage(product!.oldPrize, product!.prize)}%',
                                 previousPrize: product!.oldPrize.toString(),

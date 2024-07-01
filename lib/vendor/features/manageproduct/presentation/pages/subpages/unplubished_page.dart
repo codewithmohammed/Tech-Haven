@@ -42,7 +42,6 @@ class UnPublishedPage extends StatelessWidget {
                               // ),
                               SlidableAction(
                                 onPressed: (context) {
-                                  print('object');
                                   context.read<ManageProductBloc>().add(
                                         UpdateTheProductPublishEvent(
                                           product:

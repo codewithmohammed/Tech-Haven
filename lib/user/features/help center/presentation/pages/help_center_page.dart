@@ -37,7 +37,12 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Help Center'),
-        leading: const BackButton(),
+        leading: const BackButton(
+          // color: Colors.white,
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -46,17 +51,16 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
             BlocConsumer<HelpCenterBloc, HelpCenterState>(
               listener: (context, state) {
                 if (state is GetUserDataSuccess) {
-                  print('sdkjfhlakshdfklalf');
                   emailController.text = state.user.email!;
                   nameController.text = state.user.username!;
-                  print(emailController.text);
                 }
                 if (state is RequestSendHelpCenterSuccess) {
                   emailController.clear();
                   nameController.clear();
                   subjectController.clear();
                   bodyController.clear();
-                  Fluttertoast.showToast(msg: 'Request sent successfully');   context.read<HelpCenterBloc>().add(GetUserDataEvent());
+                  Fluttertoast.showToast(msg: 'Request sent successfully');
+                  context.read<HelpCenterBloc>().add(GetUserDataEvent());
                   context.read<HelpCenterBloc>().add(GetAllUserRequestEvent());
                 } else if (state is RequestSendHelpCenterError) {
                   Fluttertoast.showToast(msg: state.message);

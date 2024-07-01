@@ -17,6 +17,7 @@ import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/get_all_user_address.dart';
+import 'package:tech_haven/user/features/checkout/domain/usecase/save_user_address.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/send_order.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/show_present_payment_sheet.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/submit_payment_form.dart';
@@ -31,6 +32,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final SendOrder _sendOrder;
   // final GetAllProduct _getAllProduct;
   final GetAllUserAddress _getAllUserAddress;
+  final SaveUserAddress _saveUserAddress;
   final GetAllCartProduct _getAllCartProduct;
   final GetUserData _getUserData;
   final GetAllCart _getAllCart;
@@ -40,6 +42,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       required SendOrder sendOrder,
       required UpdateProductToCart updateProductToCart,
       required GetAllUserAddress getAllUserAddress,
+      required SaveUserAddress saveUserAddress,
       required GetAllCart getAllCart,
       required GetUserData getUserData,
       required GetAllCartProduct getAllCartProduct,
@@ -51,6 +54,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         _getAllCart = getAllCart,
         _getUserData = getUserData,
         // _getAllProduct = getAllProduct,
+        _saveUserAddress = saveUserAddress,
         _getAllUserAddress = getAllUserAddress,
         _submitPaymentForm = submitPaymentForm,
         _getAllCartProduct = getAllCartProduct,
@@ -67,6 +71,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         emit(CheckoutInitial());
       },
     );
+    on<SaveUserAddressEvent>(_onSaveUserAddressEvent);
     // on<RemoveTheOrderEvent>(_onRemoveTheOrderEvent);
     on<SubmitPaymentFormEvent>(_onSubmitPaymentFormEvent);
 
@@ -228,5 +233,16 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
   void _onUnselectAddress(UnselectAddress event, Emitter<CheckoutState> emit) {
     emit(AddressUnselected());
+  }
+
+  FutureOr<void> _onSaveUserAddressEvent(
+      SaveUserAddressEvent event, Emitter<CheckoutState> emit) async {
+    final result = await _saveUserAddress(SaveUserAddressParams(
+        address: event.address,
+        pin: event.pin,
+        city: event.city,
+        state: event.state,
+        country: event.country));
+    result.fold((failure) => emit(SaveUserAddressFailed(message: failure.message  )), (success) => emit(SaveUserAddressSuccess()));
   }
 }

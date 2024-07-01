@@ -28,6 +28,24 @@ final class VerifyPhoneAndSignUpUserEvent extends AuthEvent {
   });
 }
 
+// final class SendOTPForGoogleLogin extends AuthEvent {
+//   final String phoneNumber;
+//   SendOTPForGoogleLogin({required this.phoneNumber});
+// }
+
+final class UpdateThePhoneNumberOfUser extends AuthEvent {
+  final bool updateNumber;
+  final String phoneNumber;
+  final String verificationID;
+  final String otpCode;
+  UpdateThePhoneNumberOfUser({
+    required this.phoneNumber,
+    required this.updateNumber,
+    required this.verificationID,
+    required this.otpCode,
+  });
+}
+
 final class CreateUserEvent extends AuthEvent {
   final String username;
   final String currency;

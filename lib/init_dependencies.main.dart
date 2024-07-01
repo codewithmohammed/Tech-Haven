@@ -38,6 +38,7 @@ import 'package:tech_haven/user/features/auth/domain/usecases/forgot_password_se
 import 'package:tech_haven/user/features/auth/domain/usecases/google_sign_up.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/send_otp_to_phone_number.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/create_user.dart';
+import 'package:tech_haven/user/features/auth/domain/usecases/update_user_phone_number.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/user_signin.dart';
 import 'package:tech_haven/user/features/auth/domain/usecases/verify_phone_number_and_sign_up.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
@@ -47,6 +48,7 @@ import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_
 import 'package:tech_haven/user/features/checkout/data/repositories/checkout_repository_impl.dart';
 import 'package:tech_haven/user/features/checkout/domain/repository/checkout_repository.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/get_all_user_address.dart';
+import 'package:tech_haven/user/features/checkout/domain/usecase/save_user_address.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/send_order.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/show_present_payment_sheet.dart';
 import 'package:tech_haven/user/features/checkout/domain/usecase/submit_payment_form.dart';
@@ -70,6 +72,7 @@ import 'package:tech_haven/user/features/home/data/datasource/home_page_data_sou
 import 'package:tech_haven/user/features/home/data/datasource/home_page_data_source_impl.dart';
 import 'package:tech_haven/user/features/home/data/repositories/home_page_repository_impl.dart';
 import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
+import 'package:tech_haven/user/features/home/domain/usecase/fetch_trending_product.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_banner_home_page.dart';
 import 'package:tech_haven/user/features/home/domain/usecase/get_all_sub_categories_home_page.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
@@ -82,6 +85,12 @@ import 'package:tech_haven/user/features/order%20history/domain/repository/user_
 import 'package:tech_haven/user/features/order%20history/domain/usecase/get_all_user_order_history.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/bloc/user_order_history_page_bloc.dart';
 import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
+import 'package:tech_haven/user/features/ordredProducts/data/datasource/ordered_products_page_data_source.dart';
+import 'package:tech_haven/user/features/ordredProducts/data/datasource/ordered_products_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/ordredProducts/data/repositories/ordered_products_page_repository_impl.dart';
+import 'package:tech_haven/user/features/ordredProducts/domain/repository/ordered_products_page_repository.dart';
+import 'package:tech_haven/user/features/ordredProducts/domain/usecase/get_user_ordered_products.dart';
+import 'package:tech_haven/user/features/ordredProducts/presentation/bloc/ordered_products_page_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
 import 'package:tech_haven/user/features/profile%20edit/data/datasource/profile_edit_page_data_source.dart';
 import 'package:tech_haven/user/features/profile%20edit/data/datasource/profile_edit_page_data_source_impl.dart';
@@ -89,7 +98,11 @@ import 'package:tech_haven/user/features/profile%20edit/data/repositories/profil
 import 'package:tech_haven/user/features/profile%20edit/domain/repository/profile_edit_page_repository.dart';
 import 'package:tech_haven/user/features/profile%20edit/domain/usecase/update_user_data.dart';
 import 'package:tech_haven/user/features/profile%20edit/presentation/bloc/profile_edit_page_bloc.dart';
-import 'package:tech_haven/user/features/profile%20edit/presentation/pages/profile_edit_page.dart';
+import 'package:tech_haven/user/features/profile/data/datasource/user_profile_page_data_source.dart';
+import 'package:tech_haven/user/features/profile/data/datasource/user_profile_page_data_source_impl.dart';
+import 'package:tech_haven/user/features/profile/data/repositories/user_profile_page_repository_impl.dart';
+import 'package:tech_haven/user/features/profile/domain/repository/user_profile_page_repository.dart';
+import 'package:tech_haven/user/features/profile/domain/usecase/send_otp_for_google_login.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:tech_haven/user/features/review%20enter/presentation/bloc/review_enter_page_bloc.dart';
 import 'package:tech_haven/user/features/reviews/data/datasource/review_page_data_source.dart';
@@ -183,6 +196,18 @@ Future<void> initDependencies() async {
   _initUserOrderHistoryPage();
   _initReviewPage();
   _initProfileEditPage();
+  _initOrderedProductsPage();
+}
+
+void _initOrderedProductsPage() {
+  serviceLocator
+    ..registerFactory<OrderedProductsPageDataSource>(
+        () => OrderedProductsPageDataSourceImpl(serviceLocator()))
+    ..registerFactory<OrderedProductsPageRepository>(
+        () => OrderedProductsPageRepositoryImpl(serviceLocator()))
+    ..registerFactory(() => GetUserOrderProducts(serviceLocator()))
+    ..registerLazySingleton(() => OrderedProductsPageBloc(
+        getUserOrderProducts: serviceLocator(), getUserData: serviceLocator()));
 }
 
 void _initProfileEditPage() {
@@ -236,7 +261,8 @@ void _initUserOrderHistoryPage() {
     ..registerFactory(() => GetAllUserOrderHistoryUseCase(
         userOrderHistoryRepository: serviceLocator()))
     ..registerLazySingleton(() => UserOrderHistoryPageBloc(
-        getAllUserOrderHistoryUseCase: serviceLocator()));
+        getAllUserOrderHistoryUseCase: serviceLocator(),
+        getUserData: serviceLocator()));
 }
 
 void _initReviewEnterPage() {
@@ -325,7 +351,15 @@ void _initRegisterVendor() {
 
 void _initProfile() {
   serviceLocator
-      .registerFactory(() => ProfileBloc(getUserData: serviceLocator()));
+    ..registerFactory<UserProfilePageDataSource>(() =>
+        UserProfilePageDataSourceImpl(
+            firebaseAuth: serviceLocator(), firestore: serviceLocator()))
+    ..registerFactory<UserProfilePageRepository>(
+        () => UserProfilePageRepositoryImpl(serviceLocator()))
+    ..registerFactory(() => SendOtpForGoogleLogin(serviceLocator()))
+    ..registerLazySingleton(() => ProfileBloc(
+        getUserData: serviceLocator(),
+        sendOtpForGoogleLogin: serviceLocator()));
 }
 
 void _initProductsPage() {
@@ -339,13 +373,14 @@ void _initProductsPage() {
 
 void _intiCheckout() {
   serviceLocator
-    ..registerFactory<CheckoutDataSource>(
-        () => CheckoutDataSourceImpl(firebaseFirestore: serviceLocator()))
+    ..registerFactory<CheckoutDataSource>(() => CheckoutDataSourceImpl(
+        firebaseFirestore: serviceLocator(), firebaseAuth: serviceLocator()))
     ..registerFactory<CheckoutRepository>(
         () => CheckoutRepositoryImpl(checkoutDataSource: serviceLocator()))
     ..registerFactory(
         () => ShowPresentPaymentSheet(checkoutRepository: serviceLocator()))
     ..registerFactory(() => SendOrder(checkoutRepository: serviceLocator()))
+    ..registerFactory(() => SaveUserAddress(serviceLocator()))
     ..registerFactory(
         () => GetAllUserAddress(checkoutRepository: serviceLocator()))
     ..registerFactory(
@@ -355,6 +390,7 @@ void _intiCheckout() {
         showPresentPaymentSheet: serviceLocator(),
         getAllUserAddress: serviceLocator(),
         getAllCart: serviceLocator(),
+        saveUserAddress: serviceLocator(),
         updateProductFields: serviceLocator(),
         updateProductToCart: serviceLocator(),
         getAProduct: serviceLocator(),
@@ -399,8 +435,10 @@ _initAuth() {
     ..registerFactory(() => GoogleSignUp(authRepository: serviceLocator()))
     ..registerFactory(
         () => ForgotPasswordSendEmail(authRepository: serviceLocator()))
+    ..registerFactory(() => UpdateUserPhoneNumber(serviceLocator()))
     ..registerLazySingleton(
       () => AuthBloc(
+          updateUserPhoneNumber: serviceLocator(),
           sendOTPToPhoneNumber: serviceLocator(),
           verifyPhoneAndSignUpUser: serviceLocator(),
           createUser: serviceLocator(),
@@ -458,8 +496,10 @@ void _initHomePage() {
         () => GetAllSubCategoriesHomePage(homePageRepository: serviceLocator()))
     ..registerFactory(
         () => GetAllBannerHomePage(homePageRepository: serviceLocator()))
+    ..registerFactory(() => FetchTrendingProduct(serviceLocator()))
     ..registerLazySingleton(() => HomePageBloc(
         // getAllReviewsProduct: ,
+        fetchTrendingProduct: serviceLocator(),
         getAProduct: serviceLocator(),
         getAllProduct: serviceLocator(),
         getAllBannerHomePage: serviceLocator(),

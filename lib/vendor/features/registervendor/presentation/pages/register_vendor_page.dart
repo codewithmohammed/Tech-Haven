@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/common/widgets/profile_image_widget.dart';
-import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/entities/user.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/pick_image.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
 
@@ -59,7 +56,12 @@ class _RegisterVendorPageState extends State<RegisterVendorPage> {
     return Scaffold(
         appBar: AppBar(
           // automaticallyImplyLeading: true,
-          leading: const BackButton(),
+          leading: const BackButton(
+          // color: Colors.white,
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
+        ),
           title: const Text(
             'Register as Vendor',
           ),
@@ -84,7 +86,7 @@ class _RegisterVendorPageState extends State<RegisterVendorPage> {
             }
           },
           builder: (context, state) {
-            print(state);
+            // print(state);
             if (state is RegisterVendorLoading) {
               return const Center(
                 child: Column(

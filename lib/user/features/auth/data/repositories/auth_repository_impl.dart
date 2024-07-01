@@ -57,23 +57,45 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> createUser({
-    required File? image,
-    required String username,
-  required String currency,
-  required String currencySymbol,
-    required int color,
+  Future<Either<Failure, void>> updateUserPhoneNumber({
+    required bool updateNumber,
+    required String phoneNumber,
+    required String verificationID,
+    required String otpCode,
   }) async {
     try {
-      final bool result = await remoteDataSource.createUser(
-          image: image, username: username,currency: currency,currencySymbol: currencySymbol, color: color);
-      return right(result);
+      await remoteDataSource.updateUserPhoneNumber(
+        updateNumber: updateNumber,
+        phoneNumber: phoneNumber,
+        verificationID: verificationID,
+        otpCode: otpCode,
+      );
+      return right((null));
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }
   }
 
-
+  @override
+  Future<Either<Failure, bool>> createUser({
+    required File? image,
+    required String username,
+    required String currency,
+    required String currencySymbol,
+    required int color,
+  }) async {
+    try {
+      final bool result = await remoteDataSource.createUser(
+          image: image,
+          username: username,
+          currency: currency,
+          currencySymbol: currencySymbol,
+          color: color);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
 
   @override
   Future<Either<Failure, String>> userSignIn(
@@ -108,7 +130,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(Failure(e.message));
     }
   }
-  
+
   // @override
   // Future<Either<Failure, String>> signInUserWithGoogle() async{
   //   try {

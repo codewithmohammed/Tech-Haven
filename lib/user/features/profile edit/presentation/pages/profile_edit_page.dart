@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
-import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/common/widgets/profile_image_widget.dart';
@@ -36,7 +35,12 @@ class ProfileEditPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading: const BackButton(),
+        leading: const BackButton(
+          // color: Colors.white,
+          style: ButtonStyle(
+              backgroundColor:
+                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
+        ),
         title: const Text('Edit your Data'),
       ),
       body: BlocConsumer<ProfileEditPageBloc, ProfileEditPageState>(
@@ -117,6 +121,7 @@ class ProfileEditPage extends StatelessWidget {
                       username: username.value,
                       email: user.email,
                       phoneNumber: user.phoneNumber,
+                      userAllowed: user.userAllowed,
                       currency: user.currency,
                       currencySymbol: user.currencySymbol,
                       profilePhoto: user.profilePhoto,

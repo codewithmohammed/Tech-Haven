@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
@@ -8,11 +7,9 @@ import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/pick_image.dart';
-
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/list_view_container.dart';
-import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/sub_text.dart';
 
 class AddImagesWidget extends StatefulWidget {
   const AddImagesWidget(
@@ -45,11 +42,7 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
         });
       }
     } else {
-      showSnackBar(
-          context: context,
-          title: 'Oh',
-          content: 'You Failed To SelectImage',
-          contentType: ContentType.failure);
+      showFailedImageSnackBar();
     }
   }
 
@@ -63,17 +56,13 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
       // widget.productImages.value = widget.productImagesTemp;
       // print(widget.productImages.length);
     } else {
-      showSnackBar(
-          context: context,
-          title: 'Oh',
-          content: 'You Failed To SelectImage',
-          contentType: ContentType.failure);
+      showFailedImageSnackBar();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.productImagesLink != null) {}
+    // if (widget.productImagesLink != null) {}
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -163,7 +152,8 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                 ),
               ),
             ),
-            if (widget.productImagesLink == null)
+            if (widget.productImagesLink == null &&
+                widget.productImages.isEmpty)
               SizedBox(
                 height: 100,
                 child: ListViewContainer(
@@ -175,6 +165,7 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                       radius: 20,
                     ),
                     onTapCenterWidget: () {
+                      // print(widget.productImages.length);
                       selectImage(widget.productImages.length);
                     },
                     onPressedCrossIcon: () {}),
@@ -196,9 +187,9 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SubText(
-                  subText: 'color ${mainIndex + 1}',
-                ),
+                // SubText(
+                //   subText: 'color ${mainIndex + 1}',
+                // ),
                 Container(
                   width: 80,
                   height: 100,
@@ -289,5 +280,13 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
         ),
       ],
     );
+  }
+
+  void showFailedImageSnackBar() {
+    showSnackBar(
+        context: context,
+        title: 'Oh',
+        content: 'You Failed To SelectImage',
+        contentType: ContentType.failure);
   }
 }

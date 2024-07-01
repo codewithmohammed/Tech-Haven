@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
-import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 class HelpfulButtonWidget extends StatefulWidget {
   final int initialCount;
@@ -15,8 +14,8 @@ class HelpfulButtonWidget extends StatefulWidget {
     required this.onPressed,
   });
 
-  @override
-  _HelpfulButtonWidgetState createState() => _HelpfulButtonWidgetState();
+   @override
+  State<HelpfulButtonWidget> createState() => _HelpfulButtonWidgetState();
 }
 
 class _HelpfulButtonWidgetState extends State<HelpfulButtonWidget> {

@@ -44,6 +44,7 @@ class CustomSliverAppBar extends StatelessWidget
         //
         title: const AppBarSearchBar(
           enabled: false,
+          isForSliver: true,
           autoFocus: true,
         ),
       ),

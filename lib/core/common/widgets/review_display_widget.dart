@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/entities/review.dart';
 import 'package:tech_haven/user/features/details/presentation/widgets/star_widget.dart';
@@ -33,16 +35,32 @@ class ReveiwDisplayWidget extends StatelessWidget {
             children: [
               //container for the picture
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                height: 40,
-                clipBehavior: Clip.antiAlias,
-                width: 40,
-                decoration: const BoxDecoration(
-                    color: Colors.red, shape: BoxShape.circle),
-                child: reviewModel.userProfile != null
-                    ? Image.network(reviewModel.userProfile!)
-                    : null,
-              ),
+  margin: const EdgeInsets.symmetric(horizontal: 10),
+  height: 40,
+  clipBehavior: Clip.antiAlias,
+  width: 40,
+  decoration: const BoxDecoration(
+    color: Colors.red,
+    shape: BoxShape.circle,
+  ),
+  child: reviewModel.userProfile != null
+      ? CachedNetworkImage(
+          imageUrl: reviewModel.userProfile!,
+          placeholder: (context, url) => Shimmer.fromColors(
+            baseColor: Colors.grey.shade100,
+            highlightColor: Colors.grey.shade300,
+            child: Container(
+              width: 40,
+              height: 40,
+              color: Colors.white,
+            ),
+          ),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+          fit: BoxFit.cover,
+        )
+      : null,
+),
+
               GlobalTitleText(
                 title: reviewModel.userName,
                 fontSize: 15,
@@ -72,7 +90,6 @@ class ReveiwDisplayWidget extends StatelessWidget {
               child: HelpfulButtonWidget(
                 initialCount: reviewModel.listOfHelpFulUsers.length,
                 onPressed: (bool isLiked) {
-                  print(isLiked);
                   context.read<ReviewPageBloc>().add(AddUserToHelpfulEvent(
                       userID: userID,
                       isLiked: isLiked,

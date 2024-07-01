@@ -7,7 +7,8 @@ class TitleWithCountBar extends StatelessWidget {
       {super.key,
       required this.title,
       required this.itemsCount,
-      this.isForFavorite = false,this.totalPrize = '0'});
+      this.isForFavorite = false,
+      this.totalPrize = '0'});
 
   final String title;
   final String itemsCount;
@@ -41,9 +42,9 @@ class TitleWithCountBar extends StatelessWidget {
             ],
           ),
           if (!isForFavorite)
-             Text(
+            Text(
               totalPrize,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),

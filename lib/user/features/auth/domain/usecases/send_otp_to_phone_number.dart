@@ -19,6 +19,7 @@ class SendOTPToPhoneNumber
       password: params.password,
     );
   }
+  
 }
 
 class SendOTPToPhoneNumberParams {

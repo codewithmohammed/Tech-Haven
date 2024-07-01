@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
-import 'package:rive/rive.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/error/failures.dart';

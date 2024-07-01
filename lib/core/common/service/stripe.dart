@@ -26,8 +26,7 @@ class StripePayoutService {
     );
 
     if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body);
-      print('Payout successful: $jsonResponse');
+      jsonDecode(response.body);
     } else {
       throw Exception('Failed to create payout: ${response.reasonPhrase}');
     }
@@ -35,11 +34,10 @@ class StripePayoutService {
 }
 
 // Example usage
-void main() async {
-  final payoutService = StripePayoutService('your_secret_key_here');
-  try {
-    await payoutService.createPayout(amount: 1000, currency: 'usd', destination: 'acct_1Gqj58Hpdw6KrtgH');
-  } catch (e) {
-    print(e);
-  }
-}
+// void main() async {
+//   final payoutService = StripePayoutService('your_secret_key_here');
+//   try {
+//     await payoutService.createPayout(amount: 1000, currency: 'usd', destination: 'acct_1Gqj58Hpdw6KrtgH');
+//   } catch (e) {
+//   }
+// }

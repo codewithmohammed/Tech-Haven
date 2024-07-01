@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:tech_haven/core/common/bloc/common_bloc.dart';
@@ -18,6 +19,7 @@ import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.d
 import 'package:tech_haven/user/features/map/presentation/bloc/map_page_bloc.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/bloc/user_order_history_page_bloc.dart';
 import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
+import 'package:tech_haven/user/features/ordredProducts/presentation/bloc/ordered_products_page_bloc.dart';
 import 'package:tech_haven/user/features/products/presentation/bloc/products_page_bloc.dart';
 import 'package:tech_haven/user/features/profile%20edit/presentation/bloc/profile_edit_page_bloc.dart';
 import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
@@ -44,6 +46,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initDependencies();
+  // Set the preferred orientations to portrait only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
@@ -131,6 +139,9 @@ void main() async {
       ),
        BlocProvider(
         create: (_) => serviceLocator<ProfileEditPageBloc>(),
+      ),
+       BlocProvider(
+        create: (_) => serviceLocator<OrderedProductsPageBloc>(),
       ),
     ],
     child: const MyApp(),

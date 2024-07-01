@@ -14,7 +14,7 @@ class ProfileEditPageRepositoryImpl implements ProfileEditPageRepository {
       UserModel userModel, File? newImage) async {
     try {
       await profileEditPageDataSource.updateUserData(userModel, newImage);
-      return right(());
+      return right((null));
     } on ServerException catch (e) {
       return left(Failure(e.message));
     }

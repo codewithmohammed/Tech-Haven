@@ -1,6 +1,6 @@
+
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
-import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';

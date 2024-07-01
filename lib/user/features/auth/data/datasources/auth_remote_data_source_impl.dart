@@ -29,7 +29,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String currencySymbol,
     required int color,
   }) async {
-          String imageID = const Uuid().v1();
+    String imageID = const Uuid().v1();
     User? user = firebaseAuth.currentUser;
     try {
 //if image is not null then we upload the image into storage and get the download url and create a user doc
@@ -37,7 +37,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (user != null) {
         String? downloadURL;
         if (image != null) {
-
           Reference reference = firebaseStorage
               .ref('user')
               .child('usersProfilePicture')
@@ -54,6 +53,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         model.UserModel userModel = model.UserModel(
           email: user.email!,
+          userAllowed: true,
           phoneNumber: user.phoneNumber!,
           userImageID: imageID,
           uid: user.uid,
@@ -86,6 +86,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     try {
       await getVerificationId(phoneNumber);
+
       if (potentialVerificationId != null) {
         return SignUpModelImpl(
           phoneNumber: phoneNumber,
@@ -95,7 +96,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
         //
       } else {
-        throw const ServerException('The Verification ID is failed to recieve');
+        throw const ServerException(
+            'The Verification ID is failed to recieve, Please try again,');
       }
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message!);
@@ -112,12 +114,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     await firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (phoneAuthCredential) async {
-        firebaseAuth.signInWithCredential(phoneAuthCredential);
+        await firebaseAuth.signInWithCredential(phoneAuthCredential);
       },
       verificationFailed: (error) async {
         throw ServerException(error.message!);
       },
-      codeSent: (verificationId, forceResendingToken) async {
+      codeSent: (verificationId, forceResendingToken) {
         // print('assigning the verification id');
         assignTheVerificationId(verificationId: verificationId);
         // print(potentialVerificationId);
@@ -184,6 +186,48 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(
         e.toString(),
       );
+    }
+  }
+
+  @override
+  Future<void> updateUserPhoneNumber({
+    required bool updateNumber,
+    required String phoneNumber,
+    required String verificationID,
+    required String otpCode,
+  }) async {
+    try {
+      // Verify OTP
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationID,
+        smsCode: otpCode,
+      );
+      final User? currentUser = firebaseAuth.currentUser;
+      // Update phone number in Firebase Auth
+      if (currentUser != null) {
+        if (updateNumber) {
+          await currentUser.updatePhoneNumber(credential);
+        } else {
+          await currentUser.linkWithCredential(credential);
+        }
+
+        final User? updateUser = firebaseAuth.currentUser;
+
+        await firebaseFirestore
+            .collection('users')
+            .doc(currentUser.uid)
+            .update({
+          'phoneNumber': updateUser!.phoneNumber,
+        });
+      } else {
+        throw const ServerException("The user doesn't Exist");
+      }
+      return;
+      // Update phone number in Firestore
+    } on ServerException catch (e) {
+      throw ServerException(e.toString());
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.toString());
     }
   }
 
@@ -262,20 +306,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-   Future<String> signUpUserWithGoogle() async {
+  Future<String> signUpUserWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
         throw const ServerException('The Google user is not initiated');
       }
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await firebaseAuth.signInWithCredential(credential);
+      final userCredential =
+          await firebaseAuth.signInWithCredential(credential);
       final user = userCredential.user;
 
       if (user == null) {
@@ -283,17 +329,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       // Check if the user already exists in Firestore
-      final doc = await firebaseFirestore.collection('users').doc(user.uid).get();
+      final doc =
+          await firebaseFirestore.collection('users').doc(user.uid).get();
       if (!doc.exists) {
         // Create a User object with the necessary details
         final newUser = model.UserModel(
           uid: user.uid,
           userImageID: null,
           phoneNumber: user.phoneNumber,
+          userAllowed: true,
           username: user.displayName,
           currency: 'USD', // Assign default or fetch from a settings screen
-          vendorID: 'default_vendor_id', // Assign default or generate dynamically
-          currencySymbol: '\$', // Assign default or fetch from a settings screen
+          vendorID: null, // Assign default or generate dynamically
+          currencySymbol:
+              '\$', // Assign default or fetch from a settings screen
           email: user.email,
           profilePhoto: user.photoURL,
           isVendor: false, // Assign default or fetch from a settings screen
@@ -302,7 +351,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
 
         // Save the user data to Firestore
-        await firebaseFirestore.collection('users').doc(user.uid).set(newUser.toJson());
+        await firebaseFirestore
+            .collection('users')
+            .doc(user.uid)
+            .set(newUser.toJson());
       }
 
       return user.email!;

@@ -9,6 +9,7 @@ class ProductInfo {
   final String variantCategoryID;
   final String productID;
   final String productName;
+  final int color;
 
   ProductInfo({
     required this.brandID,
@@ -21,5 +22,6 @@ class ProductInfo {
     required this.variantCategoryID,
     required this.productID,
     required this.productName,
+    required this.color
   });
 }

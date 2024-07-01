@@ -7,7 +7,7 @@ class Vendor {
   final int color;
   final String userName;
   final bool isVendor;
-  final String businessPicture;
+  final String? businessPicture;
   final String businessName;
   final String physicalAddress;
   final String accountNumber;

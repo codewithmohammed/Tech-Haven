@@ -138,7 +138,6 @@ class DealsGridView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: "The Cart is Updated Successfully",
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -150,7 +149,7 @@ class DealsGridView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: state.message,
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
+                
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -162,7 +161,6 @@ class DealsGridView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: "The Favorites is Updated Successfully",
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
@@ -172,7 +170,7 @@ class DealsGridView extends StatelessWidget {
                   Fluttertoast.showToast(
                       msg: state.message,
                       toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
+                
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.green,
                       textColor: Colors.white,

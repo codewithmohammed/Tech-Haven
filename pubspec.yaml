@@ -71,22 +71,23 @@ dependencies:
   intl: 0.18.1
   like_button: ^2.0.5
   lottie: ^3.1.0
+  palette_generator: ^0.3.3+3
   path_provider: ^2.1.2
   pinput: ^4.0.0
   pull_to_refresh: ^2.0.0
   rive: ^0.13.1
-  rxdart: ^0.27.7
+  rxdart: 0.27.0
   shimmer: ^3.0.0
   smooth_page_indicator: ^1.1.0
   swipe_to: ^1.0.6
   uuid: ^4.3.3
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.0
+  flutter_native_splash: ^2.4.0
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.4.0
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -146,10 +147,12 @@ flutter:
     - assets/icons/publish.svg
     - assets/icons/share.svg
     - assets/icons/star.svg
+    - assets/lotties/otp-lottie.json
     - assets/lotties/sign_up_lottie.json
     - assets/icons/star_half.svg
     - assets/lotties/sign_in_lottie.json
     - assets/icons/thumb_up.svg
+    - assets/icons/phone_outlined.svg
     - assets/icons/trash_bin.svg
     - assets/icons/user_add.svg
     - assets/icons/thumb_up_filled.svg

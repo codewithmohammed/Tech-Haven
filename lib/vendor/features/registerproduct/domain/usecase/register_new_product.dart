@@ -15,7 +15,7 @@ class RegisterNewProduct implements UseCase<bool, RegisterNewProductParams> {
     return await registerProductRepository.registerNewProduct(
       brandName: params.brandName,
       brandID: params.brandID,
-      oldPrize: params.oldPrize,
+      oldPrize: params.oldPrize,color:params.color ,
       name: params.productName,
       prize: params.productPrize,
       quantity: params.productQuantity,
@@ -45,7 +45,7 @@ class RegisterNewProductParams {
   final String mainCategory;
   final String mainCategoryID;
   // final String vendorID;
-  final String subCategory;
+  final String subCategory;final String color;
   final String subCategoryID;
   final String variantCategory;
   final String variantCategoryID;
@@ -58,7 +58,7 @@ class RegisterNewProductParams {
   RegisterNewProductParams({
     required this.brandName,
     required this.brandID,
-    required this.productName,
+    required this.productName,required this.color,
     // required this.vendorID,
     required this.productPrize,
     required this.oldPrize,

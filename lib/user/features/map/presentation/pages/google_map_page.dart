@@ -87,6 +87,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                     state.user!.phoneNumber!;
               }
               nameTextEditingController.text = state.user!.username!;
+              emailAdressTextEditingController.text = state.user!.email!;
               Fluttertoast.showToast(msg: state.message);
             }
           }
@@ -103,7 +104,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           //   }
           // }
           if (state is GetLocationDetailsSuccess) {
-            print('object');
             if (state.location != null) {
               if (state.user.phoneNumber != null) {
                 phoneNumberTextEditingController.text = state.user.phoneNumber!;

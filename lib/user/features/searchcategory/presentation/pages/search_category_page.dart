@@ -1,7 +1,9 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
@@ -15,13 +17,14 @@ class SearchCategoryPage extends StatelessWidget {
   const SearchCategoryPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {  context.read<SearchCategoryCubit>().changeIndex(0);
     PageController pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!SearchCategoryBloc.isDataLoaded) {
         // If data is not loaded and not loading, fetch the data
         BlocProvider.of<SearchCategoryBloc>(context)
             .add(const GetAllSearchCategoryEvent(refreshPage: false));
+      
       }
     });
     return SafeArea(
@@ -61,6 +64,8 @@ class SearchCategoryPage extends StatelessWidget {
                         primary: true,
                         itemCount: mainCategoryModel.length,
                         itemBuilder: (context, listTileindex) {
+                          // print(pageIndex);
+                          // print('listIndex' '$listTileindex');
                           return ListTile(
                             tileColor: listTileindex == pageIndex
                                 ? AppPallete.lightgreyColor
@@ -114,9 +119,7 @@ class SearchCategoryPage extends StatelessWidget {
                     // SideListViewTiles(mainCategoryModel: mainCategoryModel),
                     Expanded(
                       child: BlocBuilder<SearchCategoryCubit, int>(
-                        builder: (context, state) {
-                          // int currentPage = state;
-
+                        builder: (context, indexState) {
                           return PageView.builder(
                             controller: pageController,
                             // itemExtent: 1000,
@@ -126,6 +129,9 @@ class SearchCategoryPage extends StatelessWidget {
                               context
                                   .read<SearchCategoryCubit>()
                                   .changeIndex(value);
+                              // context
+                              //     .read<SearchCategoryCubit>()
+                              //     .changeIndex(value);
                             },
                             itemCount: mainCategoryModel.length,
                             scrollDirection: Axis.vertical,
@@ -147,10 +153,23 @@ class SearchCategoryPage extends StatelessWidget {
                                       margin: const EdgeInsets.only(top: 10),
                                       width: double.infinity,
                                       color: AppPallete.lightgreyColor,
-                                      child: Image.network(
-                                        mainCategoryModel[mainPageIndex]
-                                            .imageURL,
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            mainCategoryModel[mainPageIndex]
+                                                .imageURL,
                                         fit: BoxFit.fitHeight,
+                                        placeholder: (context, url) =>
+                                            Shimmer.fromColors(
+                                          baseColor: Colors.grey.shade100,
+                                          highlightColor: Colors.grey.shade300,
+                                          child: Container(
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(Icons.error),
                                       ),
                                     ),
                                   ),
@@ -225,10 +244,6 @@ class SearchCategoryPage extends StatelessWidget {
                                                                 100),
                                                     itemBuilder:
                                                         (context, index) {
-                                                      print(state ==
-                                                              accordionIndex &&
-                                                          mainPageIndex ==
-                                                              pageIndex);
                                                       return InkWell(
                                                         onTap: () {
                                                           GoRouter.of(context).pushNamed(
@@ -250,16 +265,42 @@ class SearchCategoryPage extends StatelessWidget {
                                                                   .center,
                                                           children: [
                                                             Expanded(
-                                                              flex: 2,
-                                                              child:
-                                                                  Image.network(
-                                                                variantCategoryModel[
-                                                                        index]
-                                                                    .imageURL,
-                                                                fit: BoxFit
-                                                                    .fitHeight,
-                                                              ),
-                                                            ),
+                                                                flex: 2,
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl: variantCategoryModel[
+                                                                          index]
+                                                                      .imageURL,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      Shimmer
+                                                                          .fromColors(
+                                                                    baseColor: Colors
+                                                                        .grey
+                                                                        .shade100,
+                                                                    highlightColor:
+                                                                        Colors
+                                                                            .grey
+                                                                            .shade300,
+                                                                    child:
+                                                                        Container(
+                                                                      width: double
+                                                                          .infinity,
+                                                                      height: double
+                                                                          .infinity,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
+                                                                      const Icon(
+                                                                          Icons
+                                                                              .error),
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                )),
                                                             Text(
                                                               variantCategoryModel[
                                                                       index]

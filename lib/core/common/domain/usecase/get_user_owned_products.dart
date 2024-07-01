@@ -8,7 +8,6 @@ class GetUserOwnedProducts implements UseCase<List<String>, NoParams> {
   GetUserOwnedProducts({required this.repository});
   @override
   Future<Either<Failure, List<String>>> call(NoParams params) async {
-    print('objedfghjkl;sct');
     return repository.getUserOwnedProducts();
   }
 }

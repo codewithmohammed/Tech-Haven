@@ -6,9 +6,10 @@ sealed class GetImagesEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 final class GetImagesForTheProductEvent extends GetImagesEvent {
   final String productID;
-  GetImagesForTheProductEvent({required this.productID});
+  const GetImagesForTheProductEvent({required this.productID});
 }
 
-final class EmitInitialEvent extends GetImagesEvent{}
+final class EmitInitialEvent extends GetImagesEvent {}

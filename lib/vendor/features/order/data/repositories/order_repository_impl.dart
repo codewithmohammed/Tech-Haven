@@ -1,6 +1,4 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/common/data/model/payment_model.dart';
-import 'package:tech_haven/core/entities/order.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/vendor/features/order/data/datasource/order_data_source.dart';
 import 'package:tech_haven/vendor/features/order/domain/repository/order_repository.dart';
@@ -17,7 +15,6 @@ class OrderRepositoryImpl implements OrderRepository {
       // ,required PaymentModel paymentModel
       }) async {
     try {
-      print('object');
       final result = await orderDataSource.deliverOrderToAdmin(order: order ,
       // paymentModel: paymentModel
       );

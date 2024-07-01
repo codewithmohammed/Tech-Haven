@@ -10,7 +10,6 @@ class DeliverOrderToAdmin
   DeliverOrderToAdmin({required this.orderRepository});
   @override
   Future<Either<Failure, String>> call(DeliverOrderToAdminParams params) async {
-    print('gi');
     return await orderRepository.deliverOrderToAdmin(order: params.order
     // ,paymentModel: params.paymentModel
     );

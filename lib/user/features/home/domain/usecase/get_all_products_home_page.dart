@@ -1,8 +1,3 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:tech_haven/core/entities/product.dart';
-import 'package:tech_haven/core/error/failures.dart';
-import 'package:tech_haven/core/usecase/usecase.dart';
-import 'package:tech_haven/user/features/home/domain/repository/home_page_repository.dart';
 
 // class GetAllProductsHomePage implements UseCase<List<Product>, NoParams> {
 //   final HomePageRepository homePageRepository;

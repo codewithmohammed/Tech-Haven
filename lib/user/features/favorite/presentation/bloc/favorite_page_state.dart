@@ -18,12 +18,12 @@ final class FavoritePageLoadedSuccess extends FavoritePageState {
 
 final class FavoritePageLoadedFailed extends FavoritePageState {
   final String message;
-  FavoritePageLoadedFailed({required this.message});
+  const FavoritePageLoadedFailed({required this.message});
 }
 
 final class FavoriteRemovedSuccess extends FavoritePageState {}
 
 final class FavoriteRemovedFailed extends FavoritePageState {
   final String message;
-  FavoriteRemovedFailed({required this.message});
+  const FavoriteRemovedFailed({required this.message});
 }

@@ -18,19 +18,20 @@ part 'vendor_order_page_state.dart';
 
 class VendorOrderPageBloc
     extends Bloc<VendorOrderPageEvent, VendorOrderPageState> {
-  final GetAllOrders _getAllOrders;
+  // final GetAllOrders _getAllOrders;
   final DeliverOrderToAdmin _deliverOrderToAdmin;
-  final GetAProduct _getAProduct;
+  // final GetAProduct _getAProduct;
   final GetVendorOrders _getVendorOrders;
   VendorOrderPageBloc(
       {required GetAllOrders getAllOrders,
       required GetAProduct getAProduct,
       required GetVendorOrders getVendorOrders,
       required DeliverOrderToAdmin deliverOrderToAdmin})
-      : _getAllOrders = getAllOrders,
+      :
+      //  _getAllOrders = getAllOrders,
         _deliverOrderToAdmin = deliverOrderToAdmin,
         _getVendorOrders = getVendorOrders,
-        _getAProduct = getAProduct,
+        // _getAProduct = getAProduct,
         super(VendorOrderPageInitial()) {
     on<VendorOrderPageEvent>((event, emit) {
       emit(VendorOrderPageLoading());

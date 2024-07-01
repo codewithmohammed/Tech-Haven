@@ -23,7 +23,6 @@ class AddressModel {
   }
 
   Map<String, dynamic> toJson() {
-    print(city + country + line1 + postalCode + state);
     return {
       'city': city,
       'country': country,
