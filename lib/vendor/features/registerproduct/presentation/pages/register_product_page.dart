@@ -345,12 +345,9 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       ),
                       Constants.kHeight,
                       const SubText(subText: 'Specifications'),
-                      const Text(
-                        "Every name and It's specification should be filled else the corresponding fields will not be saved",
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 10,
-                        ),
+                      const ErrorTextWidget(
+                        errorText:
+                            "Every name and It's specification should be filled else the corresponding fields will not be saved",
                       ),
                       DynamicForm(
                         onFormChanged: handleFormData,
@@ -459,8 +456,10 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                       ),
                       if (widget.product != null)
                         const GlobalTitleText(
-                          title: 'Add New Images',
-                        ),
+                          title: 'Update Current Images',
+                        ), const ErrorTextWidget(
+                          errorText:
+                              "Your old images of this product will be replaced by the new images"),
                       if (widget.product != null)
                         AddImagesWidget(
                           productImages: productImages,
@@ -468,6 +467,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                           deletedImagesIndex: deletedImagesIndex,
                           canAddNewImages: true,
                         ),
+                     
                       Constants.kHeight,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -661,6 +661,25 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
             isPublished: isPublished,
           ),
         );
+  }
+}
+
+class ErrorTextWidget extends StatelessWidget {
+  const ErrorTextWidget({
+    super.key,
+    required this.errorText,
+  });
+  final String errorText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      errorText,
+      style: const TextStyle(
+        color: Colors.red,
+        fontSize: 10,
+      ),
+    );
   }
 }
 

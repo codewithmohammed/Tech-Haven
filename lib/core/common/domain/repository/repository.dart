@@ -16,7 +16,7 @@ abstract class Repository {
   Future<Either<Failure, List<Product>>> getAllProduct();
   Future<Either<Failure, List<Product>>> getAllCartProduct();
   Future<Either<Failure, List<Product>>> getAllFavoriteProduct();
-  
+    Future<Either<Failure, List<Category>>> getAllBrands();
   Future<Either<Failure,Product>> getAProduct({required String productID});
   // Future<Either<Failure, List<Category>>> getAllSubCategory();
   Future<Either<Failure, bool>> updateProductToFavorite({

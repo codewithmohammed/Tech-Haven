@@ -23,7 +23,6 @@ class CircularButton extends StatelessWidget {
     return Container(
       height: diameter,
       width: diameter,
-      // alignment: Alignment.center,
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,

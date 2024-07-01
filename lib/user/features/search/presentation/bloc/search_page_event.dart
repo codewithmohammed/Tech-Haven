@@ -15,13 +15,29 @@ abstract class SearchPageEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
 final class GetAllCartProductsEvent extends SearchPageEvent {}
+
+final class GetAllCategoriesEventForFilter extends SearchPageEvent {}
+
 class SearchProductsEvent extends SearchPageEvent {
   final String? query;
-  // final bool isFirstTime;
+  final bool forFilter;
+  final double minPrice;
+  final double maxPrice;
+  final String? brand;
+  final String? mainCateogry;
+  final String? subCategory;
+  final String? variantCategory;
 
-  const SearchProductsEvent(this.query);
-
+  const SearchProductsEvent(this.query,
+      {required this.forFilter,
+      this.maxPrice = 0,
+      this.brand,
+      this.minPrice = 0,
+      this.mainCateogry,
+      this.subCategory,
+      this.variantCategory});
 }
 
 final class UpdateProductToFavoriteSearchPageEvent extends SearchPageEvent {

@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:tech_haven/core/common/domain/usecase/get_all_brands.dart';
 import 'package:tech_haven/core/entities/category.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/delete_product.dart';
-import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_brands.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/get_all_category.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/register_new_product.dart';
 import 'package:tech_haven/vendor/features/registerproduct/domain/usecase/update_existing_product.dart';
@@ -43,7 +43,7 @@ class RegisterProductBloc
     });
     // on<EmitRegisterProductPageIniti
     on<GetAllCategoryEvent>(_onGetAllCategoryEvent);
-    on<GetAllBrandEvent>(_onGetAllBrandEvent);
+    // on<GetAllBrandEvent>(_onGetAllBrandEvent);
     on<RegisterNewProductEvent>(_onRegisterNewProductEvent);
     on<DeleteTheProductEvent>(_onDeleteTheProductEvent);
     on<UpdateExistingProductEvent>(_onUpdateExistingProductEvent);
@@ -151,17 +151,18 @@ class RegisterProductBloc
         allCategoryModel: allCategoryModel!, allBrandModel: allBrandModel!));
   }
 
-  FutureOr<void> _onGetAllBrandEvent(
-      GetAllBrandEvent event, Emitter<RegisterProductState> emit) async {
-    final allbrands = await _getAllBrands(NoParams());
+  // FutureOr<void> _onGetAllBrandEvent(
+  //     GetAllBrandEvent event, Emitter<RegisterProductState> emit) async {
+  //   final allbrands = await _getAllBrands(NoParams());
 
-    allbrands
-        .fold((failure) => emit(GetAllBrandsFailed(message: failure.message)),
-            (success) {
-      isBrandLoaded = true;
-      return emit(GetAllBrandsSuccess(listOfBrands: success));
-    });
-  }
+  //   allbrands
+  //       .fold((failure) => emit(GetAllBrandsFailed(message: failure.message)),
+  //           (success) {
+  //     print('slkjfslkd');
+  //     isBrandLoaded = true;
+  //     return emit(GetAllBrandsSuccess(listOfBrands: success));
+  //   });
+  // }
 
   FutureOr<void> _onOnChangeDynamicFormEvent(
       OnChangeDynamicFormEvent event, Emitter<RegisterProductState> emit) {

@@ -80,6 +80,7 @@ dependencies:
   shimmer: ^3.0.0
   smooth_page_indicator: ^1.1.0
   swipe_to: ^1.0.6
+  syncfusion_flutter_sliders: 25.1.35
   uuid: ^4.3.3
 
 dev_dependencies:

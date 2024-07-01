@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
@@ -86,31 +88,28 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                         //   attributeCount++;
                         // });
                       },
-                      onPressedCrossIcon: () {
-                        if (widget.productImagesLink != null) {
-                          setState(() {
-                            widget.deletedImagesIndex.add(index);
-                          });
-                        } else {
-                          setState(() {
-                            if (widget.productImages.containsKey(index + 1)) {
-                              final value = widget.productImages[index + 1];
-                              widget.productImages[index] = value!;
-                              widget.productImages.remove(index + 1);
-                            } else {
-                              widget.productImages.remove(index);
-                            }
-                          });
-                        }
-                      },
                       containerWidth: 80,
                       centerWidget: Stack(
                         alignment: Alignment.center,
                         children: [
                           widget.productImagesLink != null
-                              ? Image.network(
-                                  widget.productImagesLink![index]!.first
-                                      .imageURL,
+                              ? CachedNetworkImage(
+                                  imageUrl: widget.productImagesLink![index]!
+                                      .first.imageURL,
+                                  placeholder: (context, url) =>
+                                      Shimmer.fromColors(
+                                    baseColor: Colors.grey.shade100,
+                                    highlightColor: Colors.grey.shade300,
+                                    child: Container(
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  fit: BoxFit
+                                      .cover, // You can adjust this based on your requirement
                                 )
                               : Image.file(
                                   widget.productImages[index]!.first,
@@ -143,6 +142,23 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                             ),
                         ],
                       ),
+                      onPressedCrossIcon: () {
+                        if (widget.productImagesLink != null) {
+                          setState(() {
+                            widget.deletedImagesIndex.add(index);
+                          });
+                        } else {
+                          setState(() {
+                            if (widget.productImages.containsKey(index + 1)) {
+                              final value = widget.productImages[index + 1];
+                              widget.productImages[index] = value!;
+                              widget.productImages.remove(index + 1);
+                            } else {
+                              widget.productImages.remove(index);
+                            }
+                          });
+                        }
+                      },
                       crossIcon: (widget.deletedImagesIndex.contains(index) &&
                               (widget.productImagesLink != null))
                           ? false
@@ -165,7 +181,11 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                       radius: 20,
                     ),
                     onTapCenterWidget: () {
-                      // print(widget.productImages.length);
+                      if (widget.productImagesLink != null) {
+                        setState(() {
+                          widget.deletedImagesIndex.add(0);
+                        });
+                      }
                       selectImage(widget.productImages.length);
                     },
                     onPressedCrossIcon: () {}),
@@ -207,8 +227,23 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                   child: InkWell(
                     child: Center(
                       child: widget.productImagesLink != null
-                          ? Image.network(
-                              widget.productImagesLink![mainIndex]![0].imageURL)
+                          ? CachedNetworkImage(
+                              imageUrl: widget
+                                  .productImagesLink![mainIndex]![0].imageURL,
+                              placeholder: (context, url) => Shimmer.fromColors(
+                                baseColor: Colors.grey.shade100,
+                                highlightColor: Colors.grey.shade300,
+                                child: Container(
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  color: AppPallete.whiteColor,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              fit: BoxFit
+                                  .cover, // Adjust this based on your requirement
+                            )
                           : Image.file(
                               widget.productImages[mainIndex]!.first,
                             ),
@@ -242,10 +277,24 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                               },
                               containerWidth: 150,
                               centerWidget: widget.productImagesLink != null
-                                  ? Image.network(
-                                      widget
+                                  ? CachedNetworkImage(
+                                      imageUrl: widget
                                           .productImagesLink![mainIndex]![index]
                                           .imageURL,
+                                      placeholder: (context, url) =>
+                                          Shimmer.fromColors(
+                                        baseColor: Colors.grey.shade100,
+                                        highlightColor: Colors.grey.shade300,
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: double.infinity,
+                                          color: AppPallete.whiteColor,
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                      fit: BoxFit
+                                          .cover, // Adjust this based on your requirement
                                     )
                                   : Image.file(
                                       widget.productImages[mainIndex]![index],

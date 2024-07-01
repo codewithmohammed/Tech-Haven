@@ -42,6 +42,7 @@ class FavoritePage extends StatelessWidget {
     //   '5',
     // ];
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const AppBarSearchBar(
         favouriteIconNeeded: false,
         backButton: true,

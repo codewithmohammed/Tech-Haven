@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/notification/presentation/widgets/tab_text.dart';
 import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
@@ -28,6 +29,9 @@ class ManageProductPage extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            if (state is ManageProductLoadingState) {
+              return const Loader();
+            }
             if (state is GetAllProductsSuccess) {
               return Scaffold(
                 appBar: const VendorAppBar(

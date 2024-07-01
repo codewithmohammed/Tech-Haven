@@ -144,6 +144,20 @@ class DataSourceImpl implements DataSource {
     }
   }
 
+    @override
+  Future<List<CategoryModel>> getAllBrands() async {
+    try {
+      final allBrands = await firebaseFirestore.collection('brand').get();
+      List<CategoryModel> listOfBrandModels = [];
+      for (var brand in allBrands.docs) {
+        listOfBrandModels.add(CategoryModel.fromJson(brand.data()));
+      }
+      return listOfBrandModels;
+    } catch (e) {
+      throw ServerException(e.toString());
+    }
+  }
+
   @override
   Future<List<CategoryModel>> getAllCategory(bool refresh) async {
     if (mainCategories.isNotEmpty && !refresh) {
