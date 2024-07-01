@@ -35,7 +35,7 @@ dependencies:
   build_runner: ^2.4.9
   cached_network_image: ^3.3.1
   carousel_slider: ^4.2.1
-  cloud_firestore: ^5.0.2
+  cloud_firestore: 4.17.5
   country_picker: ^2.0.25
   cupertino_icons: ^1.0.6
   currency_picker: ^2.0.21
@@ -43,8 +43,8 @@ dependencies:
   easy_debounce: ^2.0.3
   equatable: ^2.0.5
   firebase_auth: ^4.18.0
-  firebase_core: ^2.27.2
-  firebase_storage: ^11.6.11
+  firebase_core: ^2.32.0
+  firebase_storage: ^11.7.7
   fl_chart: ^0.67.0
   flutter:
     sdk: flutter
