@@ -46,17 +46,17 @@ final class DeleteProductFailed extends RegisterProductPageActionState {
   DeleteProductFailed({required this.message});
 }
 
-final class AllBrandsPageState extends RegisterProductPageState {}
+// final class AllBrandsPageState extends RegisterProductPageState {}
 
-final class GetAllBrandsSuccess extends AllBrandsPageState {
-  final List<Category> listOfBrands;
-  GetAllBrandsSuccess({required this.listOfBrands});
-}
+// final class GetAllBrandsSuccess extends AllBrandsPageState {
+//   final List<Category> listOfBrands;
+//   GetAllBrandsSuccess({required this.listOfBrands});
+// }
 
-final class GetAllBrandsFailed extends AllBrandsPageState {
-  final String message;
-  GetAllBrandsFailed({required this.message});
-}
+// final class GetAllBrandsFailed extends AllBrandsPageState {
+//   final String message;
+//   GetAllBrandsFailed({required this.message});
+// }
 
 final class DynamicFormState extends RegisterProductPageState {}
 
