@@ -186,7 +186,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
             );
           }
         }
-
+        // print('object');
         context.read<CheckoutBloc>().add(SubmitPaymentFormEvent(
               address: addressController.text,
               pin: pinController.text,
@@ -210,128 +210,149 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
         child: BlocConsumer<CheckoutBloc, CheckoutState>(
           // listenWhen: (previous, current) => current is AddressSelectState,
           listener: (context, state) {
+            // print(state);
             if (state is SaveUserAddressFailed) {
               Fluttertoast.showToast(msg: state.message);
-            } else if (state is SaveUserAddressSuccess) {
+            }
+            if (state is SaveUserAddressSuccess) {
               Fluttertoast.showToast(msg: 'New Location is added SuccessFully');
             }
-          },
-          buildWhen: (previous, current) => current is GetAllUserAddressState,
-          builder: (context, addressLoadState) {
-            if (addressLoadState is AddressLoaded) {
-              stringAddresses =
-                  addressLoadState.addresses.map((e) => e.line1).toList();
-              stringAddresses.add('UnSelect Location');
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    // if (addressLoadState is AddressLoaded)
-                    // BlocBuilder<CheckoutBloc, CheckoutState>(
-                    // buildWhen: (previous, current) =>
-                    //     current is AddressSelectState,
-                    // builder: (context, state) {
-                    // if(state is AddressSelected){
-
-                    // }
-                    // return
-                    CustomDropDown<String>(
-                        searchEditingController: addressSearchEditingController,
-                        hintText: 'Select Address',
-                        items: stringAddresses,
-                        currentItem: selectedAddress?.line1,
-                        onChanged: (selectedAddress) {
-                          setState(() {
-                            if (selectedAddress != null &&
-                                addressLoadState.addresses
-                                    .map((e) => e.line1)
-                                    .contains(selectedAddress)) {
-                              this.selectedAddress = addressLoadState.addresses
-                                  .firstWhere((element) =>
-                                      element.line1 == selectedAddress);
-                              addressController.text =
-                                  this.selectedAddress!.line1;
-                              pinController.text =
-                                  this.selectedAddress!.postalCode;
-                              cityController.text = this.selectedAddress!.city;
-                              stateController.text =
-                                  this.selectedAddress!.state;
-                              countryController.text =
-                                  this.selectedAddress!.country;
-                            } else {
-                              addressController.clear();
-                              pinController.clear();
-                              cityController.clear();
-                              stateController.clear();
-                              countryController.clear();
-                              this.selectedAddress = null;
-                            }
-                          });
-                        }),
-                    //   },
-                    // ),
-                    CustomTextFormField(
-                      enabled: selectedAddress == null,
-                      labelText: 'Address',
-                      hintText: 'Enter Your Address',
-                      textEditingController: addressController,
-                    ),
-                    CustomTextFormField(
-                      enabled: selectedAddress == null,
-                      labelText: 'Country',
-                      hintText: 'Enter Your Country',
-                      textEditingController: countryController,
-                    ),
-                    CustomTextFormField(
-                      enabled: selectedAddress == null,
-                      labelText: 'State',
-                      hintText: 'Enter Your State',
-                      textEditingController: stateController,
-                    ),
-                    CustomTextFormField(
-                      enabled: selectedAddress == null,
-                      labelText: 'City',
-                      hintText: 'Enter Your City',
-                      textEditingController: cityController,
-                    ),
-                    CustomTextFormField(
-                      enabled: selectedAddress == null,
-                      labelText: 'PIN',
-                      hintText: 'Enter Your PIN',
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      textEditingController: pinController,
-                    ),
-                    CustomTextFormField(
-                      enabled: false,
-                      labelText: 'Currency',
-                      hintText: 'Enter Your Currency',
-                      textEditingController: currencyController,
-                    ),
-                    CustomTextFormField(
-                      enabled: false,
-                      labelText: 'Total Amount',
-                      hintText: 'Enter Your Amount',
-                      textEditingController: amountController,
-                    ),
-                    const SizedBox(height: 20),
-                    RoundedRectangularButton(
-                      isLoading:
-                          context.read<CheckoutBloc>().state is CheckoutLoading,
-                      title: 'SUBMIT PAYMENT',
-                      onPressed: () {
-                        if (context.read<CheckoutBloc>().state
-                            is! CheckoutLoading) {
-                          submitForm();
-                        } else {
-                          Fluttertoast.showToast(msg: 'Please Wait');
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              );
+            if (state is AddressFailed) {
+              Fluttertoast.showToast(msg: "You don't have saved address yet");
             }
-            return const Loader();
+          },
+
+          builder: (context, addressLoadState) {
+            // if (addressLoadState is AddressLoaded) {
+            //   stringAddresses =
+            //       addressLoadState.addresses.map((e) => e.line1).toList();
+            stringAddresses.add('UnSelect Location');
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  // if (addressLoadState is AddressLoaded)
+                  // BlocBuilder<CheckoutBloc, CheckoutState>(
+                  // buildWhen: (previous, current) =>
+                  //     current is AddressSelectState,
+                  // builder: (context, state) {
+                  // if(state is AddressSelected){
+
+                  // }
+                  // return
+                  BlocBuilder<CheckoutBloc, CheckoutState>(
+                    buildWhen: (previous, current) =>
+                        current is GetAllUserAddressState,
+                    builder: (context, state) {
+                      if (addressLoadState is AddressLoaded) {
+                        stringAddresses = addressLoadState.addresses
+                            .map((e) => e.line1)
+                            .toList();
+                        stringAddresses.add('UnSelect Location');
+                        return CustomDropDown<String>(
+                            searchEditingController:
+                                addressSearchEditingController,
+                            hintText: 'Select Address',
+                            items: stringAddresses,
+                            currentItem: selectedAddress?.line1,
+                            onChanged: (selectedAddress) {
+                              setState(() {
+                                if (selectedAddress != null &&
+                                    addressLoadState.addresses
+                                        .map((e) => e.line1)
+                                        .contains(selectedAddress)) {
+                                  this.selectedAddress = addressLoadState
+                                      .addresses
+                                      .firstWhere((element) =>
+                                          element.line1 == selectedAddress);
+                                  addressController.text =
+                                      this.selectedAddress!.line1;
+                                  pinController.text =
+                                      this.selectedAddress!.postalCode;
+                                  cityController.text =
+                                      this.selectedAddress!.city;
+                                  stateController.text =
+                                      this.selectedAddress!.state;
+                                  countryController.text =
+                                      this.selectedAddress!.country;
+                                } else {
+                                  addressController.clear();
+                                  pinController.clear();
+                                  cityController.clear();
+                                  stateController.clear();
+                                  countryController.clear();
+                                  this.selectedAddress = null;
+                                }
+                              });
+                            });
+                      }
+                      return Container();
+                    },
+                  ),
+                  //   },
+                  // ),
+                  CustomTextFormField(
+                    enabled: selectedAddress == null,
+                    labelText: 'Address',
+                    hintText: 'Enter Your Address',
+                    textEditingController: addressController,
+                  ),
+                  CustomTextFormField(
+                    enabled: selectedAddress == null,
+                    labelText: 'Country',
+                    hintText: 'Enter Your Country',
+                    textEditingController: countryController,
+                  ),
+                  CustomTextFormField(
+                    enabled: selectedAddress == null,
+                    labelText: 'State',
+                    hintText: 'Enter Your State',
+                    textEditingController: stateController,
+                  ),
+                  CustomTextFormField(
+                    enabled: selectedAddress == null,
+                    labelText: 'City',
+                    hintText: 'Enter Your City',
+                    textEditingController: cityController,
+                  ),
+                  CustomTextFormField(
+                    enabled: selectedAddress == null,
+                    labelText: 'PIN',
+                    hintText: 'Enter Your PIN',
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    textEditingController: pinController,
+                  ),
+                  CustomTextFormField(
+                    enabled: false,
+                    labelText: 'Currency',
+                    hintText: 'Enter Your Currency',
+                    textEditingController: currencyController,
+                  ),
+                  CustomTextFormField(
+                    enabled: false,
+                    labelText: 'Total Amount',
+                    hintText: 'Enter Your Amount',
+                    textEditingController: amountController,
+                  ),
+                  const SizedBox(height: 20),
+                  RoundedRectangularButton(
+                    isLoading:
+                        context.read<CheckoutBloc>().state is CheckoutLoading,
+                    title: 'SUBMIT PAYMENT',
+                    onPressed: () {
+                      if (context.read<CheckoutBloc>().state
+                          is! CheckoutLoading) {
+                        submitForm();
+                      } else {
+                        Fluttertoast.showToast(msg: 'Please Wait');
+                      }
+                    },
+                  ),
+                ],
+              ),
+            );
+            // }
+            // return const Loader();
           },
         ),
       ),

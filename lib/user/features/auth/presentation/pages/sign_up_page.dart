@@ -253,7 +253,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             InkWell(
                               onTap: () {
                                 GoRouter.of(context)
-                                    .pushNamed(AppRouteConstants.signinPage);
+                                    .pushReplacementNamed(AppRouteConstants.signinPage);
                               },
                               child: const Text(
                                 'Sign in',

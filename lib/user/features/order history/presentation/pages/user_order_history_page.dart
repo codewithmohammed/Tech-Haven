@@ -20,14 +20,12 @@ class UserOrderHistoryPage extends StatelessWidget {
         extendBodyBehindAppBar: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
-
-          
           leading: const BackButton(
-          // color: Colors.white,
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
-        ),
+            // color: Colors.white,
+            style: ButtonStyle(
+                backgroundColor:
+                    MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
+          ),
           title: const Text('Your Order History'),
           centerTitle: true,
         ),
@@ -38,6 +36,12 @@ class UserOrderHistoryPage extends StatelessWidget {
             } else if (state is UserOrderHistoryLoading) {
               return const Loader();
             } else if (state is UserOrderHistoryLoaded) {
+              if (state.orders.isEmpty) {
+                return const Center(
+                  child: Text(
+                      "You haven't bought anything so far from this store"),
+                );
+              }
               return Container(
                   alignment: Alignment.topCenter,
                   child: Accordion(

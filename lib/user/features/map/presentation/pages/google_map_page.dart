@@ -22,7 +22,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   TextEditingController locationTextEditingController = TextEditingController();
   TextEditingController apartmentHouseNumberTextEditingController =
       TextEditingController();
-  TextEditingController emailAdressTextEditingController =
+  TextEditingController emailAddressTextEditingController =
       TextEditingController();
   TextEditingController specificAddressTextEditingController =
       TextEditingController();
@@ -42,7 +42,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   void dispose() {
     locationTextEditingController.dispose();
     apartmentHouseNumberTextEditingController.dispose();
-    emailAdressTextEditingController.dispose();
+    emailAddressTextEditingController.dispose();
     specificAddressTextEditingController.dispose();
     phoneNumberTextEditingController.dispose();
     nameTextEditingController.dispose();
@@ -87,7 +87,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                     state.user!.phoneNumber!;
               }
               nameTextEditingController.text = state.user!.username!;
-              emailAdressTextEditingController.text = state.user!.email!;
+              emailAddressTextEditingController.text = state.user!.email!;
               Fluttertoast.showToast(msg: state.message);
             }
           }
@@ -100,7 +100,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           //     phoneNumberTextEditingController.text = state.user!.phoneNumber!;
 
           //     nameTextEditingController.text = state.user!.username!;
-          //     emailAdressTextEditingController.text = state.user!.email!;
+          //     emailAddressTextEditingController.text = state.user!.email!;
           //   }
           // }
           if (state is GetLocationDetailsSuccess) {
@@ -108,11 +108,11 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
               if (state.user.phoneNumber != null) {
                 phoneNumberTextEditingController.text = state.user.phoneNumber!;
               }
+              emailAddressTextEditingController.text = state.user.email!;
               nameTextEditingController.text = state.user.username!;
               locationTextEditingController.text = state.location!.location;
               apartmentHouseNumberTextEditingController.text =
                   state.location!.apartmentHouseNumber;
-
               specificAddressTextEditingController.text =
                   state.location!.addressInstructions;
             }
@@ -150,7 +150,15 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                           labelText: 'Phone Number',
                           hintText: '+ 000 00 000 0000',
                           textEditingController:
-                              phoneNumberTextEditingController),
+                              phoneNumberTextEditingController),CustomTextFormField(
+                        enabled: false,
+                        durationMilliseconds: 500,
+                        labelText: 'Email Address',
+                        hintText: 'john@example.com',
+                        textEditingController:
+                            emailAddressTextEditingController,
+                        validator: Validator.validateEmail,
+                      ),
                       CustomTextFormField(
                         enabled: state is UpdateLocationDetailsLoading
                             ? false
@@ -160,7 +168,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         hintText: 'e.h. building name,street #',
                         textEditingController: locationTextEditingController,
                         validator: Validator.validateEmptyField,
-                      ),
+                      ),  
                       CustomTextFormField(
                         enabled: state is UpdateLocationDetailsLoading
                             ? false
@@ -172,16 +180,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             apartmentHouseNumberTextEditingController,
                         validator: Validator.validateEmptyField,
                       ),
-                      CustomTextFormField(
-                        enabled: state is UpdateLocationDetailsLoading
-                            ? false
-                            : true,
-                        durationMilliseconds: 500,
-                        labelText: 'Email Address',
-                        hintText: 'john@example.com',
-                        textEditingController: emailAdressTextEditingController,
-                        validator: Validator.validateEmail,
-                      ),
+                    
                       CustomTextFormField(
                         enabled: state is UpdateLocationDetailsLoading
                             ? false
@@ -225,7 +224,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                                     apartmentHouseNumberTextEditingController
                                         .text,
                                 emailAdress:
-                                    emailAdressTextEditingController.text,
+                                    emailAddressTextEditingController.text,
                                 addressInstructions:
                                     specificAddressTextEditingController.text));
                       }

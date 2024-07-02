@@ -44,7 +44,6 @@ dependencies:
   equatable: ^2.0.5
   firebase_auth: ^4.18.0
   firebase_core: ^2.27.2
-  firebase_messaging: ^14.7.21
   firebase_storage: ^11.6.11
   fl_chart: ^0.67.0
   flutter:
@@ -80,7 +79,7 @@ dependencies:
   shimmer: ^3.0.0
   smooth_page_indicator: ^1.1.0
   swipe_to: ^1.0.6
-  syncfusion_flutter_sliders: ^26.1.40
+  syncfusion_flutter_sliders: 25.1.35
   uuid: ^4.3.3
 
 dev_dependencies:
@@ -148,7 +147,7 @@ flutter:
     - assets/icons/publish.svg
     - assets/icons/share.svg
     - assets/icons/star.svg
-    - assets/lotties/otp-lottie.json
+    - assets/lotties/otp_lottie.json
     - assets/lotties/sign_up_lottie.json
     - assets/icons/star_half.svg
     - assets/lotties/sign_in_lottie.json
@@ -165,6 +164,7 @@ flutter:
     - assets/icons/angle_right.svg
     - assets/icons/outlined_star.svg
     - assets/icons/question_mark.svg
+    - assets/lotties/forget_password.json
     - assets/icons/arrow_right_exit.svg
     - assets/icons/language.svg
     - assets/icons/translate.svg

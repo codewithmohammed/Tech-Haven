@@ -52,11 +52,11 @@ final class HorizontalProductListViewState extends HomePageState {}
 final class HorizontalProductsListViewHomeSuccess
     extends HorizontalProductListViewState {
   final List<Product> listOfProducts;
-  final List<String> listOfFavoritedProducts;
+  // final List<String> listOfFavoritedProducts;
 
   HorizontalProductsListViewHomeSuccess({
     required this.listOfProducts,
-    required this.listOfFavoritedProducts,
+    // required this.listOfFavoritedProducts,
   });
 }
 
@@ -104,6 +104,7 @@ final class CartLoadedFailedHomeState extends ProductCartHomeState {
   CartLoadedFailedHomeState({required this.message});
 }
 
+
 final class ProductUpdatedToCartHomeSuccess extends ProductCartHomeState {
   final bool updatedSuccess;
   ProductUpdatedToCartHomeSuccess({required this.updatedSuccess});
@@ -114,19 +115,45 @@ final class ProductUpdatedToCartHomeFailed extends ProductCartHomeState {
   ProductUpdatedToCartHomeFailed({required this.message});
 }
 
-final class UpdateProductToFavoriteState extends HomePageState {}
+
+final class ProductFavoriteHomeState extends HomePageState {}
+
+final class FavoriteLoadingHomeState extends ProductFavoriteHomeState {}
+
+final class FavoriteLoadedSuccessHomeState extends ProductFavoriteHomeState {
+  final List<String> listOfFavorite;
+  FavoriteLoadedSuccessHomeState({required this.listOfFavorite});
+}
+
+final class FavoriteLoadedFailedHomeState extends ProductFavoriteHomeState {
+  final String message;
+  FavoriteLoadedFailedHomeState({required this.message});
+}
 
 final class ProductUpdatedToFavoriteHomeSuccess
-    extends UpdateProductToFavoriteState {
+    extends ProductFavoriteHomeState {
   final bool updatedSuccess;
   ProductUpdatedToFavoriteHomeSuccess({required this.updatedSuccess});
 }
 
 final class ProductUpdatedToFavoriteHomeFailed
-    extends UpdateProductToFavoriteState {
+    extends ProductFavoriteHomeState {
   final String message;
   ProductUpdatedToFavoriteHomeFailed({required this.message});
 }
+
+// final class ProductUpdatedToFavoriteHomeSuccess extends ProductFavoriteHomeState {
+//   final bool updatedSuccess;
+//   ProductUpdatedToFavoriteHomeSuccess({required this.updatedSuccess});
+// }
+
+// final class ProductUpdatedToFavoriteHomeFailed extends ProductFavoriteHomeState {
+//   final String message;
+//   ProductUpdatedToFavoriteHomeFailed({required this.message});
+// }
+
+// final class UpdateProductToFavoriteState extends HomePageState {}
+
 
 final class GetAllSubCategoriesState extends HomePageState {}
 

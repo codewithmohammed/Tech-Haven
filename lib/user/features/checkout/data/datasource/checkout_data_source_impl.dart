@@ -38,6 +38,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       required String country,
       required String currency,
       required String amount}) async {
+    // print('sdfsdfsd');
     try {
       final url = Uri.parse('https://api.stripe.com/v1/payment_intents');
       final secretKey = dotenv.env["STRIPE_SECRET_KEY"]!;
@@ -79,15 +80,16 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       await initPaymentSheet(data: jsonResponse);
       return paymentIntentModel;
     } on StripeException catch (e) {
-    if (e.error.code == FailureCode.Canceled) {
-      throw const ServerException('The payment flow has been canceled. Please try again.');
-    } else {
-      throw ServerException('Stripe error: ${e.error.toString()}');
+      if (e.error.code == FailureCode.Canceled) {
+        throw const ServerException(
+            'The payment flow has been canceled. Please try again.');
+      } else {
+        throw ServerException('Stripe error: ${e.error.toString()}');
+      }
+    } catch (e) {
+      // Handle other errors
+      throw ServerException('Unknown error: ${e.toString()}');
     }
-  } catch (e) {
-    // Handle other errors
-    throw ServerException('Unknown error: ${e.toString()}');
-  }
   }
 // import 'package:stripe/stripe.dart';
 
@@ -106,16 +108,17 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           style: ThemeMode.dark,
         ),
       );
-     } on StripeException catch (e) {
-    if (e.error.code == FailureCode.Canceled) {
-      throw const ServerException('The payment flow has been canceled. Please try again.');
-    } else {
-      throw ServerException('Stripe error: ${ e.error.toString()}');
+    } on StripeException catch (e) {
+      if (e.error.code == FailureCode.Canceled) {
+        throw const ServerException(
+            'The payment flow has been canceled. Please try again.');
+      } else {
+        throw ServerException('Stripe error: ${e.error.toString()}');
+      }
+    } catch (e) {
+      // Handle other errors
+      throw ServerException('Unknown error: ${e.toString()}');
     }
-  } catch (e) {
-    // Handle other errors
-    throw ServerException('Unknown error: ${e.toString()}');
-  }
   }
 
   @override
@@ -127,15 +130,16 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
 
       return paymentIntentModel;
     } on StripeException catch (e) {
-    if (e.error.code == FailureCode.Canceled) {
-      throw const ServerException('The payment flow has been canceled. Please try again.');
-    } else {
-      throw ServerException('Stripe error: ${e.error.toString()}');
+      if (e.error.code == FailureCode.Canceled) {
+        throw const ServerException(
+            'The payment flow has been canceled. Please try again.');
+      } else {
+        throw ServerException('Stripe error: ${e.error.toString()}');
+      }
+    } catch (e) {
+      // Handle other errors
+      throw ServerException('Unknown error: ${e.toString()}');
     }
-  } catch (e) {
-    // Handle other errors
-    throw ServerException('Unknown error: ${e.toString()}');
-  }
   }
 
   @override
@@ -190,7 +194,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
               subCategoryID: product.subCategoryID,
               variantCategory: product.variantCategory,
               variantCategoryID: product.variantCategoryID,
-              overview: product.overview, color: 0,
+              overview: product.overview,
+              color: 0,
             ).toJson());
 
         if (mapOfvendorProducts[product.vendorID] != null) {
@@ -200,7 +205,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
             productID: carts[i].productID,
             quantity: carts[i].productCount,
             price: product.prize,
-            productName: product.name, color: 0,
+            productName: product.name,
+            color: 0,
           ));
         } else {
           mapOfvendorProducts[product.vendorID] = [
@@ -210,7 +216,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
               vendorID: product.vendorID,
               productID: carts[i].productID,
               quantity: carts[i].productCount,
-              price: product.prize, color: 0,
+              price: product.prize,
+              color: 0,
             )
           ];
         }
@@ -221,7 +228,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           productID: carts[i].productID,
           shippingCharge: product.shippingCharge ?? 0,
           quantity: carts[i].productCount,
-          price: product.prize, color: 0,
+          price: product.prize,
+          color: 0,
         ));
       }
       // print('iterate finished');
@@ -279,7 +287,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           state: paymentIntentModel.shippingModel.addressModel.state,
           country: paymentIntentModel.shippingModel.addressModel.country,
           currency: paymentIntentModel.currency,
-          totalAmount: paymentIntentModel.amount, 
+          totalAmount: paymentIntentModel.amount,
         );
         await firebaseFirestore
             .collection('vendorOrders')
@@ -305,7 +313,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         country: paymentIntentModel.shippingModel.addressModel.country,
         currency: paymentIntentModel.currency,
         // shippingCharge: ,
-        totalAmount: paymentIntentModel.amount, 
+        totalAmount: paymentIntentModel.amount,
       );
       final PaymentModel paymentModel = PaymentModel(
         userID: user.uid!,
@@ -322,7 +330,6 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           .collection('orderDetails')
           .doc(orderID)
           .set(orderModel.toJson());
-
 
       return 'success';
     } catch (e) {

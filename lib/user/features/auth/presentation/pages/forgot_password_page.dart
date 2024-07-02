@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -67,6 +68,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             alignment: Alignment.bottomCenter,
             children: [
               Container(),
+              Positioned(
+                top: 25,
+                child: ConstrainedBox(
+                    constraints: BoxConstraints.tight(const Size(415, 415)),
+                    child: Lottie.asset('assets/lotties/forget_password.json')),
+              ),
               Positioned(
                 bottom: -50,
                 child: AuthenticationContainer(

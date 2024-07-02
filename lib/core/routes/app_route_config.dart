@@ -28,7 +28,7 @@ import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.
 import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/pages/user_order_history_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
-import 'package:tech_haven/user/features/ordredProducts/presentation/widgets/ordered_products_page.dart';
+import 'package:tech_haven/user/features/ordredProducts/presentation/pages/ordered_products_page.dart';
 import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
 import 'package:tech_haven/user/features/profile%20edit/presentation/pages/profile_edit_page.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
@@ -85,11 +85,11 @@ class AppRoutes {
           otpParams: state.extra as OTPParams,
         ),
       ),
-      _buildPageRoute(
-        name: AppRouteConstants.newPasswordPage,
-        path: '/new_password_page',
-        child: const NewPasswordPage(),
-      ),
+      // _buildPageRoute(
+      //   name: AppRouteConstants.newPasswordPage,
+      //   path: '/new_password_page',
+      //   child: const NewPasswordPage(),
+      // ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.signupWelcomePage,
         path: '/sign_up_welcome_page/:initialUsername',

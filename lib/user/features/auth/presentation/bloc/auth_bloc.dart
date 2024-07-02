@@ -164,15 +164,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> _onSignUpWithGoogleAccount(
       SignUpWithGoogleAccount event, Emitter<AuthState> emit) async {
     final res = await _googleSignUp(NoParams());
-    res.fold((failure) => emit(AuthGoogleSignUpFailed(message: '')),
-        (success) => emit(AuthGoogleSignUpSuccess(message: '')));
+    res.fold((failure) => emit(AuthGoogleSignUpFailed(message: failure.message)),
+        (success) => emit(AuthGoogleSignUpSuccess(message: success)));
   }
 
   FutureOr<void> _onSignInWithGoogleAccount(
       SignInWithGoogleAccount event, Emitter<AuthState> emit) async {
     final res = await _googleSignUp(NoParams());
-    res.fold((failure) => emit(AuthGoogleSignInFailed(message: '')),
-        (success) => emit(AuthGoogleSignInSuccess(message: '')));
+    res.fold((failure) => emit(AuthGoogleSignInFailed(message: failure.message)),
+        (success) => emit(AuthGoogleSignInSuccess(message: success)));
   }
 
   FutureOr<void> _onForgotPasswordSendEmailEvent(

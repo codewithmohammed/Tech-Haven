@@ -86,6 +86,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
   FutureOr<void> _onSubmitPaymentFormEvent(
       SubmitPaymentFormEvent event, Emitter<CheckoutState> emit) async {
+    // print('object');
     User? user;
     final userData = await _getUserData(NoParams());
     userData.fold(
@@ -94,6 +95,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       user = success;
     });
     if (user != null) {
+      print(event.address);
       final result = await _submitPaymentForm(SubmitPaymentFormParams(
           name: user!.username!,
           address: event.address,
@@ -243,6 +245,8 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         city: event.city,
         state: event.state,
         country: event.country));
-    result.fold((failure) => emit(SaveUserAddressFailed(message: failure.message  )), (success) => emit(SaveUserAddressSuccess()));
+    result.fold(
+        (failure) => emit(SaveUserAddressFailed(message: failure.message)),
+        (success) => emit(SaveUserAddressSuccess()));
   }
 }

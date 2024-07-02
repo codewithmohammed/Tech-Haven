@@ -44,3 +44,8 @@ final class GetProductForAdvertisement extends HomePageEvent {
   final String productID;
   const GetProductForAdvertisement({required this.productID});
 }
+
+
+final class GetAllFavoriteHomeEvent extends HomePageEvent{
+
+}

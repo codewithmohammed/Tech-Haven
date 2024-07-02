@@ -481,30 +481,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.13.0"
-  firebase_messaging:
-    dependency: "direct main"
-    description:
-      name: firebase_messaging
-      sha256: fd3ae8fd4e1687cac1f5fd788c7f8e69bb1bbb2e3947cdc4c46f304e19ed2f07
-      url: "https://pub.dev"
-    source: hosted
-    version: "14.7.21"
-  firebase_messaging_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_messaging_platform_interface
-      sha256: df3c04f31f365cc78052c65678d3b437bfc644b29f63f9e533ba459a6606143a
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.29"
-  firebase_messaging_web:
-    dependency: transitive
-    description:
-      name: firebase_messaging_web
-      sha256: b60252e4b77a66f3466190d2679b7144218199442c00e6ced45c2963484e9db0
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.7.1"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -1470,18 +1446,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "87cbeee9b916e013eedbd43bf07f253c34dd5184c88325e5227434e0f8b89a68"
+      sha256: e17dcc7a1d0701e84d0a83c0040503cdcc6c72e44db0d733ab4c706dd5b8b9f8
       url: "https://pub.dev"
     source: hosted
-    version: "26.1.40"
+    version: "25.2.7"
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_sliders
-      sha256: e2ef998ad1078f564487c56b8b57ecd2215f8b87ea4acc9e4743b9502cb980fc
+      sha256: "8879cc5f3b343d3c402704f783d2bdb5c800b29c8d8cf6654cb041f5a3641830"
       url: "https://pub.dev"
     source: hosted
-    version: "26.1.40"
+    version: "25.1.35"
   synchronized:
     dependency: transitive
     description:

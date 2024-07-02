@@ -26,7 +26,7 @@ class HorizontalProductListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void updateProductToFavorite(Product product, bool isLiked) {
-      // print('updating the favorite');
+      print('updating the favorite');
       context.read<HomePageBloc>().add(
             UpdateProductToFavoriteHomeEvent(
               product: product,
@@ -111,6 +111,15 @@ class HorizontalProductListView extends StatelessWidget {
 
                   context.read<HomePageBloc>().add(GetAllCartHomeEvent());
                 }
+                if (state is FavoriteLoadedFailedHomeState) {
+                  showSnackBar(
+                      context: context,
+                      title: 'Oh',
+                      content: state.message,
+                      contentType: ContentType.failure);
+
+                  context.read<HomePageBloc>().add(GetAllFavoriteHomeEvent());
+                }
                 if (state is ProductUpdatedToFavoriteHomeSuccess) {
                   Fluttertoast.showToast(
                       msg: "The Favorites is Updated Successfully",
@@ -119,6 +128,8 @@ class HorizontalProductListView extends StatelessWidget {
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
                       fontSize: 16.0);
+                  print('object');
+                  context.read<HomePageBloc>().add(GetAllFavoriteHomeEvent());
                 }
                 if (state is ProductUpdatedToFavoriteHomeFailed) {
                   Fluttertoast.showToast(
@@ -128,6 +139,7 @@ class HorizontalProductListView extends StatelessWidget {
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
                       fontSize: 16.0);
+                  context.read<HomePageBloc>().add(GetAllFavoriteHomeEvent());
                 }
               },
               builder: (context, listState) {
@@ -144,13 +156,31 @@ class HorizontalProductListView extends StatelessWidget {
                       final currentProduct = listState.listOfProducts[index];
                       //column since the container is divided into two
                       return ProductCard(
-                        likeButton: CustomLikeButton(
-                          isFavorited: listState.listOfFavoritedProducts
-                              .contains(currentProduct.productID),
-                          onTapFavouriteButton: (bool isLiked) async {
-                            updateProductToFavorite(
-                                listState.listOfProducts[index], isLiked);
-                            return isLiked ? false : true;
+                        likeButton: BlocBuilder<HomePageBloc, HomePageState>(
+                          buildWhen: (previous, current) =>
+                              current is ProductFavoriteHomeState,
+                          builder: (context, favstate) {
+                            if (favstate is FavoriteLoadedSuccessHomeState) {
+                              return CustomLikeButton(
+                                isFavorited: favstate.listOfFavorite
+                                    .contains(currentProduct.productID),
+                                onTapFavouriteButton: (bool isLiked) async {
+                                  print(favstate
+                                      is FavoriteLoadedSuccessHomeState);
+                                  updateProductToFavorite(
+                                      listState.listOfProducts[index], isLiked);
+                                  return isLiked ? false : true;
+                                },
+                              );
+                            }
+                            return CustomLikeButton(
+                              isFavorited: false,
+                              onTapFavouriteButton: (bool isLiked) async {
+                                // updateProductToFavorite(
+                                //     listState.listOfProducts[index], isLiked);
+                                return isLiked ? false : true;
+                              },
+                            );
                           },
                         ),
                         onTapCard: () {

@@ -118,7 +118,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                 top: 25,
                 child: ConstrainedBox(
                     constraints: BoxConstraints.tight(const Size(415, 415)),
-                    child: Lottie.asset(' assets/lotties/otp-lottie.json')),
+                    child: Lottie.asset('assets/lotties/otp_lottie.json')),
               ),
               Container(),
               Positioned(

@@ -70,6 +70,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     on<UpdateProductToFavoriteHomeEvent>(
       _onUpdateProductToFavoriteEvent,
     );
+    on<GetAllFavoriteHomeEvent>(_onGetAllFavoriteHomeEvent);
     on<GetProductForAdvertisement>(_onGetProductForAdvertisement);
     on<UpdateProductToCartHomeEvent>(
       _onUpdateProductToCartEvent,
@@ -81,20 +82,16 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   FutureOr<void> _onGetAllProductsEvent(
       GetAllProductsEvent event, Emitter<HomePageState> emit) async {
-    List<String> listOfAllFavorited = [];
+    // List<String> listOfAllFavorited = [];
 
-    final allFavorited = await _getAllFavorite(NoParams());
-    allFavorited.fold((failure) {
-    }, (success) {
-      listOfAllFavorited = success; // Assigning value here
-    });
     final allProducts = await _getAllProduct(NoParams());
     allProducts.fold((failure) {
-      emit(HorizontalProductsListViewHomeFailed(message: failure.message));
+      return emit(
+          HorizontalProductsListViewHomeFailed(message: failure.message));
     }, (success) {
-      emit(HorizontalProductsListViewHomeSuccess(
+      return emit(HorizontalProductsListViewHomeSuccess(
         listOfProducts: success,
-        listOfFavoritedProducts: listOfAllFavorited,
+        // listOfFavoritedProducts: listOfAllFavorited,
       ));
     });
 
@@ -105,6 +102,18 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
             )), (success) {
       return emit(CartLoadedSuccessHomeState(
         listOfCart: success,
+      ));
+    });
+
+    final favorite = await _getAllFavorite(NoParams());
+
+    favorite.fold(
+        (failure) => emit(FavoriteLoadedFailedHomeState(
+              message: failure.message,
+            )), (success) {
+      print(success);
+      return emit(FavoriteLoadedSuccessHomeState(
+        listOfFavorite: success,
       ));
     });
   }
@@ -133,9 +142,10 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
     result.fold(
         (failure) => emit(ProductUpdatedToFavoriteHomeFailed(
               message: failure.message,
-            )),
-        (success) =>
-            emit(ProductUpdatedToFavoriteHomeSuccess(updatedSuccess: success)));
+            )), (success) {
+      print(success);
+      return emit(ProductUpdatedToFavoriteHomeSuccess(updatedSuccess: success));
+    });
   }
 
   FutureOr<void> _onUpdateProductToCartEvent(
@@ -163,6 +173,21 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
             )), (success) {
       return emit(CartLoadedSuccessHomeState(
         listOfCart: success,
+      ));
+    });
+  }
+
+  FutureOr<void> _onGetAllFavoriteHomeEvent(
+      GetAllFavoriteHomeEvent event, Emitter<HomePageState> emit) async {
+    // emit(CartLoadingHomeState());
+    final result = await _getAllFavorite(NoParams());
+
+    result.fold(
+        (failure) => emit(FavoriteLoadedFailedHomeState(
+              message: failure.message,
+            )), (success) {
+      return emit(FavoriteLoadedSuccessHomeState(
+        listOfFavorite: success,
       ));
     });
   }

@@ -269,7 +269,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // Sign out the current user before signing in with a different email
         await firebaseAuth.signOut();
       }
-
+      // print(phoneNumber);
       // Fetch the user document from Firestore based on the provided phone number
       final QuerySnapshot snapshot = await firebaseFirestore
           .collection('users')

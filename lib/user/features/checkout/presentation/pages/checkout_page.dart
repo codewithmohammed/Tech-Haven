@@ -24,11 +24,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
   @override
   Widget build(BuildContext context) {
     late PaymentIntentModel paymentIntentModel;
-    // context.read<CheckoutBloc>().add(CheckoutInitialEmit());
-
-    context
-        .read<CheckoutBloc>()
-        .add(LoadAddresses()); // Replace 'USER_ID' with actual user ID
+    context.read<CheckoutBloc>().add(CheckoutInitialEmit());
+    // print(context.read<CheckoutBloc>().state);
+    context.read<CheckoutBloc>().add(LoadAddresses());
     return Scaffold(
       // Appbar
       appBar: const AppBarSearchBar(

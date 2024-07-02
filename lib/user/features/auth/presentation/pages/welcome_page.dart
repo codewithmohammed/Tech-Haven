@@ -57,22 +57,22 @@ class WelcomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          FadeInDown(
-                            from: 50,
-                            duration: const Duration(
-                                milliseconds:
-                                    Constants.normalAnimationMilliseconds),
-                            curve: Curves.easeOut,
-                            child: InkWell(
-                              onTap: () {},
-                              child: const Text('Skip'),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     FadeInDown(
+                      //       from: 50,
+                      //       duration: const Duration(
+                      //           milliseconds:
+                      //               Constants.normalAnimationMilliseconds),
+                      //       curve: Curves.easeOut,
+                      //       child: InkWell(
+                      //         onTap: () {},
+                      //         child: const Text('Skip'),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       const SizedBox(
                         height: 20,
                       ),

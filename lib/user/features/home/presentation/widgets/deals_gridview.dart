@@ -20,29 +20,31 @@ class DealsGridView extends StatelessWidget {
     super.key,
   });
 
-  void updateProductToFavorite(
-      BuildContext context, Product product, bool isLiked) {
-    context.read<HomePageBloc>().add(
-          UpdateProductToFavoriteHomeEvent(
-            product: product,
-            isFavorited: !isLiked,
-          ),
-        );
-  }
-
-  void updateProductToCart(BuildContext context,
-      {required Product product, required Cart? cart, required int itemCount}) {
-    context.read<HomePageBloc>().add(
-          UpdateProductToCartHomeEvent(
-            product: product,
-            itemCount: itemCount,
-            cart: cart,
-          ),
-        );
-  }
-
   @override
   Widget build(BuildContext context) {
+    void updateProductToFavorite(Product product, bool isLiked) {
+      print('object');
+      context.read<HomePageBloc>().add(
+            UpdateProductToFavoriteHomeEvent(
+              product: product,
+              isFavorited: !isLiked,
+            ),
+          );
+    }
+
+    void updateProductToCart(BuildContext context,
+        {required Product product,
+        required Cart? cart,
+        required int itemCount}) {
+      context.read<HomePageBloc>().add(
+            UpdateProductToCartHomeEvent(
+              product: product,
+              itemCount: itemCount,
+              cart: cart,
+            ),
+          );
+    }
+
     return Container(
       height: 670,
       margin: const EdgeInsets.only(
@@ -116,67 +118,7 @@ class DealsGridView extends StatelessWidget {
             child: BlocConsumer<HomePageBloc, HomePageState>(
               buildWhen: (previous, current) =>
                   current is HorizontalProductListViewState,
-              listener: (context, state) {
-                if (state is HorizontalProductsListViewHomeFailed) {
-                  return showSnackBar(
-                      context: context,
-                      title: 'Oh',
-                      content: state.message,
-                      contentType: ContentType.failure);
-                }
-
-                if (state is CartLoadedFailedHomeState) {
-                  showSnackBar(
-                      context: context,
-                      title: 'Oh',
-                      content: state.message,
-                      contentType: ContentType.failure);
-
-                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
-                }
-                if (state is ProductUpdatedToCartHomeSuccess) {
-                  Fluttertoast.showToast(
-                      msg: "The Cart is Updated Successfully",
-                      toastLength: Toast.LENGTH_SHORT,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-
-                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
-                }
-                if (state is ProductUpdatedToCartHomeFailed) {
-                  Fluttertoast.showToast(
-                      msg: state.message,
-                      toastLength: Toast.LENGTH_SHORT,
-                
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-
-                  context.read<HomePageBloc>().add(GetAllCartHomeEvent());
-                }
-                if (state is ProductUpdatedToFavoriteHomeSuccess) {
-                  Fluttertoast.showToast(
-                      msg: "The Favorites is Updated Successfully",
-                      toastLength: Toast.LENGTH_SHORT,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                }
-                if (state is ProductUpdatedToFavoriteHomeFailed) {
-                  Fluttertoast.showToast(
-                      msg: state.message,
-                      toastLength: Toast.LENGTH_SHORT,
-                
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-                }
-              },
+              listener: (context, state) {},
               builder: (context, listState) {
                 if (listState is HorizontalProductsListViewHomeSuccess) {
                   return GridView.builder(
@@ -192,13 +134,31 @@ class DealsGridView extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final currentProduct = listState.listOfProducts[index];
                       return DealsProductCard(
-                        likeButton: CustomLikeButton(
-                          isFavorited: listState.listOfFavoritedProducts
-                              .contains(currentProduct.productID),
-                          onTapFavouriteButton: (bool isLiked) async {
-                            updateProductToFavorite(context,
-                                listState.listOfProducts[index], isLiked);
-                            return isLiked ? false : true;
+                        likeButton: BlocBuilder<HomePageBloc, HomePageState>(
+                          buildWhen: (previous, current) =>
+                              current is ProductFavoriteHomeState,
+                          builder: (context, favstate) {
+                            // print(favstate is FavoriteLoadedSuccessHomeState);
+                            if (favstate is FavoriteLoadedSuccessHomeState) {
+                              print(favstate.listOfFavorite);
+                              return CustomLikeButton(
+                                isFavorited: favstate.listOfFavorite
+                                    .contains(currentProduct.productID),
+                                onTapFavouriteButton: (bool isLiked) async {
+                                  updateProductToFavorite(
+                                      listState.listOfProducts[index], isLiked);
+                                  return isLiked ? false : true;
+                                },
+                              );
+                            }
+                            return CustomLikeButton(
+                              isFavorited: false,
+                              onTapFavouriteButton: (bool isLiked) async {
+                                // updateProductToFavorite(
+                                //     listState.listOfProducts[index], isLiked);
+                                return isLiked ? false : true;
+                              },
+                            );
                           },
                         ),
                         onTapCard: () {

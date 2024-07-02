@@ -17,7 +17,7 @@ class SendRequestForVendor
     return await registerVendorRepository.sendRequestForVendor(
       businessPicture: params.businessPicture,
       user: params.user,
-      physicalAddress: params.businessName,
+      physicalAddress: params.physicalAddress,
       businessName: params.businessName,
       accountNumber: params.accountNumber,
     );
