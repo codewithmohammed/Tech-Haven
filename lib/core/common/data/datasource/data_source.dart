@@ -41,7 +41,7 @@ abstract class DataSource {
       required String addressInstructions});
 
   Future<LocationModel?> getCurrentLocationDetails();
-
+  Future<List<CategoryModel>> getAllBrands();
   Future<String> updateProductFields(
       String productID, Map<String, dynamic> updates);
 

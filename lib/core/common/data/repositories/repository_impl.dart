@@ -9,6 +9,7 @@ import 'package:tech_haven/core/common/data/model/product_review_model.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/common/domain/repository/repository.dart';
 import 'package:tech_haven/core/entities/cart.dart';
+import 'package:tech_haven/core/entities/category.dart';
 import 'package:tech_haven/core/entities/image.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/review.dart';
@@ -287,6 +288,17 @@ class RepositoryImpl implements Repository {
     try {
       final result =
           await dataSource.getProductReviewModel(productID: productID);
+      return right(result);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Category>>> getAllBrands()async {
+    try {
+      final result =
+          await dataSource.getAllBrands();
       return right(result);
     } on ServerException catch (e) {
       return left(Failure(e.message));

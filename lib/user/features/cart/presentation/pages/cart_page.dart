@@ -80,10 +80,10 @@ class CartPage extends StatelessWidget {
                                   title: 'Cart',
                                   itemsCount:
                                       '${calculateTotalQuantity(listOfCarts: listState.listOfCarts)} Items',
-                                  totalPrize: calculateTotalPrize(
+                                  totalPrize: 'AED ${calculateTotalPrize(
                                     products: listState.listOfProducts,
                                     carts: listState.listOfCarts,
-                                  ).toString(),
+                                  )}',
                                 )
                               : const Center(
                                   child: Text('Your Cart is Empty'),

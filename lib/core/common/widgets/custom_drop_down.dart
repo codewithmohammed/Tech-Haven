@@ -2,15 +2,14 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropDown<T> extends StatelessWidget {
-  const CustomDropDown({
-    super.key,
-    required this.items,
-    required this.currentItem,
-    this.onChanged,
-    this.hintText = 'Select Item',
-    required this.searchEditingController
-  });
-final TextEditingController searchEditingController;
+  const CustomDropDown(
+      {super.key,
+      required this.items,
+      required this.currentItem,
+      this.onChanged,
+      this.hintText = 'Select Item',
+      required this.searchEditingController});
+  final TextEditingController searchEditingController;
   final List<T> items;
   final T? currentItem;
   final void Function(T?)? onChanged;
@@ -32,7 +31,10 @@ final TextEditingController searchEditingController;
             .map((item) => DropdownMenuItem(
                   value: item,
                   child: Text(
-                    item.toString().split('.').last, // Display only enum value name
+                    item
+                        .toString()
+                        .split('.')
+                        .last, // Display only enum value name
                     style: const TextStyle(
                       fontSize: 14,
                     ),
@@ -59,38 +61,39 @@ final TextEditingController searchEditingController;
         menuItemStyleData: const MenuItemStyleData(
           height: 40,
         ),
-        dropdownSearchData: DropdownSearchData(
-          searchController: searchEditingController,
-          searchInnerWidgetHeight: 50,
-          searchInnerWidget: Container(
-            height: 50,
-            padding: const EdgeInsets.only(
-              top: 8,
-              bottom: 4,
-              right: 8,
-              left: 8,
-            ),
-            child: TextFormField(
-              expands: true,
-              maxLines: null,
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 8,
-                ),
-                hintText: 'Search for an item...',
-                hintStyle: const TextStyle(fontSize: 12),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-          ),
-          searchMatchFn: (item, searchValue) {
-            return item.value.toString().contains(searchValue);
-          },
-        ),
+        // dropdownSearchData: DropdownSearchData(
+        //   searchController: searchEditingController,
+        //   searchInnerWidgetHeight: 50,
+        //   searchInnerWidget: Container(
+        //     height: 50,
+        //     padding: const EdgeInsets.only(
+        //       top: 8,
+        //       bottom: 4,
+        //       right: 8,
+        //       left: 8,
+        //     ),
+        //     child: TextFormField(
+        //       expands: true,
+        //       maxLines: null,
+        //       decoration: InputDecoration(
+        //         isDense: true,
+        //         contentPadding: const EdgeInsets.symmetric(
+        //           horizontal: 10,
+        //           vertical: 8,
+        //         ),
+        //         hintText: 'Search for an item...',
+        //         hintStyle: const TextStyle(fontSize: 12),
+        //         border: OutlineInputBorder(
+        //           borderRadius: BorderRadius.circular(8),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        //   searchMatchFn: (item, searchValue) {
+
+        //     return item.value.toString().contains(searchValue);
+        //   },
+        // ),
       ),
     );
   }
