@@ -64,7 +64,9 @@ class _SearchPageState extends State<SearchPage> {
           deliveryPlaceNeeded: false,
           enabled: true,
           onChanged: (query) {
-            context.read<SearchPageBloc>().add(SearchProductsEvent(query));
+            context.read<SearchPageBloc>().add(SearchProductsEvent(
+                  query,
+                ));
           },
         ),
       ),
