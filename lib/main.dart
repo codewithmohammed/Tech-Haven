@@ -60,7 +60,7 @@ void main() async {
       BlocProvider(
         create: (context) => serviceLocator<AuthBloc>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (context) => serviceLocator<ReviewPageBloc>(),
       ),
       BlocProvider(
@@ -75,7 +75,7 @@ void main() async {
       BlocProvider(
         create: (_) => serviceLocator<SearchCategoryCubit>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<UserOrderHistoryPageBloc>(),
       ),
       BlocProvider(
@@ -105,7 +105,7 @@ void main() async {
       BlocProvider(
         create: (_) => serviceLocator<CheckoutBloc>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<ProfileBloc>(),
       ),
       BlocProvider(
@@ -117,30 +117,31 @@ void main() async {
       BlocProvider(
         create: (_) => serviceLocator<ProductsPageBloc>(),
       ),
-        BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<RegisterVendorBloc>(),
-      ),  BlocProvider(
+      ),
+      BlocProvider(
         create: (_) => serviceLocator<VendorOrderPageBloc>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<VendorOrderDetailsBloc>(),
       ),
-         BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<RevenueBloc>(),
       ),
-        BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<UserOrderPageBloc>(),
       ),
-        BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<SearchPageBloc>(),
       ),
-        BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<ReviewEnterPageBloc>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<ProfileEditPageBloc>(),
       ),
-       BlocProvider(
+      BlocProvider(
         create: (_) => serviceLocator<OrderedProductsPageBloc>(),
       ),
     ],
