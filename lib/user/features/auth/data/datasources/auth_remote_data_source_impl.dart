@@ -228,6 +228,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.toString());
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.toString());
+    } catch (e) {
+      throw ServerException(e.toString());
     }
   }
 
@@ -310,7 +312,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
-        throw const ServerException('The Google user is not initiated');
+        throw Exception('The Google user is not initiated');
       }
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -325,7 +327,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final user = userCredential.user;
 
       if (user == null) {
-        throw const ServerException('User data is not available');
+        throw Exception('User data is not available');
       }
 
       // Check if the user already exists in Firestore
@@ -358,7 +360,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
 
       return user.email!;
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.toString());
     } catch (e) {
+      print(e);
       throw ServerException(e.toString());
     }
   }
@@ -387,11 +392,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         return 'Change your Password from the link that is send to your email $email';
       } else {
-        throw const ServerException(
+        throw Exception(
           "User doesn't Exist with this phone number",
         );
       }
       // return potentialVerificationId!;
+    } on FirebaseAuthException catch (e) {
+      throw ServerException(e.toString());
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
