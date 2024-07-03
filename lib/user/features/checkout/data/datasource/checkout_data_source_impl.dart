@@ -18,7 +18,6 @@ import 'package:tech_haven/core/entities/user.dart' as model;
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_source.dart';
-import 'package:tech_haven/user/features/checkout/data/models/address_model.dart';
 import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 import 'package:uuid/uuid.dart';
 // import 'package:tech_haven/user/features/checkout/domain/usecase/send_order.dart';
@@ -340,6 +339,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
   @override
   Future<List<AddressDetailsModel>> getAllUserAddress(
       {required String userID}) async {
+    print(userID);
     try {
       @override
       final snapshot = await firebaseFirestore
@@ -347,7 +347,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           .doc(userID)
           .collection('addresses')
           .get();
-
+      print(snapshot.docs.isNotEmpty);
       return snapshot.docs
           .map((doc) => AddressDetailsModel.fromJson(doc.data()))
           .toList();
@@ -367,7 +367,8 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       const uuid = Uuid();
       final addressID = uuid.v4();
 
-      final addressDetailsModel = AddressModel(
+      final addressDetailsModel = AddressDetailsModel(
+        addressID: addressID,
         city: city,
         country: country,
         line1: address,

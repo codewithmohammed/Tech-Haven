@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
-import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
@@ -46,18 +45,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               content: state.message,
               contentType: ContentType.failure,
             );
+            GoRouter.of(context).pop();
           }
           if (state is UserEmailForgotPasswordSuccess) {
             showSnackBar(
               context: context,
               title: 'Oh',
               content: state.message,
-              contentType: ContentType.failure,
+              contentType: ContentType.success,
             );
 
-            GoRouter.of(context).pushReplacementNamed(
-              AppRouteConstants.signinPage,
-            );
+            GoRouter.of(context).pop();
           }
         },
         builder: (context, state) {

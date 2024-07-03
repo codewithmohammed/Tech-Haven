@@ -34,68 +34,86 @@ class OrderTile extends StatelessWidget {
         child: Column(
           children: [
             //row for the first bar
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //clock icon
-                Row(
-                  children: [
-                    const SvgIcon(
-                      icon: CustomIcons.clockSvg,
-                      radius: 20,
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    //column for the text
-                    Column(
-                      children: [
-                        const Text(
-                          'Date',
-                          style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          formatDateTime(order.orderDate),
-                          style: const TextStyle(
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                //text for the amount
-                Column(
-                  children: [
-                    const Text(
-                      'Status',
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      order.products.length == order.deliveredProducts.length
-                          ? 'Waiting for Admin to Deliver \n the Products'
-                          : '${order.products.length - order.deliveredProducts.length} product is on pending',
-                      overflow: TextOverflow.fade,
-                    ),
-                  ],
-                ),
-                Text(
-                  'Total Amount \n${changeAmountDecimal(amount: order.totalAmount)}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.blue,
-                    overflow: TextOverflow.fade,
-                  ),
-                )
-              ],
+          Row(
+  crossAxisAlignment: CrossAxisAlignment.start, // Adjust crossAxisAlignment as needed
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    // Clock icon and date
+    Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const SvgIcon(
+          icon: CustomIcons.clockSvg,
+          radius: 20,
+        ),
+        const SizedBox(
+          width: 20,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Date',
+              style: TextStyle(
+                color: Colors.blueGrey,
+                fontSize: 16,
+              ),
             ),
+            Text(
+              formatDateTime(order.orderDate),
+              style: const TextStyle(
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+    // Status information
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Status',
+            style: TextStyle(
+              color: Colors.blueGrey,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            order.products.length == order.deliveredProducts.length
+                ? 'Waiting for Admin to Deliver the Products'
+                : '${order.products.length - order.deliveredProducts.length} product${order.products.length - order.deliveredProducts.length > 1 ? 's are' : ' is'} pending',
+            overflow: TextOverflow.fade,
+          ),
+        ],
+      ),
+    ),
+    // Total amount
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Total Amount',
+            style: TextStyle(
+              color: Colors.blue,
+              fontSize: 16,
+            ),
+          ),
+          Text(
+            changeAmountDecimal(amount: order.totalAmount),
+            style: const TextStyle(
+              fontSize: 12,
+            ),
+            overflow: TextOverflow.fade,
+          ),
+        ],
+      ),
+    ),
+  ],
+),
             //divider
             const Divider(),
             //text for the order details

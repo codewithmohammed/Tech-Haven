@@ -164,8 +164,8 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    // context.read<CheckoutBloc>().add(LoadAddresses());
     final formKey = GlobalKey<FormState>();
-
     void submitForm() {
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
@@ -226,7 +226,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
             // if (addressLoadState is AddressLoaded) {
             //   stringAddresses =
             //       addressLoadState.addresses.map((e) => e.line1).toList();
-            stringAddresses.add('UnSelect Location');
+            // stringAddresses.add('UnSelect Location');
             return SingleChildScrollView(
               child: Column(
                 children: [
@@ -243,6 +243,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
                     buildWhen: (previous, current) =>
                         current is GetAllUserAddressState,
                     builder: (context, state) {
+                      print(state);
                       if (addressLoadState is AddressLoaded) {
                         stringAddresses = addressLoadState.addresses
                             .map((e) => e.line1)

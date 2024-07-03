@@ -42,6 +42,7 @@ class _SignInPageState extends State<SignInPage> {
           // listenWhen: (previous, current) => current is SignInPageActionState,
           // buildWhen: (previous, current) => current is AuthSignInPageState,
           listener: (context, state) {
+            print(state);
             if (state is AuthGoogleSignInSuccess) {
               GoRouter.of(context).pushReplacementNamed(
                 AppRouteConstants.mainPage,
@@ -58,8 +59,8 @@ class _SignInPageState extends State<SignInPage> {
               );
             }
             if (state is AuthSignInSuccess) {
-              GoRouter.of(context)
-                  .pushReplacementNamed(AppRouteConstants.mainPage);
+              print('object');
+              GoRouter.of(context).goNamed(AppRouteConstants.mainPage);
             }
             if (state is AuthSignInFailed) {
               showSnackBar(

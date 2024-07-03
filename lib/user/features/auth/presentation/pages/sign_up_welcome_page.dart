@@ -74,7 +74,7 @@ class SignUpWelcomePage extends StatelessWidget {
             );
           }
           if (state is CreateUserSuccess) {
-            GoRouter.of(context).pushNamed(AppRouteConstants.mainPage);
+            GoRouter.of(context).goNamed(AppRouteConstants.mainPage);
           }
           if (state is CreateUserFailed) {
             showSnackBar(

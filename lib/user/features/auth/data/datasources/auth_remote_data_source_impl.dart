@@ -291,7 +291,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // Navigate to the next screen or perform any desired action
       } else {
         throw const ServerException(
-          "User can't sign in",
+          "create an account first to sign in",
         );
       }
     } on FirebaseAuthException catch (e) {

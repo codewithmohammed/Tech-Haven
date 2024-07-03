@@ -174,6 +174,8 @@ class VendorOrderDetailsPage extends StatelessWidget {
                                           fontSize: 14,
                                         ),
                                         Text(
+                                            'Vendor Name :  ${state.listOfProducts[listIndex].vendorName} '),
+                                        Text(
                                             'Name :  ${state.listOfProducts[listIndex].name} '),
                                         Text(
                                             'Brand : ${state.listOfProducts[listIndex].brandName} '),

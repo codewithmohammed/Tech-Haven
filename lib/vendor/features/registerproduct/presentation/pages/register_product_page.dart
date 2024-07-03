@@ -121,7 +121,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       // if (!RegisterProductBloc.isCategoryLoaded) {print('I am here');
       // If data is not loaded and not loading, fetch the data
       BlocProvider.of<RegisterProductBloc>(context)
-          .add(GetAllCategoryEvent(refreshPage: false));
+          .add(GetAllCategoryEvent(refreshPage: true));
       // }
       // if (!RegisterProductBloc.isBrandLoaded) {
       //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());

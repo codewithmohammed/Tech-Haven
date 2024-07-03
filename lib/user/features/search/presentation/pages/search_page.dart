@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/custom_blur_button.dart';
@@ -219,7 +220,7 @@ void _showFilterBottomSheet(BuildContext context) {
                       const SizedBox(height: 16.0),
                       // BlocConsumer<SearchPageBloc, SearchPageState>(
                       // listener: (context, state) {TODO: implement listener
-                      // 
+                      //
                       // },
                       // buildWhen: (previous, current) =>
                       // current is FilterBottomSheetState,/
@@ -291,83 +292,102 @@ void _showFilterBottomSheet(BuildContext context) {
                     ],
                   );
                 }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Filter Products',
-                      // style: Theme.of(context).textTheme.headline6,
-                    ),
-                    const SizedBox(height: 16.0),
-                    SfRangeSlider(
-                      min: minPrice,
-                      max: maxPrice,
-                      values: currentRangeValues,
-                      onChanged: (SfRangeValues values) {
-                        setState(() {
-                          currentRangeValues = values;
-                        });
-                      },
-                      interval: 1500,
-                      showTicks: true,
-                      showLabels: true,
-                      enableTooltip: true,
-                      labelFormatterCallback: (actualValue, formattedText) {
-                        return actualValue.toStringAsFixed(0);
-                      },
-                      numberFormat: NumberFormat('AED'),
-                    ),
-                    const SizedBox(height: 16.0),
-                    // BlocConsumer<SearchPageBloc, SearchPageState>(
-                    // listener: (context, state) {
-                    // },
-                    // buildWhen: (previous, current) =>
-                    // current is FilterBottomSheetState,/
-                    // builder: (context, state) {
-                    // if (state is FilterAllCategoryLoadedSuccess) {
-                    // return
-                    // }
-                    // return Column(
-                    //   children: [
-                    //     CustomDropDown(
-                    //       items: const ['items', 'hgjh'],
-                    //       currentItem: null,
-                    //       searchEditingController: searchEditingController,
-                    //       onChanged: (p0) {},
-                    //     ),
-                    //     CustomDropDown(
-                    //       items: const ['items', 'hgjh'],
-                    //       currentItem: null,
-                    //       searchEditingController: searchEditingController,
-                    //       onChanged: (p0) {},
-                    //     ),
-                    //     CustomDropDown(
-                    //       items: const ['items', 'hgjh'],
-                    //       currentItem: null,
-                    //       searchEditingController: searchEditingController,
-                    //       onChanged: (p0) {},
-                    //     ),
-                    //   ],
-                    // );
-                    // },
-                    // ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // print(minPrice);
-                        // print(maxPrice);
-                        // Call the search event with price range
-                        context.read<SearchPageBloc>().add(SearchProductsEvent(
-                              null,
-                              forFilter: true,
-                              minPrice: currentRangeValues.start,
-                              maxPrice: currentRangeValues.end,
-                              // mainCateogry:
-                            ));
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Search'),
-                    ),
-                  ],
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey.shade100,
+                  highlightColor: Colors.grey.shade300,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Filter Products',
+                        // style: Theme.of(context).textTheme.headline6,
+                      ),
+                      const SizedBox(height: 16.0),
+                      SfRangeSlider(
+                        min: minPrice,
+                        max: maxPrice,
+                        values: currentRangeValues,
+                        onChanged: (SfRangeValues values) {
+                          setState(() {
+                            currentRangeValues = values;
+                          });
+                        },
+                        interval: 1500,
+                        showTicks: true,
+                        showLabels: true,
+                        enableTooltip: true,
+                        labelFormatterCallback: (actualValue, formattedText) {
+                          return actualValue.toStringAsFixed(0);
+                        },
+                        numberFormat: NumberFormat('AED'),
+                      ),
+                      const SizedBox(height: 16.0),
+                      // BlocConsumer<SearchPageBloc, SearchPageState>(
+                      // listener: (context, state) {TODO: implement listener
+                      //
+                      // },
+                      // buildWhen: (previous, current) =>
+                      // current is FilterBottomSheetState,/
+                      // builder: (context, state) {
+                      // if (state is FilterAllCategoryLoadedSuccess) {
+                      // return
+                      // }\
+                      CustomDropDown(
+                        items: [].map((e) => e.categoryName).toList(),
+                        currentItem: null,
+                        searchEditingController: searchEditingController,
+                      ),
+                      // DropDownWidgets(
+                      //     allCategories: state.allCategoryModel,
+                      //     categoryIndexes: categoryIndexes),
+                      // },
+                      // ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      SizedBox(
+                        height: 40,
+                        width: 150,
+                        child: PrimaryAppButton(
+                          onPressed: () {
+                            // print(state.allCategoryModel[categoryIndexes[0]!]);
+                            context
+                                .read<SearchPageBloc>()
+                                .add(SearchProductsEvent(
+                                  null,
+                                  forFilter: true,
+                                  minPrice: currentRangeValues.start,
+                                  maxPrice: currentRangeValues.end,
+                                  brand: brandValue,
+                                  // mainCateogry: categoryIndexes[0] != null
+                                  //     ? state
+                                  //         .allCategoryModel[categoryIndexes[0]!]
+                                  //         .categoryName
+                                  //     : null,
+                                  // subCategory: categoryIndexes[0] != null &&
+                                  //         categoryIndexes[1] != null
+                                  //     ? state
+                                  //         .allCategoryModel[categoryIndexes[0]!]
+                                  //         .subCategories[categoryIndexes[1]!]
+                                  //         .categoryName
+                                  //     : null,
+                                  // variantCategory: categoryIndexes[0] != null &&
+                                  //         categoryIndexes[1] != null &&
+                                  //         categoryIndexes[2] != null
+                                  //     ? state
+                                  //         .allCategoryModel[categoryIndexes[0]!]
+                                  //         .subCategories[categoryIndexes[1]!]
+                                  //         .subCategories[categoryIndexes[2]!]
+                                  //         .categoryName
+                                  //     : null,
+                                ));
+                            Navigator.pop(context);
+                          },
+                          buttonText: 'Search',
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
