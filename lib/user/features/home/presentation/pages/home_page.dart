@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/widgets/custom_sliver_appbar.dart';
-import 'package:tech_haven/user/features/favorite/presentation/bloc/favorite_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/advertisement_container.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/carousel_banner_container.dart';

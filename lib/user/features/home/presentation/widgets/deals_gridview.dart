@@ -55,11 +55,11 @@ class DealsGridView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 child: Row(
                   children: [
                     Text(
@@ -86,28 +86,28 @@ class DealsGridView extends StatelessWidget {
               SizedBox(
                 height: 25,
                 width: 125,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppPallete.blackColor,
-                    foregroundColor: AppPallete.whiteColor,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(
-                          5,
-                        ),
-                      ),
-                    ),
-                  ),
-                  child: const Text(
-                    'VIEW ALL',
-                    style: TextStyle(
-                      color: AppPallete.whiteColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+                // child: ElevatedButton(
+                //   onPressed: () {},
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: AppPallete.blackColor,
+                //     foregroundColor: AppPallete.whiteColor,
+                //     shape: const RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.all(
+                //         Radius.circular(
+                //           5,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                //   child: const Text(
+                //     'VIEW ALL',
+                //     style: TextStyle(
+                //       color: AppPallete.whiteColor,
+                //       fontSize: 12,
+                //       fontWeight: FontWeight.w700,
+                //     ),
+                //   ),
+                // ),
               )
             ],
           ),

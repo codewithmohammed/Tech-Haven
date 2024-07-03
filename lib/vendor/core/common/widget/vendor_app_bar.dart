@@ -33,21 +33,7 @@ class VendorAppBar extends StatelessWidget implements PreferredSizeWidget {
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
           ),
-          child: messageIcon && trailingIcon == null
-              ? CircularButton(
-                  onPressed: () {
-                    GoRouter.of(context)
-                        .pushNamed(AppRouteConstants.vendorChatPage);
-                  },
-                  circularButtonChild: const SvgIcon(
-                    icon: CustomIcons.messagesSvg,
-                    radius: 25,
-                  ),
-                  diameter: 50,
-                  color: AppPallete.whiteColor,
-                  shadow: false,
-                )
-              : trailingIcon != null
+          child: trailingIcon != null
                   ? CircularButton(
                       onPressed: onPressedTrailingIcon,
                       circularButtonChild: SvgIcon(
