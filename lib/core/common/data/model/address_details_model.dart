@@ -10,7 +10,6 @@ class AddressDetailsModel extends AddressDetails {
       required super.state});
 
   factory AddressDetailsModel.fromJson(Map<String, dynamic> json) {
-    print(json['addressID']);
     return AddressDetailsModel(
         addressID: json['addressID'],
         city: json['city'],

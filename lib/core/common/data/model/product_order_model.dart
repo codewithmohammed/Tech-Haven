@@ -17,14 +17,6 @@ class ProductOrderModel extends ProductOrder {
   });
 
   factory ProductOrderModel.fromJson(Map<String, dynamic> json) {
-    print('Raw JSON: $json');
-    print('Raw productName: ${json['productName']}');
-    print('Raw vendorID: ${json['vendorID']}');
-    print('Raw shippingCharge: ${json['shippingCharge']}');
-    print('Raw productID: ${json['productID']}');
-    print('Raw color: ${json['color']}');
-    print('Raw quantity: ${json['quantity']}');
-    print('Raw price: ${json['price']}');
     return ProductOrderModel(
       productName: json['productName'],
       vendorID: json['vendorID'],

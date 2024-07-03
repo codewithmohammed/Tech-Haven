@@ -111,7 +111,6 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         (failure) => emit(FavoriteLoadedFailedHomeState(
               message: failure.message,
             )), (success) {
-      print(success);
       return emit(FavoriteLoadedSuccessHomeState(
         listOfFavorite: success,
       ));
@@ -143,7 +142,6 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
         (failure) => emit(ProductUpdatedToFavoriteHomeFailed(
               message: failure.message,
             )), (success) {
-      print(success);
       return emit(ProductUpdatedToFavoriteHomeSuccess(updatedSuccess: success));
     });
   }

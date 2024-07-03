@@ -1,4 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,11 +8,9 @@ import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/utils/check_product_is_carted.dart';
-import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/deals_product_card.dart';
 
-import '../../../../../core/theme/app_pallete.dart';
 
 class DealsGridView extends StatelessWidget {
   const DealsGridView({
@@ -23,7 +20,6 @@ class DealsGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void updateProductToFavorite(Product product, bool isLiked) {
-      print('object');
       context.read<HomePageBloc>().add(
             UpdateProductToFavoriteHomeEvent(
               product: product,
@@ -140,7 +136,6 @@ class DealsGridView extends StatelessWidget {
                           builder: (context, favstate) {
                             // print(favstate is FavoriteLoadedSuccessHomeState);
                             if (favstate is FavoriteLoadedSuccessHomeState) {
-                              print(favstate.listOfFavorite);
                               return CustomLikeButton(
                                 isFavorited: favstate.listOfFavorite
                                     .contains(currentProduct.productID),

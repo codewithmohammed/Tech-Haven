@@ -339,7 +339,6 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
   @override
   Future<List<AddressDetailsModel>> getAllUserAddress(
       {required String userID}) async {
-    print(userID);
     try {
       @override
       final snapshot = await firebaseFirestore
@@ -347,7 +346,6 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           .doc(userID)
           .collection('addresses')
           .get();
-      print(snapshot.docs.isNotEmpty);
       return snapshot.docs
           .map((doc) => AddressDetailsModel.fromJson(doc.data()))
           .toList();

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tech_haven/core/common/widgets/custom_drop_down.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
-import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/entities/address_details.dart';
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
@@ -243,7 +242,6 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
                     buildWhen: (previous, current) =>
                         current is GetAllUserAddressState,
                     builder: (context, state) {
-                      print(state);
                       if (addressLoadState is AddressLoaded) {
                         stringAddresses = addressLoadState.addresses
                             .map((e) => e.line1)

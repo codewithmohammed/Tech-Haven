@@ -64,7 +64,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         // listenWhen: (previous, current) => current is SignUpPageActionState,
         // buildWhen: (previous, current) => current is AuthSignUpPageState,
-        listener: (context, state) {print(state);
+        listener: (context, state) {
           //showing a snackbar if the verification of mobile number failed
           if (state is OTPSendFailed) {
             showSnackBar(

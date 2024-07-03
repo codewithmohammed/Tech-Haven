@@ -10,7 +10,6 @@ import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/about%20product/presentation/pages/about_product_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
-import 'package:tech_haven/user/features/auth/presentation/pages/new_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_in_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_up_page.dart';
