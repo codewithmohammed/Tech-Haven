@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/common/widgets/custom_sliver_appbar.dart';
+import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/advertisement_container.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/carousel_banner_container.dart';
@@ -34,41 +36,69 @@ class _HomePageState extends State<HomePage> {
           slivers: [
             const CustomSliverAppBar(),
             SliverToBoxAdapter(
-              child: BlocBuilder<HomePageBloc, HomePageState>(
-                buildWhen: (previous, current) =>
-                    current is TrendingProductState,
-                builder: (context, state) {
-                  if (state is TrendingProductLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is TrendingProductLoaded) {
-                    // print(state.product.productName);
-                    return AdvertisementContainer(
-                        trendingProduct: state.product);
-                  } else if (state is TrendingProductError) {
-                    return Center(child: Text('Error: ${state.message}'));
-                  } else {
-                    return const AdvertisementContainer(trendingProduct: null);
-                  }
-                },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (Responsive.isDesktop(context) ||
+                      Responsive.isTablet(context))
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  BlocBuilder<HomePageBloc, HomePageState>(
+                    buildWhen: (previous, current) =>
+                        current is TrendingProductState,
+                    builder: (context, state) {
+                      if (state is TrendingProductLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is TrendingProductLoaded) {
+                        // print(state.product.productName);
+                        return ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 1000),
+                          child: AdvertisementContainer(
+                              trendingProduct: state.product),
+                        );
+                      } else if (state is TrendingProductError) {
+                        return Center(child: Text('Error: ${state.message}'));
+                      } else {
+                        return const AdvertisementContainer(
+                            trendingProduct: null);
+                      }
+                    },
+                  ),
+                  ConstrainedBox(
+                      constraints: BoxConstraints.tight(const Size(2000, 300)),
+                      child: const CarouselBannerContainer()),
+                  Center(
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 1000, // Adjust this value as needed
+                      ),
+                      child: const CategoryIconListView(),
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 1000, // Adjust this value as needed
+                      ),
+                      child: const HorizontalProductListView(
+                          // listOfProducts: state.listOfProducts,
+                          ),
+                    ),
+                  ),
+                  Center(
+                    child: Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: 1000, // Adjust this value as needed
+                      ),
+                      child: const DealsGridView(),
+                    ),
+                  ),
+                  const SizedBox(height: 80)
+                ],
               ),
             ),
-            const SliverToBoxAdapter(
-              child: CarouselBannerContainer(),
-            ),
-            const SliverToBoxAdapter(
-              child: CategoryIconListView(),
-            ),
-            const SliverToBoxAdapter(
-              child: HorizontalProductListView(
-                  // listOfProducts: state.listOfProducts,
-                  ),
-            ),
-            const SliverToBoxAdapter(
-              child: DealsGridView(),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 80),
-            )
           ],
         ),
       ),

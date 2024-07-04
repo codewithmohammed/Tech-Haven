@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +50,7 @@ class HorizontalProductListView extends StatelessWidget {
     }
 
     return Container(
+      alignment: Alignment.center,
       height: 360,
       margin: const EdgeInsets.only(
         top: 20,
@@ -145,141 +148,148 @@ class HorizontalProductListView extends StatelessWidget {
                   // if(listState.)
                   // print(listState.listOfProducts);
                   // print('object');
-                  return ListView.builder(
-                    // physics: const BouncingScrollPhysics(),
-                    scrollDirection:
-                        Axis.horizontal, // Set scroll direction to horizontal
-                    itemCount: listState.listOfProducts.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final currentProduct = listState.listOfProducts[index];
-                      //column since the container is divided into two
-                      return ProductCard(
-                        likeButton: BlocBuilder<HomePageBloc, HomePageState>(
-                          buildWhen: (previous, current) =>
-                              current is ProductFavoriteHomeState,
-                          builder: (context, favstate) {
-                            if (favstate is FavoriteLoadedSuccessHomeState) {
+                  return ScrollConfiguration(
+behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+  PointerDeviceKind.touch,
+  PointerDeviceKind.stylus,
+  PointerDeviceKind.mouse,
+},),
+                    child: ListView.builder(
+                      // physics: const BouncingScrollPhysics(),
+                      scrollDirection:
+                          Axis.horizontal, // Set scroll direction to horizontal
+                      itemCount: listState.listOfProducts.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final currentProduct = listState.listOfProducts[index];
+                        //column since the container is divided into two
+                        return ProductCard(
+                          likeButton: BlocBuilder<HomePageBloc, HomePageState>(
+                            buildWhen: (previous, current) =>
+                                current is ProductFavoriteHomeState,
+                            builder: (context, favstate) {
+                              if (favstate is FavoriteLoadedSuccessHomeState) {
+                                return CustomLikeButton(
+                                  isFavorited: favstate.listOfFavorite
+                                      .contains(currentProduct.productID),
+                                  onTapFavouriteButton: (bool isLiked) async {
+                                    updateProductToFavorite(
+                                        listState.listOfProducts[index], isLiked);
+                                    return isLiked ? false : true;
+                                  },
+                                );
+                              }
                               return CustomLikeButton(
-                                isFavorited: favstate.listOfFavorite
-                                    .contains(currentProduct.productID),
+                                isFavorited: false,
                                 onTapFavouriteButton: (bool isLiked) async {
-                                  updateProductToFavorite(
-                                      listState.listOfProducts[index], isLiked);
+                                  // updateProductToFavorite(
+                                  //     listState.listOfProducts[index], isLiked);
                                   return isLiked ? false : true;
                                 },
                               );
-                            }
-                            return CustomLikeButton(
-                              isFavorited: false,
-                              onTapFavouriteButton: (bool isLiked) async {
-                                // updateProductToFavorite(
-                                //     listState.listOfProducts[index], isLiked);
-                                return isLiked ? false : true;
-                              },
-                            );
+                            },
+                          ),
+                          onTapCard: () {
+                            GoRouter.of(context).pushNamed(
+                                AppRouteConstants.detailsPage,
+                                extra: currentProduct);
                           },
-                        ),
-                        onTapCard: () {
-                          GoRouter.of(context).pushNamed(
-                              AppRouteConstants.detailsPage,
-                              extra: currentProduct);
-                        },
-                        // isFavorited: listState.listOfFavoritedProducts
-                        //     .contains(currentProduct.productID),
-                        // index: index,
-                        isHorizontal: true,
-                        product: currentProduct,
-                        // onTapFavouriteButton: (bool isLiked) async {
-                        //   updateProductToFavorite(currentProduct, isLiked);
-                        //   return isLiked ? false : true;
-                        // },
-                        shoppingCartWidget:
-                            BlocBuilder<HomePageBloc, HomePageState>(
-                          buildWhen: (previous, current) =>
-                              current is ProductCartHomeState,
-                          builder: (context, cartState) {
-                            if (cartState is CartLoadedSuccessHomeState) {
-                              ///if index =  0, then it will return -1 if the product is not carted
-                              ///if index = 1, then it will return -1
-                              ///if index = 2 , then it will return -1
-                              ///
-                              ///if there is product it will return the cart index
-
-                              // final Product product =
-                              //     listState.listOfProducts[index];
-                              // final Cart cart = cartState.listOfCart.firstWhere(
-                              //   (cart) => cart.productID == product.productID,
-                              // );
-                              bool productIsCarted = false;
-                              final cartIndex = checkCurrentProductIsCarted(
-                                  product: listState.listOfProducts[index],
-                                  carts: cartState.listOfCart);
-
-                              if (cartIndex > -1) {
-                                productIsCarted = true;
+                          // isFavorited: listState.listOfFavoritedProducts
+                          //     .contains(currentProduct.productID),
+                          // index: index,
+                          isHorizontal: true,
+                          product: currentProduct,
+                          // onTapFavouriteButton: (bool isLiked) async {
+                          //   updateProductToFavorite(currentProduct, isLiked);
+                          //   return isLiked ? false : true;
+                          // },
+                          shoppingCartWidget:
+                              BlocBuilder<HomePageBloc, HomePageState>(
+                            buildWhen: (previous, current) =>
+                                current is ProductCartHomeState,
+                            builder: (context, cartState) {
+                              if (cartState is CartLoadedSuccessHomeState) {
+                                ///if index =  0, then it will return -1 if the product is not carted
+                                ///if index = 1, then it will return -1
+                                ///if index = 2 , then it will return -1
+                                ///
+                                ///if there is product it will return the cart index
+                    
+                                // final Product product =
+                                //     listState.listOfProducts[index];
+                                // final Cart cart = cartState.listOfCart.firstWhere(
+                                //   (cart) => cart.productID == product.productID,
+                                // );
+                                bool productIsCarted = false;
+                                final cartIndex = checkCurrentProductIsCarted(
+                                    product: listState.listOfProducts[index],
+                                    carts: cartState.listOfCart);
+                    
+                                if (cartIndex > -1) {
+                                  productIsCarted = true;
+                                }
+                    
+                                // print(productIsCarted);
+                    
+                                return ShoppingCartButton(
+                                  onTapPlusButton: () {
+                                    if (productIsCarted &&
+                                        cartState.listOfCart[cartIndex]
+                                                .productCount <=
+                                            currentProduct.quantity) {
+                                      updateProductToCart(
+                                        product: currentProduct,
+                                        cart: cartState.listOfCart[cartIndex],
+                                        itemCount: cartState.listOfCart[cartIndex]
+                                                .productCount +
+                                            1,
+                                      );
+                                      //if the product is not carted yet . then we increase it by one
+                                    } else if (!productIsCarted) {
+                                      updateProductToCart(
+                                        product: currentProduct,
+                                        cart: null,
+                                        itemCount: 1,
+                                      );
+                                    }
+                                  },
+                                  onTapMinusButton: () {
+                                    if (productIsCarted &&
+                                        cartState.listOfCart[cartIndex]
+                                                    .productCount -
+                                                1 >=
+                                            0) {
+                                      updateProductToCart(
+                                        product: currentProduct,
+                                        cart: cartState.listOfCart[cartIndex],
+                                        itemCount: cartState.listOfCart[cartIndex]
+                                                .productCount -
+                                            1,
+                                      );
+                                    }
+                                    //if there is no product carted and the user clicks '-' then we show a
+                                    if (!productIsCarted) {
+                                      Fluttertoast.showToast(
+                                        msg: 'Add Product To Cart First',
+                                      );
+                                    }
+                                  },
+                                  onTapCartButton: () {},
+                                  currentCount: productIsCarted
+                                      ? cartState
+                                          .listOfCart[cartIndex].productCount
+                                      : 0,
+                                  isLoading: false,
+                                );
                               }
-
-                              // print(productIsCarted);
-
-                              return ShoppingCartButton(
-                                onTapPlusButton: () {
-                                  if (productIsCarted &&
-                                      cartState.listOfCart[cartIndex]
-                                              .productCount <=
-                                          currentProduct.quantity) {
-                                    updateProductToCart(
-                                      product: currentProduct,
-                                      cart: cartState.listOfCart[cartIndex],
-                                      itemCount: cartState.listOfCart[cartIndex]
-                                              .productCount +
-                                          1,
-                                    );
-                                    //if the product is not carted yet . then we increase it by one
-                                  } else if (!productIsCarted) {
-                                    updateProductToCart(
-                                      product: currentProduct,
-                                      cart: null,
-                                      itemCount: 1,
-                                    );
-                                  }
-                                },
-                                onTapMinusButton: () {
-                                  if (productIsCarted &&
-                                      cartState.listOfCart[cartIndex]
-                                                  .productCount -
-                                              1 >=
-                                          0) {
-                                    updateProductToCart(
-                                      product: currentProduct,
-                                      cart: cartState.listOfCart[cartIndex],
-                                      itemCount: cartState.listOfCart[cartIndex]
-                                              .productCount -
-                                          1,
-                                    );
-                                  }
-                                  //if there is no product carted and the user clicks '-' then we show a
-                                  if (!productIsCarted) {
-                                    Fluttertoast.showToast(
-                                      msg: 'Add Product To Cart First',
-                                    );
-                                  }
-                                },
-                                onTapCartButton: () {},
-                                currentCount: productIsCarted
-                                    ? cartState
-                                        .listOfCart[cartIndex].productCount
-                                    : 0,
-                                isLoading: false,
+                              return const ShoppingCartButton(
+                                currentCount: 0,
+                                isLoading: true,
                               );
-                            }
-                            return const ShoppingCartButton(
-                              currentCount: 0,
-                              isLoading: true,
-                            );
-                          },
-                        ),
-                      );
-                    },
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   );
                 }
                 return ListView.builder(

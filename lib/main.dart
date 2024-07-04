@@ -33,15 +33,15 @@ import 'package:tech_haven/vendor/features/order/presentation/bloc/vendor_order_
 import 'package:tech_haven/vendor/features/orderdetails/presentation/bloc/vendor_order_details_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+// import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
 import 'package:tech_haven/vendor/features/revenue/presentation/bloc/revenue_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
-  Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
-  await Stripe.instance.applySettings();
+  // await dotenv.load(fileName: ".env");
+  // Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
+  // await Stripe.instance.applySettings();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

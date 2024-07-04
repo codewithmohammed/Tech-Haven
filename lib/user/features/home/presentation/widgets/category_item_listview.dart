@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,9 +14,9 @@ class CategoryIconListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
-      height: 200, // Fixed height for horizontal list
+      height: 200,
+      width: double.infinity,
       alignment: Alignment.center,
       child: BlocConsumer<HomePageBloc, HomePageState>(
         listener: (context, state) {
@@ -46,18 +48,24 @@ class CategoryIconListView extends StatelessWidget {
               },
             );
           }
-          return GridView.builder(
-            physics: const AlwaysScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 100,
+          return ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(dragDevices: {
+  PointerDeviceKind.touch,
+  PointerDeviceKind.mouse,
+},),
+            child: GridView.builder(
+              physics: const AlwaysScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 100,
+              ),
+              scrollDirection:
+                  Axis.horizontal, // Set scroll direction to horizontal
+              itemCount: 20,
+              itemBuilder: (BuildContext context, int index) {
+                //this is the main column which will contain the two list parellel listviews
+                return const CategoryCircularContainer();
+              },
             ),
-            scrollDirection:
-                Axis.horizontal, // Set scroll direction to horizontal
-            itemCount: 20,
-            itemBuilder: (BuildContext context, int index) {
-              //this is the main column which will contain the two list parellel listviews
-              return const CategoryCircularContainer();
-            },
           );
         },
       ),

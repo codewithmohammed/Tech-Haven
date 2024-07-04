@@ -124,7 +124,8 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
               Positioned(
                 bottom: -50,
                 child: AuthenticationContainer(
-                  height: 450,
+                  // height: 450,
+             
                   title: 'Code Verification',
                   subTitle:
                       'Enter your 4-digit verification code receieved in your phone number',

@@ -55,6 +55,7 @@ dependencies:
   flutter_rating_stars: ^1.1.0
   flutter_slidable: ^3.1.0
   flutter_stripe: ^10.1.1
+  flutter_stripe_web: ^5.2.0
   flutter_svg: ^2.0.10+1
   fluttertoast: ^8.2.5
   fpdart: ^1.1.0

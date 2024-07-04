@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
+import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
@@ -75,7 +76,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               Positioned(
                 bottom: -50,
                 child: AuthenticationContainer(
-                  height: 450,
+                  // height: 450,
                   title: "Forgot \nPassword?",
                   subTitle: 'enter your registered mobile number',
                   columnChildren: [
@@ -84,10 +85,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       textFormFieldEnabled: true,
                       phoneNumberController: phoneNumberController,
                     ),
-                  ],
-                  buttonNeeded: true,
-                  buttonText: 'Sent OTP',
-                  onPressedElevatedButton: () async {
+                      PrimaryAppButton(
+                    buttonText:  'Sent OTP',
+                    onPressed: () async {
                     if (countryCode.value != '000') {
                       final fullPhoneNumber =
                           '+${countryCode.value}${phoneNumberController.text}';
@@ -100,6 +100,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       //     );
                     }
                   },
+                  ),
+                  ],
+                  // buttonNeeded: true,
+                  // buttonText: ,
+                  // onPressedElevatedButton: 
                 ),
               )
             ],

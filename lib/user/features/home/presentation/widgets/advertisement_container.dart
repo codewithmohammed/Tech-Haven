@@ -47,6 +47,7 @@ class AdvertisementCard extends StatelessWidget {
         ? Container(
             color: AppPallete.primaryAppColor,
             height: 150,
+            // width: 50,
             padding: const EdgeInsets.all(10),
             child: Row(
               children: [
