@@ -76,13 +76,14 @@ class UserProfilePage extends StatelessWidget {
                   if (state is GetProfileDataSuccessState &&
                       state.user.phoneNumber == null)
                     TileBarButton(
-                        title: 'Verify Phone Number',
-                        subtitle:
-                            'Verify you phone number to get access to more features',
-                        onTap: () {
-                          _showPhoneVerificationDialog(context);
-                        },
-                        icon: CustomIcons.phoneOutlined),
+                      title: 'Verify Phone Number',
+                      subtitle:
+                          'Verify you phone number to get access to more features',
+                      onTap: () {
+                        _showPhoneVerificationDialog(context);
+                      },
+                      icon: CustomIcons.phoneOutlined,
+                    ),
                   TileBarButton(
                     title: state is GetProfileDataSuccessState
                         ? state.user.isVendor

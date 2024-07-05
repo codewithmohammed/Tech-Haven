@@ -7,27 +7,30 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/remove_button.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/save_button.dart';
 
-import '../../constants/constants.dart';
+// import '../../constants/constants.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 
 class RectangularProductCard extends StatelessWidget {
-  const RectangularProductCard(
-      {super.key,
-      // required this.items,
+  const RectangularProductCard({
+    super.key,
+    this.isLoading = false,
+    required this.onTap,
+    required this.isFavoriteCard,
+    required this.productName,
+    required this.textEditingController,
+    required this.productPrize,
+    required this.vendorName,
+    required this.deliveryDate,
+    this.onTapFavouriteButton,
+    required this.productImage,
+    this.isFavorite = false,
+    this.onPressedSaveButton,
+    this.productQuantity = '0',
+    this.onTapRemoveButton,
+  });
 
-      this.isLoading = false,
-      required this.onTap,
-      required this.isFavoriteCard,
-      required this.productName,
-      required this.textEditingController,
-      required this.productPrize,
-      required this.vendorName,
-      required this.deliveryDate,
-      this.onTapFavouriteButton,
-      required this.productImage,
-      this.isFavorite = false,
-      this.onPressedSaveButton,
-      this.productQuantity = '0',
-      this.onTapRemoveButton});
   final bool isFavoriteCard;
   final bool isFavorite;
   final bool isLoading;
@@ -120,15 +123,14 @@ class RectangularProductCardContent extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(
-          10,
-        ),
+        padding: const EdgeInsets.all(10),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                //for the heading
+                // for the heading
                 Expanded(
                   flex: 2,
                   child: Column(
@@ -142,8 +144,8 @@ class RectangularProductCardContent extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-                      Constants.kHeight,
-                      //for the price
+                      const SizedBox(height: 8),
+                      // for the price
                       Row(
                         children: [
                           const Text(
@@ -152,9 +154,7 @@ class RectangularProductCardContent extends StatelessWidget {
                               fontSize: 12,
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                          const SizedBox(width: 10),
                           Text(
                             productPrize,
                             style: const TextStyle(
@@ -164,8 +164,8 @@ class RectangularProductCardContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Constants.kHeight,
-                      //for the delivery
+                      const SizedBox(height: 8),
+                      // for the delivery
                       if (!isFavoriteCard)
                         Row(
                           children: [
@@ -176,33 +176,34 @@ class RectangularProductCardContent extends StatelessWidget {
                                 fontSize: 12,
                               ),
                             ),
-                            const SizedBox(
-                              width: 2,
-                            ),
-                            Text(
-                              deliveryDate,
-                              style: const TextStyle(
-                                color: AppPallete.primaryAppButtonColor,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 12,
+                            const SizedBox(width: 2),
+                            Flexible(
+                              child: Text(
+                                deliveryDate,
+                                style: const TextStyle(
+                                  color: AppPallete.primaryAppButtonColor,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
+                                ),
+                                overflow: TextOverflow.ellipsis,
                               ),
                             )
                           ],
                         ),
-                      Constants.kHeight,
-                      //for the vendor name
+                      const SizedBox(height: 8),
+                      // for the vendor name
                       Row(
                         children: [
                           const Text('Sold by'),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            vendorName,
-                            style: const TextStyle(
-                              // color: AppPallete.primaryAppButtonColor,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 12,
+                          const SizedBox(width: 5),
+                          Flexible(
+                            child: Text(
+                              vendorName,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 12,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -236,78 +237,82 @@ class RectangularProductCardContent extends StatelessWidget {
                 ),
               ],
             ),
-            Constants.kHeight,
+            const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (!isFavoriteCard)
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 30,
-                            width: 70,
-                            child: TextFormField(
-                              controller: textEditingController,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              keyboardType: TextInputType.number,
-                              textAlignVertical: TextAlignVertical.center,
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                hintText: 'Quantity',
-                                hintStyle: TextStyle(
-                                  fontSize: 12,
-                                ),
-                                alignLabelWithHint: true,
-                                contentPadding: EdgeInsets.only(bottom: 2),
-                                fillColor: AppPallete.darkgreyColor,
-                                border: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(style: BorderStyle.solid),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(
-                                      5,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: SizedBox(
+                                height: 30,
+                                width: 70,
+                                child: TextFormField(
+                                  controller: textEditingController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly
+                                  ],
+                                  keyboardType: TextInputType.number,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  textAlign: TextAlign.center,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Quantity',
+                                    hintStyle: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                    alignLabelWithHint: true,
+                                    contentPadding: EdgeInsets.only(bottom: 2),
+                                    fillColor: AppPallete.darkgreyColor,
+                                    border: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(style: BorderStyle.solid),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          SizedBox(
-                            width: 100,
-                            height: 30,
-                            child: SaveButton(
-                              onPressed: onPressedSaveButton,
+                            const SizedBox(width: 5),
+                            Flexible(
+                              child: SizedBox(
+                                width: 100,
+                                height: 30,
+                                child: SaveButton(
+                                  onPressed: onPressedSaveButton,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'Total Quantity Available : $productQuantity',
-                        style: const TextStyle(
-                          fontSize: 10,
+                          ],
                         ),
-                      )
-                    ],
+                        Text(
+                          'Total Quantity Available : $productQuantity',
+                          style: const TextStyle(
+                            fontSize: 10,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        )
+                      ],
+                    ),
                   ),
+                if (!isFavoriteCard) const SizedBox(width: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    //remove button
+                    // remove button
                     if (!isFavoriteCard) RemoveButton(onTap: onTapRemoveButton),
-                    //heart button
+                    // heart button
                     CustomLikeButton(
                       isFavorited: isFavorited,
                       onTapFavouriteButton: onTapFavouriteButton,
-                    )
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           ],

@@ -16,8 +16,9 @@ class CartPageBottomContainer extends StatelessWidget {
     required this.totalShpping,
     required this.total,
     required this.listOfCart,
+    this.isDialog = false,
   });
-
+  final bool isDialog;
   final double subTotal;
   final double totalShpping;
   final double total;
@@ -27,12 +28,16 @@ class CartPageBottomContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 300,
-      decoration: const BoxDecoration(
-        boxShadow: [Constants.globalBoxBlur],
+      decoration: BoxDecoration(
+        boxShadow: const [Constants.globalBoxBlur],
         color: AppPallete.whiteColor,
         borderRadius: BorderRadius.only(
-          topRight: Radius.circular(20),
-          topLeft: Radius.circular(20),
+          topRight: const Radius.circular(20),
+          topLeft: const Radius.circular(20),
+          bottomLeft:
+              isDialog ? const Radius.circular(20) : const Radius.circular(0),
+          bottomRight:
+              isDialog ? const Radius.circular(20) : const Radius.circular(0),
         ),
       ),
       child: Padding(

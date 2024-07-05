@@ -11,7 +11,6 @@ import 'package:tech_haven/core/utils/check_product_is_carted.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
 import 'package:tech_haven/user/features/home/presentation/widgets/deals_product_card.dart';
 
-
 class DealsGridView extends StatelessWidget {
   const DealsGridView({
     super.key,
@@ -58,53 +57,55 @@ class DealsGridView extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    Text(
-                      'MEGA DEALS',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Text(
+                        'MEGA DEALS',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                     SizedBox(
                       width: 5,
                     ),
-                    Text(
-                      '24 HOURS ONLY',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                    Flexible(
+                      child: Text(
+                        '24 HOURS ONLY',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 25,
-                width: 125,
-                // child: ElevatedButton(
-                //   onPressed: () {},
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: AppPallete.blackColor,
-                //     foregroundColor: AppPallete.whiteColor,
-                //     shape: const RoundedRectangleBorder(
-                //       borderRadius: BorderRadius.all(
-                //         Radius.circular(
-                //           5,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                //   child: const Text(
-                //     'VIEW ALL',
-                //     style: TextStyle(
-                //       color: AppPallete.whiteColor,
-                //       fontSize: 12,
-                //       fontWeight: FontWeight.w700,
-                //     ),
-                //   ),
-                // ),
-              )
+              // SizedBox(
+              //   height: 25,
+              //   width: 125,
+              //   child: ElevatedButton(
+              //     onPressed: () {},
+              //     style: ElevatedButton.styleFrom(
+              //       backgroundColor: AppPallete.blackColor,
+              //       foregroundColor: AppPallete.whiteColor,
+              //       shape: const RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.all(
+              //           Radius.circular(5),
+              //         ),
+              //       ),
+              //     ),
+              //     child: const Text(
+              //       'VIEW ALL',
+              //       style: TextStyle(
+              //         color: AppPallete.whiteColor,
+              //         fontSize: 12,
+              //         fontWeight: FontWeight.w700,
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           // Container for the product card

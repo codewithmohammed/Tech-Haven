@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/entities/trending_product.dart';
+import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/home/presentation/bloc/home_page_bloc.dart';
@@ -45,8 +46,12 @@ class AdvertisementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return trendingProduct != null
         ? Container(
-            color: AppPallete.primaryAppColor,
             height: 150,
+            decoration: BoxDecoration(
+                color: AppPallete.primaryAppColor,
+                borderRadius: Responsive.isMobile(context)
+                    ? const BorderRadius.all(Radius.zero)
+                    : BorderRadius.circular(10)),
             // width: 50,
             padding: const EdgeInsets.all(10),
             child: Row(

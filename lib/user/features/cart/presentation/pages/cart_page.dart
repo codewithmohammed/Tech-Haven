@@ -11,6 +11,7 @@ import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/entities/cart.dart';
 import 'package:tech_haven/core/entities/product.dart';
+import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/check_product_is_carted.dart';
@@ -148,7 +149,13 @@ class CartPage extends StatelessWidget {
                           if (listState is CartProductsListViewSuccess) {
                             generateTextEditingController(
                                 listState.listOfProducts.length);
-                            return ListView.separated(
+                            return GridView.builder(
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      mainAxisExtent: 275,
+                                      // childAspectRatio: 16 / 9,
+                                      // childAspectRatio: 16 / 7,
+                                      maxCrossAxisExtent: 550),
                               itemCount: listState.listOfProducts.length,
                               itemBuilder: (context, index) {
                                 final currentProduct =
@@ -222,16 +229,15 @@ class CartPage extends StatelessWidget {
                                   },
                                 );
                               },
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                return Container(
-                                  height: 10,
-                                  color: AppPallete.lightgreyColor,
-                                );
-                              },
                             );
                           }
-                          return ListView.separated(
+                          return GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      mainAxisExtent: 275,
+                                      // childAspectRatio: 16 / 9,
+                                      // childAspectRatio: 16 / 7,
+                                      maxCrossAxisExtent: 550),
                             itemCount: 5,
                             itemBuilder: (context, index) {
                               return RectangularProductCard(
@@ -246,13 +252,6 @@ class CartPage extends StatelessWidget {
                                   productImage: null,
                                   textEditingController: null,
                                   productQuantity: '0');
-                            },
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return Container(
-                                height: 10,
-                                color: AppPallete.lightgreyColor,
-                              );
                             },
                           );
                         },
@@ -277,7 +276,11 @@ class CartPage extends StatelessWidget {
                                         color: Colors.white,
                                         child: PrimaryAppButton(
                                           onPressed: () {
-                                            showBottomContainer.value = true;
+                                            if (Responsive.isMobile(context)) {
+                                              showBottomContainer.value = true;
+                                            } else {
+                                              showCartDialog(context,);
+                                            }
                                           },
                                           buttonText: 'CHECKOUT',
                                         ),
@@ -344,4 +347,64 @@ class CartPage extends StatelessWidget {
       ),
     );
   }
+
+void showCartDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: BlocBuilder<CartPageBloc, CartPageState>(
+          buildWhen: (previous, current) => current is CartProductsListViewSuccess,
+          builder: (context, state) {
+            if (state is CartProductsListViewSuccess) {
+              final double subTotal = calculateTotalPrize(
+                products: state.listOfProducts,
+                carts: state.listOfCarts,
+              );
+
+              final double totalShpping = calculateTotalShipping(
+                products: state.listOfProducts,
+                carts: state.listOfCarts,
+              );
+
+              final double total = subTotal + totalShpping;
+
+              return total > 0
+                  ? Stack(
+                      children: [
+                        CartPageBottomContainer(
+                          isDialog: true,
+                          listOfCart: state.listOfCarts,
+                          subTotal: subTotal,
+                          totalShpping: totalShpping,
+                          total: total,
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: CircularButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            circularButtonChild: const SvgIcon(
+                              icon: CustomIcons.angleDownSvg,
+                              radius: 16,
+                            ),
+                            diameter: 35,
+                          ),
+                        ),
+                      ],
+                    )
+                  : const SizedBox();
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
+      );
+    },
+  );
+}
 }

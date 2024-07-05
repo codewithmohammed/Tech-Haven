@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/cart/presentation/pages/cart_page.dart';
+import 'package:tech_haven/user/features/help%20center/presentation/pages/help_center_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
+import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/profile/presentation/pages/user_profile_page.dart';
+import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/pages/search_category_page.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/manage_product_page.dart';
 import 'package:tech_haven/vendor/features/revenue/presentation/pages/revenue_page.dart';
@@ -22,12 +25,20 @@ class Constants {
   static const int normalAnimationMilliseconds = 1000;
   static const double buttonTextFontSize = 15;
 
-  static List<Widget> listOFMainPages = [
+  static List<Widget> listOFMainPagesForMobile = [
     const HomePage(),
     const SearchCategoryPage(),
     // const MainNotificationPage(),
     const UserProfilePage(),
     const CartPage(),
+  ];
+  static List<Widget> listOfMainPagesForTabletAndDesktop = [
+    const HomePage(),
+    const SearchCategoryPage(),
+    const CartPage(),
+    const UserOrderPage(),
+    const HelpCenterPage(),
+
   ];
 
   static List<Widget> listOFVendorPages = [

@@ -3,10 +3,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
+import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
@@ -17,14 +19,14 @@ class SearchCategoryPage extends StatelessWidget {
   const SearchCategoryPage({super.key});
 
   @override
-  Widget build(BuildContext context) {  context.read<SearchCategoryCubit>().changeIndex(0);
+  Widget build(BuildContext context) {
+    context.read<SearchCategoryCubit>().changeIndex(0);
     PageController pageController = PageController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!SearchCategoryBloc.isDataLoaded) {
         // If data is not loaded and not loading, fetch the data
         BlocProvider.of<SearchCategoryBloc>(context)
             .add(const GetAllSearchCategoryEvent(refreshPage: false));
-      
       }
     });
     return SafeArea(
@@ -147,29 +149,35 @@ class SearchCategoryPage extends StatelessWidget {
                                         .categoryName,
                                     fontSize: 14,
                                   ),
-                                  AspectRatio(
-                                    aspectRatio: 16 / 9,
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 10),
-                                      width: double.infinity,
-                                      color: AppPallete.lightgreyColor,
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            mainCategoryModel[mainPageIndex]
-                                                .imageURL,
-                                        fit: BoxFit.fitHeight,
-                                        placeholder: (context, url) =>
-                                            Shimmer.fromColors(
-                                          baseColor: Colors.grey.shade100,
-                                          highlightColor: Colors.grey.shade300,
-                                          child: Container(
-                                            width: double.infinity,
-                                            height: double.infinity,
-                                            color: Colors.white,
+                                  SizedBox(
+                                    height: !Responsive.isMobile(context)
+                                        ? 200
+                                        : null,
+                                    child: AspectRatio(
+                                      aspectRatio: 16 / 9,
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        width: double.infinity,
+                                        color: AppPallete.lightgreyColor,
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              mainCategoryModel[mainPageIndex]
+                                                  .imageURL,
+                                          fit: BoxFit.fitHeight,
+                                          placeholder: (context, url) =>
+                                              Shimmer.fromColors(
+                                            baseColor: Colors.grey.shade100,
+                                            highlightColor:
+                                                Colors.grey.shade300,
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: double.infinity,
+                                              color: Colors.white,
+                                            ),
                                           ),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
                                       ),
                                     ),
                                   ),

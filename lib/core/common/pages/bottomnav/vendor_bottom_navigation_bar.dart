@@ -5,7 +5,7 @@ import 'package:tech_haven/core/common/widgets/animated_bar.dart';
 import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
-import 'package:tech_haven/core/common/pages/bottomnav/utils/bottom_nav_utils.dart';
+import 'package:tech_haven/core/rive/rive_nav_utils.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/widgets/bottom_navigation_bar_container.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -46,27 +46,27 @@ class VendorBottomNavigationBar extends StatelessWidget {
         children: List.generate(
           Constants.vendorListOfIcons.length,
           (index) {
-            // final icon = BottomNavUtils.selectedBottomNavVendor.value;
+            // final icon = RiveNavUtils.selectedBottomNavVendor.value;
             return ValueListenableBuilder(
-              valueListenable: BottomNavUtils.selectedBottomNavVendor,
+              valueListenable: RiveNavUtils.selectedBottomNavVendor,
               builder: (BuildContext context, value, Widget? child) {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     AnimatedBar(
-                      isActive: BottomNavUtils.selectedBottomNavVendor.value ==
+                      isActive: RiveNavUtils.selectedBottomNavVendor.value ==
                           Constants.vendorListOfIcons[index],
                     ),
                     CircularButton(
                       onPressed: () {
-                        BottomNavUtils.selectedBottomNavVendor.value =
+                        RiveNavUtils.selectedBottomNavVendor.value =
                             Constants.vendorListOfIcons[index];
                         pageController.jumpToPage(index);
                       },
                       shadow: false,
                       circularButtonChild: Opacity(
                         opacity: Constants.vendorListOfIcons[index] ==
-                                BottomNavUtils.selectedBottomNavVendor.value
+                                RiveNavUtils.selectedBottomNavVendor.value
                             ? 1
                             : 0.5,
                         child: SvgIcon(

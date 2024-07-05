@@ -169,6 +169,7 @@ flutter:
     - assets/icons/arrow_right_exit.svg
     - assets/icons/language.svg
     - assets/icons/translate.svg
+    - assets/icons/angle_left.svg
     - assets/icons/angle_down.svg
     - assets/icons/arrow_left.svg
     - assets/icons/face_grin.svg

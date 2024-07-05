@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/pages/sidemenu/side_menu.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';

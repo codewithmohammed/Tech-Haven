@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
+import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
+import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class CustomSliverAppBar extends StatelessWidget
@@ -20,6 +23,7 @@ class CustomSliverAppBar extends StatelessWidget
       floating: true,
       //the whole height of the appBar
       expandedHeight: 150,
+      // leading:
       //the height of the app bar when it is collapsed or scrolled
       collapsedHeight: 100,
       stretchTriggerOffset: 100,
@@ -42,10 +46,13 @@ class CustomSliverAppBar extends StatelessWidget
           end: 10,
         ),
         //
-        title: const AppBarSearchBar(
-          enabled: false,
-          isForSliver: true,
-          autoFocus: true,
+        title: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: const AppBarSearchBar(
+            enabled: false,
+            isForSliver: true,
+            autoFocus: true,
+          ),
         ),
       ),
     );
