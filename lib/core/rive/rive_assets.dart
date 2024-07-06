@@ -121,7 +121,7 @@ List<ProfileSideItemModel> profileSideMenus = [
   ),
   ProfileSideItemModel(
     icon: CustomIcons.cartSvg,
-    title: 'Start Selling',
+    title: 'Enter Vendor Mode',
   ),
   ProfileSideItemModel(
     icon: CustomIcons.questionMarkSvg,

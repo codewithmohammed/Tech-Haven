@@ -487,7 +487,7 @@ _initDataCommon() {
     ..registerFactory(() => GetVendorData(repository: serviceLocator()))
     ..registerLazySingleton(() => CommonBloc(
         getCurrentLocationDetails: serviceLocator(),
-        updateProductToFavorite: serviceLocator()));
+        updateProductToFavorite: serviceLocator(), getUserData: serviceLocator()));
 }
 
 void _initHomePage() {

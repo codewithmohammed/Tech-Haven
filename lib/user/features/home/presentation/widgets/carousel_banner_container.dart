@@ -132,13 +132,26 @@ class CarouselBannerContainer extends StatelessWidget {
           }
           return CarouselSlider(
             options: CarouselOptions(
-              aspectRatio: 16 / 9, // Set aspect ratio to 16:9
-              enlargeFactor: 0.2,
-              viewportFraction: 0.8, // Set width of carousel items
-              enlargeCenterPage: true, autoPlay: true,
-              enableInfiniteScroll: false,
-              clipBehavior: Clip.antiAlias,
-            ),
+                aspectRatio: 16 / 9, // Set aspect ratio to 16:9
+                viewportFraction: Responsive.isMobile(context)
+                    ? 0.8
+                    : Responsive.isTablet(context)
+                        ? 0.6
+                        : Responsive.isDesktop(context)
+                            ? 0.4
+                            : 0.8, // Set width of carousel items
+                enlargeCenterPage: true,
+                enlargeFactor: Responsive.isMobile(context)
+                    ? 0.3
+                    : Responsive.isTablet(context)
+                        ? 0.5
+                        : Responsive.isDesktop(context)
+                            ? 0.7
+                            : 0.3,
+                enlargeStrategy: CenterPageEnlargeStrategy.scale,
+                enableInfiniteScroll: true,
+                autoPlay: true,
+              ),
             items:
                 //here there must be builder of items from the firebase
                 [

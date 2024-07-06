@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -21,7 +22,6 @@ import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/checkout/data/datasource/checkout_data_source.dart';
 import 'package:tech_haven/user/features/checkout/data/models/payment_intent_model.dart';
 import 'package:uuid/uuid.dart';
-// import 'package:tech_haven/user/features/checkout/domain/usecase/send_order.dart';
 
 class CheckoutDataSourceImpl implements CheckoutDataSource {
   final FirebaseFirestore firebaseFirestore;
@@ -41,7 +41,13 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
     // print('sdfsdfsd');
     try {
       final url = Uri.parse('https://api.stripe.com/v1/payment_intents');
-      final secretKey = dotenv.env["STRIPE_SECRET_KEY"]!;
+      print('hello how');
+      String? secretKey;
+      if (!kIsWeb) {
+        secretKey = dotenv.env["STRIPE_SECRET_KEY"]!;
+      }
+
+      print('ok da mone');
       final body = {
         'amount': amount,
         'currency': currency.toLowerCase(),
@@ -57,7 +63,9 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
 
       final response = await http.post(url,
           headers: {
-            "Authorization": "Bearer $secretKey",
+            "Authorization": kIsWeb
+                ? "Bearer sk_test_51PITFLIhpYTVpxkBNiZJBhx7dykQdGYwNOecnnjCxaZ0hpXuTqlqQQBHL2Kh3VIq4vfklyw70BqWfaRed7H3aXrD003YCcU8S7"
+                : "Bearer $secretKey",
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: body);
@@ -76,8 +84,9 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       } else {
         throw ServerException(response.reasonPhrase.toString());
       }
-
-      await initPaymentSheet(data: jsonResponse);
+      if (!kIsWeb) {
+        await initPaymentSheet(data: jsonResponse);
+      }
       return paymentIntentModel;
     } on StripeException catch (e) {
       if (e.error.code == FailureCode.Canceled) {
@@ -125,8 +134,10 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
   Future<PaymentIntentModel> showPresentPaymentSheet(
       {required PaymentIntentModel paymentIntentModel}) async {
     try {
-      await Stripe.instance
-          .presentPaymentSheet(options: const PaymentSheetPresentOptions());
+      if (!kIsWeb) {
+        await Stripe.instance
+            .presentPaymentSheet(options: const PaymentSheetPresentOptions());
+      }
 
       return paymentIntentModel;
     } on StripeException catch (e) {

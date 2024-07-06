@@ -166,7 +166,7 @@ class UserProfilePage extends StatelessWidget {
   }
 }
 
-ValueNotifier<String> countryCode = ValueNotifier('000');
+ValueNotifier<String> _countryCode = ValueNotifier('000');
 
 void _showPhoneVerificationDialog(BuildContext context) {
   final TextEditingController phoneController = TextEditingController();
@@ -188,7 +188,7 @@ void _showPhoneVerificationDialog(BuildContext context) {
             Form(
               key: formKey,
               child: PhoneNumberTextField(
-                countryCode: countryCode,
+                countryCode: _countryCode,
                 textFormFieldEnabled: true,
                 phoneNumberController: phoneController,
               ),
@@ -201,7 +201,7 @@ void _showPhoneVerificationDialog(BuildContext context) {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 String phoneNumber =
-                    '+${countryCode.value}${phoneController.text}';
+                    '+${_countryCode.value}${phoneController.text}';
                 // Implement verification logic here
                 context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
                       phoneNumber: phoneNumber,

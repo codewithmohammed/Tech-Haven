@@ -23,11 +23,21 @@ final class LocationFailedState extends LocationState {
 
 final class FavoriteButtonState extends CommonState {}
 
-final class UpdateFavoriteSuccess extends FavoriteButtonState {
-  
-}
+final class UpdateFavoriteSuccess extends FavoriteButtonState {}
 
 final class UpdateFavoriteFailed extends FavoriteButtonState {
   final String message;
   UpdateFavoriteFailed({required this.message});
+}
+
+final class LoadUserDataCommonState extends CommonState {}
+
+final class LoadUserDataCommonSuccessState extends LoadUserDataCommonState {
+  final User user;
+  LoadUserDataCommonSuccessState({required this.user});
+}
+
+final class LoadUserDataCommonFailedState extends LoadUserDataCommonState {
+  final String message;
+  LoadUserDataCommonFailedState({required this.message});
 }

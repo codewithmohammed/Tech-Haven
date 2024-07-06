@@ -16,3 +16,7 @@ final class UpdateProductToFavoriteEvent extends CommonEvent {
   const UpdateProductToFavoriteEvent(
       {required this.isFavorited, required this.product});
 }
+
+
+final class LoadUserDataEventForCommon extends CommonEvent{}
+

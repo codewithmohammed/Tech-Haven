@@ -234,10 +234,10 @@ class CartPage extends StatelessWidget {
                           return GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      mainAxisExtent: 275,
-                                      // childAspectRatio: 16 / 9,
-                                      // childAspectRatio: 16 / 7,
-                                      maxCrossAxisExtent: 550),
+                                    mainAxisExtent: 275,
+                                    // childAspectRatio: 16 / 9,
+                                    // childAspectRatio: 16 / 7,
+                                    maxCrossAxisExtent: 550),
                             itemCount: 5,
                             itemBuilder: (context, index) {
                               return RectangularProductCard(
@@ -279,7 +279,9 @@ class CartPage extends StatelessWidget {
                                             if (Responsive.isMobile(context)) {
                                               showBottomContainer.value = true;
                                             } else {
-                                              showCartDialog(context,);
+                                              showCartDialog(
+                                                context,
+                                              );
                                             }
                                           },
                                           buttonText: 'CHECKOUT',
@@ -348,63 +350,64 @@ class CartPage extends StatelessWidget {
     );
   }
 
-void showCartDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: BlocBuilder<CartPageBloc, CartPageState>(
-          buildWhen: (previous, current) => current is CartProductsListViewSuccess,
-          builder: (context, state) {
-            if (state is CartProductsListViewSuccess) {
-              final double subTotal = calculateTotalPrize(
-                products: state.listOfProducts,
-                carts: state.listOfCarts,
-              );
+  void showCartDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: BlocBuilder<CartPageBloc, CartPageState>(
+            buildWhen: (previous, current) =>
+                current is CartProductsListViewSuccess,
+            builder: (context, state) {
+              if (state is CartProductsListViewSuccess) {
+                final double subTotal = calculateTotalPrize(
+                  products: state.listOfProducts,
+                  carts: state.listOfCarts,
+                );
 
-              final double totalShpping = calculateTotalShipping(
-                products: state.listOfProducts,
-                carts: state.listOfCarts,
-              );
+                final double totalShpping = calculateTotalShipping(
+                  products: state.listOfProducts,
+                  carts: state.listOfCarts,
+                );
 
-              final double total = subTotal + totalShpping;
+                final double total = subTotal + totalShpping;
 
-              return total > 0
-                  ? Stack(
-                      children: [
-                        CartPageBottomContainer(
-                          isDialog: true,
-                          listOfCart: state.listOfCarts,
-                          subTotal: subTotal,
-                          totalShpping: totalShpping,
-                          total: total,
-                        ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          child: CircularButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            circularButtonChild: const SvgIcon(
-                              icon: CustomIcons.angleDownSvg,
-                              radius: 16,
-                            ),
-                            diameter: 35,
+                return total > 0
+                    ? Stack(
+                        children: [
+                          CartPageBottomContainer(
+                            isDialog: true,
+                            listOfCart: state.listOfCarts,
+                            subTotal: subTotal,
+                            totalShpping: totalShpping,
+                            total: total,
                           ),
-                        ),
-                      ],
-                    )
-                  : const SizedBox();
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
-        ),
-      );
-    },
-  );
-}
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: CircularButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              circularButtonChild: const SvgIcon(
+                                icon: CustomIcons.angleDownSvg,
+                                radius: 16,
+                              ),
+                              diameter: 35,
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox();
+              }
+              return const Center(child: CircularProgressIndicator());
+            },
+          ),
+        );
+      },
+    );
+  }
 }

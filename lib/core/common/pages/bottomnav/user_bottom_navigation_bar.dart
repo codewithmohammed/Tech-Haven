@@ -124,7 +124,7 @@ class _UserBottomNavigationBarState extends State<UserBottomNavigationBar>
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.fastOutSlowIn,
                   top: 500,
-                  left: isSideMenuOpened ? 300 : 0,
+                  left: isSideMenuOpened ? 300 : 15,
                   child: CircularButton(
                     diameter: 50,
                     onPressed: () {
@@ -139,7 +139,7 @@ class _UserBottomNavigationBarState extends State<UserBottomNavigationBar>
                     },
                     circularButtonChild: SvgIcon(
                       icon: isSideMenuOpened
-                          ? CustomIcons.angleUpSvg
+                          ? CustomIcons.angleLeftSvg
                           : CustomIcons.angleRightSvg,
                       radius: 50,
                     ),

@@ -1,4 +1,5 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,6 +10,9 @@ import 'package:tech_haven/user/features/checkout/data/models/payment_intent_mod
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/shipping_details_page.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/submit_page.dart';
+
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+// import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key, required this.totalAmount});
@@ -43,9 +47,19 @@ class _CheckoutPageState extends State<CheckoutPage> {
           }
           if (state is SubmitPaymentFormSuccess) {
             // print(state);
-            paymentIntentModel = state.paymentIntentModel;
-            context.read<CheckoutBloc>().add(ShowPresentPaymentSheetEvent(
-                paymentIntentModel: state.paymentIntentModel));
+            pageController.nextPage(
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.bounceInOut);
+            if (!kIsWeb) {
+              // print('state is success');
+
+              paymentIntentModel = state.paymentIntentModel;
+              context.read<CheckoutBloc>().add(ShowPresentPaymentSheetEvent(
+                  paymentIntentModel: state.paymentIntentModel));
+            } else {
+              showPaymentSheetForWeb(
+                  paymentIntentModel: state.paymentIntentModel);
+            }
           }
           if (state is PaymentFailed) {
             Fluttertoast.showToast(msg: state.message);
@@ -85,12 +99,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
             Fluttertoast.showToast(msg: '${state.message}please wait');
             // GoRouter.of(context).pop();
           }
-          if (state is SubmitPaymentFormSuccess) {
-            pageController.nextPage(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.bounceInOut);
-            // print('showing the payment sheet');
-          }
+          // if (state is SubmitPaymentFormSuccess) {
+
+          //   // print('showing the payment sheet');
+          // }
         },
         builder: (context, state) {
           if (state is SubmitPaymentFormSuccess) {
@@ -219,6 +231,32 @@ class _CheckoutPageState extends State<CheckoutPage> {
             ],
           );
         },
+      ),
+    );
+  }
+
+  showPaymentSheetForWeb({required PaymentIntentModel paymentIntentModel}) {
+    final String clientSecret = paymentIntentModel.clientSecret;
+    print(clientSecret);
+    final PlatformWebViewController controller = PlatformWebViewController(
+      const PlatformWebViewControllerCreationParams(),
+    )..loadRequest(
+        LoadRequestParams(
+          uri: Uri.parse(
+              'http://127.0.0.1:5500/web/stripe/stripe_webview.html?client_secret=$clientSecret'),
+        ),
+      );
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: SizedBox(
+          width: 400,
+          height: 600,
+          child: PlatformWebViewWidget(
+            PlatformWebViewWidgetCreationParams(controller: controller),
+          ).build(context),
+        ),
       ),
     );
   }

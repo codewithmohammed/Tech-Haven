@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
@@ -60,7 +59,7 @@ class SearchCategoryPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 140,
+                      width: Responsive.isMobile(context) ? 140 : 300,
                       height: MediaQuery.of(context).size.height,
                       child: ListView.builder(
                         primary: true,
@@ -142,7 +141,8 @@ class SearchCategoryPage extends StatelessWidget {
                                   mainCategoryModel[mainPageIndex]
                                       .subCategories;
                               return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                // mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   GlobalTitleText(
                                     title: mainCategoryModel[mainPageIndex]
@@ -150,33 +150,39 @@ class SearchCategoryPage extends StatelessWidget {
                                     fontSize: 14,
                                   ),
                                   SizedBox(
-                                    height: !Responsive.isMobile(context)
-                                        ? 200
-                                        : null,
-                                    child: AspectRatio(
-                                      aspectRatio: 16 / 9,
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 10),
-                                        width: double.infinity,
-                                        color: AppPallete.lightgreyColor,
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              mainCategoryModel[mainPageIndex]
-                                                  .imageURL,
-                                          fit: BoxFit.fitHeight,
-                                          placeholder: (context, url) =>
-                                              Shimmer.fromColors(
-                                            baseColor: Colors.grey.shade100,
-                                            highlightColor:
-                                                Colors.grey.shade300,
-                                            child: Container(
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              color: Colors.white,
+                                    //   height: !Responsive.isMobile(context)
+                                    //       ? 200
+                                    //       : null,
+                                    child: ConstrainedBox(
+                                      constraints:
+                                          const BoxConstraints(maxHeight: 300),
+                                      child: AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(top: 10),
+                                          width: double.infinity,
+                                          color: AppPallete.lightgreyColor,
+                                          child: CachedNetworkImage(
+                                            imageUrl:
+                                                mainCategoryModel[mainPageIndex]
+                                                    .imageURL,
+                                            fit: BoxFit.fitHeight,
+                                            placeholder: (context, url) =>
+                                                Shimmer.fromColors(
+                                              baseColor: Colors.grey.shade100,
+                                              highlightColor:
+                                                  Colors.grey.shade300,
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                color: Colors.white,
+                                              ),
                                             ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
                                         ),
                                       ),
                                     ),
@@ -197,7 +203,7 @@ class SearchCategoryPage extends StatelessWidget {
                                           return Container(
                                             margin:
                                                 const EdgeInsets.only(top: 10),
-                                            child: Column(
+                                            child:  Column(
                                               mainAxisAlignment:
                                                   MainAxisAlignment.start,
                                               children: [
