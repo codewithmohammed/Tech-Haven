@@ -1,3 +1,4 @@
+
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:bootpay_webview_flutter_platform_interface/bootpay_webview_flutter_platform_interface.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,8 @@ import 'package:tech_haven/user/features/checkout/data/models/payment_intent_mod
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/shipping_details_page.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/submit_page.dart';
+
+// import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key, required this.totalAmount});
@@ -46,11 +49,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
           }
           if (state is SubmitPaymentFormSuccess) {
             // print(state);
-            pageController.nextPage(
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.bounceInOut);
+
             if (!kIsWeb) {
-              // print('state is success');
+              pageController.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.bounceInOut);
 
               paymentIntentModel = state.paymentIntentModel;
               context.read<CheckoutBloc>().add(ShowPresentPaymentSheetEvent(
@@ -235,42 +238,33 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  showPaymentSheetForWeb(
-      {required PaymentIntentModel paymentIntentModel}) async {  
-        // print('hello how are up');
-    final String clientSecret = paymentIntentModel.clientSecret;
-    // print(clientSecret);
-    final PlatformWebViewController controller = PlatformWebViewController(
-      const PlatformWebViewControllerCreationParams(),
-    )..loadRequest(
-        LoadRequestParams(
-          uri: Uri.parse(
-              'http://127.0.0.1:5500/web/stripe/stripe_webview.html?client_secret=$clientSecret'),
+  showPaymentSheetForWeb({required PaymentIntentModel paymentIntentModel}) {
+    try {
+      
+      final String clientSecret = paymentIntentModel.clientSecret;
+      // print(clientSecret);
+      final PlatformWebViewController controller = PlatformWebViewController(
+        const PlatformWebViewControllerCreationParams(),
+      )..loadRequest(
+          LoadRequestParams(
+            uri: Uri.parse(
+                'http://127.0.0.1:5500/web/stripe/stripe_webview.html?client_secret=$clientSecret'),
+          ),
+        );
+      showDialog(
+        context: context,
+        builder: (context) => Dialog(
+          child: SizedBox(
+            width: 400,
+            height: 600,
+            child: PlatformWebViewWidget(
+              PlatformWebViewWidgetCreationParams(controller: controller),
+            ).build(context),
+          ),
         ),
       );
-
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: SizedBox(
-          width: 400,
-          height: 600,
-          child: PlatformWebViewWidget(
-            PlatformWebViewWidgetCreationParams(controller: controller),
-          ).build(context),
-        ),
-      ),
-    );
-    // controller.
-    //  await controller.goBack();
-    // final List<PaymentStatus> listOfPayments = await StripeService(
-    //         'sk_test_51PITFLIhpYTVpxkBNiZJBhx7dykQdGYwNOecnnjCxaZ0hpXuTqlqQQBHL2Kh3VIq4vfklyw70BqWfaRed7H3aXrD003YCcU8S7')
-    //     .getLatestPayments();
-
-    // PaymentStatus currentPayment = listOfPayments
-    //     .firstWhere((element) => element.id == paymentIntentModel.id);
-
-    // if (currentPayment.status == 'succeeded') {
-    // } else if (currentPayment.status == 'requires_payment_method') {}
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }
