@@ -243,7 +243,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
     )..loadRequest(
         LoadRequestParams(
           uri: Uri.parse(
-              'http://127.0.0.1:5500/web/stripe/stripe_webview.html?client_secret=$clientSecret'),
+              'https://techhavenstripepayment.web.app/?client_secret=$clientSecret'),
         ),
       );
 

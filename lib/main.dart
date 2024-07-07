@@ -46,6 +46,8 @@ void main() async {
   Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
   await Stripe.instance.applySettings();
   }
+
+  
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

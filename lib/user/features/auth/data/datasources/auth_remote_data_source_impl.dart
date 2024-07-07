@@ -401,26 +401,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
-//   @override
-//   Future<String> signInUserWithGoogle() async {
-//     try {
-//       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-//       if (googleUser == null) {
-//         throw const ServerException('The Google user is not initiated');
-//       }
-//       final GoogleSignInAuthentication googleAuth =
-//           await googleUser.authentication;
-
-//       final credential = GoogleAuthProvider.credential(
-//         accessToken: googleAuth.accessToken,
-//         idToken: googleAuth.idToken,
-//       );
-// // if(credential)
-//       final userCredential =
-//           await firebaseAuth.signInWithCredential(credential);
-//       return userCredential.user!.email!;
-//     } catch (e) {
-
-//     }
-//   }
 }
