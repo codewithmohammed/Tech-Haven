@@ -49,6 +49,8 @@ class UserOrderHistoryPage extends StatelessWidget {
                     maxOpenSections: 1,
                     headerBackgroundColorOpened: Colors.blue,
                     scaleWhenAnimating: true,
+                    contentBorderRadius: 10,
+                    
                     openAndCloseAnimation: true,
                     children: state.orders.map((order) {
                       return AccordionSection(

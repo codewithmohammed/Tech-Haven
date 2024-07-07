@@ -38,9 +38,10 @@ import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/reg
 // import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:tech_haven/vendor/features/registervendor/presentation/bloc/register_vendor_bloc.dart';
 import 'package:tech_haven/vendor/features/revenue/presentation/bloc/revenue_bloc.dart';
-
+// import 'package:webview_flutter/webview_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // WebView.platform = SurfaceAndroidWebView();
   if(!kIsWeb){
   await dotenv.load(fileName: ".env");
   Stripe.publishableKey = dotenv.env["STRIPE_PUBLISH_KEY"]!;
