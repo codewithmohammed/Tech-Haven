@@ -6,7 +6,6 @@ import 'package:tech_haven/user/features/help%20center/presentation/pages/help_c
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/profile/presentation/pages/user_profile_page.dart';
-import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
 import 'package:tech_haven/user/features/searchcategory/presentation/pages/search_category_page.dart';
 import 'package:tech_haven/vendor/features/manageproduct/presentation/pages/manage_product_page.dart';
 import 'package:tech_haven/vendor/features/revenue/presentation/pages/revenue_page.dart';

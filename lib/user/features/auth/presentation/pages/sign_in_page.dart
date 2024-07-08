@@ -48,7 +48,7 @@ class _SignInPageState extends State<SignInPage> {
           // buildWhen: (previous, current) => current is AuthSignInPageState,
           listener: (context, state) {
             if (state is AuthGoogleSignInSuccess) {
-              GoRouter.of(context).pushReplacementNamed(
+              GoRouter.of(context).goNamed(
                 AppRouteConstants.mainPage,
                 // pathParameters: {
                 //   'initialUsername': state.user.username!,}
