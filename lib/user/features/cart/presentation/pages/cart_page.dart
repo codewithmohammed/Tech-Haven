@@ -149,6 +149,7 @@ class CartPage extends StatelessWidget {
                             generateTextEditingController(
                                 listState.listOfProducts.length);
                             return ListView.separated(
+                              padding: const EdgeInsets.only(bottom: 80),
                               itemCount: listState.listOfProducts.length,
                               itemBuilder: (context, index) {
                                 final currentProduct =
@@ -257,7 +258,10 @@ class CartPage extends StatelessWidget {
                           );
                         },
                       ),
-                    )
+                    ),
+                    // const SizedBox(
+                    //   height: 90,
+                    // )
                   ],
                 ),
                 BlocBuilder<CartPageBloc, CartPageState>(
@@ -334,7 +338,10 @@ class CartPage extends StatelessWidget {
                             )
                           : const SizedBox();
                     }
-                    return const SizedBox();
+                    return const SizedBox.shrink(
+                        // height: 80,
+                        // color: Colors.transparent,
+                        );
                   },
                 );
               },

@@ -232,7 +232,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                     ? 'Update The Product'
                     : 'Register New Product',
                 bottom: null,
-                messageIcon: widget.product != null ? false : true,
+                // messageIcon: widget.product != null ? false : true,
                 trailingIcon:
                     widget.product != null ? CustomIcons.trashBinSvg : null,
                 onPressedTrailingIcon: () {

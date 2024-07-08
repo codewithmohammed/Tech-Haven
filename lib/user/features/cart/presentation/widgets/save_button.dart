@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 
 class SaveButton extends StatefulWidget {
@@ -22,10 +20,10 @@ class _SaveButtonState extends State<SaveButton> {
     return ElevatedButton(
       onPressed: widget.isLoading ? null : widget.onPressed,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(
+        backgroundColor: WidgetStateProperty.all<Color>(
           Colors.green,
         ),
-        shape: MaterialStateProperty.all<OutlinedBorder>(
+        shape: WidgetStateProperty.all<OutlinedBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5.0),
           ),

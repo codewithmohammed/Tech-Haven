@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/entities/user_ordered_product.dart';
+import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/ordredProducts/presentation/bloc/ordered_products_page_bloc.dart';
 
 class OrderedProductsPage extends StatelessWidget {
@@ -17,7 +19,11 @@ class OrderedProductsPage extends StatelessWidget {
         .add(FetchOrderProductsEvent(orderId: orderID));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Product Details')),
+      appBar: AppBar(
+        title: const Text('Product Details'),
+        leading: const CustomBackButton(),
+        backgroundColor: AppPallete.whiteColor,
+      ),
       body: BlocBuilder<OrderedProductsPageBloc, OrderedProductsPageState>(
         builder: (context, state) {
           if (state is OrderedProductsPageLoading) {

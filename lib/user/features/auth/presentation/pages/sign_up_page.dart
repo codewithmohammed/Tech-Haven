@@ -100,7 +100,7 @@ class _SignUpPageState extends State<SignUpPage> {
             );
           }
           if (state is AuthGoogleSignUpSuccess) {
-            GoRouter.of(context).pushReplacementNamed(
+            GoRouter.of(context).goNamed(
               AppRouteConstants.mainPage,
               // pathParameters: {
               //   'initialUsername': state.user.username!,}

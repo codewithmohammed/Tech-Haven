@@ -134,10 +134,34 @@ class UserProfilePage extends StatelessWidget {
                     },
                     icon: CustomIcons.questionMarkSvg,
                   ),
-                  // const TileBarButton(
-                  //   title: 'About App',
-                  //   icon: CustomIcons.exclamationSvg,
-                  // ),
+                  const ProfileHeaderTile(
+                    title: 'ABOUT US',
+                  ),
+                  TileBarButton(
+                    title: 'About App',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.aboutAppPage);
+                    },
+                    icon: CustomIcons.exclamationSvg,
+                  ),
+                  TileBarButton(
+                    title: 'Terms And Conditions',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.termsAndConditionsPage);
+                    },
+                    icon: CustomIcons.fileCheck,
+                  ),
+                  TileBarButton(
+                    title: 'Privacy Policy',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.privacyPolicyPage);
+                    },
+                    icon: CustomIcons.lockOutlinedSvg,
+                  ),
+
                   TileBarButton(
                     title: 'Sign Out',
                     icon: CustomIcons.rightArrowExitSvg,

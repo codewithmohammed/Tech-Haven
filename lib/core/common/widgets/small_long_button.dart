@@ -20,7 +20,7 @@ class SmallLongButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: const ButtonStyle().copyWith(
-            shape: const MaterialStatePropertyAll(
+            shape: const WidgetStatePropertyAll(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(
@@ -29,7 +29,7 @@ class SmallLongButton extends StatelessWidget {
                 ),
               ),
             ),
-            backgroundColor: MaterialStatePropertyAll(
+            backgroundColor: WidgetStatePropertyAll(
               bgColor,
             )),
         child: Text(

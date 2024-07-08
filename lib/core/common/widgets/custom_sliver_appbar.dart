@@ -12,9 +12,11 @@ class CustomSliverAppBar extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      forceElevated: true,
+      // forceElevated: true,
       scrolledUnderElevation: 0,
+      // forceMaterialTransparency: true,
       elevation: 0,
+      surfaceTintColor: Colors.white,
       automaticallyImplyLeading: false,
       pinned: true,
       floating: true,
@@ -25,6 +27,7 @@ class CustomSliverAppBar extends StatelessWidget
       stretchTriggerOffset: 100,
       onStretchTrigger: () async {},
       flexibleSpace: FlexibleSpaceBar(
+        
         background: Container(
           color: AppPallete.primaryAppColor,
           alignment: Alignment.topLeft,

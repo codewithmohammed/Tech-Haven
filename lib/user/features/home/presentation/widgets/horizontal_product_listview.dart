@@ -26,7 +26,6 @@ class HorizontalProductListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void updateProductToFavorite(Product product, bool isLiked) {
-      print('updating the favorite');
       context.read<HomePageBloc>().add(
             UpdateProductToFavoriteHomeEvent(
               product: product,
@@ -128,7 +127,6 @@ class HorizontalProductListView extends StatelessWidget {
                       backgroundColor: Colors.green,
                       textColor: Colors.white,
                       fontSize: 16.0);
-                  print('object');
                   context.read<HomePageBloc>().add(GetAllFavoriteHomeEvent());
                 }
                 if (state is ProductUpdatedToFavoriteHomeFailed) {
@@ -165,8 +163,6 @@ class HorizontalProductListView extends StatelessWidget {
                                 isFavorited: favstate.listOfFavorite
                                     .contains(currentProduct.productID),
                                 onTapFavouriteButton: (bool isLiked) async {
-                                  print(favstate
-                                      is FavoriteLoadedSuccessHomeState);
                                   updateProductToFavorite(
                                       listState.listOfProducts[index], isLiked);
                                   return isLiked ? false : true;
@@ -178,7 +174,7 @@ class HorizontalProductListView extends StatelessWidget {
                               onTapFavouriteButton: (bool isLiked) async {
                                 // updateProductToFavorite(
                                 //     listState.listOfProducts[index], isLiked);
-                                return isLiked ? false : true;
+                                return isLiked ;
                               },
                             );
                           },

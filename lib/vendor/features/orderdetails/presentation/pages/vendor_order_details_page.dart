@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/constants/constants.dart';
@@ -23,11 +24,8 @@ class VendorOrderDetailsPage extends StatelessWidget {
         .read<VendorOrderDetailsBloc>()
         .add(GetAllOrderedProductsEvent(listOfOrderModel: products));
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: const BackButton(),
-        forceMaterialTransparency: true,
-        title: const Text('Order Products Details'),
+      appBar: const CustomAppBar(
+        title: 'Order Products Details',
       ),
       body: SafeArea(
           child: BlocConsumer<VendorOrderDetailsBloc, VendorOrderDetailsState>(
@@ -282,3 +280,4 @@ class VendorOrderDetailsPage extends StatelessWidget {
     return (quantity * amount);
   }
 }
+

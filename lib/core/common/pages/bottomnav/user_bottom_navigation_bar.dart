@@ -6,6 +6,7 @@ import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/widgets/bottom_navigation_bar_container.dart';
 import 'package:tech_haven/core/rive/rive_assets.dart';
+import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class UserBottomNavigationBar extends StatelessWidget {
   const UserBottomNavigationBar({super.key});
@@ -14,11 +15,12 @@ class UserBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PageController pageController = PageController();
-    return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        // resizeToAvoidBottomInset: false,
-        body: PageView.builder(
+    return Scaffold(
+      backgroundColor: AppPallete.backgroundColor,
+      extendBody: true,
+         resizeToAvoidBottomInset: false,
+      body: SafeArea(     bottom: false,
+        child: PageView.builder(
           physics: const NeverScrollableScrollPhysics(),
           controller: pageController,
           itemCount: Constants.listOFMainPages.length,
@@ -30,48 +32,48 @@ class UserBottomNavigationBar extends StatelessWidget {
             BottomNavUtils.animateTheIcon(index);
           },
         ),
-        bottomNavigationBar: BottomNavigationBarContainer(
-          children: List.generate(
-            bottonNavs.length,
-            (index) {
-              final riveIcon = bottonNavs[index].riveAsset;
-              return ValueListenableBuilder(
-                valueListenable: BottomNavUtils.selectedBottomNavUser,
-                builder: (BuildContext context, value, Widget? child) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedBar(
-                        isActive: riveIcon ==
-                            BottomNavUtils.selectedBottomNavUser.value,
-                      ),
-                      CircularButton(
-                        onPressed: () {
-                          BottomNavUtils.animateTheIcon(index);
-                          pageController.jumpToPage(index);
-                        },
-                        shadow: false,
-                        circularButtonChild: Opacity(
-                          opacity: riveIcon ==
-                                  BottomNavUtils.selectedBottomNavUser.value
-                              ? 1
-                              : 0.5,
-                          child: RiveAnimation.asset(
-                            riveIcon.src,
-                            artboard: riveIcon.artboard,
-                            onInit: (artboard) {
-                              BottomNavUtils.riveOnInIt(index, artboard);
-                            },
-                          ),
+      ),
+      bottomNavigationBar: BottomNavigationBarContainer(
+        children: List.generate(
+          bottonNavs.length,
+          (index) {
+            final riveIcon = bottonNavs[index].riveAsset;
+            return ValueListenableBuilder(
+              valueListenable: BottomNavUtils.selectedBottomNavUser,
+              builder: (BuildContext context, value, Widget? child) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedBar(
+                      isActive: riveIcon ==
+                          BottomNavUtils.selectedBottomNavUser.value,
+                    ),
+                    CircularButton(
+                      onPressed: () {
+                        BottomNavUtils.animateTheIcon(index);
+                        pageController.jumpToPage(index);
+                      },
+                      shadow: false,
+                      circularButtonChild: Opacity(
+                        opacity: riveIcon ==
+                                BottomNavUtils.selectedBottomNavUser.value
+                            ? 1
+                            : 0.5,
+                        child: RiveAnimation.asset(
+                          riveIcon.src,
+                          artboard: riveIcon.artboard,
+                          onInit: (artboard) {
+                            BottomNavUtils.riveOnInIt(index, artboard);
+                          },
                         ),
-                        diameter: 45,
                       ),
-                    ],
-                  );
-                },
-              );
-            },
-          ),
+                      diameter: 45,
+                    ),
+                  ],
+                );
+              },
+            );
+          },
         ),
       ),
     );

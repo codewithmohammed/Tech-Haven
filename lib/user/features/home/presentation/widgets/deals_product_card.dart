@@ -100,9 +100,9 @@ class DealsProductCard extends StatelessWidget {
                                 bottomLeft: Radius.circular(10),
                               ),
                             ),
-                            child: const Text(
-                              'SmartPhones Deals',
-                              style: TextStyle(
+                            child: Text(
+                              '${product!.subCategory} Deals',
+                              style: const TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600,
                                 color: AppPallete.whiteColor,

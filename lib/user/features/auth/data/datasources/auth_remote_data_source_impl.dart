@@ -293,7 +293,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // Navigate to the next screen or perform any desired action
       } else {
         throw const ServerException(
-          "User can't sign in",
+          "User can't sign in , Please try again later with good network",
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -363,7 +363,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.toString());
     } catch (e) {
-      print(e);
       throw ServerException(e.toString());
     }
   }

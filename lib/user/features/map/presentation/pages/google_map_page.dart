@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
@@ -56,6 +57,9 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           ? null
           : AppBar(
               title: const Text('Location'),
+              backgroundColor: AppPallete.whiteColor,
+              leading: const CustomBackButton(),
+              scrolledUnderElevation: 0,
               actions: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -150,7 +154,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                           labelText: 'Phone Number',
                           hintText: '+ 000 00 000 0000',
                           textEditingController:
-                              phoneNumberTextEditingController),CustomTextFormField(
+                              phoneNumberTextEditingController),
+                      CustomTextFormField(
                         enabled: false,
                         durationMilliseconds: 500,
                         labelText: 'Email Address',
@@ -168,7 +173,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                         hintText: 'e.h. building name,street #',
                         textEditingController: locationTextEditingController,
                         validator: Validator.validateEmptyField,
-                      ),  
+                      ),
                       CustomTextFormField(
                         enabled: state is UpdateLocationDetailsLoading
                             ? false
@@ -180,7 +185,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
                             apartmentHouseNumberTextEditingController,
                         validator: Validator.validateEmptyField,
                       ),
-                    
                       CustomTextFormField(
                         enabled: state is UpdateLocationDetailsLoading
                             ? false

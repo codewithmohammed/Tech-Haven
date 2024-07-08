@@ -95,7 +95,6 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
       user = success;
     });
     if (user != null) {
-      print(event.address);
       final result = await _submitPaymentForm(SubmitPaymentFormParams(
           name: user!.username!,
           address: event.address,

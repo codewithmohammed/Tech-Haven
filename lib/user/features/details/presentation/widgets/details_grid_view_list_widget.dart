@@ -191,7 +191,7 @@ class DetailsGridViewListWidget extends StatelessWidget {
           }
           return const SizedBox(
             child: Center(
-              child: Text('No Products from this brand anymore'),
+              child: Text('No more Products from this brand'),
             ),
           );
         }

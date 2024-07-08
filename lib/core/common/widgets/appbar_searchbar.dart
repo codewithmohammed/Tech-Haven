@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/bloc/common_bloc.dart';
-import 'package:tech_haven/core/common/widgets/circular_button.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
@@ -43,20 +43,7 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (backButton)
-                CircularButton(
-                  onPressed: () {
-                    GoRouter.of(context).pop();
-                  },
-                  circularButtonChild: const SvgIcon(
-                    icon: CustomIcons.arrowLeftSvg,
-                    radius: 25,
-                    // color: AppPallete.whiteColor,
-                  ),
-                  diameter: 40,
-                  color: AppPallete.whiteColor,
-                  shadow: false,
-                ),
+              if (backButton) const CustomBackButton(),
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -152,3 +139,4 @@ class AppBarSearchBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size(double.infinity, 85);
 }
+
