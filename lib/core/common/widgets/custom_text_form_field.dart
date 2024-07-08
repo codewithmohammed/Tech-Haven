@@ -6,7 +6,6 @@ import 'package:tech_haven/core/validators/validators.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String labelText;
-  final String? errorText;
   final String hintText;
   final bool isObscureText;
   final TextEditingController? textEditingController;
@@ -22,8 +21,7 @@ class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
     super.key,
     required this.labelText,
-    this.onChanged,
-    this.errorText,
+     this.onChanged,
     required this.hintText,
     this.isObscureText = false,
     this.inputFormatters,
@@ -46,8 +44,7 @@ class CustomTextFormField extends StatelessWidget {
         alignment: Alignment.centerRight,
         children: [
           TextFormField(
-            
-            onChanged: onChanged,
+            onChanged:onChanged ,
             enabled: enabled,
             controller: textEditingController,
             autovalidateMode: autovalidateMode,
@@ -57,7 +54,6 @@ class CustomTextFormField extends StatelessWidget {
             inputFormatters: inputFormatters,
             style: const TextStyle(fontSize: 16),
             decoration: InputDecoration(
-              errorText: errorText,
               contentPadding: const EdgeInsets.only(top: 5),
               errorStyle: const TextStyle(
                 fontSize: 10,

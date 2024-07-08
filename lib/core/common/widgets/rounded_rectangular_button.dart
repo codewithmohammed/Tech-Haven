@@ -29,7 +29,7 @@ class RoundedRectangularButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(5.0),
         ),
       ).copyWith(
-        backgroundColor: MaterialStatePropertyAll(
+        backgroundColor: WidgetStatePropertyAll(
           outlined ? AppPallete.whiteColor : AppPallete.primaryAppButtonColor,
         ),
       ),

@@ -33,6 +33,14 @@ class CircularButton extends StatelessWidget {
             : null,
       ),
       child: IconButton(
+        color: color,
+        style: const ButtonStyle().copyWith(
+            shape: const WidgetStatePropertyAll(
+              CircleBorder(),
+            ),
+            backgroundColor: WidgetStatePropertyAll(
+              color,
+            )),
         onPressed: onPressed,
         icon: circularButtonChild,
       ),

@@ -50,7 +50,7 @@ class CustomDropDown<T> extends StatelessWidget {
             ),
           ),
           padding: EdgeInsets.symmetric(horizontal: 16),
-          overlayColor: MaterialStatePropertyAll(
+          overlayColor: WidgetStatePropertyAll(
             Color(0xFF2F353E),
           ),
           height: 45,
