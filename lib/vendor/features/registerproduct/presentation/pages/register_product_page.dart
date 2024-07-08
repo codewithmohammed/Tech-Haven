@@ -121,7 +121,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       // if (!RegisterProductBloc.isCategoryLoaded) {print('I am here');
       // If data is not loaded and not loading, fetch the data
       BlocProvider.of<RegisterProductBloc>(context)
-          .add(GetAllCategoryEvent(refreshPage: true));
+          .add(GetAllCategoryEvent(refreshPage: false));
       // }
       // if (!RegisterProductBloc.isBrandLoaded) {
       //   BlocProvider.of<RegisterProductBloc>(context).add(GetAllBrandEvent());
@@ -232,7 +232,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                     ? 'Update The Product'
                     : 'Register New Product',
                 bottom: null,
-                messageIcon: widget.product != null ? false : true,
+                // messageIcon: widget.product != null ? false : true,
                 trailingIcon:
                     widget.product != null ? CustomIcons.trashBinSvg : null,
                 onPressedTrailingIcon: () {

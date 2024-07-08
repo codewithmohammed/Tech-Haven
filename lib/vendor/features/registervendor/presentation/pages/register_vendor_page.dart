@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
 import 'package:tech_haven/core/common/widgets/custom_text_form_field.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/common/widgets/profile_image_widget.dart';
@@ -54,18 +55,7 @@ class _RegisterVendorPageState extends State<RegisterVendorPage> {
 
 //if the user is signed in we will pass the user model else we will else we will direct him to sign in or sign up page from the profile page and if he already is logged in or signed up we will direct them to register page if they are not vendor and to vendor page if thery are vendor.
     return Scaffold(
-        appBar: AppBar(
-          // automaticallyImplyLeading: true,
-          leading: const BackButton(
-          // color: Colors.white,
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
-        ),
-          title: const Text(
-            'Register as Vendor',
-          ),
-        ),
+        appBar: const CustomAppBar(title: 'Register as Vendor',),
         body: BlocConsumer<RegisterVendorBloc, RegisterVendorState>(
           listener: (context, state) {
             if (state is SendRequestForVendorSuccess) {

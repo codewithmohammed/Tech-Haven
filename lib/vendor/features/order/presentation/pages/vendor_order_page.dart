@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/common/widgets/order_tile.dart';
+import 'package:tech_haven/vendor/core/common/widget/vendor_app_bar.dart';
 import 'package:tech_haven/vendor/features/order/presentation/bloc/vendor_order_page_bloc.dart';
 
 class VendorOrderPage extends StatelessWidget {
@@ -19,17 +20,7 @@ class VendorOrderPage extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading:const BackButton(
-          // color: Colors.white,
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
-        ),
-        title: const Text('Your Order'),
-        centerTitle: true,
-      ),
+      appBar: const VendorAppBar(title: 'Your Order', bottom: null),
       body: BlocConsumer<VendorOrderPageBloc, VendorOrderPageState>(
         listener: (context, state) {
           if (state is GetAllOrderListFailed) {

@@ -11,7 +11,6 @@ import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/rive/rive_nav_utils.dart';
 import 'package:tech_haven/core/rive/rive_assets.dart';
-import 'package:tech_haven/core/rive/rive_utils.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 // import 'package:flutter/material.dart';

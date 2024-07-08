@@ -140,6 +140,8 @@ flutter:
     - assets/icons/edit.svg
     - assets/icons/exclamation.svg
     - assets/icons/eye.svg
+    - assets/icons/file_check.svg
+    - assets/icons/lock_outlined.svg
     - assets/icons/eye_slash.svg
     - assets/icons/globe.svg
     - assets/icons/heart.svg
