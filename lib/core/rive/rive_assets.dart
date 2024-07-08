@@ -127,6 +127,10 @@ List<ProfileSideItemModel> profileSideMenus = [
     icon: CustomIcons.questionMarkSvg,
     title: 'Help Center',
   ),
+   ProfileSideItemModel(
+    icon: CustomIcons.questionMarkSvg,
+    title: 'About Us',
+  ),
   ProfileSideItemModel(
     icon: CustomIcons.rightArrowExitSvg,
     title: 'Sign Out',

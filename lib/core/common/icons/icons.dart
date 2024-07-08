@@ -17,10 +17,11 @@ class CustomIcons {
   static const String mapPinSvg = 'assets/icons/map_pin.svg';
   static const String thumbUpFilledSvg = 'assets/icons/thumb_up_filled.svg';
   static const String mapPinAltSvg = 'assets/icons/map_pin_alt.svg';
-  static const String angleLeftSvg = 'assets/icons/angle_left.svg';
   static const String messagesSvg = 'assets/icons/messages.svg';
+  static const String lockOutlinedSvg = 'assets/icons/lock_outlined.svg';
   static const String microphoneSvg = 'assets/icons/microphone.svg';
   static const String playSvg = 'assets/icons/play.svg';
+  static const String fileCheck = 'assets/icons/file_check.svg';
   static const String publishSvg = 'assets/icons/publish.svg';
   static const String shareSvg = 'assets/icons/share.svg';
   static const String starSvg = 'assets/icons/star.svg';
