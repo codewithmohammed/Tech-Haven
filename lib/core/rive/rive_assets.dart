@@ -127,8 +127,16 @@ List<ProfileSideItemModel> profileSideMenus = [
     icon: CustomIcons.questionMarkSvg,
     title: 'Help Center',
   ),
+     ProfileSideItemModel(
+    icon: CustomIcons.fileCheck,
+    title: 'Terms and Conditions',
+  ),
+     ProfileSideItemModel(
+    icon: CustomIcons.lockOutlinedSvg,
+    title: 'Privacy Policy',
+  ),
    ProfileSideItemModel(
-    icon: CustomIcons.questionMarkSvg,
+    icon: CustomIcons.exclamationSvg,
     title: 'About Us',
   ),
   ProfileSideItemModel(

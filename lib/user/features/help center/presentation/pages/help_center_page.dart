@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/data/model/help_request_model.dart';
+import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/help%20center/presentation/bloc/help_center_bloc.dart';
@@ -35,14 +36,8 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
     context.read<HelpCenterBloc>().add(GetAllUserRequestEvent());
     context.read<HelpCenterBloc>().add(GetUserDataEvent());
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Help Center'),
-        leading: const BackButton(
-          // color: Colors.white,
-          style: ButtonStyle(
-              backgroundColor:
-                  MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
-        ),
+      appBar: const CustomAppBar(
+        title: 'Help Center',
       ),
       body: SingleChildScrollView(
         child: Padding(

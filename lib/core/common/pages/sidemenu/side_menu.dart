@@ -115,11 +115,9 @@ class SideMenuState extends State<SideMenu> {
                               ? const SizedBox.shrink()
                               : (!state.user.isVendor && index + 3 == 5)
                                   ? SideMenuTile(
-                                      isActive:
-                                          RiveNavUtils
-                                                      .selectedSideBarTotal
-                                                      .value ==
-                                                  index + 3,
+                                      isActive: RiveNavUtils
+                                              .selectedSideBarTotal.value ==
+                                          index + 3,
                                       onTap: () {
                                         if (state.user.phoneNumber == null) {
                                           return _showPhoneVerificationDialog(
@@ -134,15 +132,38 @@ class SideMenuState extends State<SideMenu> {
                                       icon: CustomIcons.cartSvg)
                                   : SideMenuTile(
                                       isActive: (state.user.phoneNumber != null &&
-                                                  RiveNavUtils
-                                                          .selectedSideBarTotal
+                                              RiveNavUtils.selectedSideBarTotal
+                                                      .value ==
+                                                  4 &&
+                                              index + 3 == 6)
+                                          ? true
+                                          : (state.user.phoneNumber != null &&
+                                                  RiveNavUtils.selectedSideBarTotal
                                                           .value ==
-                                                      4 &&
-                                                  index + 3 == 6)
+                                                      5 &&
+                                                  index + 3 == 7)
                                               ? true
-                                              : RiveNavUtils
-                                              .selectedSideBarTotal.value ==
-                                          index + 3,
+                                              : (state.user.phoneNumber !=
+                                                          null &&
+                                                      RiveNavUtils
+                                                              .selectedSideBarTotal
+                                                              .value ==
+                                                          6 &&
+                                                      index + 3 == 8)
+                                                  ? true
+                                                  : (state.user
+                                                                  .phoneNumber !=
+                                                              null &&
+                                                          RiveNavUtils
+                                                                  .selectedSideBarTotal
+                                                                  .value ==
+                                                              7 &&
+                                                          index + 3 == 9)
+                                                      ? true
+                                                      : RiveNavUtils
+                                                              .selectedSideBarTotal
+                                                              .value ==
+                                                          index + 3,
                                       onTap: () {
                                         // print(state.user.phoneNumber == null &&
                                         //     RiveNavUtils.selectedSideBarTotal
@@ -164,12 +185,31 @@ class SideMenuState extends State<SideMenu> {
                                         }
                                         if (state.user.phoneNumber != null &&
                                             index + 3 == 6) {
-                                          print('object');
                                           RiveNavUtils
                                               .selectedSideBarTotal.value = 4;
                                           return;
                                         }
-                                        if (index + 3 == 7) {
+                                        if (state.user.phoneNumber != null &&
+                                            index + 3 == 7) {
+                                          RiveNavUtils
+                                              .selectedSideBarTotal.value = 5;
+                                          return;
+                                        }
+                                        if (state.user.phoneNumber != null &&
+                                            index + 3 == 8) {
+                                          print(index + 3);
+                                          RiveNavUtils
+                                              .selectedSideBarTotal.value = 6;
+                                          return;
+                                        }
+                                        if (state.user.phoneNumber != null &&
+                                            index + 3 == 9) {
+                                          print(index + 3);
+                                          RiveNavUtils
+                                              .selectedSideBarTotal.value = 7;
+                                          return;
+                                        }
+                                        if (index + 3 == 10) {
                                           showConfirmationDialog(
                                               context,
                                               'Sign Out',

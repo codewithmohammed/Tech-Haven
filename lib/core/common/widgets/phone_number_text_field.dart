@@ -11,8 +11,9 @@ class PhoneNumberTextField extends StatelessWidget {
     required this.countryCode,
     required this.textFormFieldEnabled,
     required this.phoneNumberController,
+     this.errorText,
   });
-
+  final String? errorText;
   final ValueNotifier<String> countryCode;
   final bool textFormFieldEnabled;
   final TextEditingController phoneNumberController;
@@ -39,6 +40,8 @@ class PhoneNumberTextField extends StatelessWidget {
         //phone number field
         Expanded(
           child: CustomTextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            errorText: errorText,
             enabled: textFormFieldEnabled,
             textEditingController: phoneNumberController,
             labelText: 'Phone Number',

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/common/pages/sidemenu/side_menu.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/user_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/bottomnav/vendor_bottom_navigation_bar.dart';
 import 'package:tech_haven/core/common/pages/splash/presentation/pages/splash_page.dart';
@@ -25,7 +24,6 @@ import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_pa
 import 'package:tech_haven/user/features/help%20center/presentation/pages/help_center_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
-import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/pages/user_order_history_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/ordredProducts/presentation/pages/ordered_products_page.dart';
@@ -187,23 +185,23 @@ class AppRoutes {
           orderID: state.pathParameters['orderID']!,
         ),
       ),
-      _buildPageRoute(
-        name: AppRouteConstants.messagePage,
-        path: '/message_page',
-        child: const MessagePage(),
-        transitionsBuilder: (animation, child) {
-          final tween = Tween(
-            begin: const Offset(1, 0),
-            end: Offset.zero,
-          ).animate(
-            CurvedAnimation(parent: animation, curve: Curves.easeInOut),
-          );
-          return SlideTransition(
-            position: tween,
-            child: child,
-          );
-        },
-      ),
+      // _buildPageRoute(
+      //   name: AppRouteConstants.messagePage,
+      //   path: '/message_page',
+      //   child: const MessagePage(),
+      //   transitionsBuilder: (animation, child) {
+      //     final tween = Tween(
+      //       begin: const Offset(1, 0),
+      //       end: Offset.zero,
+      //     ).animate(
+      //       CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+      //     );
+      //     return SlideTransition(
+      //       position: tween,
+      //       child: child,
+      //     );
+      //   },
+      // ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.reviewEnterPage,
         path: '/review_enter_page',

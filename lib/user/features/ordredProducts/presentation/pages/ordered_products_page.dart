@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/user/features/ordredProducts/presentation/bloc/ordered_products_page_bloc.dart';
 import 'package:tech_haven/user/features/ordredProducts/presentation/widgets/ordered_product_card.dart';
@@ -17,7 +18,7 @@ class OrderedProductsPage extends StatelessWidget {
         .add(FetchOrderProductsEvent(orderId: orderID));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Product Details')),
+      appBar: const CustomAppBar(title: 'Product Details'),
       body: BlocBuilder<OrderedProductsPageBloc, OrderedProductsPageState>(
         builder: (context, state) {
           if (state is OrderedProductsPageLoading) {

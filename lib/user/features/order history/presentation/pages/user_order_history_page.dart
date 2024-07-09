@@ -2,6 +2,7 @@ import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
@@ -18,16 +19,8 @@ class UserOrderHistoryPage extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         extendBody: true,
         extendBodyBehindAppBar: false,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          leading: const BackButton(
-            // color: Colors.white,
-            style: ButtonStyle(
-                backgroundColor:
-                    MaterialStatePropertyAll(Color.fromARGB(0, 255, 255, 255))),
-          ),
-          title: const Text('Your Order History'),
-          centerTitle: true,
+        appBar: const CustomAppBar(
+          title: 'Your Order History',
         ),
         body: BlocBuilder<UserOrderHistoryPageBloc, UserOrderHistoryState>(
           builder: (context, state) {
