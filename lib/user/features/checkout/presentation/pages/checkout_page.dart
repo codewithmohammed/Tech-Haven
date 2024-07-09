@@ -11,7 +11,7 @@ import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_blo
 import 'package:tech_haven/user/features/checkout/presentation/pages/shipping_details_page.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/submit_page.dart';
 
-// import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 // import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -237,26 +237,26 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   showPaymentSheetForWeb({required PaymentIntentModel paymentIntentModel}) {
     final String clientSecret = paymentIntentModel.clientSecret;
-    // final PlatformWebViewController controller = PlatformWebViewController(
-    //   const PlatformWebViewControllerCreationParams(),
-    // )..loadRequest(
-    //     LoadRequestParams(
-    //       uri: Uri.parse(
-    //           'https://techhavenstripepayment.web.app/?client_secret=$clientSecret'),
-    //     ),
-    //   );
+    final PlatformWebViewController controller = PlatformWebViewController(
+      const PlatformWebViewControllerCreationParams(),
+    )..loadRequest(
+        LoadRequestParams(
+          uri: Uri.parse(
+              'https://techhavenstripepayment.web.app/?client_secret=$clientSecret'),
+        ),
+      );
 
-    // showDialog(
-    //   context: context,
-    //   builder: (context) => Dialog(
-    //     child: SizedBox(
-    //       width: 400,
-    //       height: 600,
-    //       child: PlatformWebViewWidget(
-    //         PlatformWebViewWidgetCreationParams(controller: controller),
-    //       ).build(context),
-    //     ),
-    //   ),
-    // );
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        child: SizedBox(
+          width: 400,
+          height: 600,
+          child: PlatformWebViewWidget(
+            PlatformWebViewWidgetCreationParams(controller: controller),
+          ).build(context),
+        ),
+      ),
+    );
   }
 }
