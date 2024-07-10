@@ -90,48 +90,44 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await getVerificationId(phoneNumber);
 
-      if (potentialVerificationId != null) {
-        return SignUpModelImpl(
-          phoneNumber: phoneNumber,
-          email: email,
-          password: password,
-          verificationID: potentialVerificationId!,
-        );
-        //
-      } else {
-        throw const ServerException(
-            'The Verification ID is failed to recieve, Please try again,');
-      }
+      // Add a small delay to ensure the verification ID is assigned
+
+      // if (potentialVerificationId != null) {
+      return SignUpModelImpl(
+        phoneNumber: phoneNumber,
+        email: email,
+        password: password,
+        verificationID: potentialVerificationId!,
+      );
+      // } else {
+      // await Future.delayed(const Duration(milliseconds: 500));
+      // }
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message!);
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
-      throw ServerException(
-        e.toString(),
-      );
+      throw ServerException(e.toString());
     }
   }
 
   Future<void> getVerificationId(String phoneNumber) async {
-    await firebaseAuth.verifyPhoneNumber(
+    await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: phoneNumber,
       verificationCompleted: (phoneAuthCredential) async {
-        await firebaseAuth.signInWithCredential(phoneAuthCredential);
+        await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
       },
       verificationFailed: (error) async {
         throw ServerException(error.message!);
       },
       codeSent: (verificationId, forceResendingToken) async {
-        // print('assigning the verification id');
-        assignTheVerificationId(verificationId: verificationId);
-        // print(potentialVerificationId);
+        await assignTheVerificationId(verificationId: verificationId);
       },
-      codeAutoRetrievalTimeout: (verificationId) async {},
+      codeAutoRetrievalTimeout: (verificationId) {},
     );
   }
 
-  assignTheVerificationId({required String verificationId}) {
+  Future<void> assignTheVerificationId({required String verificationId}) async {
     potentialVerificationId = verificationId;
   }
 

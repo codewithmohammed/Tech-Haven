@@ -70,6 +70,7 @@ class SideMenuState extends State<SideMenu> {
                         GoRouter.of(context)
                             .pushNamed(AppRouteConstants.profileEditPage);
                       },
+                      userColor: user.color,
                     ),
                     const SideBarTitle(
                       title: "Browse",
@@ -198,14 +199,14 @@ class SideMenuState extends State<SideMenu> {
                                         }
                                         if (state.user.phoneNumber != null &&
                                             index + 3 == 8) {
-                                          print(index + 3);
+                                          // if (kDebugMode) {
+                                          // }
                                           RiveNavUtils
                                               .selectedSideBarTotal.value = 6;
                                           return;
                                         }
                                         if (state.user.phoneNumber != null &&
                                             index + 3 == 9) {
-                                          print(index + 3);
                                           RiveNavUtils
                                               .selectedSideBarTotal.value = 7;
                                           return;
@@ -215,11 +216,12 @@ class SideMenuState extends State<SideMenu> {
                                               context,
                                               'Sign Out',
                                               'Are you sure you want to sign out',
-                                              () async{
-                                           await FirebaseAuth.instance.signOut();
+                                              () async {
+                                            await FirebaseAuth.instance
+                                                .signOut();
                                             GoogleSignIn googleSignIn =
                                                 GoogleSignIn();
-                                          await  googleSignIn.signOut();
+                                            await googleSignIn.signOut();
                                             GoRouter.of(context).goNamed(
                                                 AppRouteConstants.splashScreen);
                                           });

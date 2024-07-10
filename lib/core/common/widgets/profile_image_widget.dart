@@ -6,19 +6,21 @@ import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class ProfileImageWidget extends StatelessWidget {
-  const ProfileImageWidget(
-      {super.key,
-      required this.image,
-      required this.userColor,
-      required this.username,
-      this.initialImage,
-      required this.onPressed});
+  const ProfileImageWidget({
+    super.key,
+    required this.image,
+    required this.userColor,
+    required this.username,
+    this.initialImage,
+    required this.onPressed,
+  });
 
   final ValueNotifier<File?> image;
   final Color userColor;
   final String? initialImage;
   final ValueNotifier<String> username;
   final void Function()? onPressed;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -51,11 +53,11 @@ class ProfileImageWidget extends StatelessWidget {
                     ? DecorationImage(
                         image: FileImage(image.value!),
                       )
-                    : initialImage != null
+                    : (initialImage != null && initialImage!.isNotEmpty)
                         ? DecorationImage(image: NetworkImage(initialImage!))
                         : null,
               ),
-              child: image.value == null && initialImage == null
+              child: image.value == null && (initialImage == null || initialImage!.isEmpty)
                   ? ValueListenableBuilder(
                       valueListenable: username,
                       builder: (context, value, child) {
@@ -65,7 +67,8 @@ class ProfileImageWidget extends StatelessWidget {
                             fontSize: 100,
                           ),
                         );
-                      })
+                      },
+                    )
                   : const SizedBox(),
             );
           },

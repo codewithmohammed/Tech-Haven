@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
@@ -15,7 +14,7 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         backgroundColor:
-            MaterialStateProperty.all<Color>(AppPallete.primaryAppButtonColor),
+            WidgetStateProperty.all<Color>(AppPallete.primaryAppButtonColor),
       ),
     ),
 
@@ -56,7 +55,6 @@ class AppTheme {
   );
 
   static var inputDecoration = InputDecoration(
-    
     filled: true,
     fillColor: AppPallete.whiteColor,
     contentPadding: const EdgeInsets.only(top: 10),
@@ -89,14 +87,14 @@ class AppTheme {
           backgroundColor: AppPallete.primaryAppButtonColor),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
-              AppPallete.primaryAppButtonColor),
+          backgroundColor:
+              WidgetStateProperty.all<Color>(AppPallete.primaryAppButtonColor),
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
-              AppPallete.primaryAppButtonColor),
+          backgroundColor:
+              WidgetStateProperty.all<Color>(AppPallete.primaryAppButtonColor),
         ),
       )
       // inputDecorationTheme: InputDecorationTheme(

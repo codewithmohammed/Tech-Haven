@@ -41,13 +41,11 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
     // print('sdfsdfsd');
     try {
       final url = Uri.parse('https://api.stripe.com/v1/payment_intents');
-      print('hello how');
       String? secretKey;
       if (!kIsWeb) {
         secretKey = dotenv.env["STRIPE_SECRET_KEY"]!;
       }
 
-      print('ok da mone');
       final body = {
         'amount': amount,
         'currency': currency.toLowerCase(),

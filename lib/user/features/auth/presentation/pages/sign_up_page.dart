@@ -3,6 +3,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tech_haven/core/common/widgets/circular_button.dart';
@@ -53,12 +54,7 @@ class _SignUpPageState extends State<SignUpPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is OTPSendFailed) {
-            showSnackBar(
-              context: context,
-              title: 'Oh',
-              content: state.message,
-              contentType: ContentType.failure,
-            );
+            Fluttertoast.showToast(msg: state.message);
           }
           if (state is OTPSendSuccess) {
             GoRouter.of(context).pushNamed(
