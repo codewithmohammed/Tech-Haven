@@ -83,46 +83,7 @@ class _SignInPageState extends State<SignInPage> {
               desktopLayout: _buildSignInTabletDesktopLayout(context),
             );
 
-            //  Stack(
-            //   alignment: Alignment.bottomCenter,
-            //   children: [
-            //     Container(
-            //         // decoration: const BoxDecoration(
-            //         //   color: AppPallete.primaryAppColor,
-            //         // ),
-            //         ),
-            //     Positioned(
-            //       top: 25,
-            //       child: ConstrainedBox(
-            //           constraints: BoxConstraints.tight(const Size(415, 415)),
-            //           child:
-            //               Lottie.asset('assets/lotties/sign_in_lottie.json')),
-            //     ),
-            //     //for aligning the container in the stack ,used the align widget instead of positioned.
-            //     // MediaQuery.of(context).size.width > 650 ?
-            //     //if the screen width is greater than the value we will build a new align else for the mobile phones
-            //     // Align(
-            //     //   heightFactor: 2,
-            //     //   widthFactor: 2,
-            //     //   alignment: screenWidth < 930
-            //     //       ? const AlignmentDirectional(0, 1.35)
-            //     //       : screenWidth < 1250
-            //     //           ? const Alignment(1, 0)
-            //     //           : screenWidth < 1650
-            //     //               ? const Alignment(2, 0)
-            //     //               : const Alignment(3, 0),
-            //     //the authentication container for form filling the same will be used in the login page / and sign up page.
-            //     // child:
-            //     // Positioned(
-            //     //   bottom: -50,
-            //     //   child: Form(
-            //     //     key: signinFormKey,
-            //     //     child:
-            //     //   ),
-            //     // ),
-
-            //   ],
-            // );
+        
           },
         ));
   }

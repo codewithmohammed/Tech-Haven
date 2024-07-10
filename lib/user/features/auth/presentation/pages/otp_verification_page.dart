@@ -191,7 +191,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                       }
                     },
                     onChanged: (value) {
-                      debugPrint('onChanged: $value');
+                      // debugPrint('onChanged: $value');
                     },
                     cursor: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
