@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
+import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/terms/pesentation/widgets/terms_header.dart';
 import 'package:tech_haven/user/features/terms/pesentation/widgets/terms_section.dart';
 
@@ -8,11 +9,14 @@ class TermsAndConditionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(
-        title: 'Terms and Conditions',
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppPallete.whiteColor,
+        leading: const CustomBackButton(),
+        scrolledUnderElevation: 0,
+        title: const Text('Terms and Conditions'),
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -83,3 +87,4 @@ class TermsAndConditionsPage extends StatelessWidget {
     );
   }
 }
+

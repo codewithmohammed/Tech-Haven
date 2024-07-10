@@ -30,9 +30,8 @@ class _ReviewEnterPageState extends State<ReviewEnterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Product Review',
-      ),
+      appBar:
+          CustomAppBar(title: 'Rate ${widget.reviewRouteModel.product.name}'),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

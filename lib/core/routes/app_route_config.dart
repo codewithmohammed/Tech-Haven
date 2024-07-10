@@ -9,6 +9,7 @@ import 'package:tech_haven/core/entities/product.dart';
 import 'package:tech_haven/core/entities/user.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/user/features/about%20product/presentation/pages/about_product_page.dart';
+import 'package:tech_haven/user/features/about/presentation/pages/about_app.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/forgot_password_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/otp_verification_page.dart';
 import 'package:tech_haven/user/features/auth/presentation/pages/sign_in_page.dart';
@@ -24,15 +25,18 @@ import 'package:tech_haven/user/features/favorite/presentation/pages/favorite_pa
 import 'package:tech_haven/user/features/help%20center/presentation/pages/help_center_page.dart';
 import 'package:tech_haven/user/features/home/presentation/pages/home_page.dart';
 import 'package:tech_haven/user/features/map/presentation/pages/google_map_page.dart';
+import 'package:tech_haven/user/features/message/presentation/pages/message_page.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/pages/user_order_history_page.dart';
 import 'package:tech_haven/user/features/order/presentation/pages/user_order_page.dart';
 import 'package:tech_haven/user/features/ordredProducts/presentation/pages/ordered_products_page.dart';
+import 'package:tech_haven/user/features/privacy/presentation/pages/privacy_and_policy_page.dart';
 import 'package:tech_haven/user/features/products/presentation/pages/products_page.dart';
 import 'package:tech_haven/user/features/profile%20edit/presentation/pages/profile_edit_page.dart';
 import 'package:tech_haven/user/features/review%20enter/data/models/review_enter_route_model.dart';
 import 'package:tech_haven/user/features/review%20enter/presentation/pages/review_enter_page.dart';
 import 'package:tech_haven/user/features/reviews/presentation/pages/review_page.dart';
 import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
+import 'package:tech_haven/user/features/terms/pesentation/pages/terms_and_conditions_page.dart';
 import 'package:tech_haven/vendor/features/message/presentation/pages/vendor_chat_page.dart';
 import 'package:tech_haven/vendor/features/orderdetails/presentation/pages/vendor_order_details_page.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/pages/register_product_page.dart';
@@ -52,6 +56,21 @@ class AppRoutes {
         name: AppRouteConstants.welcomePage,
         path: '/welcome_page',
         child: const WelcomePage(),
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.privacyPolicyPage,
+        path: '/privacy_policy_page',
+        child: const PrivacyPolicyPage(),
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.aboutAppPage,
+        path: '/about_app_page',
+        child: const AboutAppPage(),
+      ),
+      _buildPageRoute(
+        name: AppRouteConstants.termsAndConditionsPage,
+        path: '/terms_and_conditions_page',
+        child: const TermsAndConditionsPage(),
       ),
       _buildPageRoute(
           name: AppRouteConstants.userOrderPage,

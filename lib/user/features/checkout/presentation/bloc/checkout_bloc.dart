@@ -218,6 +218,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     final user = await _getUserData(NoParams());
     user.fold((failed) => emit(AddressFailed(message: failed.message)),
         (user) => userID = user!.uid);
+
     if (userID != null) {
       final addresses =
           await _getAllUserAddress(GetAllUserAddressParams(userID: userID!));

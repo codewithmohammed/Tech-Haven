@@ -4,22 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
-import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/common/widgets/profile_image_widget.dart';
+import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/pick_image.dart';
 import 'package:tech_haven/user/features/profile%20edit/presentation/bloc/profile_edit_page_bloc.dart';
 
 class ProfileEditPage extends StatelessWidget {
   const ProfileEditPage({super.key});
 
+  // Future<File?> pickImage() async {
+  //   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     return File(pickedFile.path);
+  //   }
+  //   return null;
+  // }
+
   @override
   Widget build(BuildContext context) {
     context.read<ProfileEditPageBloc>().add(GetUserDataEvent());
     ValueNotifier<String> username = ValueNotifier('');
     ValueNotifier<File?> image = ValueNotifier(null);
-
     void selectImage() async {
       final pickedImage = await pickImage();
       if (pickedImage != null) {
@@ -28,8 +36,11 @@ class ProfileEditPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Edit your Data',
+      appBar: AppBar(
+        scrolledUnderElevation: 0,
+        backgroundColor: AppPallete.whiteColor,
+        leading: const CustomBackButton(),
+        title: const Text('Edit your Data'),
       ),
       body: BlocConsumer<ProfileEditPageBloc, ProfileEditPageState>(
         listener: (context, state) {
@@ -85,6 +96,18 @@ class ProfileEditPage extends StatelessWidget {
                           hintText: 'Name',
                         ),
                       ),
+                      // CustomTextFormField(
+                      //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //   labelText: 'Physical Address',
+                      //   hintText: 'Enter your Physical Address',
+                      //   textEditingController: TextEditingController(),
+                      // ),
+                      // CustomTextFormField(
+                      //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                      //   labelText: 'Account Number',
+                      //   hintText: 'Enter Your Account Number',
+                      //   textEditingController: TextEditingController(),
+                      // ),
                     ],
                   ),
                 ),

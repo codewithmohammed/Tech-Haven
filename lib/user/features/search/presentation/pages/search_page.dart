@@ -101,37 +101,32 @@ class _SearchPageState extends State<SearchPage> {
                           itemCount: state.products.length,
                           itemBuilder: (context, index) {
                             final currentProduct = state.products[index];
-                            return state.products.isNotEmpty
-                                ? ProductCard(
-                                    onTapCard: () {
-                                      GoRouter.of(context).pushNamed(
-                                          AppRouteConstants.detailsPage,
-                                          extra: currentProduct);
-                                    },
-                                    likeButton: CustomLikeButton(
-                                      isFavorited: state.listOfFavoritedProducts
-                                          .contains(currentProduct.productID),
-                                      onTapFavouriteButton:
-                                          (bool isLiked) async {
-                                        updateProductToFavorite(
-                                            currentProduct, isLiked);
-                                        return isLiked ? false : true;
-                                      },
-                                    ),
-                                    isHorizontal: false,
-                                    product: state.products[index],
-                                    // onTapFavouriteButton:
-                                    // isFavorited:
-                                    shoppingCartWidget: Container())
-                                : const Center(
-                                    child: Text(
-                                      'No Data Found',
-                                    ),
-                                  );
+                            return ProductCard(
+                                onTapCard: () {
+                                  GoRouter.of(context).pushNamed(
+                                      AppRouteConstants.detailsPage,
+                                      extra: currentProduct);
+                                },
+                                likeButton: CustomLikeButton(
+                                  isFavorited: state.listOfFavoritedProducts
+                                      .contains(currentProduct.productID),
+                                  onTapFavouriteButton: (bool isLiked) async {
+                                    updateProductToFavorite(
+                                        currentProduct, isLiked);
+                                    return isLiked ? false : true;
+                                  },
+                                ),
+                                isHorizontal: false,
+                                product: state.products[index],
+                                // onTapFavouriteButton:
+                                // isFavorited:
+                                shoppingCartWidget: Container());
                           },
                         )
                       : const Center(
-                          child: Text('No Products Found'),
+                          child: Text(
+                            'No Products Found',
+                          ),
                         );
                   //   ListView.builder(
                   //     itemCount: state.products.length,

@@ -17,6 +17,9 @@ class AppRouteConstants {
   static const String profileEditPage = 'profile_edit_page';
   static const String vendorOrderDetailsPage = 'vendor_order_details_page';
   static const String orderedProductsPage = 'user_ordered_products';
+  static const String aboutAppPage = 'about_app_page';
+  static const String termsAndConditionsPage = 'terms_and_conditions_page';
+  static const String privacyPolicyPage = 'privacy_policy_page';
   static const String userOrderHistoryPage = 'user_order_history_page';
   static const String vendorMainPage = 'vendor_main_page';
   static const String vendorChatPage = 'vendor_chat_page';

@@ -34,11 +34,9 @@ class UserReviewContainerWidget extends StatelessWidget {
       },
       buildWhen: (previous, current) => current is LoadReviewsState,
       builder: (context, reviewState) {
-        if (reviewState is LoadReviewSuccessState) {   
-        
+        if (reviewState is LoadReviewSuccessState) {
           // print(reviewState.allUserOwnedProducts.length);
           if (reviewState.listOfReviews.isNotEmpty) {
-         
             // print(
             //     (reviewState.allUserOwnedProducts.contains(product.productID)));
             context
@@ -50,19 +48,47 @@ class UserReviewContainerWidget extends StatelessWidget {
               children: [
                 if (reviewState.allUserOwnedProducts
                     .contains(product.productID))
-                  StarRatingWidget(
-                    isForReviewPage: false,
-                    onValueChanged: (double newValue) {
-                      GoRouter.of(context).pushNamed(
-                        AppRouteConstants.reviewEnterPage,
-                        extra: ReviewEnterRouteModel(
-                          listOfReview:reviewState.listOfReviews,
-                            product: product, userRating: newValue),
-                      );
-                      starValueNotifier.value = newValue;
-                      starValueNotifierForReviewPage.value = newValue;
-                    },
-                    // valueNotifier: starValueNotifier,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          children: [
+                            GlobalTitleText(title: 'Rate this Product'),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: StarRatingWidget(
+                                starSize: 20,
+                                starSpacing: 20,
+                                isForReviewPage: false,
+                                onValueChanged: (double newValue) {
+                                  GoRouter.of(context).pushNamed(
+                                    AppRouteConstants.reviewEnterPage,
+                                    extra: ReviewEnterRouteModel(
+                                        listOfReview: reviewState.listOfReviews,
+                                        product: product,
+                                        userRating: newValue),
+                                  );
+                                  starValueNotifier.value = newValue;
+                                  starValueNotifierForReviewPage.value =
+                                      newValue;
+                                },
+                                // valueNotifier: starValueNotifier,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -128,11 +154,13 @@ class UserReviewContainerWidget extends StatelessWidget {
                   ),
                 ),
                 ReveiwDisplayWidget(
-                  reviewModel: reviewState.listOfReviews[0], userID: reviewState.userID,
+                  reviewModel: reviewState.listOfReviews[0],
+                  userID: reviewState.userID,
                 ),
                 if (reviewState.listOfReviews.length > 1)
                   ReveiwDisplayWidget(
-                    reviewModel: reviewState.listOfReviews[1], userID:  reviewState.userID,
+                    reviewModel: reviewState.listOfReviews[1],
+                    userID: reviewState.userID,
                   ),
                 Container(
                     padding: const EdgeInsets.symmetric(
@@ -145,7 +173,8 @@ class UserReviewContainerWidget extends StatelessWidget {
                         GoRouter.of(context).pushNamed(
                             AppRouteConstants.fullReviewPage,
                             extra: ReviewRouteModel(
-                                listOfReview: reviewState.listOfReviews, userID: reviewState.userID ));
+                                listOfReview: reviewState.listOfReviews,
+                                userID: reviewState.userID));
                       },
                       title: 'VIEW MORE',
                       outlined: true,
@@ -172,8 +201,9 @@ class UserReviewContainerWidget extends StatelessWidget {
                         GoRouter.of(context).pushNamed(
                           AppRouteConstants.reviewEnterPage,
                           extra: ReviewEnterRouteModel(
-                            listOfReview: reviewState.listOfReviews,
-                              product: product, userRating: newValue),
+                              listOfReview: reviewState.listOfReviews,
+                              product: product,
+                              userRating: newValue),
                         );
                         starValueNotifier.value = newValue;
                         starValueNotifierForReviewPage.value = newValue;
@@ -207,7 +237,8 @@ class UserReviewContainerWidget extends StatelessWidget {
                     listOfHelpFulUsers: [],
                     userName: 'userName',
                     userRating: 5,
-                  ), userID: '',
+                  ),
+                  userID: '',
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -270,7 +301,8 @@ class UserReviewContainerWidget extends StatelessWidget {
                     listOfHelpFulUsers: [],
                     userName: 'userName',
                     userRating: 5,
-                  ), userID: '',
+                  ),
+                  userID: '',
                 ),
                 ReveiwDisplayWidget(
                   reviewModel: Review(
@@ -283,7 +315,8 @@ class UserReviewContainerWidget extends StatelessWidget {
                     productID: '',
                     userName: 'userName',
                     userRating: 5,
-                  ), userID: '',
+                  ),
+                  userID: '',
                 ),
                 Container(
                     padding: const EdgeInsets.symmetric(

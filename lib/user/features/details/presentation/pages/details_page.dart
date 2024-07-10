@@ -65,11 +65,11 @@ class DetailsPage extends StatelessWidget {
             ProductImagesDisplayWidget(
               product: product,
             ),
-      
+
             //for the indicator
-      
+
             Container(),
-      
+
             //for the prize tag
             SizedBox(
               height: 250,
@@ -112,7 +112,7 @@ class DetailsPage extends StatelessWidget {
                       ),
                     ],
                   ),
-      
+
                   Container(
                     padding: const EdgeInsets.all(8.0),
                     color: Colors.grey[200],
@@ -127,7 +127,7 @@ class DetailsPage extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          'upto AED ${product.oldPrize - product.prize}',
+                          'upto AED ${(product.oldPrize - product.prize).floor()}',
                           style: const TextStyle(color: Colors.orange),
                         ),
                       ],
@@ -178,7 +178,7 @@ class DetailsPage extends StatelessWidget {
                   Text(
                       'FREE delivery ${DateFormat('EEEE').format(DateTime.now().add(const Duration(days: 7)))}, ${formatDateTime(DateTime.now().add(const Duration(days: 7)))}'),
                   const SizedBox(height: 8.0),
-      
+
                   // RichText(
                   //   text: const TextSpan(
                   //     children: [
@@ -213,8 +213,7 @@ class DetailsPage extends StatelessWidget {
                   Text(
                     product.quantity == 0 ? 'Not In Stock' : 'In Stock',
                     style: TextStyle(
-                      color:
-                          product.quantity == 0 ? Colors.red : Colors.green,
+                      color: product.quantity == 0 ? Colors.red : Colors.green,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -243,11 +242,11 @@ class DetailsPage extends StatelessWidget {
             //   ),
             // ),
             const GlobalPageDivider(),
-      
+
             UserReviewContainerWidget(
               product: product,
             ),
-      
+
             Container(
               // height: 600,
               padding: const EdgeInsets.all(10),

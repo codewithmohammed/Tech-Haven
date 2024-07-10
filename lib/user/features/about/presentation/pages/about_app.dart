@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
+import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/about/presentation/widgets/about_page_header.dart';
 
 class AboutAppPage extends StatelessWidget {
@@ -7,11 +8,14 @@ class AboutAppPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(
-        title: 'About Tech Haven',
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppPallete.whiteColor,
+        leading: const CustomBackButton(),
+        scrolledUnderElevation: 0,
+        title: const Text('About Tech Haven'),
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
@@ -29,11 +33,11 @@ class AboutAppPage extends StatelessWidget {
                   color: Colors.black87,
                 ),
               ),
-              SizedBox(height: 20),
-              AboutPageHeader(
+              SizedBox(height: 20),  AboutPageHeader(
                 header: 'Our Mission',
                 fontSize: 22,
               ),
+          
               SizedBox(height: 10),
               Text(
                 'Our mission is to revolutionize the way people shop for electronics by providing an easy, reliable, and enjoyable online shopping experience. We are committed to delivering exceptional value, outstanding customer service, and innovative solutions to meet your tech needs.',
@@ -43,10 +47,12 @@ class AboutAppPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              AboutPageHeader(
+
+                AboutPageHeader(
                 header: 'Why Choose Us?',
                 fontSize: 22,
               ),
+             
               SizedBox(height: 10),
               Text(
                 '• Wide Selection: Discover a vast array of electronics, from smartphones and laptops to home appliances and gadgets.\n'
@@ -59,10 +65,11 @@ class AboutAppPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 20),
-              AboutPageHeader(
-                header: 'Join Us',
+                AboutPageHeader(
+                header:  'Join Us',
                 fontSize: 22,
               ),
+             
               SizedBox(height: 10),
               Text(
                 'Whether you\'re a tech enthusiast or a budding entrepreneur, Tech Haven is the perfect place for you. Join our community today and experience the future of electronics shopping.',

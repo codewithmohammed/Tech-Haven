@@ -2,10 +2,11 @@ import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
+import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/loader.dart';
 import 'package:tech_haven/core/common/widgets/rounded_rectangular_button.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
+import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/order%20history/presentation/bloc/user_order_history_page_bloc.dart';
 
@@ -19,8 +20,13 @@ class UserOrderHistoryPage extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         extendBody: true,
         extendBodyBehindAppBar: false,
-        appBar: const CustomAppBar(
-          title: 'Your Order History',
+        appBar: AppBar(
+          scrolledUnderElevation: 0,
+          backgroundColor: AppPallete.whiteColor,
+          automaticallyImplyLeading: false,
+          leading: const CustomBackButton(),
+          title: const Text('Your Order History'),
+          centerTitle: true,
         ),
         body: BlocBuilder<UserOrderHistoryPageBloc, UserOrderHistoryState>(
           builder: (context, state) {
@@ -38,7 +44,7 @@ class UserOrderHistoryPage extends StatelessWidget {
               return Container(
                   alignment: Alignment.topCenter,
                   child: Accordion(
-                    headerBorderRadius: 0,
+                    headerBorderRadius: 10,
                     maxOpenSections: 1,
                     headerBackgroundColorOpened: Colors.blue,
                     scaleWhenAnimating: true,
@@ -51,21 +57,81 @@ class UserOrderHistoryPage extends StatelessWidget {
                             children: [
                               Column(
                                 children: [
-                                  const Text('Ordered Date'),
-                                  Text(formatDateTime(order.orderDate)),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text('Deliverd Date'),
-                                  Text(formatDateTime(order.deliveryDate)),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text('Total Amount'),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  const Text(
+                                    'Ordered Date',
+                                    style: TextStyle(
+                                      color: AppPallete.whiteColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
                                   Text(
-                                      'AED ${changeAmountDecimal(amount: order.totalAmount)}'),
+                                    formatDateTime(order.orderDate),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  const Text(
+                                    'Delivered Date',
+                                    style: TextStyle(
+                                      color: AppPallete.whiteColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    formatDateTime(order.deliveryDate),
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  const Text(
+                                    'Total Amount',
+                                    style: TextStyle(
+                                      color: AppPallete.whiteColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    'AED ${changeAmountDecimal(amount: order.totalAmount)}',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 2, 255, 10),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
                                 ],
                               ),
                             ],

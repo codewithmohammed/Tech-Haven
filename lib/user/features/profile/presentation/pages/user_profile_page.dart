@@ -77,14 +77,13 @@ class UserProfilePage extends StatelessWidget {
                   if (state is GetProfileDataSuccessState &&
                       state.user.phoneNumber == null)
                     TileBarButton(
-                      title: 'Verify Phone Number',
-                      subtitle:
-                          'Verify you phone number to get access to more features',
-                      onTap: () {
-                        _showPhoneVerificationDialog(context);
-                      },
-                      icon: CustomIcons.phoneOutlined,
-                    ),
+                        title: 'Verify Phone Number',
+                        subtitle:
+                            'Verify you phone number to get access to more features',
+                        onTap: () {
+                          _showPhoneVerificationDialog(context);
+                        },
+                        icon: CustomIcons.phoneOutlined),
                   TileBarButton(
                     title: state is GetProfileDataSuccessState
                         ? state.user.isVendor
@@ -136,15 +135,39 @@ class UserProfilePage extends StatelessWidget {
                     },
                     icon: CustomIcons.questionMarkSvg,
                   ),
-                  // const TileBarButton(
-                  //   title: 'About App',
-                  //   icon: CustomIcons.exclamationSvg,
-                  // ),
+                  const ProfileHeaderTile(
+                    title: 'ABOUT US',
+                  ),
+                  TileBarButton(
+                    title: 'About App',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.aboutAppPage);
+                    },
+                    icon: CustomIcons.exclamationSvg,
+                  ),
+                  TileBarButton(
+                    title: 'Terms And Conditions',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.termsAndConditionsPage);
+                    },
+                    icon: CustomIcons.fileCheck,
+                  ),
+                  TileBarButton(
+                    title: 'Privacy Policy',
+                    onTap: () {
+                      GoRouter.of(context)
+                          .pushNamed(AppRouteConstants.privacyPolicyPage);
+                    },
+                    icon: CustomIcons.lockOutlinedSvg,
+                  ),
+
                   TileBarButton(
                     title: 'Sign Out',
                     icon: CustomIcons.rightArrowExitSvg,
                     onTap: () {
-                      showConfirmationDialog(context, 'Sign Out',
+                       showConfirmationDialog(context, 'Sign Out',
                           'Are you sure you want to sign out', () async {
                         await FirebaseAuth.instance.signOut();
                         GoogleSignIn googleSignIn = GoogleSignIn();
@@ -169,7 +192,7 @@ class UserProfilePage extends StatelessWidget {
   }
 }
 
-ValueNotifier<String> _countryCode = ValueNotifier('000');
+ValueNotifier<String> countryCode = ValueNotifier('000');
 
 void _showPhoneVerificationDialog(BuildContext context) {
   final TextEditingController phoneController = TextEditingController();
@@ -191,7 +214,7 @@ void _showPhoneVerificationDialog(BuildContext context) {
             Form(
               key: formKey,
               child: PhoneNumberTextField(
-                countryCode: _countryCode,
+                countryCode: countryCode,
                 textFormFieldEnabled: true,
                 phoneNumberController: phoneController,
               ),
@@ -204,7 +227,7 @@ void _showPhoneVerificationDialog(BuildContext context) {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 String phoneNumber =
-                    '+${_countryCode.value}${phoneController.text}';
+                    '+${countryCode.value}${phoneController.text}';
                 // Implement verification logic here
                 context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
                       phoneNumber: phoneNumber,
