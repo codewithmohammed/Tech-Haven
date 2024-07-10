@@ -33,6 +33,8 @@ class AuthenticationContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      // constraints: BoxConstraints.tight(const Size(500, 1000)),
+      padding: const EdgeInsets.all(30),
       decoration: BoxDecoration(
         boxShadow: const [Constants.globalBoxBlur],
         color: AppPallete.whiteColor,
@@ -41,42 +43,39 @@ class AuthenticationContainer extends StatelessWidget {
                 topLeft: Radius.circular(45), topRight: Radius.circular(45))
             : const BorderRadius.all(Radius.circular(45)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FadeIn(
-              duration: const Duration(
-                milliseconds: Constants.normalAnimationMilliseconds,
-              ),
-              curve: Curves.easeIn,
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FadeIn(
+            duration: const Duration(
+              milliseconds: Constants.normalAnimationMilliseconds,
+            ),
+            curve: Curves.easeIn,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
               ),
             ),
-            FadeIn(
-              duration: const Duration(
-                milliseconds: Constants.normalAnimationMilliseconds,
-              ),
-              curve: Curves.easeIn,
-              child: Text(subTitle),
+          ),
+          FadeIn(
+            duration: const Duration(
+              milliseconds: Constants.normalAnimationMilliseconds,
             ),
-            Expanded(
-              child: Form(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: columnChildren,
-                ),
+            curve: Curves.easeIn,
+            child: Text(subTitle),
+          ),
+          Expanded(
+            child: Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: columnChildren,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

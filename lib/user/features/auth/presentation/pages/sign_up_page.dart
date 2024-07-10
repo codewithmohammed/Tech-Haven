@@ -49,6 +49,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // resizeToAvoidBottomInset: false,
       backgroundColor: AppPallete.primaryAppColor,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -107,9 +108,9 @@ class _SignUpPageState extends State<SignUpPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const SizedBox(
-          height: 15,
-        ),
+        // const SizedBox(
+        //   height: 15,
+        // ),
         Flexible(
           flex: 2,
           child: ConstrainedBox(
@@ -118,7 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
         Flexible(
-          flex: 3,
+          flex: 4,
           child: _buildSignUpAuthenticationContainer(context),
         ),
       ],
@@ -134,7 +135,9 @@ class _SignUpPageState extends State<SignUpPage> {
           constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
           child: Lottie.asset('assets/lotties/sign_up_lottie.json'),
         ),
-        _buildSignUpAuthenticationContainer(context),
+        ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+            child: _buildSignUpAuthenticationContainer(context)),
       ],
     );
   }
@@ -142,153 +145,151 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildSignUpAuthenticationContainer(
     BuildContext context,
   ) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              Expanded(
-                child: AuthenticationContainer(
-                  // height: 625,
-                  title: 'Sign Up',
-                  columnChildren: [
-                    PhoneNumberTextField(
-                      countryCode: countryCode,
-                      textFormFieldEnabled: textFormFieldEnabled,
-                      phoneNumberController: phoneNumberController,
-                      errorText: phoneNumberError,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Expanded(
+              child: AuthenticationContainer(
+                // height: 625,
+                title: 'Sign Up',
+                columnChildren: [
+                  PhoneNumberTextField(
+                    countryCode: countryCode,
+                    textFormFieldEnabled: textFormFieldEnabled,
+                    phoneNumberController: phoneNumberController,
+                    errorText: phoneNumberError,
+                  ),
+                  CustomTextFormField(
+                    enabled: textFormFieldEnabled,
+                    textEditingController: emailController,
+                    labelText: 'Email',
+                    hintText: 'example@gmail.com',
+                    validator: Validator.validateEmail,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    errorText: emailError,
+                  ),
+                  CustomTextFormField(
+                    enabled: textFormFieldEnabled,
+                    textEditingController: passwordController,
+                    labelText: 'Password',
+                    hintText: '',
+                    isObscureText: passwordIsObscure,
+                    validator: Validator.validatePassword,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    isPasswordField: true,
+                    suffixOnTap: () {
+                      setState(() {
+                        passwordIsObscure = !passwordIsObscure;
+                      });
+                    },
+                    errorText: passwordError,
+                  ),
+                  CustomTextFormField(
+                    enabled: textFormFieldEnabled,
+                    textEditingController: rePasswordController,
+                    labelText: 'Re-Enter Password',
+                    hintText: '',
+                    isObscureText: rePasswordIsObscure,
+                    isPasswordField: true,
+                    suffixOnTap: () {
+                      setState(() {
+                        rePasswordIsObscure = !rePasswordIsObscure;
+                      });
+                    },
+                    errorText: rePasswordError,
+                  ),
+                  FadeInUp(
+                    from: 50,
+                    duration: const Duration(
+                      milliseconds: Constants.normalAnimationMilliseconds,
                     ),
-                    CustomTextFormField(
-                      enabled: textFormFieldEnabled,
-                      textEditingController: emailController,
-                      labelText: 'Email',
-                      hintText: 'example@gmail.com',
-                      validator: Validator.validateEmail,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      errorText: emailError,
-                    ),
-                    CustomTextFormField(
-                      enabled: textFormFieldEnabled,
-                      textEditingController: passwordController,
-                      labelText: 'Password',
-                      hintText: '',
-                      isObscureText: passwordIsObscure,
-                      validator: Validator.validatePassword,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      isPasswordField: true,
-                      suffixOnTap: () {
-                        setState(() {
-                          passwordIsObscure = !passwordIsObscure;
-                        });
-                      },
-                      errorText: passwordError,
-                    ),
-                    CustomTextFormField(
-                      enabled: textFormFieldEnabled,
-                      textEditingController: rePasswordController,
-                      labelText: 'Re-Enter Password',
-                      hintText: '',
-                      isObscureText: rePasswordIsObscure,
-                      isPasswordField: true,
-                      suffixOnTap: () {
-                        setState(() {
-                          rePasswordIsObscure = !rePasswordIsObscure;
-                        });
-                      },
-                      errorText: rePasswordError,
-                    ),
-                    FadeInUp(
-                      from: 50,
-                      duration: const Duration(
-                        milliseconds: Constants.normalAnimationMilliseconds,
-                      ),
-                      curve: Curves.easeOut,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Already have an account?',
+                    curve: Curves.easeOut,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Already have an account?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppPallete.primaryAppColor,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            GoRouter.of(context).pushReplacementNamed(
+                                AppRouteConstants.signinPage);
+                          },
+                          child: const Text(
+                            'Sign in',
                             style: TextStyle(
                               fontSize: 14,
-                              color: AppPallete.primaryAppColor,
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              GoRouter.of(context).pushReplacementNamed(
-                                  AppRouteConstants.signinPage);
-                            },
-                            child: const Text(
-                              'Sign in',
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    PrimaryAppButton(
-                      buttonText: 'Sign up',
-                      onPressed: () {
-                        setState(() {
-                          phoneNumberError = Validator.validatePhoneNumber(
-                              phoneNumberController.text);
-                          emailError =
-                              Validator.validateEmail(emailController.text);
-                          passwordError = Validator.validatePassword(
-                              passwordController.text);
-                          rePasswordError = passwordController.text ==
-                                  rePasswordController.text
-                              ? null
-                              : 'Passwords do not match';
+                  ),
+                  PrimaryAppButton(
+                    buttonText: 'Sign up',
+                    onPressed: () {
+                      setState(() {
+                        phoneNumberError = Validator.validatePhoneNumber(
+                            phoneNumberController.text);
+                        emailError =
+                            Validator.validateEmail(emailController.text);
+                        passwordError =
+                            Validator.validatePassword(passwordController.text);
+                        rePasswordError =
+                            passwordController.text == rePasswordController.text
+                                ? null
+                                : 'Passwords do not match';
 
-                          if (phoneNumberError == null &&
-                              emailError == null &&
-                              passwordError == null &&
-                              rePasswordError == null &&
-                              countryCode.value != '000') {
-                            fullPhoneNumber =
-                                '+${countryCode.value}${phoneNumberController.text}';
-                            context.read<AuthBloc>().add(
-                                  SendOTPEvent(
-                                    phoneNumber: fullPhoneNumber,
-                                    email: emailController.text,
-                                    password: passwordController.text,
-                                  ),
-                                );
-                          }
-                        });
-                      },
-                    ),
-                    // const SizedBox(height: 50),
-                  ],
-                ),
+                        if (phoneNumberError == null &&
+                            emailError == null &&
+                            passwordError == null &&
+                            rePasswordError == null &&
+                            countryCode.value != '000') {
+                          fullPhoneNumber =
+                              '+${countryCode.value}${phoneNumberController.text}';
+                          context.read<AuthBloc>().add(
+                                SendOTPEvent(
+                                  phoneNumber: fullPhoneNumber,
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                ),
+                              );
+                        }
+                      });
+                    },
+                  ),
+                  // const SizedBox(height: 50),
+                ],
               ),
-            ],
-          ),
-          Positioned(
-            top: 10,
-            right: 35,
-            child: CircularButton(
-              onPressed: () async {
-                // print('object');
-                context.read<AuthBloc>().add(SignUpWithGoogleAccount());
-              },
-              circularButtonChild: SvgPicture.asset(
-                AuthConstants.googleIconSVG,
-                width: 30,
-                height: 30,
-              ),
-              diameter: 70,
             ),
+          ],
+        ),
+        Positioned(
+          top: 10,
+          right: 35,
+          child: CircularButton(
+            onPressed: () async {
+              // print('object');
+              context.read<AuthBloc>().add(SignUpWithGoogleAccount());
+            },
+            circularButtonChild: SvgPicture.asset(
+              AuthConstants.googleIconSVG,
+              width: 30,
+              height: 30,
+            ),
+            diameter: 70,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

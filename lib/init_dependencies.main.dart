@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tech_haven/core/common/bloc/common_bloc.dart';
 import 'package:tech_haven/core/common/cubits/app_cubit/app_user_cubit.dart';
 import 'package:tech_haven/core/common/data/datasource/data_source.dart';
@@ -173,6 +174,7 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => FirebaseAuth.instance);
   serviceLocator.registerLazySingleton(() => FirebaseFirestore.instance);
   serviceLocator.registerLazySingleton(() => FirebaseStorage.instance);
+  serviceLocator.registerLazySingleton(() => GoogleSignIn());
   _initAuth();
   _initHomePage();
   _initDetailsPage();
@@ -418,6 +420,7 @@ _initAuth() {
     ..registerFactory<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(
         firebaseStorage: serviceLocator(),
+        googleSignIn: serviceLocator(),
         firebaseAuth: serviceLocator(),
         firebaseFirestore: serviceLocator(),
       ),
@@ -487,7 +490,8 @@ _initDataCommon() {
     ..registerFactory(() => GetVendorData(repository: serviceLocator()))
     ..registerLazySingleton(() => CommonBloc(
         getCurrentLocationDetails: serviceLocator(),
-        updateProductToFavorite: serviceLocator(), getUserData: serviceLocator()));
+        updateProductToFavorite: serviceLocator(),
+        getUserData: serviceLocator()));
 }
 
 void _initHomePage() {

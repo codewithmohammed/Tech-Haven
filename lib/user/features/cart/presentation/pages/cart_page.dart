@@ -60,6 +60,7 @@ class CartPage extends StatelessWidget {
     return BlocListener<CheckoutBloc, CheckoutState>(
       listener: (context, state) {
         if (state is SaveOrderSuccess) {
+          controllers = [];
           context.read<CartPageBloc>().add(GetAllProductsEvent());
         }
       },
@@ -68,6 +69,7 @@ class CartPage extends StatelessWidget {
           if (state is CartLoadedSuccessDetailsState ||
               state is CartLoadedSuccessDetailsPageRelatedState ||
               state is UpdateProductToFavoriteSuccess) {
+            controllers = [];
             context.read<CartPageBloc>().add(GetAllProductsEvent());
           }
         },
@@ -75,6 +77,7 @@ class CartPage extends StatelessWidget {
           listener: (context, state) {
             if (state is FavoriteRemovedSuccess ||
                 state is FavoritePageLoadedSuccess) {
+              controllers = [];
               context.read<CartPageBloc>().add(GetAllProductsEvent());
             }
           },

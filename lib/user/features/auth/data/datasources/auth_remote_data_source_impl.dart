@@ -119,7 +119,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       verificationFailed: (error) async {
         throw ServerException(error.message!);
       },
-      codeSent: (verificationId, forceResendingToken) {
+      codeSent: (verificationId, forceResendingToken) async{
         // print('assigning the verification id');
         assignTheVerificationId(verificationId: verificationId);
         // print(potentialVerificationId);

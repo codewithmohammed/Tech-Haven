@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tech_haven/core/common/bloc/common_bloc.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/pages/sidemenu/widgets/info_card.dart';
@@ -216,6 +217,9 @@ class SideMenuState extends State<SideMenu> {
                                               'Are you sure you want to sign out',
                                               () {
                                             FirebaseAuth.instance.signOut();
+                                            GoogleSignIn googleSignIn =
+                                                GoogleSignIn();
+                                            googleSignIn.signOut();
                                             GoRouter.of(context).goNamed(
                                                 AppRouteConstants.splashScreen);
                                           });
