@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
 import 'package:tech_haven/core/common/widgets/appbar_searchbar.dart';
 import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
@@ -144,8 +145,10 @@ class UserProfilePage extends StatelessWidget {
                     icon: CustomIcons.rightArrowExitSvg,
                     onTap: () {
                       showConfirmationDialog(context, 'Sign Out',
-                          'Are you sure you want to sign out', () {
-                        FirebaseAuth.instance.signOut();
+                          'Are you sure you want to sign out', () async {
+                        await FirebaseAuth.instance.signOut();
+                        GoogleSignIn googleSignIn = GoogleSignIn();
+                        await googleSignIn.signOut();
                         GoRouter.of(context)
                             .goNamed(AppRouteConstants.splashScreen);
                       });

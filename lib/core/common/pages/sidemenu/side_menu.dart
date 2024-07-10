@@ -215,11 +215,11 @@ class SideMenuState extends State<SideMenu> {
                                               context,
                                               'Sign Out',
                                               'Are you sure you want to sign out',
-                                              () {
-                                            FirebaseAuth.instance.signOut();
+                                              () async{
+                                           await FirebaseAuth.instance.signOut();
                                             GoogleSignIn googleSignIn =
                                                 GoogleSignIn();
-                                            googleSignIn.signOut();
+                                          await  googleSignIn.signOut();
                                             GoRouter.of(context).goNamed(
                                                 AppRouteConstants.splashScreen);
                                           });

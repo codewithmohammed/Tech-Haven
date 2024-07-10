@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart' as model;
 import 'package:tech_haven/core/error/exceptions.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
@@ -15,8 +16,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseFirestore firebaseFirestore;
   final FirebaseAuth firebaseAuth;
   final FirebaseStorage firebaseStorage;
+  final GoogleSignIn googleSignIn;
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
+    required this.googleSignIn,
     required this.firebaseFirestore,
     required this.firebaseStorage,
   });
@@ -119,7 +122,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       verificationFailed: (error) async {
         throw ServerException(error.message!);
       },
-      codeSent: (verificationId, forceResendingToken) async{
+      codeSent: (verificationId, forceResendingToken) async {
         // print('assigning the verification id');
         assignTheVerificationId(verificationId: verificationId);
         // print(potentialVerificationId);
@@ -267,6 +270,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final User? currentUser = firebaseAuth.currentUser;
       if (currentUser != null) {
         // Sign out the current user before signing in with a different email
+        //  GoogleSignIn googleSignIn =
+        //                                         GoogleSignIn();
+                                            googleSignIn.signOut();
         await firebaseAuth.signOut();
       }
       // print(phoneNumber);
@@ -308,56 +314,69 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<String> signUpUserWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      if (googleUser == null) {
-        throw const ServerException('The Google user is not initiated');
-      }
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      User? user;
+      if (kIsWeb) {
+        final GoogleAuthProvider googleAuthProvider = GoogleAuthProvider();
+        final userCredential =
+            await firebaseAuth.signInWithPopup(googleAuthProvider);
+        user = userCredential.user;
+      } else {
+        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        if (googleUser == null) {
+          throw Exception
+          ('The Google user is not initiated');
+        }
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final userCredential =
-          await firebaseAuth.signInWithCredential(credential);
-      final user = userCredential.user;
-
-      if (user == null) {
-        throw const ServerException('User data is not available');
-      }
-
-      // Check if the user already exists in Firestore
-      final doc =
-          await firebaseFirestore.collection('users').doc(user.uid).get();
-      if (!doc.exists) {
-        // Create a User object with the necessary details
-        final newUser = model.UserModel(
-          uid: user.uid,
-          userImageID: null,
-          phoneNumber: user.phoneNumber,
-          userAllowed: true,
-          username: user.displayName,
-          currency: 'USD', // Assign default or fetch from a settings screen
-          vendorID: null, // Assign default or generate dynamically
-          currencySymbol:
-              '\$', // Assign default or fetch from a settings screen
-          email: user.email,
-          profilePhoto: user.photoURL,
-          isVendor: false, // Assign default or fetch from a settings screen
-          isProfilePhotoUploaded: user.photoURL != null,
-          color: 0xFF000000, // Assign default or fetch from a settings screen
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
         );
 
-        // Save the user data to Firestore
-        await firebaseFirestore
-            .collection('users')
-            .doc(user.uid)
-            .set(newUser.toJson());
+        final userCredential =
+            await firebaseAuth.signInWithCredential(credential);
+        user = userCredential.user;
+
+        if (user == null) {
+          throw const ServerException('User data is not available');
+        }
+
+        // Check if the user already exists in Firestore
+        final doc =
+            await firebaseFirestore.collection('users').doc(user.uid).get();
+        if (!doc.exists) {
+          // Create a User object with the necessary details
+          final newUser = model.UserModel(
+            uid: user.uid,
+            userImageID: null,
+            phoneNumber: user.phoneNumber,
+            userAllowed: true,
+            username: user.displayName,
+            currency: 'USD', // Assign default or fetch from a settings screen
+            vendorID: null, // Assign default or generate dynamically
+            currencySymbol:
+                '\$', // Assign default or fetch from a settings screen
+            email: user.email,
+            profilePhoto: user.photoURL,
+            isVendor: false, // Assign default or fetch from a settings screen
+            isProfilePhotoUploaded: user.photoURL != null,
+            color: 0xFF000000, // Assign default or fetch from a settings screen
+          );
+
+          // Save the user data to Firestore
+          await firebaseFirestore
+              .collection('users')
+              .doc(user.uid)
+              .set(newUser.toJson());
+        }
       }
 
-      return user.email!;
+      if (user != null) {
+        return user.email!;
+      } else {
+        throw Exception('User is Not Registered');
+      }
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -400,5 +419,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
   }
-
 }
