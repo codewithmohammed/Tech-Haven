@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/responsive/responsive.dart';
-import 'package:tech_haven/core/theme/app_pallete.dart';
 
 class ResponsiveAuthentication extends StatelessWidget {
   const ResponsiveAuthentication(
@@ -15,19 +14,19 @@ class ResponsiveAuthentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            if (Responsive.isMobile(context)) mobileLayout,
-            if (Responsive.isTablet(context) && tabletLayout != null)
-              tabletLayout!,
-            if (Responsive.isDesktop(context) && desktopLayout != null)
-              desktopLayout!
-            else
-              mobileLayout
-          ],
-        ),
-      );
+    return Center(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (Responsive.isMobile(context)) mobileLayout,
+          if (Responsive.isTablet(context) && tabletLayout != null)
+            tabletLayout!,
+          if (Responsive.isDesktop(context) && desktopLayout != null)
+            desktopLayout!
+          else
+            mobileLayout
+        ],
+      ),
+    );
   }
 }

@@ -10,9 +10,9 @@ import 'package:tech_haven/core/utils/auth_utils.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/forgot_password_page_state.dart';
+import 'package:tech_haven/user/features/auth/presentation/responsive/responsive_authentication.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
 import 'package:tech_haven/core/common/widgets/phone_number_text_field.dart';
-
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
 
@@ -22,22 +22,11 @@ class ForgotPasswordPage extends StatefulWidget {
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   TextEditingController phoneNumberController = TextEditingController();
-  // @override
-  // void deactivate() {
-  //   phoneNumberController.dispose();
-  //   super.deactivate();
-  // }
-
   final countryCode = AuthUtils.forgotPasswordCountryCode;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppPallete.primaryAppColor,
-      body: BlocConsumer<AuthBloc, AuthState>(
-        // buildWhen: (previous, current) =>
-        //     current is AuthForgotPasswordPageState,
-        // listenWhen: (previous, current) =>
-        //     current is ForgotPasswordPageActionState,
+    return BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is UserEmailForgotPasswordFailed) {
             showSnackBar(
@@ -51,11 +40,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           if (state is UserEmailForgotPasswordSuccess) {
             showSnackBar(
               context: context,
-              title: 'Oh',
+              title: 'Success',
               content: state.message,
               contentType: ContentType.success,
             );
-
             GoRouter.of(context).pop();
           }
         },
@@ -63,54 +51,93 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           if (state is AuthLoading) {
             return const Loader();
           }
-          return Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Container(),
-              Positioned(
-                top: 25,
-                child: ConstrainedBox(
-                    constraints: BoxConstraints.tight(const Size(415, 415)),
-                    child: Lottie.asset('assets/lotties/forget_password.json')),
-              ),
-              Positioned(
-                bottom: -50,
-                child: AuthenticationContainer(
-                  // height: 450,
-                  title: "Forgot \nPassword?",
-                  subTitle: 'enter your registered mobile number',
-                  columnChildren: [
-                    PhoneNumberTextField(
-                      countryCode: countryCode,
-                      textFormFieldEnabled: true,
-                      phoneNumberController: phoneNumberController,
-                    ),
-                      PrimaryAppButton(
-                    buttonText:  'Sent OTP',
-                    onPressed: () async {
-                    if (countryCode.value != '000') {
-                      final fullPhoneNumber =
-                          '+${countryCode.value}${phoneNumberController.text}';
-                      //check if the user is present.if the user is present send the otp to the mobile else show snackbar.
-                      context.read<AuthBloc>().add(ForgotPasswordSendEmailEvent(
-                          phoneNumber: fullPhoneNumber));
-                      // GoRouter.of(context).pushNamed(
-                      //     AppRouteConstants.otpVerificationPage,
-                      //     pathParameters: {'verificationId': 'hello'}
-                      //     );
-                    }
-                  },
-                  ),
-                  ],
-                  // buttonNeeded: true,
-                  // buttonText: ,
-                  // onPressedElevatedButton: 
-                ),
-              )
-            ],
+          return ResponsiveAuthentication(
+            mobileLayout: _buildForgotPasswordMobileLayout(context),
+            desktopLayout: _buildForgotPasswordDesktopLayout(context),
           );
         },
+      );
+  }
+
+  Widget _buildForgotPasswordMobileLayout(BuildContext context) {
+    return Scaffold(
+         backgroundColor: AppPallete.primaryAppColor,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [       const SizedBox(height: 50),
+          Flexible(
+            flex: 2,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
+              child: Lottie.asset('assets/lotties/forget_password.json'),
+            ),
+          ),
+          Flexible(
+            flex: 4,
+            child: _buildForgotPasswordContainer(context),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildForgotPasswordDesktopLayout(BuildContext context) {
+    return Scaffold(
+         backgroundColor: AppPallete.primaryAppColor,
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
+            child: Lottie.asset('assets/lotties/forget_password.json'),
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+            child: _buildForgotPasswordContainer(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildForgotPasswordContainer(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      alignment: Alignment.bottomCenter,
+      children: [
+        Column(
+          children: [
+            const SizedBox(height: 50),
+            Expanded(
+              child: AuthenticationContainer(
+                title: "Forgot \nPassword?",
+                subTitle: 'Enter your registered mobile number',
+                columnChildren: [
+                  const SizedBox(height: 20),
+                  PhoneNumberTextField(
+                    countryCode: countryCode,
+                    textFormFieldEnabled: true,
+                    phoneNumberController: phoneNumberController,
+                  ),
+                  PrimaryAppButton(
+                    buttonText: 'Send OTP',
+                    onPressed: () async {
+                      if (countryCode.value != '000') {
+                        final fullPhoneNumber =
+                            '+${countryCode.value}${phoneNumberController.text}';
+                        context.read<AuthBloc>().add(ForgotPasswordSendEmailEvent(
+                          phoneNumber: fullPhoneNumber,
+                        ));
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

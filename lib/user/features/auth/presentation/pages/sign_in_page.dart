@@ -128,22 +128,26 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   _buildSignInMobileLayout(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const SizedBox(
-          height: 15,
-        ),
-        Flexible(
-          flex: 2,
+        Container(
+            // height: 15,
+            ),
+        Positioned(
+          top: 0,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
             child: Lottie.asset('assets/lotties/sign_in_lottie.json'),
           ),
         ),
-        Flexible(
-          flex: 3,
-          child: _buildSignInAuthenticationContainer(context),
+        Positioned(
+          bottom: 0,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+            child: _buildSignInAuthenticationContainer(context),
+          ),
         ),
       ],
     );
@@ -158,130 +162,130 @@ class _SignInPageState extends State<SignInPage> {
           constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
           child: Lottie.asset('assets/lotties/sign_in_lottie.json'),
         ),
-        _buildSignInAuthenticationContainer(context),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+          child: _buildSignInAuthenticationContainer(context),
+        ),
       ],
     );
   }
 
   _buildSignInAuthenticationContainer(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              Expanded(
-                child: AuthenticationContainer(
-                  // height: 450,
-                  title: 'Sign In',
-                  columnChildren: [
-                    PhoneNumberTextField(
-                      errorText: phoneNumberError,
-                      countryCode: countryCode,
-                      textFormFieldEnabled: true,
-                      phoneNumberController: phoneNumberController,
-                    ),
-                    CustomTextFormField(
-                      errorText: passwordError,
-                      textEditingController: passwordController,
-                      labelText: 'Password',
-                      hintText: '',
-                      isObscureText: passwordIsObscure,
-                      validator: Validator.validatePassword,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      isPasswordField: true,
-                      suffixOnTap: () {
-                        setState(
-                          () {
-                            passwordIsObscure =
-                                passwordIsObscure ? false : true;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Expanded(
+              child: AuthenticationContainer(
+                // height: 450,
+                title: 'Sign In',
+                columnChildren: [
+                  PhoneNumberTextField(
+                    errorText: phoneNumberError,
+                    countryCode: countryCode,
+                    textFormFieldEnabled: true,
+                    phoneNumberController: phoneNumberController,
+                  ),
+                  CustomTextFormField(
+                    errorText: passwordError,
+                    textEditingController: passwordController,
+                    labelText: 'Password',
+                    hintText: '',
+                    isObscureText: passwordIsObscure,
+                    validator: Validator.validatePassword,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    isPasswordField: true,
+                    suffixOnTap: () {
+                      setState(
+                        () {
+                          passwordIsObscure = passwordIsObscure ? false : true;
+                        },
+                      );
+                    },
+                  ),
+                  FadeInUp(
+                    from: 50,
+                    duration: const Duration(
+                        milliseconds: Constants.normalAnimationMilliseconds),
+                    curve: Curves.easeOut,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            GoRouter.of(context).pushNamed(
+                                AppRouteConstants.forgotPasswordPage);
                           },
-                        );
-                      },
-                    ),
-                    FadeInUp(
-                      from: 50,
-                      duration: const Duration(
-                          milliseconds: Constants.normalAnimationMilliseconds),
-                      curve: Curves.easeOut,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              GoRouter.of(context).pushNamed(
-                                  AppRouteConstants.forgotPasswordPage);
-                            },
-                            child: const Text(
-                              "Forgot Password ?",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: AppPallete.primaryAppColor),
+                          child: const Text(
+                            "Forgot Password ?",
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: AppPallete.primaryAppColor),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            GoRouter.of(context).pushReplacementNamed(
+                                AppRouteConstants.signupPage);
+                          },
+                          child: const Text(
+                            'Sign up',
+                            style: TextStyle(
+                              fontSize: 14,
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              GoRouter.of(context).pushReplacementNamed(
-                                  AppRouteConstants.signupPage);
-                            },
-                            child: const Text(
-                              'Sign up',
-                              style: TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-                    PrimaryAppButton(
-                      buttonText: 'Sign in',
-                      onPressed: () {
-                        setState(() {
-                          phoneNumberError = Validator.validatePhoneNumber(
-                              phoneNumberController.text);
-                          passwordError = Validator.validatePassword(
-                              passwordController.text);
-                          if (phoneNumberError == null &&
-                              passwordError == null &&
-                              countryCode.value != '000') {
-                            // print('object');
-                            fullPhoneNumber =
-                                '+${countryCode.value}${phoneNumberController.text}';
-                            context.read<AuthBloc>().add(UserSignInEvent(
-                                phoneNumber: fullPhoneNumber,
-                                password: passwordController.text));
-                          }
-                        });
-                        // print('object');
-                      },
-                    ),
-                    // const SizedBox(height: 50),
-                  ],
-                ),
+                  ),
+                  PrimaryAppButton(
+                    buttonText: 'Sign in',
+                    onPressed: () {
+                      setState(() {
+                        phoneNumberError = Validator.validatePhoneNumber(
+                            phoneNumberController.text);
+                        passwordError =
+                            Validator.validatePassword(passwordController.text);
+                        if (phoneNumberError == null &&
+                            passwordError == null &&
+                            countryCode.value != '000') {
+                          // print('object');
+                          fullPhoneNumber =
+                              '+${countryCode.value}${phoneNumberController.text}';
+                          context.read<AuthBloc>().add(UserSignInEvent(
+                              phoneNumber: fullPhoneNumber,
+                              password: passwordController.text));
+                        }
+                      });
+                      // print('object');
+                    },
+                  ),
+                  // const SizedBox(height: 50),
+                ],
               ),
-            ],
-          ),
-          Positioned(
-            top: 10,
-            right: 35,
-            child: CircularButton(
-              onPressed: () async {
-                context.read<AuthBloc>().add(SignInWithGoogleAccount());
-              },
-              circularButtonChild: SvgPicture.asset(
-                AuthConstants.googleIconSVG,
-                width: 30,
-                height: 30,
-              ),
-              diameter: 70,
             ),
+          ],
+        ),
+        Positioned(
+          top: 10,
+          right: 35,
+          child: CircularButton(
+            onPressed: () async {
+              context.read<AuthBloc>().add(SignInWithGoogleAccount());
+            },
+            circularButtonChild: SvgPicture.asset(
+              AuthConstants.googleIconSVG,
+              width: 30,
+              height: 30,
+            ),
+            diameter: 70,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

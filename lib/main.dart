@@ -52,11 +52,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await initDependencies();
-  // Set the preferred orientations to portrait only
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // // Set the preferred orientations to portrait only
+  // await SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
 
   runApp(MultiBlocProvider(
     providers: [

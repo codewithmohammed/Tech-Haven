@@ -49,7 +49,6 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       backgroundColor: AppPallete.primaryAppColor,
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
@@ -105,22 +104,25 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _buildSignUpMobileLayout(
     BuildContext context,
   ) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // const SizedBox(
-        //   height: 15,
-        // ),
-        Flexible(
-          flex: 2,
+        Container(
+            // height: 15,
+            ),
+        Positioned(
+          top: 0,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxHeight: 415, maxWidth: 415),
             child: Lottie.asset('assets/lotties/sign_up_lottie.json'),
           ),
         ),
-        Flexible(
-          flex: 4,
-          child: _buildSignUpAuthenticationContainer(context),
+        Positioned(
+          bottom: 0,
+          child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+              child: _buildSignUpAuthenticationContainer(context)),
         ),
       ],
     );

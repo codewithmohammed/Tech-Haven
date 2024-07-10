@@ -144,22 +144,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String otpCode,
   }) async {
     try {
-      //first we will try to create a new phoneauthCredential with the verificationId and the otp code recieved
+      // First, create a new phoneAuthCredential with the verificationId and the otp code received
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: otpCode,
       );
 
-      //then ww will try to sign in the user with the phone credential so will get the user credential to check whether the otp is verified to signinwithcredential
-      // UserCredential userCredential =
-      //     await firebaseAuth.signInWithCredential(phoneAuthCredential);
-
-      //we will get the user data if it's signed in successfully and if not otherwise.
-      // User? phoneNumberUser = userCredential.user;
-
-//if the recieved user is null it means that the otp entered is not vaalid. so we will return an error
-//if phonenumberuser is not null we will create user with email and password and link the user of it to the phone number
-      // if (phoneAuthCredential != null) {
+      // Attempt to create user with email and password
       UserCredential userCredential = await createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -169,26 +160,62 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (user != null) {
         await user.linkWithCredential(phoneAuthCredential);
-        //sending username to
+        // Return the username if available, otherwise extract name from email
         return user.displayName ?? AuthUtils.extractNameFromEmail(user.email!);
       } else {
         throw const ServerException(
-          'Exception Cauth While Linking Phone Number',
+          'Exception Caught While Linking Phone Number',
         );
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'credential-already-in-use') {
-        throw const ServerException(
-          'its an credential-already-in-use: in use exception',
-        );
-      }
-      throw ServerException(e.message!);
-    } on ServerException catch (e) {
-      throw ServerException(e.message);
+      throw handleFirebaseAuthException(e);
     } catch (e) {
       throw ServerException(
         e.toString(),
       );
+    }
+  }
+
+  ServerException handleFirebaseAuthException(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'credential-already-in-use':
+        throw const ServerException(
+          'The account corresponding to the credential already exists among your users.',
+        );
+      case 'provider-already-linked':
+        throw const ServerException(
+          'The provider has already been linked to the user.',
+        );
+      case 'invalid-credential':
+        throw const ServerException(
+          'The provider\'s credential is not valid. It might have expired or is using invalid tokens.',
+        );
+      case 'email-already-in-use':
+        throw const ServerException(
+          'The email corresponding to the credential already exists among your users.',
+        );
+      case 'operation-not-allowed':
+        throw const ServerException(
+          'You have not enabled the provider in the Firebase Console.',
+        );
+      case 'invalid-email':
+        throw const ServerException(
+          'The email used in a EmailAuthProvider.credential is invalid.',
+        );
+      case 'invalid-password':
+        throw const ServerException(
+          'The password used in a EmailAuthProvider.credential is not correct or the user does not have a password.',
+        );
+      case 'invalid-verification-code':
+        throw const ServerException(
+          'The verification code of the credential is not valid.',
+        );
+      case 'invalid-verification-id':
+        throw const ServerException(
+          'The verification ID of the credential is not valid.',
+        );
+      default:
+        throw ServerException(e.message!);
     }
   }
 
@@ -230,7 +257,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on ServerException catch (e) {
       throw ServerException(e.toString());
     } on FirebaseAuthException catch (e) {
-      throw ServerException(e.toString());
+      throw handleFirebaseAuthException(e);
     }
   }
 
@@ -272,7 +299,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // Sign out the current user before signing in with a different email
         //  GoogleSignIn googleSignIn =
         //                                         GoogleSignIn();
-                                            googleSignIn.signOut();
+        googleSignIn.signOut();
         await firebaseAuth.signOut();
       }
       // print(phoneNumber);
@@ -301,9 +328,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
       }
     } on FirebaseAuthException catch (e) {
-      throw ServerException(
-        e.message ?? 'Invalid Exception',
-      );
+      throw handleFirebaseAuthException(e);
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
@@ -323,8 +348,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
         if (googleUser == null) {
-          throw Exception
-          ('The Google user is not initiated');
+          throw Exception('The Google user is not initiated');
         }
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
@@ -377,6 +401,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         throw Exception('User is Not Registered');
       }
+    } on FirebaseAuthException catch (e) {
+      throw handleFirebaseAuthException(e);
     } catch (e) {
       throw ServerException(e.toString());
     }
@@ -411,6 +437,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
       }
       // return potentialVerificationId!;
+    } on FirebaseAuthException catch (e) {
+      throw handleFirebaseAuthException(e);
     } on ServerException catch (e) {
       throw ServerException(e.message);
     } catch (e) {
