@@ -5,6 +5,7 @@ class PaymentIntentModel {
   final String id;
   final int amount;
   final String currency;
+  final String clientSecret;
   final String description;
   final PaymentMethodOptionsModel paymentMethodOptionsModel;
   final ShippingModel shippingModel;
@@ -20,6 +21,7 @@ class PaymentIntentModel {
     required this.id,
     required this.amount,
     required this.currency,
+    required this.clientSecret,
     required this.description,
     required this.paymentMethodOptionsModel,
     required this.shippingModel,
@@ -36,6 +38,7 @@ class PaymentIntentModel {
     return PaymentIntentModel(
       id: json['id'],
       amount: json['amount'],
+      clientSecret: json['client_secret'],
       currency: json['currency'],
       description: json['description'],
       paymentMethodOptionsModel:
@@ -56,6 +59,7 @@ class PaymentIntentModel {
       'id': id,
       'amount': amount,
       'currency': currency,
+      'client_secret'
       'description': description,
       'payment_method_options': paymentMethodOptionsModel.toJson(),
       // 'name': name,
