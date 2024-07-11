@@ -358,9 +358,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             await firebaseAuth.signInWithCredential(credential);
         user = userCredential.user;
 
-        if (user == null) {
-          throw const ServerException('User data is not available');
-        }
+     
+      }
+
+      if (user != null) {
 
         // Check if the user already exists in Firestore
         final doc =
@@ -390,9 +391,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               .doc(user.uid)
               .set(newUser.toJson());
         }
-      }
-
-      if (user != null) {
         return user.email!;
       } else {
         throw Exception('User is Not Registered');

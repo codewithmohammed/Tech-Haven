@@ -81,7 +81,7 @@ class UserProfilePage extends StatelessWidget {
                         subtitle:
                             'Verify you phone number to get access to more features',
                         onTap: () {
-                          _showPhoneVerificationDialog(context);
+                          _showPhoneVerificationDialog(context, false);
                         },
                         icon: CustomIcons.phoneOutlined),
                   TileBarButton(
@@ -99,7 +99,7 @@ class UserProfilePage extends StatelessWidget {
                     onTap: () {
                       if (state is GetProfileDataSuccessState &&
                           state.user.phoneNumber == null) {
-                        return _showPhoneVerificationDialog(context);
+                        return _showPhoneVerificationDialog(context, true);
                       }
                       //if the user is vendor we will direct them to vendor else wilill direct him to register page where they will see the status of the vendor status.
                       state is GetProfileDataSuccessState && state.user.isVendor
@@ -167,7 +167,7 @@ class UserProfilePage extends StatelessWidget {
                     title: 'Sign Out',
                     icon: CustomIcons.rightArrowExitSvg,
                     onTap: () {
-                       showConfirmationDialog(context, 'Sign Out',
+                      showConfirmationDialog(context, 'Sign Out',
                           'Are you sure you want to sign out', () async {
                         await FirebaseAuth.instance.signOut();
                         GoogleSignIn googleSignIn = GoogleSignIn();
@@ -194,7 +194,8 @@ class UserProfilePage extends StatelessWidget {
 
 ValueNotifier<String> countryCode = ValueNotifier('000');
 
-void _showPhoneVerificationDialog(BuildContext context) {
+void _showPhoneVerificationDialog(
+    BuildContext context, bool forVendorRegistration) {
   final TextEditingController phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -202,9 +203,11 @@ void _showPhoneVerificationDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text(
-          'Verify Phone Number',
-          style: TextStyle(
+        title: Text(
+          forVendorRegistration
+              ? 'Verify Your Phone Number first to Register for Vendor'
+              : 'Verify Phone Number',
+          style: const TextStyle(
             fontSize: 15,
           ),
         ),

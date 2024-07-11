@@ -72,12 +72,13 @@ class _SignUpPageState extends State<SignUpPage> {
             GoRouter.of(context).goNamed(AppRouteConstants.mainPage);
           }
           if (state is AuthGoogleSignUpFailed) {
-            showSnackBar(
-              context: context,
-              title: 'Oh',
-              content: state.message,
-              contentType: ContentType.failure,
-            );
+            Fluttertoast.showToast(msg: state.message);
+            // showSnackBar(
+            //   context: context,
+            //   title: 'Oh',
+            //   content: state.message,
+            //   contentType: ContentType.failure,
+            // );
           }
         },
         builder: (context, state) {

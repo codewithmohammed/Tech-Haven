@@ -4,9 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
-import 'package:tech_haven/core/common/widgets/custom_app_bar.dart';
 import 'package:tech_haven/core/common/widgets/custom_back_button.dart';
 import 'package:tech_haven/core/common/widgets/svg_icon.dart';
+import 'package:tech_haven/core/responsive/responsive.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/user/features/order/presentation/bloc/user_order_page_bloc.dart';
@@ -26,12 +26,12 @@ class UserOrderPage extends StatelessWidget {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-         automaticallyImplyLeading: false,
-      scrolledUnderElevation: 0,
-      leading: const CustomBackButton(),
-      backgroundColor: AppPallete.whiteColor,
-      forceMaterialTransparency: true,
-      elevation: 0,
+        automaticallyImplyLeading: false,
+        scrolledUnderElevation: 0,
+        leading: Responsive.isMobile(context) ? const CustomBackButton() : null,
+        backgroundColor: AppPallete.whiteColor,
+        forceMaterialTransparency: true,
+        elevation: 0,
         title: const Text('Your Order'),
         actions: [
           Padding(

@@ -17,6 +17,7 @@ import 'package:tech_haven/core/theme/app_pallete.dart';
 // import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
+import 'package:tech_haven/user/features/profile/presentation/bloc/profile_bloc.dart';
 
 // import 'path/to/common_bloc.dart';
 // import 'path/to/common_state.dart';
@@ -112,103 +113,92 @@ class SideMenuState extends State<SideMenu> {
                         valueListenable: RiveNavUtils.selectedSideBarTotal,
                         builder: (context, value, child) {
                           // print(state.user.phoneNumber);
-                          return (index + 3 == 4 &&
-                                  state.user.phoneNumber != null)
-                              ? const SizedBox.shrink()
-                              : (!state.user.isVendor && index + 3 == 5)
-                                  ? SideMenuTile(
-                                      isActive: RiveNavUtils
-                                              .selectedSideBarTotal.value ==
-                                          index + 3,
-                                      onTap: () {
-                                        if (state.user.phoneNumber == null) {
-                                          return _showPhoneVerificationDialog(
-                                              context);
-                                        }
-                                        GoRouter.of(context).pushNamed(
-                                            AppRouteConstants
-                                                .registerVendorPage,
-                                            extra: state.user);
-                                      },
-                                      title: 'Start Selling',
-                                      icon: CustomIcons.cartSvg)
+                          return state.user.phoneNumber == null
+                              ? SideMenuTile(
+                                  isActive: index + 3 > 3
+                                      ? index + 1 ==
+                                          RiveNavUtils
+                                              .selectedSideBarTotal.value
+                                      : index + 3 ==
+                                          RiveNavUtils
+                                              .selectedSideBarTotal.value,
+                                  onTap: () {
+                                    if (index + 3 == 4) {
+                                      return _showPhoneVerificationDialog(
+                                          context, false);
+                                    }
+                                    if (index + 3 == 5) { 
+                                      return _showPhoneVerificationDialog(
+                                          context,true);
+                                      // if (user.isVendor) {
+                                      //   GoRouter.of(context).pushNamed(
+                                      //       AppRouteConstants.vendorMainPage);
+                                      // } else {
+                                      //   GoRouter.of(context).pushNamed(
+                                      //       AppRouteConstants
+                                      //           .registerVendorPage,
+                                      //       extra: user);
+                                      // }
+                                      // return;
+                                    }
+                                    if (index + 3 > 5 && index + 3 < 10) {
+                                      RiveNavUtils.selectedSideBarTotal.value =
+                                          index + 1;
+                                      return;
+                                    }
+                                    if (index + 3 == 10) {
+                                      showConfirmationDialog(
+                                          context,
+                                          'Sign Out',
+                                          'Are you sure you want to sign out',
+                                          () async {
+                                        await FirebaseAuth.instance.signOut();
+                                        GoogleSignIn googleSignIn =
+                                            GoogleSignIn();
+                                        await googleSignIn.signOut();
+                                        GoRouter.of(context).goNamed(
+                                            AppRouteConstants.splashScreen);
+                                      });
+                                      return;
+                                    }
+
+                                    RiveNavUtils.selectedSideBarTotal.value =
+                                        index + 3;
+                                  },
+                                  title: menu.title,
+                                  icon: menu.icon)
+                              : index + 3 == 4
+                                  ? const SizedBox.shrink()
                                   : SideMenuTile(
-                                      isActive: (state.user.phoneNumber != null &&
-                                              RiveNavUtils.selectedSideBarTotal
-                                                      .value ==
-                                                  4 &&
-                                              index + 3 == 6)
-                                          ? true
-                                          : (state.user.phoneNumber != null &&
-                                                  RiveNavUtils.selectedSideBarTotal
-                                                          .value ==
-                                                      5 &&
-                                                  index + 3 == 7)
-                                              ? true
-                                              : (state.user.phoneNumber !=
-                                                          null &&
-                                                      RiveNavUtils
-                                                              .selectedSideBarTotal
-                                                              .value ==
-                                                          6 &&
-                                                      index + 3 == 8)
-                                                  ? true
-                                                  : (state.user
-                                                                  .phoneNumber !=
-                                                              null &&
-                                                          RiveNavUtils
-                                                                  .selectedSideBarTotal
-                                                                  .value ==
-                                                              7 &&
-                                                          index + 3 == 9)
-                                                      ? true
-                                                      : RiveNavUtils
-                                                              .selectedSideBarTotal
-                                                              .value ==
-                                                          index + 3,
+                                      isActive: index + 3 > 3
+                                          ? index + 1 ==
+                                              RiveNavUtils
+                                                  .selectedSideBarTotal.value
+                                          : index + 3 ==
+                                              RiveNavUtils
+                                                  .selectedSideBarTotal.value,
                                       onTap: () {
-                                        // print(state.user.phoneNumber == null &&
-                                        //     RiveNavUtils.selectedSideBarTotal
-                                        //             .value ==
-                                        //         4 &&
-                                        //     index + 3 == 6);
-                                        // print(RiveNavUtils
-                                        //     .selectedSideBarTotal.value);
-                                        // print(index + 3);
-                                        // print(state.user.phoneNumber != null &&
-                                        //     RiveNavUtils.selectedSideBarTotal
-                                        //             .value ==
-                                        //         4);
-                                        if (state.user.isVendor &&
-                                            index + 3 == 5) {
-                                          GoRouter.of(context).pushNamed(
-                                              AppRouteConstants.vendorMainPage);
+                                        if (index + 3 == 4) {
+                                          return;
+                                          //  _showPhoneVerificationDialog(
+                                          //     context);
+                                        }
+                                        if (index + 3 == 5) {
+                                          if (user.isVendor) {
+                                            GoRouter.of(context).pushNamed(
+                                                AppRouteConstants
+                                                    .vendorMainPage);
+                                          } else {
+                                            GoRouter.of(context).pushNamed(
+                                                AppRouteConstants
+                                                    .registerVendorPage,
+                                                extra: user);
+                                          }
                                           return;
                                         }
-                                        if (state.user.phoneNumber != null &&
-                                            index + 3 == 6) {
-                                          RiveNavUtils
-                                              .selectedSideBarTotal.value = 4;
-                                          return;
-                                        }
-                                        if (state.user.phoneNumber != null &&
-                                            index + 3 == 7) {
-                                          RiveNavUtils
-                                              .selectedSideBarTotal.value = 5;
-                                          return;
-                                        }
-                                        if (state.user.phoneNumber != null &&
-                                            index + 3 == 8) {
-                                          // if (kDebugMode) {
-                                          // }
-                                          RiveNavUtils
-                                              .selectedSideBarTotal.value = 6;
-                                          return;
-                                        }
-                                        if (state.user.phoneNumber != null &&
-                                            index + 3 == 9) {
-                                          RiveNavUtils
-                                              .selectedSideBarTotal.value = 7;
+                                        if (index + 3 > 5 && index + 3 < 10) {
+                                          RiveNavUtils.selectedSideBarTotal
+                                              .value = index + 1;
                                           return;
                                         }
                                         if (index + 3 == 10) {
@@ -227,12 +217,152 @@ class SideMenuState extends State<SideMenu> {
                                           });
                                           return;
                                         }
+
                                         RiveNavUtils.selectedSideBarTotal
                                             .value = index + 3;
                                       },
                                       title: menu.title,
-                                      icon: menu.icon,
-                                    );
+                                      icon: menu.icon);
+
+                          // (index + 3 == 4 && state.user.phoneNumber != null)
+                          //     ? const SizedBox.shrink()
+                          //     : (index + 3 == 4 &&
+                          //             state.user.phoneNumber == null)
+                          //         ? SideMenuTile(
+                          //             isActive: false,
+                          //             onTap: () {
+                          //               return _showPhoneVerificationDialog(
+                          //                   context);
+                          //             },
+                          //             title: menu.title,
+                          //             icon: menu.icon,
+                          //           )
+                          //         : (!state.user.isVendor && index + 3 == 5)
+                          //             ? SideMenuTile(
+                          //                 isActive: RiveNavUtils
+                          //                         .selectedSideBarTotal.value ==
+                          //                     index + 3,
+                          //                 onTap: () {
+                          //                   if (state.user.phoneNumber ==
+                          //                       null) {}
+                          //                   GoRouter.of(context).pushNamed(
+                          //                       AppRouteConstants
+                          //                           .registerVendorPage,
+                          //                       extra: state.user);
+                          //                 },
+                          //                 title: 'Start Selling',
+                          //                 icon: CustomIcons.cartSvg,
+                          //               )
+                          //             : SideMenuTile(
+                          //                 isActive: (state.user.phoneNumber !=
+                          //                             null &&
+                          //                         RiveNavUtils.selectedSideBarTotal
+                          //                                 .value ==
+                          //                             4 &&
+                          //                         index + 3 == 6)
+                          //                     ? true
+                          //                     : (state.user.phoneNumber !=
+                          //                                 null &&
+                          //                             RiveNavUtils
+                          //                                     .selectedSideBarTotal
+                          //                                     .value ==
+                          //                                 5 &&
+                          //                             index + 3 == 7)
+                          //                         ? true
+                          //                         : (state.user.phoneNumber !=
+                          //                                     null &&
+                          //                                 RiveNavUtils
+                          //                                         .selectedSideBarTotal
+                          //                                         .value ==
+                          //                                     6 &&
+                          //                                 index + 3 == 8)
+                          //                             ? true
+                          //                             : (state.user.phoneNumber !=
+                          //                                         null &&
+                          //                                     RiveNavUtils
+                          //                                             .selectedSideBarTotal
+                          //                                             .value ==
+                          //                                         7 &&
+                          //                                     index + 3 == 9)
+                          //                                 ? true
+                          //                                 : RiveNavUtils
+                          //                                         .selectedSideBarTotal
+                          //                                         .value ==
+                          //                                     index + 3,
+                          //                 onTap: () {
+                          //                   // print(state.user.phoneNumber == null &&
+                          //                   //     RiveNavUtils.selectedSideBarTotal
+                          //                   //             .value ==
+                          //                   //         4 &&
+                          //                   //     index + 3 == 6);
+                          //                   // print(RiveNavUtils
+                          //                   //     .selectedSideBarTotal.value);
+                          //                   // print(index + 3);
+                          //                   // print(state.user.phoneNumber != null &&
+                          //                   //     RiveNavUtils.selectedSideBarTotal
+                          //                   //             .value ==
+                          //                   //         4);
+
+                          //                   // if(state.user.phoneNumber.isEmpty && index+3 == 4){
+
+                          //                   // }
+                          //                   if (state.user.isVendor &&
+                          //                       index + 3 == 5) {
+
+                          //                   }
+                          //                   if (state.user.phoneNumber !=
+                          //                           null &&
+                          //                       index + 3 == 6) {
+                          //                     RiveNavUtils.selectedSideBarTotal
+                          //                         .value = 4;
+                          //                     return;
+                          //                   }
+                          //                   if (state.user.phoneNumber !=
+                          //                           null &&
+                          //                       index + 3 == 7) {
+                          //                     RiveNavUtils.selectedSideBarTotal
+                          //                         .value = 5;
+                          //                     return;
+                          //                   }
+                          //                   if (state.user.phoneNumber !=
+                          //                           null &&
+                          //                       index + 3 == 8) {
+                          //                     // if (kDebugMode) {
+                          //                     // }
+                          //                     RiveNavUtils.selectedSideBarTotal
+                          //                         .value = 6;
+                          //                     return;
+                          //                   }
+                          //                   if (state.user.phoneNumber !=
+                          //                           null &&
+                          //                       index + 3 == 9) {
+                          //                     RiveNavUtils.selectedSideBarTotal
+                          //                         .value = 7;
+                          //                     return;
+                          //                   }
+                          //                   if (index + 3 == 10) {
+                          //                     showConfirmationDialog(
+                          //                         context,
+                          //                         'Sign Out',
+                          //                         'Are you sure you want to sign out',
+                          //                         () async {
+                          //                       await FirebaseAuth.instance
+                          //                           .signOut();
+                          //                       GoogleSignIn googleSignIn =
+                          //                           GoogleSignIn();
+                          //                       await googleSignIn.signOut();
+                          //                       GoRouter.of(context).goNamed(
+                          //                           AppRouteConstants
+                          //                               .splashScreen);
+                          //                     });
+                          //                     return;
+                          //                   }
+                          //                   RiveNavUtils.selectedSideBarTotal
+                          //                       .value = index + 3;
+                          //                 },
+                          //                 title: menu.title,
+                          //                 icon: menu.icon,
+                          //               );
                         },
                       );
                     }),
@@ -256,7 +386,7 @@ class SideMenuState extends State<SideMenu> {
 }
 
 ValueNotifier<String> _countryCode = ValueNotifier('000');
-void _showPhoneVerificationDialog(BuildContext context) {
+void _showPhoneVerificationDialog(BuildContext context,bool forVendorRegister) {
   final TextEditingController phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -264,8 +394,8 @@ void _showPhoneVerificationDialog(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text(
-          'Verify Phone Number',
+        title:  Text(
+        forVendorRegister ? 'Verify Your Phone Number To Register For Vendor' :   'Verify Phone Number',
           style: TextStyle(
             fontSize: 15,
           ),
@@ -291,9 +421,9 @@ void _showPhoneVerificationDialog(BuildContext context) {
                 String phoneNumber =
                     '+${_countryCode.value}${phoneController.text}';
                 // Implement verification logic here
-                // context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
-                //       phoneNumber: phoneNumber,
-                //     ));
+                context.read<ProfileBloc>().add(SendOTPForGoogleLoginEvent(
+                      phoneNumber: phoneNumber,
+                    ));
                 Navigator.of(context).pop();
               }
             },

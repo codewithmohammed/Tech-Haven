@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +39,7 @@ import 'package:tech_haven/user/features/review%20enter/presentation/pages/revie
 import 'package:tech_haven/user/features/reviews/presentation/pages/review_page.dart';
 import 'package:tech_haven/user/features/search/presentation/pages/search_page.dart';
 import 'package:tech_haven/user/features/terms/pesentation/pages/terms_and_conditions_page.dart';
+import 'package:tech_haven/user/features/web/payment/web_payment_status_page.dart';
 import 'package:tech_haven/vendor/features/message/presentation/pages/vendor_chat_page.dart';
 import 'package:tech_haven/vendor/features/orderdetails/presentation/pages/vendor_order_details_page.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/pages/register_product_page.dart';
@@ -107,6 +110,37 @@ class AppRoutes {
       //   path: '/new_password_page',
       //   child: const NewPasswordPage(),
       // ),
+
+      _buildPageRouteWithParams(
+        name: AppRouteConstants.paymentStatusPage,
+        path: '/payment_status_page',
+        pageBuilder: (state) {
+          // final uri = Uri.parse(state.uri.toString());
+          final String redirectStatus =
+              jsonEncode(state.uri.queryParameters['redirect_status']);
+          final String errorStatus =
+              jsonEncode(state.uri.queryParameters['error']);
+          // print(redirectStatus);
+
+          return PaymentStatusPage(
+            error: redirectStatus,
+            status: 'succeeded',
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+        transitionsBuilder: (animation, child) {
+          final tween = Tween(
+            begin: const Offset(0, -1),
+            end: Offset.zero,
+          ).animate(
+            CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+          );
+          return SlideTransition(
+            position: tween,
+            child: child,
+          );
+        },
+      ),
       _buildPageRouteWithParams(
         name: AppRouteConstants.signupWelcomePage,
         path: '/sign_up_welcome_page/:initialUsername',
