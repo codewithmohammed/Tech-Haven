@@ -1,4 +1,4 @@
-package com.example.tech_haven
+package com.mohdrayid.tech_haven
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity
