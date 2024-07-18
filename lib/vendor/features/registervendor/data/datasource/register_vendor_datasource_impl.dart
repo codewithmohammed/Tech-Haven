@@ -22,7 +22,7 @@ class RegisterVendorDataSourceImpl implements RegisterVendorDataSource {
   @override
   Future<String> sendRequestForVendor(
       {required model.User user,
-      required File? businessPicture,
+      required dynamic businessPicture,
       required String businessName,
       required String physicalAddress,
       required String accountNumber}) async {
@@ -38,7 +38,9 @@ class RegisterVendorDataSourceImpl implements RegisterVendorDataSource {
             .child(vendorID)
             .child(imageID);
 
-        UploadTask uploadTask = reference.putFile(businessPicture);
+        UploadTask uploadTask = businessPicture is File
+            ? reference.putFile(businessPicture)
+            : reference.putData(businessPicture);
         TaskSnapshot taskSnapshot = await uploadTask;
         downloadURL = await taskSnapshot.ref.getDownloadURL();
       }

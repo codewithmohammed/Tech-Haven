@@ -33,6 +33,7 @@ class AppRouteConstants {
   static const String productsPage = 'products_page';
   static const String registerVendorPage = 'register_vendor_page';
   static const String userOrderPage = 'user_order_page';
+  static const String razorPayPage = 'razor_pay_page';
   static const String fullReviewPage = 'full_review_page';
   static const String aboutProductPage = 'about_product_page';
 }

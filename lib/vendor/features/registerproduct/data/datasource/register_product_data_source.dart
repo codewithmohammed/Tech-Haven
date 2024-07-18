@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:tech_haven/core/common/data/model/category_model.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/entities/product.dart';
@@ -23,7 +23,7 @@ abstract class RegisterProductDataSource {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,
-    required Map<int, List<File>> productImages,
+    required Map<int, List<dynamic>> productImages,
     required bool isPublished,
   });
   // Future<Map<int, List<model.Image>>> getImagesForTheProduct(
@@ -50,7 +50,7 @@ abstract class RegisterProductDataSource {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,
-    required Map<int, List<File>>? productImages,
+    required Map<int, List<dynamic>>? productImages,
     required List<int> deleteImagesIndexes,
     required bool isPublished,
   });

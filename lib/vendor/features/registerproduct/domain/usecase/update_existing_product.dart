@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/entities/product.dart';
@@ -58,7 +57,7 @@ class UpdateExistingProductParams {
   final String productOverview;
   final Map<String, String>? specifications;
   final double shippingCharge;
-  final Map<int, List<File>>? productImages;
+  final Map<int, List<dynamic>>? productImages;
   final List<int> deleteImagesIndexes;
   final bool isPublished;
 

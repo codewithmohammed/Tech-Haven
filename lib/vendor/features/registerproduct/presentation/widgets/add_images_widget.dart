@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tech_haven/core/common/icons/icons.dart';
@@ -12,16 +13,17 @@ import 'package:tech_haven/core/utils/pick_image.dart';
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/widgets/list_view_container.dart';
-
 class AddImagesWidget extends StatefulWidget {
   const AddImagesWidget(
       {super.key,
       required this.productImages,
+      // required this.productImagesForWeb,
       this.productImagesLink,
       required this.deletedImagesIndex,
       required this.canAddNewImages});
 
-  final Map<int, List<File>> productImages;
+  // final Map<int, List<dynamic>> productImagesForWeb;
+  final Map<int, List<dynamic>> productImages;
   final Map<int, List<model.Image>>? productImagesLink;
   final List<int> deletedImagesIndex;
   final bool canAddNewImages;
@@ -32,39 +34,63 @@ class AddImagesWidget extends StatefulWidget {
 
 class _AddImagesWidgetState extends State<AddImagesWidget> {
   void selectMultipleImages(int mainIndex) async {
-    final pickedImages = await pickMultipleImages();
-    if (pickedImages != null) {
-      if (widget.productImages.containsKey(mainIndex)) {
-        setState(() {
-          widget.productImages[mainIndex]!.addAll(pickedImages);
-        });
+    if (kIsWeb) {
+      final pickedMultipleByteImage = await pickMultipleImagesForWeb();
+      if (pickedMultipleByteImage != null) {
+        if (widget.productImages.containsKey(mainIndex)) {
+          setState(() {
+            widget.productImages[mainIndex]!.addAll(pickedMultipleByteImage);
+          });
+        } else {
+          setState(() {
+            widget.productImages[mainIndex] = pickedMultipleByteImage;
+          });
+        }
       } else {
-        setState(() {
-          widget.productImages[mainIndex] = pickedImages;
-        });
+        showFailedImageSnackBar();
       }
     } else {
-      showFailedImageSnackBar();
+      final pickedImages = await pickMultipleImagesForMobile();
+      if (pickedImages != null) {
+        if (widget.productImages.containsKey(mainIndex)) {
+          setState(() {
+            widget.productImages[mainIndex]!.addAll(pickedImages);
+          });
+        } else {
+          setState(() {
+            widget.productImages[mainIndex] = pickedImages;
+          });
+        }
+      } else {
+        showFailedImageSnackBar();
+      }
     }
   }
 
   void selectImage(int mainIndex) async {
-    final pickedImage = await pickImage();
-    if (pickedImage != null) {
-      // print(widget.productImages.length);
-      setState(() {
-        widget.productImages[mainIndex] = [pickedImage];
-      });
-      // widget.productImages.value = widget.productImagesTemp;
-      // print(widget.productImages.length);
+    if (kIsWeb) {
+      final pickedByteImage = await pickImageForWeb();
+      if (pickedByteImage != null) {
+        setState(() {
+          widget.productImages[mainIndex] = [pickedByteImage];
+        });
+      } else {
+        showFailedImageSnackBar();
+      }
     } else {
-      showFailedImageSnackBar();
+      final pickedImage = await pickImageForMobile();
+      if (pickedImage != null) {
+        setState(() {
+          widget.productImages[mainIndex] = [pickedImage];
+        });
+      } else {
+        showFailedImageSnackBar();
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.productImagesLink != null) {}
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,7 +101,6 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
               child: SizedBox(
                 height: 100,
                 child: ListView.builder(
-                  // physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemCount: widget.productImagesLink != null
@@ -83,11 +108,7 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                       : widget.productImages.length,
                   itemBuilder: (context, index) {
                     return ListViewContainer(
-                      onTapCenterWidget: () {
-                        // setState(() {
-                        //   attributeCount++;
-                        // });
-                      },
+                      onTapCenterWidget: () {},
                       containerWidth: 80,
                       centerWidget: Stack(
                         alignment: Alignment.center,
@@ -108,13 +129,17 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                                   ),
                                   errorWidget: (context, url, error) =>
                                       const Icon(Icons.error),
-                                  fit: BoxFit
-                                      .cover, // You can adjust this based on your requirement
-                                )
-                              : Image.file(
-                                  widget.productImages[index]!.first,
                                   fit: BoxFit.cover,
-                                ),
+                                )
+                              : kIsWeb
+                                  ? Image.memory(
+                                      widget.productImages[index]!.first,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.file(
+                                      widget.productImages[index]!.first,
+                                      fit: BoxFit.cover,
+                                    ),
                           if ((widget.deletedImagesIndex.contains(index)) &&
                               (widget.productImagesLink != null))
                             GestureDetector(
@@ -149,12 +174,22 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                           });
                         } else {
                           setState(() {
-                            if (widget.productImages.containsKey(index + 1)) {
-                              final value = widget.productImages[index + 1];
-                              widget.productImages[index] = value!;
-                              widget.productImages.remove(index + 1);
+                            if (kIsWeb) {
+                              if (widget.productImages.containsKey(index + 1)) {
+                                final value = widget.productImages[index + 1];
+                                widget.productImages[index] = value!;
+                                widget.productImages.remove(index + 1);
+                              } else {
+                                widget.productImages.remove(index);
+                              }
                             } else {
-                              widget.productImages.remove(index);
+                              if (widget.productImages.containsKey(index + 1)) {
+                                final value = widget.productImages[index + 1];
+                                widget.productImages[index] = value!;
+                                widget.productImages.remove(index + 1);
+                              } else {
+                                widget.productImages.remove(index);
+                              }
                             }
                           });
                         }
@@ -201,27 +236,22 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
           shrinkWrap: true,
           itemCount: widget.productImagesLink != null
               ? widget.productImagesLink!.length
-              : widget.productImages.length,
+              : kIsWeb
+                  ? widget.productImages.length
+                  : widget.productImages.length,
           itemBuilder: (context, mainIndex) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // SubText(
-                //   subText: 'color ${mainIndex + 1}',
-                // ),
                 Container(
                   width: 80,
                   height: 100,
-                  margin: const EdgeInsets.all(
-                    5,
-                  ),
+                  margin: const EdgeInsets.all(5),
                   decoration: const BoxDecoration(
                     color: AppPallete.darkgreyColor,
                     borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        10,
-                      ),
+                      Radius.circular(10),
                     ),
                   ),
                   child: InkWell(
@@ -241,12 +271,15 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                               ),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
-                              fit: BoxFit
-                                  .cover, // Adjust this based on your requirement
+                              fit: BoxFit.cover,
                             )
-                          : Image.file(
-                              widget.productImages[mainIndex]!.first,
-                            ),
+                          : kIsWeb
+                              ? Image.memory(
+                                  widget.productImages[mainIndex]!.first,
+                                )
+                              : Image.file(
+                                  widget.productImages[mainIndex]!.first,
+                                ),
                     ),
                   ),
                 ),
@@ -261,18 +294,21 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.productImagesLink != null
                               ? widget.productImagesLink![mainIndex]!.length
-                              : widget.productImages[mainIndex]!.length,
+                              : kIsWeb
+                                  ? widget.productImages[mainIndex]!.length
+                                  : widget.productImages[mainIndex]!.length,
                           itemBuilder: (context, index) {
                             return ListViewContainer(
-                              onTapCenterWidget: () {
-                                // setState(() {
-                                //   totalImageCount++;
-                                // });
-                              },
+                              onTapCenterWidget: () {},
                               onPressedCrossIcon: () {
                                 setState(() {
-                                  widget.productImages[mainIndex]!
-                                      .removeAt(index);
+                                  if (kIsWeb) {
+                                    widget.productImages[mainIndex]!
+                                        .removeAt(index);
+                                  } else {
+                                    widget.productImages[mainIndex]!
+                                        .removeAt(index);
+                                  }
                                 });
                               },
                               containerWidth: 150,
@@ -293,12 +329,15 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
                                       ),
                                       errorWidget: (context, url, error) =>
                                           const Icon(Icons.error),
-                                      fit: BoxFit
-                                          .cover, // Adjust this based on your requirement
+                                      fit: BoxFit.cover,
                                     )
-                                  : Image.file(
-                                      widget.productImages[mainIndex]![index],
-                                    ),
+                                  : kIsWeb
+                                      ? Image.memory(
+                                          widget.productImages[mainIndex]![index],
+                                        )
+                                      : Image.file(
+                                          widget.productImages[mainIndex]![index],
+                                        ),
                               crossIcon: widget.productImagesLink != null
                                   ? false
                                   : index == 0
@@ -335,7 +374,7 @@ class _AddImagesWidgetState extends State<AddImagesWidget> {
     showSnackBar(
         context: context,
         title: 'Oh',
-        content: 'You Failed To SelectImage',
+        content: 'You Failed To Select Image',
         contentType: ContentType.failure);
   }
 }

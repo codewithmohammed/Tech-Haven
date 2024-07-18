@@ -78,7 +78,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, bool>> createUser({
-    required File? image,
+    required dynamic image,
     required String username,
     required String currency,
     required String currencySymbol,

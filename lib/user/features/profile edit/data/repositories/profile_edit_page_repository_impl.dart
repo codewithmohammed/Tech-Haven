@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/error/exceptions.dart';
@@ -11,7 +11,7 @@ class ProfileEditPageRepositoryImpl implements ProfileEditPageRepository {
   ProfileEditPageRepositoryImpl({required this.profileEditPageDataSource});
   @override
   Future<Either<Failure, void>> updateUserData(
-      UserModel userModel, File? newImage) async {
+      UserModel userModel, dynamic newImage) async {
     try {
       await profileEditPageDataSource.updateUserData(userModel, newImage);
       return right((null));

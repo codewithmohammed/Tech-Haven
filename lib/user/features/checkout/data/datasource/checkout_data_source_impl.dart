@@ -170,6 +170,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
       // Populate mapOfvendorProducts and listOfProductOrderModel
 
       for (int i = 0; i < carts.length; i++) {
+        print(1);
         // print(carts[i].productID);
         Product product = products
             .firstWhere((element) => element.productID == carts[i].productID);
@@ -206,7 +207,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
               overview: product.overview,
               color: 0,
             ).toJson());
-
+        print(2);
         if (mapOfvendorProducts[product.vendorID] != null) {
           mapOfvendorProducts[product.vendorID]!.add(ProductOrderModel(
             vendorID: product.vendorID,
@@ -231,6 +232,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           ];
         }
         // print(product.vendorID);
+        print(3);
         listOfProductOrderModel.add(ProductOrderModel(
           vendorID: product.vendorID,
           productName: product.name,
@@ -241,6 +243,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           color: 0,
         ));
       }
+      print(4);
       // print('iterate finished');
       for (var entry in mapOfvendorProducts.entries) {
         var vendorID = entry.key;
@@ -253,6 +256,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         );
         // RevenueModel(currentBalance: currentBalance, vendorID: vendorID, withdrewAmount: withdrewAmount)
         // print(2);
+        print(5);
         await firebaseFirestore.collection('revenues').doc(vendorID).set({
           'currentBalance': FieldValue.increment(
             calculateTotalPrizeForVendorOrdrer(
@@ -260,7 +264,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
             ),
           )
         }, SetOptions(merge: true));
-
+        print(6);
         await firebaseFirestore
             .collection('revenues')
             .doc(vendorID)
@@ -276,6 +280,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         //     .set(paymentIntentModel.toJson());
         //first we create a vendor id with some data
         // print('addding data to vendororder');
+        print(7);
         await firebaseFirestore
             .collection('vendorOrders')
             .doc(vendorID)
@@ -298,6 +303,7 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
           currency: paymentIntentModel.currency,
           totalAmount: paymentIntentModel.amount,
         );
+        print(8);
         await firebaseFirestore
             .collection('vendorOrders')
             .doc(vendorID)
@@ -329,10 +335,12 @@ class CheckoutDataSourceImpl implements CheckoutDataSource {
         userName: user.username!,
         paymentID: paymentIntentModel.id,
       );
+      print(9);
       await firebaseFirestore
           .collection('userOrders')
           .doc(user.uid!)
           .set(paymentModel.toJson());
+      print(10);
       await firebaseFirestore
           .collection('userOrders')
           .doc(user.uid!)

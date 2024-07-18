@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/error/failures.dart';
 import 'package:tech_haven/core/usecase/usecase.dart';
@@ -52,7 +52,7 @@ class RegisterNewProductParams {
   final String productOverview;
   final Map<String, String>? specifications;
   final double shippingCharge;
-  final Map<int, List<File>> productImages;
+  final Map<int, List<dynamic>> productImages;
   final bool isPublished;
 
   RegisterNewProductParams({

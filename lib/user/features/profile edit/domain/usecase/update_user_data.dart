@@ -1,7 +1,4 @@
 
-
-import 'dart:io';
-
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/common/data/model/user_model.dart';
 import 'package:tech_haven/core/error/failures.dart';
@@ -21,7 +18,7 @@ class UpdateUserData implements UseCase<void, UpdateUserDataParams> {
 
 class UpdateUserDataParams  {
   final UserModel userModel;
-  final File? newImage;
+  final dynamic newImage;
 
   const UpdateUserDataParams({required this.userModel, this.newImage});
 

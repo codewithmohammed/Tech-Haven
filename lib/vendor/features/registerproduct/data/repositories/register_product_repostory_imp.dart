@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:fpdart/fpdart.dart';
@@ -42,7 +41,7 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,required String color,
-    required Map<int, List<File>> productImages,
+    required Map<int, List<dynamic>> productImages,
     required bool isPublished,
   }) async {
     try {
@@ -114,7 +113,7 @@ class RegisterProductRepositoryImpl extends RegisterProductRepository {
       required String overview,
       required Map<String, String>? specifications,
       required double? shippingCharge,
-      required Map<int, List<File>>? productImages,
+      required Map<int, List<dynamic>>? productImages,
       required List<int> deleteImagesIndexes,
       required bool isPublished}) async {
     try {

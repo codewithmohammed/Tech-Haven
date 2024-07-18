@@ -60,7 +60,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,
-    required Map<int, List<File>> productImages,
+    required Map<int, List<dynamic>> productImages,
     required bool isPublished,
   }) async {
     try {
@@ -168,14 +168,14 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
 
   Future<Map<int, List<ImageModel>>> saveImagesInStorage({
     required String productID,
-    required Map<int, List<File>> productImages,
+    required Map<int, List<dynamic>> productImages,
   }) async {
     try {
       final reference = FirebaseStorage.instance.ref('products');
       final Map<int, List<ImageModel>> mapOfImageModels = {};
 
       for (final entry in productImages.entries) {
-        final List<File> images = entry.value;
+        final List<dynamic> images = entry.value;
 
         for (final image in images) {
           try {
@@ -188,7 +188,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
 
             // Debugging line
 
-            final UploadTask uploadTask = imageReference.putFile(image);
+            final UploadTask uploadTask =image is File ? imageReference.putFile(image) : imageReference.putData(image);
             final TaskSnapshot taskSnapshot = await uploadTask;
 
             final String downloadURL = await taskSnapshot.ref.getDownloadURL();
@@ -274,7 +274,7 @@ class RegisterProductDataSourceImpl extends RegisterProductDataSource {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,
-    required Map<int, List<File>>? productImages,
+    required Map<int, List<dynamic>>? productImages,
     required List<int> deleteImagesIndexes,
     required bool isPublished,
   }) async {

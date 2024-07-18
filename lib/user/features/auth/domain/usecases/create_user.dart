@@ -19,7 +19,7 @@ class CreateUser implements UseCase<bool, CreateUserParams> {
 }
 
 class CreateUserParams {
-  final File? image;
+  final dynamic image;
   final String username;
   final String currency;
   final String currencySymbol;

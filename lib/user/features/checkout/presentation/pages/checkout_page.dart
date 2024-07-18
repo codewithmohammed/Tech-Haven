@@ -11,7 +11,7 @@ import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_blo
 import 'package:tech_haven/user/features/checkout/presentation/pages/shipping_details_page.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/submit_page.dart';
 
-import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
+// import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
 // import 'package:webview_flutter_web/webview_flutter_web.dart';
 
 class CheckoutPage extends StatefulWidget {
@@ -57,8 +57,8 @@ class _CheckoutPageState extends State<CheckoutPage> {
               context.read<CheckoutBloc>().add(ShowPresentPaymentSheetEvent(
                   paymentIntentModel: state.paymentIntentModel));
             } else {
-              showPaymentSheetForWeb(
-                  paymentIntentModel: state.paymentIntentModel);
+              // showPaymentSheetForWeb(
+              //     paymentIntentModel: state.paymentIntentModel);
             }
           }
           if (state is PaymentFailed) {
@@ -84,7 +84,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
             // GoRouter.of(context).pop();
           }
           if (state is SaveOrderSuccess) {
-            // print(state);
+            print('deleting cart');
             context
                 .read<CheckoutBloc>()
                 .add(RemoveAllProductsFromTheCartAndSendOrderEvent());
@@ -235,28 +235,28 @@ class _CheckoutPageState extends State<CheckoutPage> {
     );
   }
 
-  showPaymentSheetForWeb({required PaymentIntentModel paymentIntentModel}) {
-    final String clientSecret = paymentIntentModel.clientSecret;
-    final PlatformWebViewController controller = PlatformWebViewController(
-      const PlatformWebViewControllerCreationParams(),
-    )..loadRequest(
-        LoadRequestParams(
-          uri: Uri.parse(
-              'https://techhavenstripepayment.web.app/?client_secret=$clientSecret'),
-        ),
-      );
+  // showPaymentSheetForWeb({required PaymentIntentModel paymentIntentModel}) {
+  //   final String clientSecret = paymentIntentModel.clientSecret;
+  //   final PlatformWebViewController controller = PlatformWebViewController(
+  //     const PlatformWebViewControllerCreationParams(),
+  //   )..loadRequest(
+  //       LoadRequestParams(
+  //         uri: Uri.parse(
+  //             'https://techhavenstripepayment.web.app/?client_secret=$clientSecret'),
+  //       ),
+  //     );
 
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: SizedBox(
-          width: 400,
-          height: 600,
-          child: PlatformWebViewWidget(
-            PlatformWebViewWidgetCreationParams(controller: controller),
-          ).build(context),
-        ),
-      ),
-    );
-  }
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => Dialog(
+  //       child: SizedBox(
+  //         width: 400,
+  //         height: 600,
+  //         child: PlatformWebViewWidget(
+  //           PlatformWebViewWidgetCreationParams(controller: controller),
+  //         ).build(context),
+  //       ),
+  //     ),
+  //   );
+  // }
 }

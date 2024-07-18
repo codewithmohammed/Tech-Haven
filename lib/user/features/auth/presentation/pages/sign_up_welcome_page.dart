@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 // import 'package:country_picker/country_picker.dart';
 import 'package:currency_picker/currency_picker.dart';
@@ -13,46 +13,52 @@ import 'package:tech_haven/core/common/widgets/profile_image_widget.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/utils/get_random_color.dart';
 import 'package:tech_haven/core/utils/pick_image.dart';
+// import 'package:tech_haven/core/utils/pick_image.dart';
 import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/sign_up_welcome_page.dart';
+// import 'dart:typed_data';
+// import 'dart:io';
+import 'package:flutter/foundation.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class SignUpWelcomePage extends StatelessWidget {
   final String initialUsername;
-  const SignUpWelcomePage({super.key, required this.initialUsername});
 
-  // final usernameController = TextEditingController();
+  const SignUpWelcomePage({super.key, required this.initialUsername});
 
   @override
   Widget build(BuildContext context) {
     ValueNotifier<Currency?> currentCurrency = ValueNotifier(null);
     ValueNotifier<String> username = ValueNotifier(initialUsername);
-    ValueNotifier<File?> image = ValueNotifier(null);
+    ValueNotifier<dynamic> image = ValueNotifier(null);
     final List<String> items = [
       'Item1',
       'Item2',
       'Item3',
       'Item4',
     ];
-    // String? selectedValue;
 
-    // File? image;
     void selectImage() async {
-      final pickedImage = await pickImage();
-      if (pickedImage != null) {
-        image.value = pickedImage;
+      if (kIsWeb) {
+        final pickedImageInWeb = await pickImageForWeb();
+        if (pickedImageInWeb != null) {
+          image.value = pickedImageInWeb;
+        }
+      } else {
+        final pickedImageInMobile = await pickImageForMobile();
+        if (pickedImageInMobile != null) {
+          image.value = pickedImageInMobile;
+        }
       }
     }
-
-    // TextEditingController countryTextEditingController =
-    //     TextEditingController();
 
     final Color userColor = getRandomColor();
     return Scaffold(
       body: BlocConsumer<AuthBloc, AuthState>(
-        // listenWhen: (previous, current) =>
-        //     current is SignUpWelcomePageActionState,
-        // buildWhen: (previous, current) => current is AuthSignUpWelcomPageState,
         listener: (context, state) {
           if (state is AuthIsUserLoggedInSuccess) {
             context.read<AuthBloc>().add(
@@ -92,8 +98,6 @@ class SignUpWelcomePage extends StatelessWidget {
           return SafeArea(
             child: ListView(
               padding: const EdgeInsets.all(40),
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ValueListenableBuilder(
                   valueListenable: username,
@@ -121,12 +125,9 @@ class SignUpWelcomePage extends StatelessWidget {
                     onPressed: () async => selectImage(),
                   ),
                 ),
-
-                // const Spacer(),
                 const SizedBox(
                   height: 50,
                 ),
-
                 TextFormField(
                   initialValue: initialUsername,
                   onChanged: (value) {
@@ -140,7 +141,6 @@ class SignUpWelcomePage extends StatelessWidget {
                     hintText: 'Enter your UserName',
                   ),
                 ),
-                //select you country of residence.
                 InkWell(
                   onTap: () {
                     showCurrencyPicker(
@@ -169,7 +169,6 @@ class SignUpWelcomePage extends StatelessWidget {
                                 color: Theme.of(context).hintColor,
                               ),
                             ),
-                            // value: currentCurrency.value,
                             items: items
                                 .map(
                                   (String item) => DropdownMenuItem<String>(
@@ -197,17 +196,6 @@ class SignUpWelcomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                // InkWell(
-                //     onTap: () {
-                //       print('hello');
-                //     },
-                //     child: Container(
-                //       // width: 20,
-                //       height: 20,
-                //       decoration: const BoxDecoration(
-                //         color: Colors.red,
-                //       ),
-                //     )),
                 const SizedBox(
                   height: 50,
                 ),
@@ -237,5 +225,22 @@ class SignUpWelcomePage extends StatelessWidget {
       ),
     );
   }
-}
 
+  // Future<Uint8List?> pickImageForWeb() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (imageFile != null) {
+  //     return await imageFile.readAsBytes();
+  //   }
+  //   return null;
+  // }
+
+  // Future<File?> pickImageForMobile() async {
+  //   final ImagePicker picker = ImagePicker();
+  //   final XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
+  //   if (imageFile != null) {
+  //     return File(imageFile.path);
+  //   }
+  //   return null;
+  // }
+}

@@ -1,4 +1,4 @@
-import 'dart:io';
+
 
 import 'package:fpdart/fpdart.dart';
 import 'package:tech_haven/core/entities/user.dart';
@@ -25,7 +25,7 @@ class SendRequestForVendor
 }
 
 class SendRequestForVendorParams {
-  final File? businessPicture;
+  final dynamic businessPicture;
   final User user;
   final String businessName;
   final String physicalAddress;

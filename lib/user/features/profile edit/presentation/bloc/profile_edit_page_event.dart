@@ -11,6 +11,6 @@ final class GetUserDataEvent extends ProfileEditPageEvent {}
 
 final class UpdateUserDataEvent extends ProfileEditPageEvent {
   final UserModel userModel;
-  final File? newImage;
+  final dynamic newImage;
   const UpdateUserDataEvent({required this.userModel,required this.newImage});
 }

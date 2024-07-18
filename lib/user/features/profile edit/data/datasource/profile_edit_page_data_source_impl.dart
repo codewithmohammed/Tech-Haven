@@ -13,7 +13,7 @@ class ProfileEditPageDataSourceImpl implements ProfileEditPageDataSource {
       {required this.firebaseFirestore, required this.firebaseStorage});
 
   @override
-  Future<void> updateUserData(UserModel userModel, File? newImage) async {
+  Future<void> updateUserData(UserModel userModel, dynamic newImage) async {
     try {
       String? imageUrl;
       String imageID =
@@ -30,7 +30,9 @@ class ProfileEditPageDataSourceImpl implements ProfileEditPageDataSource {
         if (userModel.userImageID != null) {
           await reference.child(userModel.userImageID!).delete();
         }
-        await reference.child(imageID).putFile(newImage);
+        newImage is File
+            ? await reference.child(imageID).putFile(newImage)
+            : await reference.child(imageID).putData(newImage);
 
         // Get the download URL of the uploaded image
         imageUrl = await reference.child(imageID).getDownloadURL();
@@ -56,7 +58,6 @@ class ProfileEditPageDataSourceImpl implements ProfileEditPageDataSource {
         'isProfilePictureUploaded': userModel.isProfilePhotoUploaded,
         'profilePhoto': imageUrl ?? userModel.profilePhoto
       });
-
     } catch (e) {
       // Handle errors here (logging, UI feedback, etc.)
       rethrow; // Optionally rethrow the exception for further handling upstream

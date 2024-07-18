@@ -91,8 +91,8 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
   //   return true;
   // }
 
-  Map<int, List<File>> productImages = {};
-
+  Map<int, List<dynamic>> productImages = {};
+  // Map<int, List<Uint8List>>? productImagesForWeb = {};
   ValueNotifier<bool> shippingChargeBool = ValueNotifier(false);
 
   List<int> deletedImagesIndex = []; //
@@ -184,9 +184,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
       builder: (context, state) {
         // print(state);
         if (state is RegisterProductLoading) {
-          return Loader(
-            totalImages: productImages[0]?.length,
-          );
+          return Loader(totalImages: productImages[0]?.length);
         }
         if (state is RegisterProductAllCategoryLoadedSuccess) {
           context.read<GetImagesBloc>().add(EmitInitialEvent());
@@ -444,11 +442,13 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                               productImagesLink: listOfImagesLinks,
                               deletedImagesIndex: deletedImagesIndex,
                               canAddNewImages: true,
+                              // productImagesForWeb: productImagesForWeb,
                             );
                           }
                           return AddImagesWidget(
                             productImages: productImages,
                             productImagesLink: null,
+                            // productImagesForWeb: productImagesForWeb,
                             deletedImagesIndex: deletedImagesIndex,
                             canAddNewImages: false,
                           );
@@ -468,6 +468,7 @@ class _RegisterProductPageState extends State<RegisterProductPage> {
                           productImagesLink: null,
                           deletedImagesIndex: deletedImagesIndex,
                           canAddNewImages: true,
+                          // productImagesForWeb: productImagesForWeb,
                         ),
 
                       Constants.kHeight,

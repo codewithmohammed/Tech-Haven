@@ -27,7 +27,7 @@ final class RegisterNewProductEvent extends RegisterProductEvent {
   final String variantCategoryID;
   final String productOverview;
   final double shippingCharge;
-  final Map<int, List<File>> productImages;
+  final Map<int, List<dynamic>> productImages;
   final bool isPublished;
 
   RegisterNewProductEvent({
@@ -79,7 +79,7 @@ final class UpdateExistingProductEvent extends RegisterProductEvent {
   final String variantCategoryID;
   final String productOverview;
   final double shippingCharge;
-  final Map<int, List<File>>? productImages;
+  final Map<int, List<dynamic>>? productImages;
   final List<int> deleteImagesIndexes;
   final bool isPublished;
 

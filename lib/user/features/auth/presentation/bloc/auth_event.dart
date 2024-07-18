@@ -50,7 +50,7 @@ final class CreateUserEvent extends AuthEvent {
   final String username;
   final String currency;
   final String currencySymbol;
-  final File? image;
+  final dynamic image;
   final int color;
 
   CreateUserEvent({

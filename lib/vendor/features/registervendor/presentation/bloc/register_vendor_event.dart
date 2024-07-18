@@ -10,7 +10,7 @@ sealed class RegisterVendorEvent extends Equatable {
 final class SendRequestForVendorEvent extends RegisterVendorEvent {
   final User user;
   final String businessName;
-  final File? businessPicuture;
+  final dynamic businessPicuture;
   final String physicalAddress;
   final String accountNumber;
   const SendRequestForVendorEvent(

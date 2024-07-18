@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:tech_haven/core/entities/image.dart' as model;
 import 'package:fpdart/fpdart.dart';
@@ -25,7 +24,7 @@ abstract class RegisterProductRepository {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,
-    required Map<int, List<File>> productImages,
+    required Map<int, List<dynamic>> productImages,
     required bool isPublished,
   });
   // Future<Either<Failure, Map<int, List<model.Image>>>> getImagesForTheProduct(
@@ -51,7 +50,7 @@ abstract class RegisterProductRepository {
     required String overview,
     required Map<String, String>? specifications,
     required double? shippingCharge,
-    required Map<int, List<File>>? productImages,
+    required Map<int, List<dynamic>>? productImages,
     required List<int> deleteImagesIndexes,
     required bool isPublished,
   });

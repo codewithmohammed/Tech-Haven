@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
@@ -8,6 +9,7 @@ import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/theme/app_pallete.dart';
 import 'package:tech_haven/core/utils/sum.dart';
 import 'package:tech_haven/user/features/cart/presentation/widgets/bottom_sheet_row_text.dart';
+
 class CartPageBottomContainer extends StatelessWidget {
   const CartPageBottomContainer({
     super.key,
@@ -81,14 +83,23 @@ class CartPageBottomContainer extends StatelessWidget {
                       child: RoundedRectangularButton(
                         title: 'CHECKOUT',
                         onPressed: () {
-                       
+                          // if (kIsWeb) {
+                          //   GoRouter.of(context).pushNamed(
+                          //       AppRouteConstants.razorPayPage,
+                          //       pathParameters: {
+                          //         'totalAmount': total.toString()
+                          //       });
+                          // } else {
                           GoRouter.of(context).pushNamed(
                               AppRouteConstants.checkoutPage,
                               pathParameters: {
                                 'totalAmount': total.toString()
                               });
-                          GoRouter.of(context)
-                              .pushNamed(AppRouteConstants.googleMapPage);
+                          Navigator.of(context).pop();
+                          // }
+
+                          // GoRouter.of(context)
+                          //     .pushNamed(AppRouteConstants.googleMapPage);
                         },
                       )),
                 )

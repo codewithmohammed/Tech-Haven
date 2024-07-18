@@ -26,7 +26,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<bool> createUser({
-    required File? image,
+    required dynamic image,
     required String username,
     required String currency,
     required String currencySymbol,
@@ -46,7 +46,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               .child(user.uid)
               .child(imageID);
 
-          UploadTask uploadTask = reference.putFile(image);
+          UploadTask uploadTask = image is File ? reference.putFile(image) : reference.putData(image);
           TaskSnapshot taskSnapshot = await uploadTask;
 
           downloadURL = await taskSnapshot.ref.getDownloadURL();
@@ -196,11 +196,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
       case 'invalid-email':
         throw const ServerException(
-          'The email used in a EmailAuthProvider.credential is invalid.',
+          'The email used is invalid.',
         );
       case 'invalid-password':
         throw const ServerException(
-          'The password used in a EmailAuthProvider.credential is not correct or the user does not have a password.',
+          'The password used is not correct or the user does not have a password.',
         );
       case 'invalid-verification-code':
         throw const ServerException(

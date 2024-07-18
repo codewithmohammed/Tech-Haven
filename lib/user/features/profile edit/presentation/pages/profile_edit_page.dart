@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,23 +14,23 @@ import 'package:tech_haven/user/features/profile%20edit/presentation/bloc/profil
 class ProfileEditPage extends StatelessWidget {
   const ProfileEditPage({super.key});
 
-  // Future<File?> pickImage() async {
-  //   final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   if (pickedFile != null) {
-  //     return File(pickedFile.path);
-  //   }
-  //   return null;
-  // }
-
   @override
   Widget build(BuildContext context) {
     context.read<ProfileEditPageBloc>().add(GetUserDataEvent());
     ValueNotifier<String> username = ValueNotifier('');
-    ValueNotifier<File?> image = ValueNotifier(null);
+    ValueNotifier<dynamic> image = ValueNotifier(null);
+
     void selectImage() async {
-      final pickedImage = await pickImage();
-      if (pickedImage != null) {
-        image.value = pickedImage;
+      if (kIsWeb) {
+        final pickedImageInWeb = await pickImageForWeb();
+        if (pickedImageInWeb != null) {
+          image.value = pickedImageInWeb;
+        }
+      } else {
+        final pickedImageInMobile = await pickImageForMobile();
+        if (pickedImageInMobile != null) {
+          image.value = pickedImageInMobile;
+        }
       }
     }
 
@@ -96,18 +95,6 @@ class ProfileEditPage extends StatelessWidget {
                           hintText: 'Name',
                         ),
                       ),
-                      // CustomTextFormField(
-                      //   autovalidateMode: AutovalidateMode.onUserInteraction,
-                      //   labelText: 'Physical Address',
-                      //   hintText: 'Enter your Physical Address',
-                      //   textEditingController: TextEditingController(),
-                      // ),
-                      // CustomTextFormField(
-                      //   autovalidateMode: AutovalidateMode.onUserInteraction,
-                      //   labelText: 'Account Number',
-                      //   hintText: 'Enter Your Account Number',
-                      //   textEditingController: TextEditingController(),
-                      // ),
                     ],
                   ),
                 ),

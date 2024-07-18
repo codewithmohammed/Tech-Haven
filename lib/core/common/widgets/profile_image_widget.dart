@@ -15,7 +15,8 @@ class ProfileImageWidget extends StatelessWidget {
     required this.onPressed,
   });
 
-  final ValueNotifier<File?> image;
+  final ValueNotifier<dynamic>
+      image; // Change to dynamic to support both File and Uint8List
   final Color userColor;
   final String? initialImage;
   final ValueNotifier<String> username;
@@ -39,7 +40,7 @@ class ProfileImageWidget extends StatelessWidget {
             ],
           ),
         ),
-        ValueListenableBuilder(
+        ValueListenableBuilder<dynamic>(
           valueListenable: image,
           builder: (context, value, child) {
             return Container(
@@ -50,19 +51,28 @@ class ProfileImageWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: userColor,
                 image: image.value != null
-                    ? DecorationImage(
-                        image: FileImage(image.value!),
-                      )
+                    ? image.value is File
+                        ? DecorationImage(
+                            image: FileImage(image.value),
+                            fit: BoxFit.cover,
+                          )
+                        : DecorationImage(image: MemoryImage(image.value))
                     : (initialImage != null && initialImage!.isNotEmpty)
-                        ? DecorationImage(image: NetworkImage(initialImage!))
+                        ? DecorationImage(
+                            image: NetworkImage(initialImage!),
+                            fit: BoxFit.cover,
+                          )
                         : null,
               ),
-              child: image.value == null && (initialImage == null || initialImage!.isEmpty)
-                  ? ValueListenableBuilder(
+              child: image.value == null &&
+                      (initialImage == null || initialImage!.isEmpty)
+                  ? ValueListenableBuilder<String>(
                       valueListenable: username,
                       builder: (context, value, child) {
                         return Text(
-                          username.value.split('').first,
+                          username.value.isNotEmpty
+                              ? username.value.substring(0, 1).toUpperCase()
+                              : '',
                           style: const TextStyle(
                             fontSize: 100,
                           ),
