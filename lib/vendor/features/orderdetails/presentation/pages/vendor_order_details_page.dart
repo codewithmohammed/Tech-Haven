@@ -276,8 +276,7 @@ class VendorOrderDetailsPage extends StatelessWidget {
   }
 
   double calculateTotalProductsPrize(
-      {required double amount, required int quantity}) {
-    return (quantity * amount);
+      {required num amount, required num quantity}) {
+    return (quantity * amount).toDouble();
   }
 }
-

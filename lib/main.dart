@@ -32,6 +32,7 @@ import 'package:tech_haven/user/features/searchcategory/presentation/cubit/searc
 import 'package:tech_haven/vendor/features/manageproduct/presentation/bloc/manage_product_bloc.dart';
 import 'package:tech_haven/vendor/features/order/presentation/bloc/vendor_order_page_bloc.dart';
 import 'package:tech_haven/vendor/features/orderdetails/presentation/bloc/vendor_order_details_bloc.dart';
+import 'package:tech_haven/vendor/features/profile/presentation/bloc/vendor_profile_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/get_images_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/presentation/bloc/register_product_bloc.dart';
 // import 'package:flutter_stripe/flutter_stripe.dart';
@@ -147,6 +148,8 @@ void main() async {
       ),
        BlocProvider(
         create: (_) => serviceLocator<OrderedProductsPageBloc>(),
+      ),  BlocProvider(
+        create: (_) => serviceLocator<VendorProfileBloc>(),
       ),
     ],
     child: const MyApp(),

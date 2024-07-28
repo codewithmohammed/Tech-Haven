@@ -57,7 +57,7 @@ class CartPageBloc extends Bloc<CartPageEvent, CartPageState> {
     // final allCarted = await _getAllCart(NoParams());
     // final allFavorited = await _getAllFavorite(NoParams());
     // final allProductsResult = await _getAllProduct(NoParams());
-
+    emit(CartPageLoadingState());
     final allCartedProduct = await _getAllCartProduct(NoParams());
     final allCart = await _getAllCart(NoParams());
     final allFavorite = await _getAllFavorite(NoParams());

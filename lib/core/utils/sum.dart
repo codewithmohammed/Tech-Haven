@@ -50,12 +50,12 @@ String changeAmountDecimal( {required int amount}) {
   }
 
 
-  double calculateDiscountPercentage(double oldPrice, double offerPrice) {
+  double calculateDiscountPercentage(num oldPrice, num offerPrice) {
   if (oldPrice <= 0 || offerPrice <= 0 || offerPrice >= oldPrice) {
     throw ArgumentError('Invalid input values');
   }
   
-  double discount = oldPrice - offerPrice;
+  num discount = oldPrice - offerPrice;
   double discountPercentage = (discount / oldPrice) * 100;
   
   // Round discountPercentage to two decimal places

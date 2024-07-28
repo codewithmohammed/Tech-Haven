@@ -179,7 +179,11 @@ class SearchPageBloc extends Bloc<SearchPageEvent, SearchPageState> {
       }).toList();
     }
     // print(filteredProducts.length);
-    emit(ProductSearchLoaded(filteredProducts, listOfFavorites));
+    emit(ProductSearchLoaded(
+        filteredProducts
+            .where((product) => product.isPublished == true)
+            .toList(),
+        listOfFavorites));
   }
 
   FutureOr<void> _onUpdateProductToFavoriteSearchPageEvent(

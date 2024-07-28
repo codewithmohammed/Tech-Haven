@@ -7,9 +7,9 @@ class Product {
   final String displayImageURL;
   final String name;
   final String color;
-  final double prize;
-  final double oldPrize;
-  final int quantity;
+  final num prize;
+  final num oldPrize;
+  final num quantity;
   final String mainCategory;
   final String mainCategoryID;
   final String subCategory;
@@ -18,10 +18,10 @@ class Product {
   final String variantCategoryID;
   final String overview;
   final Map<String, String>? specifications;
-  final double? shippingCharge;
+  final num? shippingCharge;
 
   // final Map<int,List<Image>> productImages;
-  final double? rating;
+  final num? rating;
   final bool isPublished;
 
   Product({

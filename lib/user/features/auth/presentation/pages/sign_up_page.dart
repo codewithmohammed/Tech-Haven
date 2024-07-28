@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +13,6 @@ import 'package:tech_haven/core/common/widgets/primary_app_button.dart';
 import 'package:tech_haven/core/constants/constants.dart';
 import 'package:tech_haven/core/routes/app_route_constants.dart';
 import 'package:tech_haven/core/utils/auth_utils.dart';
-import 'package:tech_haven/core/utils/show_snackbar.dart';
 import 'package:tech_haven/core/validators/validators.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:tech_haven/user/features/auth/presentation/bloc/sign_up_page_state.dart';
@@ -135,8 +135,9 @@ class _SignUpPageState extends State<SignUpPage> {
           child: Lottie.asset('assets/lotties/sign_up_lottie.json'),
         ),
         ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
-            child: _buildSignUpAuthenticationContainer(context)),
+          constraints: const BoxConstraints(maxHeight: 625, maxWidth: 415),
+          child: _buildSignUpAuthenticationContainer(context),
+        ),
       ],
     );
   }
@@ -236,7 +237,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   PrimaryAppButton(
                     buttonText: 'Sign up',
                     onPressed: () {
-                      setState(() {
+                      setState(() async {
                         phoneNumberError = Validator.validatePhoneNumber(
                             phoneNumberController.text);
                         emailError =
@@ -255,13 +256,32 @@ class _SignUpPageState extends State<SignUpPage> {
                             countryCode.value != '000') {
                           fullPhoneNumber =
                               '+${countryCode.value}${phoneNumberController.text}';
-                          context.read<AuthBloc>().add(
-                                SendOTPEvent(
-                                  phoneNumber: fullPhoneNumber,
+                          // context.read<AuthBloc>().add(
+                          //       SendOTPEvent(
+                          //         phoneNumber: fullPhoneNumber,
+                          //         email: emailController.text,
+                          //         password: passwordController.text,
+                          //       ),
+                          //     );
+                          await FirebaseAuth.instance.verifyPhoneNumber(
+                            phoneNumber: fullPhoneNumber,
+                            verificationCompleted: (phoneAuthCredential) {},
+                            verificationFailed: (error) {},
+                            codeSent: (verificationId, forceResendingToken) {
+                              print(verificationId);
+                              GoRouter.of(context).pushNamed(
+                                AppRouteConstants.otpVerificationPage,
+                                extra: OTPParams(
                                   email: emailController.text,
                                   password: passwordController.text,
+                                  phoneNumber: fullPhoneNumber,
+                                  verificaionID: verificationId,
+                                  isForSignUp: true,
                                 ),
                               );
+                            },
+                            codeAutoRetrievalTimeout: (verificationId) {},
+                          );
                         }
                       });
                     },

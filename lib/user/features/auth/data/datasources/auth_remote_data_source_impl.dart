@@ -46,7 +46,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               .child(user.uid)
               .child(imageID);
 
-          UploadTask uploadTask = image is File ? reference.putFile(image) : reference.putData(image);
+          UploadTask uploadTask = image is File
+              ? reference.putFile(image)
+              : reference.putData(image);
           TaskSnapshot taskSnapshot = await uploadTask;
 
           downloadURL = await taskSnapshot.ref.getDownloadURL();
@@ -89,19 +91,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     try {
       await getVerificationId(phoneNumber);
-
-      // Add a small delay to ensure the verification ID is assigned
-
-      // if (potentialVerificationId != null) {
       return SignUpModelImpl(
         phoneNumber: phoneNumber,
         email: email,
         password: password,
         verificationID: potentialVerificationId!,
       );
-      // } else {
-      // await Future.delayed(const Duration(milliseconds: 500));
-      // }
+      // } else {}
     } on FirebaseAuthException catch (e) {
       throw ServerException(e.message!);
     } on ServerException catch (e) {
@@ -112,18 +108,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   Future<void> getVerificationId(String phoneNumber) async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
+    await firebaseAuth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
-      verificationCompleted: (phoneAuthCredential) async {
-        await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
+      verificationCompleted: (phoneAuthCredential) {
+        // await firebaseAuth.signInWithCredential(phoneAuthCredential);
       },
-      verificationFailed: (error) async {
+      verificationFailed: (error) {
         throw ServerException(error.message!);
       },
-      codeSent: (verificationId, forceResendingToken) async {
-        await assignTheVerificationId(verificationId: verificationId);
+      codeSent: (verificationId, forceResendingToken) {
+        potentialVerificationId = verificationId;
       },
-      codeAutoRetrievalTimeout: (verificationId) {},
+      codeAutoRetrievalTimeout: (verificationId) {
+        potentialVerificationId = verificationId;
+      },
     );
   }
 
@@ -140,22 +138,32 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String otpCode,
   }) async {
     try {
-      // First, create a new phoneAuthCredential with the verificationId and the otp code received
+      // Create a new phoneAuthCredential with the verificationId and otp code received
+      print('start');
       PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: otpCode,
       );
+      print(phoneAuthCredential.smsCode);
 
       // Attempt to create user with email and password
       UserCredential userCredential = await createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      print(userCredential.user!.email ?? userCredential.user!.phoneNumber);
 
       User? user = userCredential.user;
-
+      print(user != null);
       if (user != null) {
+        // Link the phone credential with the newly created user
         await user.linkWithCredential(phoneAuthCredential);
+
+        // Check if email verification is required and send verification email if necessary
+        if (!user.emailVerified) {
+          await user.sendEmailVerification();
+        }
+
         // Return the username if available, otherwise extract name from email
         return user.displayName ?? AuthUtils.extractNameFromEmail(user.email!);
       } else {
@@ -166,9 +174,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on FirebaseAuthException catch (e) {
       throw handleFirebaseAuthException(e);
     } catch (e) {
-      throw ServerException(
-        e.toString(),
-      );
+      // Handle general exceptions
+      throw ServerException(e.toString());
     }
   }
 
@@ -342,13 +349,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             await firebaseAuth.signInWithPopup(googleAuthProvider);
         user = userCredential.user;
       } else {
-        final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+        final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
         if (googleUser == null) {
           throw Exception('The Google user is not initiated');
         }
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
-
+        // print(googleAuth.accessToken);
+        // print(googleAuth.accessToken);
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
@@ -357,12 +365,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final userCredential =
             await firebaseAuth.signInWithCredential(credential);
         user = userCredential.user;
-
-     
       }
 
       if (user != null) {
-
         // Check if the user already exists in Firestore
         final doc =
             await firebaseFirestore.collection('users').doc(user.uid).get();

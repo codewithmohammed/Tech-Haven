@@ -83,23 +83,14 @@ class CartPageBottomContainer extends StatelessWidget {
                       child: RoundedRectangularButton(
                         title: 'CHECKOUT',
                         onPressed: () {
-                          // if (kIsWeb) {
-                          //   GoRouter.of(context).pushNamed(
-                          //       AppRouteConstants.razorPayPage,
-                          //       pathParameters: {
-                          //         'totalAmount': total.toString()
-                          //       });
-                          // } else {
+                          print('object');
                           GoRouter.of(context).pushNamed(
                               AppRouteConstants.checkoutPage,
                               pathParameters: {
                                 'totalAmount': total.toString()
                               });
-                          Navigator.of(context).pop();
-                          // }
-
-                          // GoRouter.of(context)
-                          //     .pushNamed(AppRouteConstants.googleMapPage);
+                          // Navigator.of(context).pop();
+                          // print('ok');
                         },
                       )),
                 )

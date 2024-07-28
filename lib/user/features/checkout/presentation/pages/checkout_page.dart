@@ -54,8 +54,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
               // print('state is success');
 
               paymentIntentModel = state.paymentIntentModel;
-              context.read<CheckoutBloc>().add(ShowPresentPaymentSheetEvent(
-                  paymentIntentModel: state.paymentIntentModel));
+              context.read<CheckoutBloc>().add(
+                    ShowPresentPaymentSheetEvent(
+                      paymentIntentModel: state.paymentIntentModel,
+                    ),
+                  );
             } else {
               // showPaymentSheetForWeb(
               //     paymentIntentModel: state.paymentIntentModel);
@@ -72,9 +75,11 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 title: 'Success',
                 content: 'The Payment has successfully completed',
                 contentType: ContentType.success);
-            context.read<CheckoutBloc>().add(SaveOrderEvent(
-                  paymentIntentModel: state.paymentIntentModel,
-                ));
+            context.read<CheckoutBloc>().add(
+                  SaveOrderEvent(
+                    paymentIntentModel: state.paymentIntentModel,
+                  ),
+                );
           }
           if (state is SaveOrderFailed) {
             Fluttertoast.showToast(msg: state.message);
@@ -84,13 +89,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
             // GoRouter.of(context).pop();
           }
           if (state is SaveOrderSuccess) {
-            print('deleting cart');
+            // print('deleting cart');
             context
                 .read<CheckoutBloc>()
                 .add(RemoveAllProductsFromTheCartAndSendOrderEvent());
           }
           if (state is AllCartsClearedSuccessState) {
-            GoRouter.of(context).pop();
+            Future.delayed(const Duration(seconds: 2)).then(
+              (value) {
+                GoRouter.of(context).pop();
+              },
+            );
           }
           if (state is AllCartClearedFailedState) {
             context

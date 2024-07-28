@@ -23,22 +23,6 @@
           }
         },
         {
-          "client_id": "774274737207-o1a9esqo754g80v3onvs3ctlhmsmb660.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.tech_haven",
-            "certificate_hash": "6ac785e7703da277c34fdfc3273075468dcf7a2b"
-          }
-        },
-        {
-          "client_id": "774274737207-qe41gcj4o8ank57gemuoei6p4bgc3unm.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.tech_haven",
-            "certificate_hash": "89bc15721d6d4032b6ba724f89451e6e4c82616c"
-          }
-        },
-        {
           "client_id": "774274737207-fki600rtasjig97a9eegdrvelgqm2q29.apps.googleusercontent.com",
           "client_type": 3
         }

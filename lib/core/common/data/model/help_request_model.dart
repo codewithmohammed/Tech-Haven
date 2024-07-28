@@ -27,7 +27,7 @@ class HelpRequestModel extends HelpRequest {
 
   Map<String, dynamic> toJson() {
     return {
-      'userID':userID,
+      'userID': userID,
       'email': email,
       'name': name,
       'subject': subject,

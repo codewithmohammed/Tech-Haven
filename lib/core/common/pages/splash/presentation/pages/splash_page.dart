@@ -41,9 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   );
                 } else if (userSnapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${userSnapshot.error}'),
-                  );
+                  return const WelcomePage();
                 } else if (!userSnapshot.hasData) {
                   return const WelcomePage(); // Handle case where user data is not available
                 } else {

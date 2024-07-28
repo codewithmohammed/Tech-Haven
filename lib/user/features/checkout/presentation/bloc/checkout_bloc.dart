@@ -135,7 +135,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
             await _getAProduct(GetAProductParams(productID: cart.productID));
 
         // Product? product;
-        int? newQuantity;
+        num? newQuantity;
         oneProduct
             .fold((l) => emit(AllCartClearedFailedState(message: l.message)),
                 (product) async {

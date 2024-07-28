@@ -1,8 +1,8 @@
 class Revenue {
   final String vendorID;
   // final double totalIncomeSoFar;
-  final double withdrewAmount;
-  final double currentBalance;
+  final num withdrewAmount;
+  final num currentBalance;
   Revenue(
       {required this.currentBalance,
       // required this.totalIncomeSoFar,

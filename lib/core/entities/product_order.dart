@@ -2,10 +2,10 @@ class ProductOrder {
   final String vendorID;
   final String productName;
   final String productID;
-  final int quantity;
-  final double shippingCharge;
-  final double price;
-  final int color;
+  final num quantity;
+  final num shippingCharge;
+  final num price;
+  final num color;
 
   ProductOrder({
     // required this.paymentID,

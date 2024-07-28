@@ -100,12 +100,13 @@ class _UserBottomNavigationBarState extends State<UserBottomNavigationBar>
                         return Responsive.isMobile(context)
                             ? Constants.listOFMainPagesForMobile[index]
                             : ValueListenableBuilder(
-                              valueListenable:  RiveNavUtils.selectedSideBarTotal,
-                              builder:(context, value, child) {
-                                return Constants
-                                    .listOfMainPagesForTabletAndDesktop[value];
-                              }
-                            );
+                                valueListenable:
+                                    RiveNavUtils.selectedSideBarTotal,
+                                builder: (context, value, child) {
+                                  return Constants
+                                          .listOfMainPagesForTabletAndDesktop[
+                                      value];
+                                });
                       },
                       onPageChanged: (index) {
                         if (Responsive.isMobile(context)) {
@@ -123,7 +124,7 @@ class _UserBottomNavigationBarState extends State<UserBottomNavigationBar>
               AnimatedPositioned(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.fastOutSlowIn,
-                  top: 500,
+                  bottom: 50,
                   left: isSideMenuOpened ? 300 : 15,
                   child: CircularButton(
                     diameter: 50,

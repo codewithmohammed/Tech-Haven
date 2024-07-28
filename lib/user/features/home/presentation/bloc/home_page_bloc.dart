@@ -90,7 +90,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
           HorizontalProductsListViewHomeFailed(message: failure.message));
     }, (success) {
       return emit(HorizontalProductsListViewHomeSuccess(
-        listOfProducts: success,
+        listOfProducts: success.where((product) => product.isPublished == true).toList(),
         // listOfFavoritedProducts: listOfAllFavorited,
       ));
     });

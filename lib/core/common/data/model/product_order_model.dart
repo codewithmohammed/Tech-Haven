@@ -20,15 +20,11 @@ class ProductOrderModel extends ProductOrder {
     return ProductOrderModel(
       productName: json['productName'],
       vendorID: json['vendorID'],
-      shippingCharge: json['shippingCharge'] is int
-          ? (json['shippingCharge'] as int).toDouble()
-          : json['shippingCharge'] as double,
+      shippingCharge: json['shippingCharge'],
       productID: json['productID'],
       color: json['color'] ?? 1,
-      quantity: json['quantity'] as int,
-      price: json['price'] is int
-          ? (json['price'] as int).toDouble()
-          : json['price'] as double,
+      quantity: json['quantity'] ,
+      price: json['price'] 
     );
   }
 

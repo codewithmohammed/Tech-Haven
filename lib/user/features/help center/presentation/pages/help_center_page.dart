@@ -26,10 +26,10 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
 
   @override
   void deactivate() {
-    emailController;
-    nameController;
-    subjectController;
-    bodyController;
+    emailController.dispose();
+    nameController.dispose();
+    subjectController.dispose();
+    bodyController.dispose();
     super.deactivate();
   }
 
@@ -47,7 +47,18 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Text(
+                'Help Center',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8.0),
+              const Text(
+                'We are here to help you. You can report a bug, share a problem, or give us feedback.',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 16.0),
               BlocConsumer<HelpCenterBloc, HelpCenterState>(
                 listener: (context, state) {
                   if (state is GetUserDataSuccess) {
@@ -76,20 +87,35 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                       TextField(
                         enabled: false,
                         controller: emailController,
-                        decoration: const InputDecoration(labelText: 'From'),
+                        decoration: const InputDecoration(
+                          labelText: 'From',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
+                      const SizedBox(height: 8.0),
                       TextField(
                         enabled: false,
                         controller: nameController,
-                        decoration: const InputDecoration(labelText: 'Name'),
+                        decoration: const InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
+                      const SizedBox(height: 8.0),
                       TextField(
                         controller: subjectController,
-                        decoration: const InputDecoration(labelText: 'Subject'),
+                        decoration: const InputDecoration(
+                          labelText: 'Subject',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
+                      const SizedBox(height: 8.0),
                       TextField(
                         controller: bodyController,
-                        decoration: const InputDecoration(labelText: 'Body'),
+                        decoration: const InputDecoration(
+                          labelText: 'Body',
+                          border: OutlineInputBorder(),
+                        ),
                         maxLines: 5,
                       ),
                       const SizedBox(height: 16.0),
@@ -122,6 +148,12 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                   );
                 },
               ),
+              const SizedBox(height: 24.0),
+              const Text(
+                'Your Requests',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8.0),
               BlocBuilder<HelpCenterBloc, HelpCenterState>(
                 buildWhen: (previous, current) =>
                     current is GetAllUserRequestState,
@@ -135,7 +167,6 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                         openAndCloseAnimation: true,
                         headerPadding: const EdgeInsets.symmetric(
                             vertical: 7, horizontal: 15),
-                        // sectionOpeningHapticFeedback: SectionHapticFeedback.light,
                         children: state.listOfHelpRequest.map((helpRequest) {
                           return AccordionSection(
                             isOpen: false,
@@ -143,7 +174,6 @@ class _HelpCenterPageState extends State<HelpCenterPage> {
                             content: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Text('Request ID: ${helpRequest.requestID}'),
                                 Text('Email: ${helpRequest.email}'),
                                 Text('Name: ${helpRequest.name}'),
                                 Text(

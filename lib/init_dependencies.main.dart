@@ -139,6 +139,12 @@ import 'package:tech_haven/vendor/features/order/domain/repository/order_reposit
 import 'package:tech_haven/vendor/features/order/domain/usecase/delete_order.dart';
 import 'package:tech_haven/vendor/features/order/presentation/bloc/vendor_order_page_bloc.dart';
 import 'package:tech_haven/vendor/features/orderdetails/presentation/bloc/vendor_order_details_bloc.dart';
+import 'package:tech_haven/vendor/features/profile/data/datasource/vendor_profile_data_source.dart';
+import 'package:tech_haven/vendor/features/profile/data/datasource/vendor_profile_data_source_impl.dart';
+import 'package:tech_haven/vendor/features/profile/data/repositories/vendor_profile_repository_impl.dart';
+import 'package:tech_haven/vendor/features/profile/domain/repository/vendor_profile_repository.dart';
+import 'package:tech_haven/vendor/features/profile/domain/usecase/get_vendor_profile.dart';
+import 'package:tech_haven/vendor/features/profile/presentation/bloc/vendor_profile_bloc.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/datasource/register_product_data_source_impl.dart';
 import 'package:tech_haven/vendor/features/registerproduct/data/repositories/register_product_repostory_imp.dart';
@@ -200,6 +206,7 @@ Future<void> initDependencies() async {
   _initReviewPage();
   _initProfileEditPage();
   _initOrderedProductsPage();
+  _initVendorProfilePage();
 }
 
 void _initOrderedProductsPage() {
@@ -339,6 +346,8 @@ void _initRegisterVendor() {
   List<String> hello = ['s', 'sdf'];
   hello.reversed;
   serviceLocator
+
+  
     ..registerFactory<RegisterVendorDataSource>(() =>
         RegisterVendorDataSourceImpl(
             firebaseAuth: serviceLocator(),
@@ -546,6 +555,18 @@ void _initSearchCategory() {
       () => SearchCategoryCubit(),
     )
     ..registerLazySingleton(() => SearchCategoryAccordionCubit());
+}
+
+void _initVendorProfilePage() {
+  serviceLocator
+    ..registerFactory<VendorProfileDataSource>(
+        () => VendorProfileDataSourceImpl(firestore: serviceLocator()))
+    ..registerFactory<VendorProfileRepository>(() =>
+        VendorProfileRepositoryImpl(vendorProfileDataSource: serviceLocator()))
+    ..registerFactory(
+        () => GetVendorProfile(vendorRepository: serviceLocator()))
+    ..registerLazySingleton(() => VendorProfileBloc(
+        getVendorProfile: serviceLocator(), getUserData: serviceLocator()));
 }
 
 _initRegisterProduct() {

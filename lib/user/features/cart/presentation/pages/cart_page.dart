@@ -59,7 +59,7 @@ class CartPage extends StatelessWidget {
 
     return BlocListener<CheckoutBloc, CheckoutState>(
       listener: (context, state) {
-        if (state is SaveOrderSuccess) {
+        if (state is AllCartsClearedSuccessState) {
           controllers = [];
           context.read<CartPageBloc>().add(GetAllProductsEvent());
         }
@@ -156,8 +156,6 @@ class CartPage extends StatelessWidget {
                               gridDelegate:
                                   const SliverGridDelegateWithMaxCrossAxisExtent(
                                       mainAxisExtent: 275,
-                                      // childAspectRatio: 16 / 9,
-                                      // childAspectRatio: 16 / 7,
                                       maxCrossAxisExtent: 550),
                               itemCount: listState.listOfProducts.length,
                               itemBuilder: (context, index) {
@@ -171,7 +169,11 @@ class CartPage extends StatelessWidget {
 
                                 if (cartIndex > -1) {
                                   productIsCarted = true;
+                                  controllers[index].text = listState
+                                      .listOfCarts[cartIndex].productCount
+                                      .toString();
                                 }
+
                                 controllers[index].text = listState
                                     .listOfCarts[cartIndex].productCount
                                     .toString();

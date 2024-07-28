@@ -15,22 +15,18 @@ import 'package:tech_haven/user/features/auth/presentation/responsive/responsive
 import 'package:tech_haven/user/features/auth/presentation/route%20params/home_route_params.dart';
 import 'package:tech_haven/user/features/auth/presentation/widgets/authentication_container.dart';
 import 'package:lottie/lottie.dart';
-class OTPVerificationPage extends StatefulWidget {
-  const OTPVerificationPage({
+
+class OTPVerificationPage extends StatelessWidget {
+  OTPVerificationPage({
     super.key,
     required this.otpParams,
   });
 
   final OTPParams otpParams;
 
-  @override
-  State<OTPVerificationPage> createState() => _OTPVerificationPageState();
-}
-
-class _OTPVerificationPageState extends State<OTPVerificationPage> {
   final pinController = TextEditingController();
+
   final focusNode = FocusNode();
-  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +35,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is UserCreationSuccess) {
-            if (widget.otpParams.isForSignUp) {
+            if (otpParams.isForSignUp) {
               GoRouter.of(context).pushReplacementNamed(
                 AppRouteConstants.signupWelcomePage,
                 pathParameters: {
@@ -72,19 +68,14 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
           if (state is AuthLoading) {
             return const Loader();
           }
-          return Form(
-            key: formKey,
-            child: ResponsiveAuthentication(
-              mobileLayout: _buildOTPMobileLayout(this.context),
-              desktopLayout: _buildOTPDesktopLayout(this.context),
-            ),
-          );
+          return _buildOTPMobileLayout(context);
         },
       ),
     );
   }
 
   Widget _buildOTPMobileLayout(BuildContext context) {
+    print('rebuilding otp mobile');
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -121,6 +112,7 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
   }
 
   Widget _buildOTPAuthenticationContainer(BuildContext context) {
+    print('hi');
     const fillColor = AppPallete.lightgreyColor;
     final defaultPinTheme = PinTheme(
       width: 56,
@@ -145,7 +137,8 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
             Expanded(
               child: AuthenticationContainer(
                 title: 'Code Verification',
-                subTitle: 'Enter your 6-digit verification code received on your phone number',
+                subTitle:
+                    'Enter your 6-digit verification code received on your phone number',
                 columnChildren: [
                   const SizedBox(height: 20),
                   Pinput(
@@ -159,38 +152,38 @@ class _OTPVerificationPageState extends State<OTPVerificationPage> {
                     ],
                     controller: pinController,
                     focusNode: focusNode,
-                    androidSmsAutofillMethod: AndroidSmsAutofillMethod.smsUserConsentApi,
-                    listenForMultipleSmsOnAndroid: true,
                     defaultPinTheme: defaultPinTheme,
                     separatorBuilder: (index) => const SizedBox(width: 1),
                     onClipboardFound: (value) {
-                      debugPrint('onClipboardFound: $value');
                       pinController.setText(value);
                     },
                     hapticFeedbackType: HapticFeedbackType.lightImpact,
                     onCompleted: (pinCode) {
-                      if (widget.otpParams.isForSignUp) {
+                      print(pinCode);
+                      if (otpParams.isForSignUp) {
                         context.read<AuthBloc>().add(
-                          VerifyPhoneAndSignUpUserEvent(
-                            phoneNumber: widget.otpParams.phoneNumber,
-                            email: widget.otpParams.email!,
-                            password: widget.otpParams.password!,
-                            verificationId: widget.otpParams.verificaionID,
-                            otpCode: pinCode,
-                          ),
-                        );
+                              VerifyPhoneAndSignUpUserEvent(
+                                phoneNumber: otpParams.phoneNumber,
+                                email: otpParams.email!,
+                                password: otpParams.password!,
+                                verificationId: otpParams.verificaionID,
+                                otpCode: pinCode,
+                              ),
+                            );
                       } else {
                         context.read<AuthBloc>().add(
-                          UpdateThePhoneNumberOfUser(
-                            updateNumber: false,
-                            phoneNumber: widget.otpParams.phoneNumber,
-                            verificationID: widget.otpParams.verificaionID,
-                            otpCode: pinCode,
-                          ),
-                        );
+                              UpdateThePhoneNumberOfUser(
+                                updateNumber: false,
+                                phoneNumber: otpParams.phoneNumber,
+                                verificationID: otpParams.verificaionID,
+                                otpCode: pinCode,
+                              ),
+                            );
                       }
                     },
                     onChanged: (value) {
+                      // print(value);
+                      if (value.length == 6) {}
                       // debugPrint('onChanged: $value');
                     },
                     cursor: Column(
