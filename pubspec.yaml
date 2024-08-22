@@ -35,7 +35,7 @@ dependencies:
   bootpay_webview_flutter_platform_interface: ^2.10.0
   build_runner: ^2.4.9
   cached_network_image: ^3.3.1
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   cloud_firestore: ^4.15.10
   country_picker: ^2.0.25
   cupertino_icons: ^1.0.6
@@ -43,7 +43,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   easy_debounce: ^2.0.3
   equatable: ^2.0.5
-  file_picker: ^8.0.6
+  file_picker: 8.0.7
   firebase_auth: ^4.18.0
   firebase_core: ^2.27.2
   firebase_storage: ^11.6.11

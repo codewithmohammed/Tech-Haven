@@ -1,5 +1,6 @@
 
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:tech_haven/core/common/widgets/global_title_text.dart';
 import 'package:tech_haven/core/constants/constants.dart';
@@ -16,6 +17,7 @@ class ProductBrandAndTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // CarouselSlider
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(

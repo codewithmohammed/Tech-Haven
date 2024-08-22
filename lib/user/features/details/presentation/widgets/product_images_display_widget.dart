@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,6 +24,7 @@ class ProductImagesDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CarouselSliderController  carouselController = CarouselSliderController();
     // context.read<DetailsPageBloc>().add(GetProductFavoriteDetailsEvent());
     void updateProductToFavorite(
         {required bool isFavorited, required Product product}) {
@@ -32,7 +34,6 @@ class ProductImagesDisplayWidget extends StatelessWidget {
           product: product, isFavorited: isFavorited));
     }
 
-    CarouselController carouselController = CarouselController();
     return BlocConsumer<DetailsPageBloc, DetailsPageState>(
       listener: (context, state) {
         // print(state);
