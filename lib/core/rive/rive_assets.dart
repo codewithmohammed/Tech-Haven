@@ -1,4 +1,5 @@
 import 'package:rive/rive.dart';
+import 'package:tech_haven/core/common/icons/icons.dart';
 
 class NavItemModel {
   final String title;
@@ -7,6 +8,13 @@ class NavItemModel {
     required this.title,
     required this.riveAsset,
   });
+}
+
+class ProfileSideItemModel {
+  final String title;
+  final String icon;
+
+  ProfileSideItemModel({required this.icon, required this.title});
 }
 
 class RiveAsset {
@@ -44,15 +52,15 @@ List<NavItemModel> bottonNavs = [
       title: 'Search',
     ),
   ),
-  NavItemModel(
-    title: 'Notification',
-    riveAsset: RiveAsset(
-      'assets/rive/animated_icon_set_.riv',
-      artboard: 'BELL',
-      stateMachineName: 'BELL_Interactivity',
-      title: 'Notification',
-    ),
-  ),
+  // NavItemModel(
+  //   title: 'Notification',
+  //   riveAsset: RiveAsset(
+  //     'assets/rive/animated_icon_set_.riv',
+  //     artboard: 'BELL',
+  //     stateMachineName: 'BELL_Interactivity',
+  //     title: 'Notification',
+  //   ),
+  // ),
   NavItemModel(
     title: 'Profile',
     riveAsset: RiveAsset(
@@ -71,4 +79,68 @@ List<NavItemModel> bottonNavs = [
       title: 'Cart',
     ),
   )
+];
+
+List<NavItemModel> browseSideMenus = [
+  NavItemModel(
+    title: 'Home',
+    riveAsset: RiveAsset(
+      'assets/rive/animated_icon_set_.riv',
+      artboard: 'HOME',
+      stateMachineName: 'HOME_Interactivity',
+      title: 'Home',
+    ),
+  ),
+  NavItemModel(
+    title: 'Search',
+    riveAsset: RiveAsset(
+      'assets/rive/animated_icon_set_.riv',
+      artboard: 'SEARCH',
+      stateMachineName: 'SEARCH_Interactivity',
+      title: 'Search',
+    ),
+  ),
+  NavItemModel(
+    title: 'Cart',
+    riveAsset: RiveAsset(
+      'assets/rive/animated_icon_set_.riv',
+      artboard: 'CART',
+      stateMachineName: 'CART_Interactivity',
+      title: 'Cart',
+    ),
+  )
+];
+List<ProfileSideItemModel> profileSideMenus = [
+  ProfileSideItemModel(
+    icon: CustomIcons.orderListSvg,
+    title: 'Your Orders',
+  ),
+  ProfileSideItemModel(
+    icon: CustomIcons.phoneOutlined,
+    title: 'Verify Phone Number',
+  ),
+  ProfileSideItemModel(
+    icon: CustomIcons.cartSvg,
+    title: 'Enter Vendor Mode',
+  ),
+  ProfileSideItemModel(
+    icon: CustomIcons.questionMarkSvg,
+    title: 'Help Center',
+  ),
+     ProfileSideItemModel(
+    icon: CustomIcons.fileCheck,
+    title: 'Terms and Conditions',
+  ),
+     ProfileSideItemModel(
+    icon: CustomIcons.lockOutlinedSvg,
+    title: 'Privacy Policy',
+  ),
+   ProfileSideItemModel(
+    icon: CustomIcons.exclamationSvg,
+    title: 'About Us',
+  ),
+  ProfileSideItemModel(
+    icon: CustomIcons.rightArrowExitSvg,
+    title: 'Sign Out',
+  ),
 ];
