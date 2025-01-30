@@ -11,9 +11,6 @@ import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_blo
 import 'package:tech_haven/user/features/checkout/presentation/pages/shipping_details_page.dart';
 import 'package:tech_haven/user/features/checkout/presentation/pages/submit_page.dart';
 
-// import 'package:webview_flutter_platform_interface/webview_flutter_platform_interface.dart';
-// import 'package:webview_flutter_web/webview_flutter_web.dart';
-
 class CheckoutPage extends StatefulWidget {
   const CheckoutPage({super.key, required this.totalAmount});
   final String totalAmount;
@@ -95,23 +92,17 @@ class _CheckoutPageState extends State<CheckoutPage> {
                 .add(RemoveAllProductsFromTheCartAndSendOrderEvent());
           }
           if (state is AllCartsClearedSuccessState) {
-            Future.delayed(const Duration(seconds: 2)).then(
-              (value) {
+          
                 GoRouter.of(context).pop();
-              },
-            );
+              
+          
           }
           if (state is AllCartClearedFailedState) {
             context
                 .read<CheckoutBloc>()
                 .add(RemoveAllProductsFromTheCartAndSendOrderEvent());
             Fluttertoast.showToast(msg: '${state.message}please wait');
-            // GoRouter.of(context).pop();
           }
-          // if (state is SubmitPaymentFormSuccess) {
-
-          //   // print('showing the payment sheet');
-          // }
         },
         builder: (context, state) {
           if (state is SubmitPaymentFormSuccess) {
@@ -146,19 +137,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                       return Container();
                     },
                     onStepTapped: (step) {
-                      // setState(() {
-                      //   currentstep = step;
-                      // });
                     },
                     onStepContinue: () {},
                     onStepCancel: () {
-                      // setState(() {
-                      //   if (currentstep > 0) {
-                      //     currentstep = currentstep - 1;
-                      //   } else {
-                      //     currentstep = 0;
-                      //   }
-                      // });
                     },
                   ),
                 ),
@@ -208,21 +189,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   controlsBuilder: (context, details) {
                     return Container();
                   },
-                  onStepTapped: (step) {
-                    // setState(() {
-                    //   currentstep = step;
-                    // });
-                  },
+                  onStepTapped: (step) {},
                   onStepContinue: () {},
-                  onStepCancel: () {
-                    // setState(() {
-                    //   if (currentstep > 0) {
-                    //     currentstep = currentstep - 1;
-                    //   } else {
-                    //     currentstep = 0;
-                    //   }
-                    // });
-                  },
+                  onStepCancel: () {},
                 ),
               ),
               Expanded(

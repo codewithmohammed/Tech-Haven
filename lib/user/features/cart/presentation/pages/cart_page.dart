@@ -72,7 +72,7 @@ class CartPage extends StatelessWidget {
             if (state is CartLoadedSuccessDetailsState ||
                 state is CartLoadedSuccessDetailsPageRelatedState ||
                 state is UpdateProductToFavoriteSuccess) {
-              controllers = [];
+              // controllers = [];
               context.read<CartPageBloc>().add(GetAllProductsEvent());
             }
           },

@@ -97,7 +97,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
         toastLength: Toast.LENGTH_SHORT,
       );
     } catch (e) {
-      print('Error handling payment success: $e');
+      // print('Error handling payment success: $e');
       Fluttertoast.showToast(msg: 'Error handling payment success');
     }
   }
