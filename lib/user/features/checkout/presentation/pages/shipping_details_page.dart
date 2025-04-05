@@ -14,7 +14,7 @@ import 'package:tech_haven/user/features/checkout/data/models/payment_intent_mod
 import 'package:tech_haven/user/features/checkout/data/models/payment_method_options_model.dart';
 import 'package:tech_haven/user/features/checkout/data/models/shipping_model.dart';
 import 'package:tech_haven/user/features/checkout/presentation/bloc/checkout_bloc.dart';
-import 'package:razorpay_web/razorpay_web.dart';
+// import 'package:razorpay_web/razorpay_web.dart';
 
 class ShippingDetailsPage extends StatefulWidget {
   const ShippingDetailsPage({super.key, required this.totalAmount});
@@ -38,7 +38,7 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
   AddressDetails? selectedAddress;
   List<String> stringAddresses = [];
 
-  late Razorpay razorPay;
+  // late Razorpay razorPay;
 
   void openCheckout() async {
     var amount = double.parse(widget.totalAmount) * 100;
@@ -55,72 +55,72 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
       }
     };
     try {
-      razorPay.open(options);
+      // razorPay.open(options);
     } catch (e) {
       debugPrint('error: $e');
     }
   }
 
-  void handlePaymentSuccess(PaymentSuccessResponse response) {
-    try {
-      double totalAmount = double.parse(widget.totalAmount);
-      int amountInCents = (totalAmount * 100).toInt();
+  // void handlePaymentSuccess(PaymentSuccessResponse response) {
+  //   try {
+  //     double totalAmount = double.parse(widget.totalAmount);
+  //     int amountInCents = (totalAmount * 100).toInt();
 
-      PaymentIntentModel paymentIntentModel = PaymentIntentModel(
-        id: response.paymentId!,
-        amount: amountInCents,
-        currency: 'INR',
-        clientSecret: 'clientSecret',
-        description: 'description',
-        paymentMethodOptionsModel: PaymentMethodOptionsModel(
-          cardOptionsModel:
-              CardOptionsModel(requestThreeDSecure: 'requestThreeDSecure'),
-        ),
-        shippingModel: ShippingModel(
-          addressModel: AddressModel(
-            city: cityController.text,
-            country: countryController.text,
-            line1: addressController.text,
-            postalCode: pinController.text,
-            state: stateController.text,
-          ),
-          name: 'Rayid',
-        ),
-      );
+  //     PaymentIntentModel paymentIntentModel = PaymentIntentModel(
+  //       id: response.paymentId!,
+  //       amount: amountInCents,
+  //       currency: 'INR',
+  //       clientSecret: 'clientSecret',
+  //       description: 'description',
+  //       paymentMethodOptionsModel: PaymentMethodOptionsModel(
+  //         cardOptionsModel:
+  //             CardOptionsModel(requestThreeDSecure: 'requestThreeDSecure'),
+  //       ),
+  //       shippingModel: ShippingModel(
+  //         addressModel: AddressModel(
+  //           city: cityController.text,
+  //           country: countryController.text,
+  //           line1: addressController.text,
+  //           postalCode: pinController.text,
+  //           state: stateController.text,
+  //         ),
+  //         name: 'Rayid',
+  //       ),
+  //     );
 
-      context
-          .read<CheckoutBloc>()
-          .add(SaveOrderEvent(paymentIntentModel: paymentIntentModel));
+  //     context
+  //         .read<CheckoutBloc>()
+  //         .add(SaveOrderEvent(paymentIntentModel: paymentIntentModel));
 
-      Fluttertoast.showToast(
-        msg: "Payment Successful ${response.paymentId!}",
-        toastLength: Toast.LENGTH_SHORT,
-      );
-    } catch (e) {
-      // print('Error handling payment success: $e');
-      Fluttertoast.showToast(msg: 'Error handling payment success');
-    }
-  }
+  //     Fluttertoast.showToast(
+  //       msg: "Payment Successful ${response.paymentId!}",
+  //       toastLength: Toast.LENGTH_SHORT,
+  //     );
+  //   } catch (e) {
+  //     // print('Error handling payment success: $e');
+  //     Fluttertoast.showToast(msg: 'Error handling payment success');
+  //   }
+  // }
 
-  void handlePaymentError(PaymentFailureResponse response) {
-    Fluttertoast.showToast(
-        msg: "Payment Failed ${response.message!}",
-        toastLength: Toast.LENGTH_SHORT);
-    GoRouter.of(context).pop();
-  }
+  // void handlePaymentError(PaymentFailureResponse response) {
+  //   Fluttertoast.showToast(
+  //       msg: "Payment Failed ${response.message!}",
+  //       toastLength: Toast.LENGTH_SHORT);
+  //   GoRouter.of(context).pop();
+  // }
 
-  void handleExternalWallet(ExternalWalletResponse response) {
-    Fluttertoast.showToast(
-      msg: "External Wallet ${response.walletName!}",
-      toastLength: Toast.LENGTH_SHORT,
-    );
-    GoRouter.of(context).pop();
-  }
+  // void handleExternalWallet(ExternalWalletResponse response) {
+  //   Fluttertoast.showToast(
+  //     msg: "External Wallet ${response.walletName!}",
+  //     toastLength: Toast.LENGTH_SHORT,
+  //   );
+  //   GoRouter.of(context).pop();
+  // }
 
   @override
   void dispose() {
     if (kIsWeb) {
-      razorPay.clear();
+      // razorPay.clear();
     }
     super.dispose();
   }
@@ -128,12 +128,12 @@ class _ShippingDetailsPageState extends State<ShippingDetailsPage> {
   @override
   void initState() {
     super.initState();
-    if (kIsWeb) {
-      razorPay = Razorpay();
-      razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
-      razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
-      razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
-    }
+    // if (kIsWeb) {
+    //   razorPay = Razorpay();
+    //   razorPay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+    //   razorPay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
+    //   razorPay.on(Razorpay.EVENT_EXTERNAL_WALLET, handleExternalWallet);
+    // }
     addressController = TextEditingController();
     pinController = TextEditingController();
     cityController = TextEditingController();
