@@ -11,13 +11,13 @@ class AppTheme {
           backgroundColor: AppPallete.primaryAppButtonColor),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
+          backgroundColor: WidgetStateProperty.all<Color>(
               AppPallete.primaryAppButtonColor),
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
+          backgroundColor: WidgetStateProperty.all<Color>(
               AppPallete.primaryAppButtonColor),
         ),
       )
@@ -41,13 +41,13 @@ class AppTheme {
           backgroundColor: AppPallete.primaryAppButtonColor),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
+          backgroundColor: WidgetStateProperty.all<Color>(
               AppPallete.primaryAppButtonColor),
         ),
       ),
       iconButtonTheme: IconButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all<Color>(
+          backgroundColor: WidgetStateProperty.all<Color>(
               AppPallete.primaryAppButtonColor),
         ),
       )
