@@ -4,8 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
-  rive_common
-  smart_auth
+  rive_native
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
