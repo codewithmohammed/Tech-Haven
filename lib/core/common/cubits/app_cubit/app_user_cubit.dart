@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:tech_haven/core/common/entities/user.dart';
+import 'package:tech_haven/core/entities/user.dart';
 
 part 'app_user_state.dart';
 

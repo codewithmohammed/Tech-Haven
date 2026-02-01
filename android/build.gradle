@@ -1,11 +1,24 @@
 buildscript {
-    ext.kotlin_version = '1.7.1'
+    ext.kotlin_version = '2.1.0'
+       repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.5.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+     tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:-options'
+        // options.compilerArgs << "-Xlint:deprecation"
     }
 }
 
